@@ -1,0 +1,8 @@
+package Message;
+
+message CResult
+{
+  required string Url = 1;
+  optional string Title = 2;
+  repeated string Snippets = 3;
+}
