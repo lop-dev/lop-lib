@@ -1,0 +1,105 @@
+import "result.proto"; // protocol编译器查找引入文件是通过编译器的命令参数 -I/--proto_path , 如果没有指定，就在protoc执行目录下寻找。
+                       // 文件名的大小写，不是和磁盘上的大小写一致，而是和命令行中的一致
+
+package Message; // 增加一个optional的package描述，相当于 namespace 的功能
+
+/*
+限定符(required/optional/repeated)的基本规则:
+  1. 在每个消息中必须至少留有一个required类型的字段。 
+  2. 每个消息中可以包含0个或多个optional类型的字段。
+  3. repeated表示的字段可以包含0个或多个数据。需要说明的是，这一点有别于C++/Java中的数组，因为后两者中的数组必须包含至少一个元素。
+  4. 如果打算在原有消息协议中添加新的字段，同时还要保证老版本的程序能够正常读取或写入，那么对于新添加的字段必须是optional或repeated。
+     道理非常简单，老版本程序无法读取或写入新增的required限定符的字段。
+除了：required、optional、repeated外，还有一个 option 关键字，暂时没有学习。
+*/
+
+message CPerson
+{
+  required int32 ID = 1; // 这里的1是分配标签，每个field都是唯一数字的标记，这是用来标记这个field在message二进制格式中的位置的，一旦使用就不能再修改顺序了。
+                         // 注:标记从1-15只有一个字节编码，包括自增长属性（更多的见Protocol Buffer Encoding）；
+			 // 标记从16-2047占用两个字节。因此尽量频繁使用1-15，
+			 // 记住为未来的扩展留下一些位置。最小的tag你可以定义为1，最大2的29次方-1  536870922.你同样不能使用19000-19999（这个位置已经被GPB自己实现），
+  required string Name = 2;
+  optional string Email = 3;
+  optional int32 Page = 4 [default = 10]; // 当含有optional字段的message从流转换成对象的时候，如果没有包含optional字段的数据，那么对象的optional字段会设置成默认值。
+                                          // 如 pasting 果没有指定默认值的话，string 默认为空串，bool 默认为false，数字类型默认0，
+					  // 枚举类型，默认为类型定义中的第一个值。
+  repeated int32 Samples = 5 [packed=true]; // 由于历史原因，repeated字段如果是基本数字类型的话，不能有效地编码。
+                                            // 现在代码可以使用特殊选项[packed=true]来得到更有效率的编码。
+
+  enum ECorpus
+  {
+    UNIVERSAL = 0;
+    WEB = 1;
+    IMAGES = 2;
+    LOCAL = 3;
+    NEWS = 4;
+    PRODUCTS = 5;
+    VIDEO = 6;
+  }
+  optional ECorpus Corpus = 6 [default = WEB]; // 如果字段的属性值是固定的几个值，可以使用枚举。
+
+  repeated CResult Result = 7; // 使用外部自定义的类型，当然也可以使用 optional 关键字。
+
+  message CInternalClass
+  {
+    required string url = 1;
+    optional string title = 2;
+    repeated string snippets = 3;
+  }
+  repeated CInternalClass InternalClass = 8; // 使用内部自定义的类型，如果外部要应用这个内部类，则通过parent.type方式来调用
+
+  extensions 10 to 100; // 
+}
+
+/*
+类型对照表
+.proto Type	C++ Type	Java Type	Notes
+double		double		double
+float		float		float
+int32		int32		int		Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead.
+int64		int64		long		Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead.
+uint32		uint32		int		Uses variable-length encoding.
+uint64		uint64		long		Uses variable-length encoding.
+sint32		int32		int		Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s.
+sint64		int64		long		Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s.
+fixed32		uint32		int		Always four bytes. More efficient than uint32 if values are often greater than 228.
+fixed64		uint64		long		Always eight bytes. More efficient than uint64 if values are often greater than 256.
+sfixed32	int32		int		Always four bytes.
+sfixed64	int64		long		Always eight bytes.
+bool	 	bool		boolean
+string		string		String		A string must always contain UTF-8 encoded or 7-bit ASCII text.
+bytes		string		ByteString	May contain any arbitrary sequence of bytes.
+*/
+
+/*
+Protocol Buffer消息升级原则:
+在实际的开发中会存在这样一种应用场景，既消息格式因为某些需求的变化而不得不进行必要的升级，但是有些使用原有消息格式的应用程序暂时又不能被立刻升级，
+这便要求我们在升级消息格式时要遵守一定的规则，从而可以保证基于新老消息格式的新老程序同时运行。规则如下：
+1. 不要修改已经存在字段的标签号。
+2. 任何新添加的字段必须是optional和repeated限定符，否则无法保证新老程序在互相传递消息时的消息兼容性。
+3. 在原有的消息中，不能移除已经存在的required字段，optional和repeated类型的字段可以被移除，但是他们之前使用的标签号必须被保留，不能被新的字段重用。
+4. int32、uint32、int64、uint64和bool等类型之间是兼容的，sint32和sint64是兼容的，string和bytes是兼容的，fixed32和sfixed32，以及fixed64和sfixed64之间是兼容的，
+   这意味着如果想修改原有字段的类型时，为了保证兼容性，只能将其修改为与其原有类型兼容的类型，否则就将打破新老消息格式的兼容性。
+5. optional和repeated限定符也是相互兼容的。
+*/
+
+/*
+更新message
+如果一个message 不再满足所有需要，需要对字段进行调整.(举例:对message增加一个额外的字段，但是仍然有支持旧格式message的代码在运行)
+要注意以下几点:
+1、不要修改已经存在字段的数字顺序标示
+2、可以增加optional或者repeated的新字段。这么做以后，所有通过旧格式message序列化的数据都可以通过新代码来生成对应的对象，正如他们不会丢失任何required元素。
+你应该为这些元素添加合理的默认值，以便新代码可以与旧代码生成的消息交互。 新代码创建的消息中旧代码不存在的字段，在解析的时候，旧代码会忽略掉新增的字段。
+无论如何，未知的field不会被丢弃，如果message晚点序列化，为。
+注意 未知field对于Python来说当前不可用。
+3、非required字段都可以转为extension ，反之亦然，只要type和number保持不变。
+4、int32, uint32, int64, uint64, and bool 是全兼容的。这意味着你能改变一个field从这些类型中的一个改变为另一个，而不用考虑会打破向前、向后兼容性。
+如果一个数字是通过网络传输而来的相应类型转换，你将会遇到type在C++中遇到的问题（e.g. if a 64-bit number is read as an int32, it will be truncated to 32 bits）      
+5、sint32 and sint64 彼此兼容,但是不能兼容其它integer类型.
+6、string and bytes 在UTF-8编码下是兼容的. 
+7、如果bytes包含一个message的编码,内嵌message与bytes兼容.
+8、fixed32 兼容 sfixed32,  fixed64 兼容 sfixed64.
+9、optional 兼容 repeated. 用一个repeat字段的编码结果作为输入,认为这个字段是可选择的客户端会这样处理,如果是原始类型的话,获得最后的输入作为相应的option值;如果是message 类型,合并所有输入元素. 
+10、更改默认值通常是OK的.要记得默认值并不会通过网络发送,如果一个程序接受一个特定字段没有设置值的消息,应用将会使用自己的版本协议定义的默认值,不会看见发送者的默认值.   
+*/
