@@ -13,4 +13,4 @@ GIT 获取地址：https://github.com/lop-dev/lop-lib
 
 SVN 获取地址：https://github.com/lop-dev/lop-lib/trunk
 
-注意：原 OKBase 获取地址，因为官方网站异常，不再维护.
+注意：原 OKBase 获取地址，因为官方网站异常，不再维护。
