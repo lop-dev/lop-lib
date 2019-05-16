@@ -1,0 +1,8 @@
+$#include "recorder.h"
+
+class CRecorder
+{
+public:
+    void play();
+    void record(const char *content);
+};

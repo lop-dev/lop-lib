@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioToolFile
+	Name="tolua++"
+	Version="8.00"
+	>
+	<Rules>
+		<CustomBuildRule
+			Name="tolua++"
+			DisplayName="tolua++"
+			CommandLine="$(ProjectDir)..\..\..\..\..\..\EXLib\tolua++\bin\Toluapp.exe [AllOptions] [AdditionalOptions] [Inputs]"
+			Outputs="[$Output]"
+			FileExtensions="*.pkg"
+			ExecutionDescription="Executing tolua++..."
+			>
+			<Properties>
+				<StringProperty
+					Name="Header"
+					DisplayName="Header"
+					Switch="-H [value]"
+					DefaultValue="$(InputDir)$(InputName).tolua.h"
+				/>
+				<StringProperty
+					Name="Output"
+					DisplayName="Output"
+					Switch="-o [value]"
+					DefaultValue="$(InputDir)$(InputName).tolua.cpp"
+				/>
+				<StringProperty
+					Name="InputFile"
+					DisplayName="InputFile"
+					Switch="-n [value]"
+					DefaultValue="$(InputName)"
+				/>
+			</Properties>
+		</CustomBuildRule>
+	</Rules>
+</VisualStudioToolFile>

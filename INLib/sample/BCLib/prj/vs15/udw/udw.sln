@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "udwServer", "udwServer.vcproj", "{AF853342-1649-46FF-9E97-E874815794BF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "udwClient", "udwClient.vcproj", "{D653F622-A007-4B76-BE8B-636163392158}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF853342-1649-46FF-9E97-E874815794BF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AF853342-1649-46FF-9E97-E874815794BF}.Debug|Win32.Build.0 = Debug|Win32
+		{AF853342-1649-46FF-9E97-E874815794BF}.Release|Win32.ActiveCfg = Release|Win32
+		{AF853342-1649-46FF-9E97-E874815794BF}.Release|Win32.Build.0 = Release|Win32
+		{D653F622-A007-4B76-BE8B-636163392158}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D653F622-A007-4B76-BE8B-636163392158}.Debug|Win32.Build.0 = Debug|Win32
+		{D653F622-A007-4B76-BE8B-636163392158}.Release|Win32.ActiveCfg = Release|Win32
+		{D653F622-A007-4B76-BE8B-636163392158}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

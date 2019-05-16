@@ -1,0 +1,2 @@
+DemoPlugin02 CSLib.UltraKit.DemoPlugin.DemoPlugin02 DemoPlugin02.dll
+DemoPlugin01 CSLib.UltraKit.DemoPlugin.DemoPlugin01 DemoPlugin01.dll
