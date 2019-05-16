@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>Recast</ProjectName>
+    <ProjectGuid>{3D3F5371-9BF4-4F5D-976B-37DA86D0B5EA}</ProjectGuid>
+    <RootNamespace>Recast</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>14.0.25431.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>lib/win-x86-32\</OutDir>
+    <IntDir>out/$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>lib/win-x86-32\</OutDir>
+    <IntDir>out/$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>Recast;Detour;DetourCrowd;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)Recast_d.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>Recast;Detour;DetourCrowd;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)Recast.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="DetourCrowd\DetourCrowd.cpp" />
+    <ClCompile Include="DetourCrowd\DetourLocalBoundary.cpp" />
+    <ClCompile Include="DetourCrowd\DetourObstacleAvoidance.cpp" />
+    <ClCompile Include="DetourCrowd\DetourPathCorridor.cpp" />
+    <ClCompile Include="DetourCrowd\DetourPathQueue.cpp" />
+    <ClCompile Include="DetourCrowd\DetourProximityGrid.cpp" />
+    <ClCompile Include="DetourTileCache\DetourTileCache.cpp" />
+    <ClCompile Include="DetourTileCache\DetourTileCacheBuilder.cpp" />
+    <ClCompile Include="Detour\DetourAlloc.cpp" />
+    <ClCompile Include="Detour\DetourAssert.cpp" />
+    <ClCompile Include="Detour\DetourCommon.cpp" />
+    <ClCompile Include="Detour\DetourNavMesh.cpp" />
+    <ClCompile Include="Detour\DetourNavMeshBuilder.cpp" />
+    <ClCompile Include="Detour\DetourNavMeshQuery.cpp" />
+    <ClCompile Include="Detour\DetourNode.cpp" />
+    <ClCompile Include="Recast\ChunkyTriMesh.cpp" />
+    <ClCompile Include="Recast\Recast.cpp" />
+    <ClCompile Include="Recast\RecastAlloc.cpp" />
+    <ClCompile Include="Recast\RecastArea.cpp" />
+    <ClCompile Include="Recast\RecastAssert.cpp" />
+    <ClCompile Include="Recast\RecastContour.cpp" />
+    <ClCompile Include="Recast\RecastFilter.cpp" />
+    <ClCompile Include="Recast\RecastLayers.cpp" />
+    <ClCompile Include="Recast\RecastMesh.cpp" />
+    <ClCompile Include="Recast\RecastMeshDetail.cpp" />
+    <ClCompile Include="Recast\RecastRasterization.cpp" />
+    <ClCompile Include="Recast\RecastRegion.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DetourCrowd\DetourCrowd.h" />
+    <ClInclude Include="DetourCrowd\DetourLocalBoundary.h" />
+    <ClInclude Include="DetourCrowd\DetourObstacleAvoidance.h" />
+    <ClInclude Include="DetourCrowd\DetourPathCorridor.h" />
+    <ClInclude Include="DetourCrowd\DetourPathQueue.h" />
+    <ClInclude Include="DetourCrowd\DetourProximityGrid.h" />
+    <ClInclude Include="DetourTileCache\DetourTileCache.h" />
+    <ClInclude Include="DetourTileCache\DetourTileCacheBuilder.h" />
+    <ClInclude Include="Detour\DetourAlloc.h" />
+    <ClInclude Include="Detour\DetourAssert.h" />
+    <ClInclude Include="Detour\DetourCommon.h" />
+    <ClInclude Include="Detour\DetourMath.h" />
+    <ClInclude Include="Detour\DetourNavMesh.h" />
+    <ClInclude Include="Detour\DetourNavMeshBuilder.h" />
+    <ClInclude Include="Detour\DetourNavMeshQuery.h" />
+    <ClInclude Include="Detour\DetourNode.h" />
+    <ClInclude Include="Detour\DetourStatus.h" />
+    <ClInclude Include="Recast\ChunkyTriMesh.h" />
+    <ClInclude Include="Recast\Recast.h" />
+    <ClInclude Include="Recast\RecastAlloc.h" />
+    <ClInclude Include="Recast\RecastAssert.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
