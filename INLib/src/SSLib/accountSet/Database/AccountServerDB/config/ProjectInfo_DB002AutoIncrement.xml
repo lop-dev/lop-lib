@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+	<changeSet author="aaron" id="ProjectInfo-AI-01">
+		<sql>
+			ALTER TABLE ProjectInfo001 AUTO_INCREMENT=283678294933505;
+			ALTER TABLE ProjectInfo002 AUTO_INCREMENT=283682589900801;
+		</sql>
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+	<changeSet author="aaron" id="ProjectInfo-CT-01">
+		<createTable tableName="ProjectInfo001">
+			<column autoIncrement="true" name="ProjectID" remarks="项目编号" type="BIGINT UNSIGNED">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="ProjectName" remarks="项目名称" type="VARCHAR(64)">
+				<constraints nullable="false"/>
+			</column>
+			<column defaultValueNumeric="0" name="AccountID" remarks="账号编号" type="BIGINT UNSIGNED">
+				<constraints nullable="false"/>
+			</column>
+			<column defaultValueNumeric="0" name="ProjectType" remarks="项目类型；0：默认类型；X：其他账号" type="SMALLINT UNSIGNED">
+				<constraints nullable="false"/>
+			</column>
+			<column defaultValueNumeric="0" name="ProjectState" remarks="项目状态；0：启用；1：禁用；2：删除" type="TINYINT UNSIGNED">
+				<constraints nullable="false"/>
+			</column>
+			<column defaultValue="" name="Members" remarks="成员" type="VARCHAR(4096)">
+				<constraints nullable="false"/>
+			</column>
+			<column defaultValueComputed="CURRENT_TIMESTAMP" name="ModifyTime" remarks="修改时间" type="TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createTable tableName="ProjectInfo002">
+			<column autoIncrement="true" name="ProjectID" remarks="项目编号" type="BIGINT UNSIGNED">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="ProjectName" remarks="项目名称" type="VARCHAR(64)">
+				<constraints nullable="false"/>
+			</column>
+			<column defaultValueNumeric="0" name="AccountID" remarks="账号编号" type="BIGINT UNSIGNED">
+				<constraints nullable="false"/>
+			</column>
+			<column defaultValueNumeric="0" name="ProjectType" remarks="项目类型；0：默认类型；X：其他账号" type="SMALLINT UNSIGNED">
+				<constraints nullable="false"/>
+			</column>
+			<column defaultValueNumeric="0" name="ProjectState" remarks="项目状态；0：启用；1：禁用；2：删除" type="TINYINT UNSIGNED">
+				<constraints nullable="false"/>
+			</column>
+			<column defaultValue="" name="Members" remarks="成员" type="VARCHAR(4096)">
+				<constraints nullable="false"/>
+			</column>
+			<column defaultValueComputed="CURRENT_TIMESTAMP" name="ModifyTime" remarks="修改时间" type="TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+	<changeSet author="aaron" id="RegionCN-CT-01">
+		<createTable tableName="RegionCN">
+			<column name="RegionID" type="INT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RegionName" remarks="账号名称" type="VARCHAR(64)">
+				<constraints nullable="false"/>
+			</column>
+			<column defaultValueNumeric="0" name="RegionState" remarks="账号状态；0：启用；1：禁用；2：删除" type="TINYINT">
+				<constraints nullable="false"/>
+			</column>
+			<column defaultValueComputed="CURRENT_TIMESTAMP" name="ModifyTime" remarks="修改时间" type="TIMESTAMP(19)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="aaron" id="RegionCN-CT-02">
+		<addPrimaryKey columnNames="RegionID" constraintName="PRIMARY" tableName="RegionCN"/>
+	</changeSet>
+	<changeSet author="aaron" id="RegionCN-CT-03">
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1001000000, '北京市');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1002000000, '天津市');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1003000000, '河北省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1004000000, '山西省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1005000000, '内蒙古自治区');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1006000000, '辽宁省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1007000000, '吉林省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1008000000, '黑龙江省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1009000000, '上海市');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1010000000, '江苏省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1011000000, '浙江省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1012000000, '安徽省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1013000000, '福建省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1014000000, '江西省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1015000000, '山东省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1016000000, '河南省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1017000000, '湖北省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1018000000, '湖南省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1019000000, '广东省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1020000000, '广西壮族自治区');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1021000000, '海南省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1022000000, '重庆市');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1023000000, '四川省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1024000000, '贵州省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1025000000, '云南省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1026000000, '西藏自治区');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1027000000, '陕西省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1028000000, '甘肃省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1029000000, '青海省');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1030000000, '宁夏回族自治区');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1031000000, '新疆维吾尔自治区');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1032000000, '香港特别行政区');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1033000000, '澳门特别行政区');
+		</sql>
+		<sql>
+			INSERT INTO `RegionCN` (`RegionID`,`RegionName`) VALUES (1034000000, '台湾省');
+		</sql>
+	</changeSet>
+</databaseChangeLog>
