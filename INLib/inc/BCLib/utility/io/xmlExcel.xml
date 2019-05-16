@@ -1,0 +1,73 @@
+﻿<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40"
+ xmlns:u1="http://www.w3.org/TR/TEC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <LastAuthor>MC SYSTEM</LastAuthor>
+  <LastSaved>2011-11-08T05:19:50Z</LastSaved>
+  <Version>12.00</Version>
+ </DocumentProperties>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>4530</WindowHeight>
+  <WindowWidth>8505</WindowWidth>
+  <WindowTopX>480</WindowTopX>
+  <WindowTopY>120</WindowTopY>
+  <RefModeR1C1/>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Borders/>
+   <Font ss:FontName="宋体" x:CharSet="134" ss:Size="12"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Sheet1">
+  <Table ss:ExpandedColumnCount="4" ss:ExpandedRowCount="3" x:FullColumns="1"
+   x:FullRows="1" ss:DefaultColumnWidth="54" ss:DefaultRowHeight="14.25">
+   <Column ss:AutoFitWidth="0" ss:Width="103.5"/>
+   <Column ss:AutoFitWidth="0" ss:Width="95.25"/>
+   <Column ss:AutoFitWidth="0" ss:Width="68.25"/>
+   <Column ss:AutoFitWidth="0" ss:Width="171"/>
+   <Row ss:AutoFitHeight="0">
+    <Cell><Data ss:Type="String">SceneID</Data></Cell>
+    <Cell><Data ss:Type="String">SceneName</Data></Cell>
+    <Cell><Data ss:Type="String">SceneDir</Data></Cell>
+    <Cell><Data ss:Type="String">SceneFile</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell><Data ss:Type="Number">1</Data></Cell>
+    <Cell><Data ss:Type="String">Name01</Data></Cell>
+    <Cell><Data ss:Type="String">Dir01</Data></Cell>
+    <Cell><Data ss:Type="String">File01</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell><Data ss:Type="Number">2</Data></Cell>
+    <Cell><Data ss:Type="String">Name02</Data></Cell>
+    <Cell><Data ss:Type="String">Dir02</Data></Cell>
+    <Cell><Data ss:Type="String">File02</Data></Cell>
+   </Row>
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <Unsynced/>
+   <Selected/>
+   <Panes>
+    <Pane>
+     <Number>3</Number>
+     <ActiveRow>3</ActiveRow>
+     <RangeSelection>R4:R10</RangeSelection>
+    </Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>
