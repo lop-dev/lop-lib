@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="databaseMgr">
+      <UniqueIdentifier>{c3b0b82f-94f8-4389-bde1-2d070a9689ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="databaseTask">
+      <UniqueIdentifier>{63e1bc7a-49cc-4b09-99a6-948db3f26d5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="databaseTask\task">
+      <UniqueIdentifier>{080b4c33-49b9-4d69-84e8-6d9762c08c6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="message">
+      <UniqueIdentifier>{64b9c891-b1b6-4953-8a6d-d6d9b16b58a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network">
+      <UniqueIdentifier>{9ba59b99-4fbf-46c6-b08f-5f36658291a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="protobuf">
+      <UniqueIdentifier>{625d898d-885d-4216-96b7-e92b69728676}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="protoext">
+      <UniqueIdentifier>{13287ad8-0d0e-4ee5-99d6-c955f819680e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\SSLib\AccountSet\accountServer\databaseMgr\databaseMgr.cpp">
+      <Filter>databaseMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SSLib\accountSet\accountServer\databaseTask\databaseTask.cpp">
+      <Filter>databaseTask</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SSLib\AccountSet\accountServer\databaseTask\databaseTaskMgr.cpp">
+      <Filter>databaseTask</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SSLib\accountSet\accountServer\databaseTask\task\accountAuthTask.cpp">
+      <Filter>databaseTask\task</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SSLib\accountSet\accountServer\databaseTask\task\namePwdTask.cpp">
+      <Filter>databaseTask\task</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SSLib\AccountSet\accountServer\network\netStub.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SSLib\AccountSet\accountServer\network\netStubMgr.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SSLib\accountSet\accountServer\protobuf\accountAuth.pb.cc">
+      <Filter>protobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SSLib\accountSet\accountServer\protobuf\accountVerify.pb.cc">
+      <Filter>protobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SSLib\accountSet\accountServer\protobuf\baseDef.pb.cc">
+      <Filter>protobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SSLib\accountSet\accountServer\protoext\accountAuth.pe.cc">
+      <Filter>protoext</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SSLib\accountSet\accountServer\protoext\accountVerify.pe.cc">
+      <Filter>protoext</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SSLib\AccountSet\accountServer\accountApp.cpp" />
+    <ClCompile Include="..\..\..\src\SSLib\AccountSet\accountServer\accountServer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\SSLib\AccountSet\accountServer\databaseMgr\databaseMgr.h">
+      <Filter>databaseMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SSLib\AccountSet\accountServer\databaseTask\databaseTask.h">
+      <Filter>databaseTask</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SSLib\AccountSet\accountServer\databaseTask\databaseTaskMgr.h">
+      <Filter>databaseTask</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SSLib\accountSet\accountServer\databaseTask\task\accountAuthTask.h">
+      <Filter>databaseTask\task</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SSLib\accountSet\accountServer\databaseTask\task\namePwdTask.h">
+      <Filter>databaseTask\task</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\SSLib\accountSet\accountServer\message\accountServerMsg.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\SSLib\message\message.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\SSLib\message\msgTypeSrv.h">
+      <Filter>message</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SSLib\AccountSet\accountServer\network\netStub.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SSLib\AccountSet\accountServer\network\netStubMgr.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\SSLib\accountSet\accountServer\protobuf\accountAuth.pb.h">
+      <Filter>protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\SSLib\accountSet\accountServer\protobuf\accountVerify.pb.h">
+      <Filter>protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\SSLib\accountSet\accountServer\protobuf\baseDef.pb.h">
+      <Filter>protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\SSLib\accountSet\accountServer\protoext\accountAuth.pe.h">
+      <Filter>protoext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\SSLib\accountSet\accountServer\protoext\accountVerify.pe.h">
+      <Filter>protoext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SSLib\accountSet\accountServer\accountApp.h" />
+    <ClInclude Include="..\..\..\src\SSLib\accountSet\accountServer\accountServer.h" />
+  </ItemGroup>
+</Project>

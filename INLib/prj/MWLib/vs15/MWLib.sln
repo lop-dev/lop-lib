@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kafka", "Kafka.vcxproj", "{1B27F014-2C87-4CB0-9864-4584098CEB6F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "redis", "redis.vcxproj", "{7C1E5A3E-DD1B-4805-A0D4-7A44E87FC3C6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		dll_9md_d|x86 = dll_9md_d|x86
+		dll_9md|x86 = dll_9md|x86
+		lib_9md_d|x86 = lib_9md_d|x86
+		lib_9md|x86 = lib_9md|x86
+		lib_9mt_d|x86 = lib_9mt_d|x86
+		lib_9mt|x86 = lib_9mt|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.dll_9md_d|x86.ActiveCfg = dll_9md_d|Win32
+		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.dll_9md_d|x86.Build.0 = dll_9md_d|Win32
+		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.dll_9md|x86.ActiveCfg = dll_9md|Win32
+		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.dll_9md|x86.Build.0 = dll_9md|Win32
+		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9md_d|x86.ActiveCfg = lib_9md_d|Win32
+		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9md_d|x86.Build.0 = lib_9md_d|Win32
+		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9md|x86.ActiveCfg = lib_9md|Win32
+		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9md|x86.Build.0 = lib_9md|Win32
+		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9mt_d|x86.ActiveCfg = lib_9mt_d|Win32
+		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9mt_d|x86.Build.0 = lib_9mt_d|Win32
+		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9mt|x86.ActiveCfg = lib_9mt|Win32
+		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9mt|x86.Build.0 = lib_9mt|Win32
+		{7C1E5A3E-DD1B-4805-A0D4-7A44E87FC3C6}.dll_9md_d|x86.ActiveCfg = dll_9md_d|Win32
+		{7C1E5A3E-DD1B-4805-A0D4-7A44E87FC3C6}.dll_9md_d|x86.Build.0 = dll_9md_d|Win32
+		{7C1E5A3E-DD1B-4805-A0D4-7A44E87FC3C6}.dll_9md|x86.ActiveCfg = dll_9md|Win32
+		{7C1E5A3E-DD1B-4805-A0D4-7A44E87FC3C6}.dll_9md|x86.Build.0 = dll_9md|Win32
+		{7C1E5A3E-DD1B-4805-A0D4-7A44E87FC3C6}.lib_9md_d|x86.ActiveCfg = lib_9md_d|Win32
+		{7C1E5A3E-DD1B-4805-A0D4-7A44E87FC3C6}.lib_9md_d|x86.Build.0 = lib_9md_d|Win32
+		{7C1E5A3E-DD1B-4805-A0D4-7A44E87FC3C6}.lib_9md|x86.ActiveCfg = lib_9md|Win32
+		{7C1E5A3E-DD1B-4805-A0D4-7A44E87FC3C6}.lib_9md|x86.Build.0 = lib_9md|Win32
+		{7C1E5A3E-DD1B-4805-A0D4-7A44E87FC3C6}.lib_9mt_d|x86.ActiveCfg = lib_9mt_d|Win32
+		{7C1E5A3E-DD1B-4805-A0D4-7A44E87FC3C6}.lib_9mt_d|x86.Build.0 = lib_9mt_d|Win32
+		{7C1E5A3E-DD1B-4805-A0D4-7A44E87FC3C6}.lib_9mt|x86.ActiveCfg = lib_9mt|Win32
+		{7C1E5A3E-DD1B-4805-A0D4-7A44E87FC3C6}.lib_9mt|x86.Build.0 = lib_9mt|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
