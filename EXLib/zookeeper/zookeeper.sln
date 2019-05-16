@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zookeeper", "zookeeper.vcxproj", "{49DF96BF-696F-4E4E-BA0B-9C01F30E0C6A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cli", "cli.vcxproj", "{6A973EB5-8C13-4670-AAFF-D10D6BB8FA97}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{49DF96BF-696F-4E4E-BA0B-9C01F30E0C6A}.Debug|x64.ActiveCfg = Debug|Win32
+		{49DF96BF-696F-4E4E-BA0B-9C01F30E0C6A}.Debug|x64.Build.0 = Debug|Win32
+		{49DF96BF-696F-4E4E-BA0B-9C01F30E0C6A}.Debug|x86.ActiveCfg = Debug|Win32
+		{49DF96BF-696F-4E4E-BA0B-9C01F30E0C6A}.Debug|x86.Build.0 = Debug|Win32
+		{49DF96BF-696F-4E4E-BA0B-9C01F30E0C6A}.Release|x64.ActiveCfg = Release|Win32
+		{49DF96BF-696F-4E4E-BA0B-9C01F30E0C6A}.Release|x86.ActiveCfg = Release|Win32
+		{49DF96BF-696F-4E4E-BA0B-9C01F30E0C6A}.Release|x86.Build.0 = Release|Win32
+		{6A973EB5-8C13-4670-AAFF-D10D6BB8FA97}.Debug|x64.ActiveCfg = Debug|Win32
+		{6A973EB5-8C13-4670-AAFF-D10D6BB8FA97}.Debug|x86.ActiveCfg = Debug|Win32
+		{6A973EB5-8C13-4670-AAFF-D10D6BB8FA97}.Debug|x86.Build.0 = Debug|Win32
+		{6A973EB5-8C13-4670-AAFF-D10D6BB8FA97}.Release|x64.ActiveCfg = Release|Win32
+		{6A973EB5-8C13-4670-AAFF-D10D6BB8FA97}.Release|x86.ActiveCfg = Release|Win32
+		{6A973EB5-8C13-4670-AAFF-D10D6BB8FA97}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
