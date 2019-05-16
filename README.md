@@ -6,7 +6,7 @@
 
 有相关问题或建议，请发邮件至：lop_dev@hotmail.com ；
 
-目前参与的人，都在各个公司工作中，尽量做到一周内反馈。
+目前参与的人，都在各个公司工作中，尽量做到次日反馈。
 
 
 GIT 获取地址：https://github.com/lop-dev/lop-lib
