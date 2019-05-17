@@ -10,7 +10,7 @@
 
 主邮箱：lop_dev@hotmail.com
 
-开发者：yz_person@@163.com、
+开发者：yz_person@163.com、
         maosher@gmail.com、
         jinhong_zheng@163.com、
         wangjin_16@126.com、
