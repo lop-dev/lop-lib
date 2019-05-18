@@ -10,12 +10,12 @@
 
 主邮箱：lop_dev@hotmail.com
 
-开发者：BCLib：178762977@qq.com、jinhong_zheng@163.com；
+开发者：BCLib：jeffqin007@163.com、lvgang1983@gmail.com、jinhong_zheng@163.com；
         CLLib：yz_person@163.com；
         CSLib：evandai2018@163.com；
         GELib：yz_person@163.com；
         MWLib：maosher@gmail.com、wangjin_16@126.com；
-        SFLib：
+        SFLib：caokouyilang@gmail.com；
         SSLib：wangjin_16@126.com；
         UDLib：fanghuaiyi@gmail.com、a1051574139@163.com；
 
