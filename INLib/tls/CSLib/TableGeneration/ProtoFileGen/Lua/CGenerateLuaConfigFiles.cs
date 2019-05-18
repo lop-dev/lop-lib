@@ -5,7 +5,7 @@ using System.IO;
 namespace Proto2Code
 {
 
-    class CLuaConfig
+    class CGenerateLuaConfigFiles
     {
         private string rootpath;
         private string configPath;
@@ -14,7 +14,7 @@ namespace Proto2Code
         private string messagePath;
         
  
-        public CLuaConfig(string path)
+        public CGenerateLuaConfigFiles(string path)
         {
             rootpath = path;
             configPath = rootpath + "ConfigFiles.lua";

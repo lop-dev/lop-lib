@@ -69,7 +69,7 @@
   <ItemGroup>
     <Compile Include="CGeneration.cs" />
     <Compile Include="ProtoFileGen\Lua\CGenerateLuaConfig.cs" />
-    <Compile Include="CLuaConfig.cs" />
+    <Compile Include="ProtoFileGen\Lua\CGenerateLuaConfigFiles.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtoFileGen\CHelper.cs" />
