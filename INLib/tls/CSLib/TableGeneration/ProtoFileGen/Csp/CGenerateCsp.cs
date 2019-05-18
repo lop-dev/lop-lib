@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Proto2Code
 {
-    public static class CGenerateCSharp
+    public static class CGenerateCsp
     {
         public static void Process(string inputDir, string writePathRoot)
         {
@@ -31,7 +30,7 @@ namespace Proto2Code
             CProtoFile cs = new CProtoFile();
             if (cs.LoadFile(filePath, file_name, writePathRoot, false))
             {
-                CGenerateModuleMessageCSharp csMsgModule = new CGenerateModuleMessageCSharp(cs.NameUnit,writePathRoot);
+                CGenerateCspMessage csMsgModule = new CGenerateCspMessage(cs.NameUnit,writePathRoot);
                 csMsgModule.StartWrite(cs.MsgIDList);
                 cs.MsgIDList.Clear();
             }

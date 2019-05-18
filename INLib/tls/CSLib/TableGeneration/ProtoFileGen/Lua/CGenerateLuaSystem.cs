@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Proto2Code
 {
-    public class CGenerateModuleSystem
+    public class CGenerateLuaSystem
     {
         private CNameUnit m_nameUnit;
         private string m_writePath;
@@ -18,7 +17,7 @@ namespace Proto2Code
         /// </summary>
         /// <param name="nameUnit"></param>
         /// <param name="writeRoot"></param>
-        public CGenerateModuleSystem(CNameUnit nameUnit, string writeRoot)
+        public CGenerateLuaSystem(CNameUnit nameUnit, string writeRoot)
         {
             m_nameUnit = nameUnit;
             m_writePath = writeRoot + m_nameUnit.ModuleSystem + ".lua";

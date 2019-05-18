@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
-namespace TableGeneration
+namespace Proto2Code
 {
     public class CGeneration : CSLib.Utility.CSingleton<CGeneration>
     {
@@ -378,7 +375,7 @@ namespace TableGeneration
                 DirectoryInfo dataDirectoryInfo = new DirectoryInfo(m_strDataPath);
                 DirectoryInfo outputDirectoryInfo = new DirectoryInfo(m_strOutputPath);
                 
-                Proto2Code.ProtoFileGen.Generate(new string[] { dataDirectoryInfo.FullName, outputDirectoryInfo.FullName , m_strLanguage });
+                CProtoFileGen.Generate(new string[] { dataDirectoryInfo.FullName, outputDirectoryInfo.FullName , m_strLanguage });
 
 
                 //FileInfo FileInfo = new FileInfo(Environment.CurrentDirectory + "/../04_ProtoFileGen/ProtoFileGen.exe");
@@ -406,7 +403,7 @@ namespace TableGeneration
         {
             if ((m_strDataPath != "") && (m_strOutputPath != ""))
             {
-                GenLuaConfig glc = new GenLuaConfig();
+                CGenerateLuaConfig glc = new CGenerateLuaConfig();
                 glc.Start(m_strDataPath, m_strOutputPath);
             }
             return 0;

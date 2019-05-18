@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Proto2Code
 {
-    public class CGenerateModuleService
+    public class CGenerateLuaService
     {
         private CNameUnit m_nameUnit;
         private string m_writePath;
@@ -19,7 +17,7 @@ namespace Proto2Code
         /// <summary>
         /// 输出模块系统消息处理文件. eg:MailServiceBase.lua
         /// </summary>
-        public CGenerateModuleService(CNameUnit nameUnit, string writeRoot)
+        public CGenerateLuaService(CNameUnit nameUnit, string writeRoot)
         {
             m_nameUnit = nameUnit;
             m_serviceBaseName = m_nameUnit.ModuleService;

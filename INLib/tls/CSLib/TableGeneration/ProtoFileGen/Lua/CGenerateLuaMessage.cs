@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Proto2Code
 {
     /// <summary>
     /// 输出模块系统消息定义文件. eg:MailSystemMessage.lua
     /// </summary>
-    public class CGenerateModuleMessage
+    public class CGenerateLuaMessage
     {
         private CNameUnit m_nameUnit;
         private string m_writePath;
 
         private FileStream m_file;
         private StreamWriter m_write;
-        public CGenerateModuleMessage(CNameUnit nameUnit, string writeRoot)
+        public CGenerateLuaMessage(CNameUnit nameUnit, string writeRoot)
         {
             m_nameUnit = nameUnit;
             m_writePath = writeRoot + m_nameUnit.MoudleSysMsg + ".lua";

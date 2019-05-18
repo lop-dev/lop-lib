@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 
-namespace TableGeneration
+namespace Proto2Code
 {
 
-    
-    class LuaConfig
+    class CLuaConfig
     {
         private string rootpath;
         private string configPath;
@@ -18,7 +14,7 @@ namespace TableGeneration
         private string messagePath;
         
  
-        public LuaConfig(string path)
+        public CLuaConfig(string path)
         {
             rootpath = path;
             configPath = rootpath + "ConfigFiles.lua";
@@ -37,7 +33,6 @@ namespace TableGeneration
 
             List<string> configLines = GetFileText(configPath);
             List<string> replaceLines = RaplaceFile(configLines, fileList);
-            //string backupPath = rootpath + "test.lua";
             SaveConfigFile(replaceLines, configPath);
         }
 
@@ -172,7 +167,6 @@ namespace TableGeneration
                                + "--------------------------------------------------------------------------------\n");
             foreach (var line in lines)
             {
-                //Console.WriteLine(line);
                 streamWriter.WriteLine(line);
             }
             streamWriter.Flush();

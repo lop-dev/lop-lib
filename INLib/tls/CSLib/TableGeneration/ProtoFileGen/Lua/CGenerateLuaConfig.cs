@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
-namespace TableGeneration
+namespace Proto2Code
 {
-    class GenLuaConfig
+    class CGenerateLuaConfig
     {
         //ConfigFiles.lua 生成模板
         public static string FILE_TEMPLATE = @"--- auto generated file,do not edit
@@ -49,7 +47,7 @@ return {0}Config
         public static string desPath = "";      //拷贝目标目录
         public void Start(string dataPath,string outputPath)
         {
-            GenLuaConfig p = new GenLuaConfig();
+            CGenerateLuaConfig p = new CGenerateLuaConfig();
             pathInput = Path.Combine(Environment.CurrentDirectory ,dataPath);
             desPath = Path.Combine(Environment.CurrentDirectory , outputPath);
 //             pathInput = curDir + "\\..\\..\\DesTable\\DescTable";
@@ -69,7 +67,7 @@ return {0}Config
             //先删除当前目录下lua文件
             removeSpecifiedFiles(tOutPath, ".lua");
             string[] fileNamesPro = filterFiles(pathInput).ToArray();
-            string tContent = "", tStrImport = "", tStrDefine = "", tFileName = "";
+            string tContent = "", tStrDefine = "", tFileName = "";
             foreach (string fnp in fileNamesPro)
             {
                 tFileName = fnp + "Table";

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace Proto2Code
 {
-    public class CGenerateModuleMessageCSharp
+    public class CGenerateCspMessage
     {
         private CNameUnit m_nameUnit;
         private string m_writePath;
@@ -13,7 +12,7 @@ namespace Proto2Code
         private FileStream m_file;
         private StreamWriter m_write;
 
-        public CGenerateModuleMessageCSharp(CNameUnit nameUnit, string writeRoot)
+        public CGenerateCspMessage(CNameUnit nameUnit, string writeRoot)
         {
             m_nameUnit = nameUnit;
             m_writePath = writeRoot + char.ToUpper(m_nameUnit.MoudleSysName[0])+m_nameUnit.MoudleSysName.Substring(1) + "Msg.cs";

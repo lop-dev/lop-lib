@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Proto2Code
 {
@@ -28,7 +27,7 @@ namespace Proto2Code
             
             if (load.LoadFile(filePath, file_name, writePathRoot))
             {
-                CGenerateModuleMessageCpp cpp = new CGenerateModuleMessageCpp(load.NameUnit, writePathRoot);
+                CGenerateModuleMessageCC cpp = new CGenerateModuleMessageCC(load.NameUnit, writePathRoot);
                 CGenerateModuleMessageH h = new CGenerateModuleMessageH(load.NameUnit, writePathRoot);
 
                 cpp.StartWrite(load.MsgIDList);

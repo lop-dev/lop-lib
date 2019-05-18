@@ -33,7 +33,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -43,7 +43,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\bin\CSLib\win-x86-32\TableGeneration\</OutputPath>
+    <OutputPath>..\..\..\bin\CSLib\win-x86-32\TableGeneration\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -54,13 +54,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="cspGeneration">
-      <HintPath>..\..\..\..\lib\CSLib\win-x86-32\release\cspGeneration.dll</HintPath>
+      <HintPath>..\..\..\lib\CSLib\win-x86-32\release\cspGeneration.dll</HintPath>
     </Reference>
     <Reference Include="cspSecurity">
-      <HintPath>..\..\..\..\lib\CSLib\win-x86-32\release\cspSecurity.dll</HintPath>
+      <HintPath>..\..\..\lib\CSLib\win-x86-32\release\cspSecurity.dll</HintPath>
     </Reference>
     <Reference Include="cspUtility">
-      <HintPath>..\..\..\..\lib\CSLib\win-x86-32\release\cspUtility.dll</HintPath>
+      <HintPath>..\..\..\lib\CSLib\win-x86-32\release\cspUtility.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -68,26 +68,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CGeneration.cs" />
-    <Compile Include="GenLuaConfig\GenLuaConfig.cs" />
-    <Compile Include="LuaConfig.cs" />
+    <Compile Include="ProtoFileGen\Lua\CGenerateLuaConfig.cs" />
+    <Compile Include="CLuaConfig.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtoFileGen\CHelper.cs" />
     <Compile Include="ProtoFileGen\CNameUnit.cs" />
-    <Compile Include="ProtoFileGen\Cpp\CGenerateCpp.cs" />
-    <Compile Include="ProtoFileGen\Cpp\CGenerateModuleMessageCpp.cs" />
-    <Compile Include="ProtoFileGen\Cpp\CGenerateModuleMessageH.cs" />
+    <Compile Include="ProtoFileGen\C++\CGenerateCpp.cs" />
+    <Compile Include="ProtoFileGen\C++\CGenerateModuleMessageCC.cs" />
+    <Compile Include="ProtoFileGen\C++\CGenerateModuleMessageH.cs" />
     <Compile Include="ProtoFileGen\CProtoFile.cs" />
-    <Compile Include="ProtoFileGen\CSharp\CGenerateCSharp.cs" />
-    <Compile Include="ProtoFileGen\CSharp\CGenerateModuleMessageCSharp.cs" />
+    <Compile Include="ProtoFileGen\Csp\CGenerateCsp.cs" />
+    <Compile Include="ProtoFileGen\Csp\CGenerateCspMessage.cs" />
     <Compile Include="ProtoFileGen\Lua\CGenerateLua.cs" />
-    <Compile Include="ProtoFileGen\Lua\CGenerateModuleMessage.cs" />
-    <Compile Include="ProtoFileGen\Lua\CGenerateModuleService.cs" />
-    <Compile Include="ProtoFileGen\Lua\CGenerateModuleSystem.cs" />
-    <Compile Include="ProtoFileGen\ProtoFileGen.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
+    <Compile Include="ProtoFileGen\Lua\CGenerateLuaMessage.cs" />
+    <Compile Include="ProtoFileGen\Lua\CGenerateLuaService.cs" />
+    <Compile Include="ProtoFileGen\Lua\CGenerateLuaSystem.cs" />
+    <Compile Include="ProtoFileGen\CProtoFileGen.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -101,6 +98,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Proto2Code
 {
-    internal class ProtoFileGen
+    internal class CProtoFileGen
     {
         public static void Generate(string[] args)
         {
@@ -42,7 +42,7 @@ namespace Proto2Code
                 }
                 else if(createType == "cs" )
                 {
-                    CGenerateCSharp.Process(inputDir, writePathRoot);
+                    CGenerateCsp.Process(inputDir, writePathRoot);
                 }
                 else
                 {

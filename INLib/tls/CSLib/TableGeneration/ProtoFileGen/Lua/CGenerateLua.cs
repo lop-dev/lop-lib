@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Proto2Code
 {
@@ -34,15 +33,15 @@ namespace Proto2Code
             {
                 string msgDefinePath = writePathRoot + "Message/";
                 Directory.CreateDirectory(msgDefinePath);
-                CGenerateModuleMessage msgDefinesWriter = new CGenerateModuleMessage(c.NameUnit, msgDefinePath);
+                CGenerateLuaMessage msgDefinesWriter = new CGenerateLuaMessage(c.NameUnit, msgDefinePath);
                 msgDefinesWriter.StartWrite(c.MsgIDList);
 
                 msgDefinePath = writePathRoot + "Services/";
                 Directory.CreateDirectory(msgDefinePath);
-                CGenerateModuleService serviceBaseWriter = new CGenerateModuleService(c.NameUnit, msgDefinePath);
+                CGenerateLuaService serviceBaseWriter = new CGenerateLuaService(c.NameUnit, msgDefinePath);
                 serviceBaseWriter.StartWrite(c.MsgIDList);
 
-                CGenerateModuleSystem seriviceWirter = new CGenerateModuleSystem(c.NameUnit, writePathRoot);
+                CGenerateLuaSystem seriviceWirter = new CGenerateLuaSystem(c.NameUnit, writePathRoot);
                 seriviceWirter.StartWrite(c.MsgIDList);
 
 

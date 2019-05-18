@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using CSLib.Utility;
 
 namespace Proto2Code
 {
-    public class CGenerateModuleMessageCpp
+    public class CGenerateModuleMessageCC
     {
         private CNameUnit m_nameUnit;
         private string m_writePath_cpp;
@@ -16,7 +14,7 @@ namespace Proto2Code
         private FileStream m_file;
         private StreamWriter m_sbServiceStr;
 
-        public CGenerateModuleMessageCpp(CNameUnit nameUnit, string writeRoot)
+        public CGenerateModuleMessageCC(CNameUnit nameUnit, string writeRoot)
         {
             m_nameUnit = nameUnit;
             m_writePath_cpp = writeRoot + m_nameUnit.MoudleSysName + "Msg" + ".cc";

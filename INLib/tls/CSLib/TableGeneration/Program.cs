@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-namespace TableGeneration
+namespace Proto2Code
 {
     public enum EFileType
     {
@@ -195,11 +195,9 @@ namespace TableGeneration
             }
             #endregion
 
-
             //自动生成lua.pb和config文件的require()到configFiles文件
             string path = new DirectoryInfo("../../").FullName + "\\TableOut\\Lua\\Generate\\";
-            //string testPath = new DirectoryInfo("../../../../../../../").FullName + "";
-            LuaConfig luaConfig = new LuaConfig(path);
+            CLuaConfig luaConfig = new CLuaConfig(path);
             luaConfig.TransConfig();
             
             Console.WriteLine("按任意键继续...");
