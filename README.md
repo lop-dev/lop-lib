@@ -10,12 +10,14 @@
 
 主邮箱：lop_dev@hotmail.com
 
-开发者：yz_person@163.com、
-        maosher@gmail.com、
-        jinhong_zheng@163.com、
-        wangjin_16@126.com、
-        fanghuaiyi@gmail.com、
-        a1051574139@163.com
+开发者：BCLib：178762977@qq.com、jinhong_zheng@163.com；
+        CLLib：yz_person@163.com；
+        CSLib：evandai2018@163.com；
+        GELib：yz_person@163.com；
+        MWLib：maosher@gmail.com、wangjin_16@126.com；
+        SFLib：
+        SSLib：wangjin_16@126.com；
+        UDLib：fanghuaiyi@gmail.com、a1051574139@163.com；
 
 
 GIT 获取地址：https://github.com/lop-dev/lop-lib.git
