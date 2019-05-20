@@ -18,30 +18,28 @@ namespace BCLib
 
 namespace CLLib
 {
-namespace Utility
-{
+    namespace BCLib_Utility
+    {
+        public ref class CZipFile
+        {
+        public:
+            CZipFile(void);
+            ~CZipFile();
 
-public ref class CZipFile
-{
-public:
-    CZipFile(void);
-    ~CZipFile();
+            void Create(System::String^ filename, System::String^ password);
+            void Open(System::String^ filename, System::String^ password);
 
-    void Create(System::String^ filename, System::String^ password);
-    void Open(System::String^ filename, System::String^ password);
+            void AddFolder(System::String^ dirname);
+            void AddFile(System::String^ filename, System::String^ savename);
+            void AddFile(System::String^ filename);
 
-    void AddFolder(System::String^ dirname);
-    void AddFile(System::String^ filename, System::String^ savename);
-    void AddFile(System::String^ filename);
-
-    void UnzipTo(System::String^ dirname);
-    void UnzipFile(System::String^ srcFile, System::String^ dstFile);
-    void Close();
-private:
-    BCLib::Utility::CZipFile* m_zipFile;
-};
-
-}//Utility
+            void UnzipTo(System::String^ dirname);
+            void UnzipFile(System::String^ srcFile, System::String^ dstFile);
+            void Close();
+        private:
+            BCLib::Utility::CZipFile* m_zipFile;
+        };
+    }//BCLib_Utility
 }//CLLib
 
 #endif

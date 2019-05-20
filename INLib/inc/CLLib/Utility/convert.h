@@ -5,7 +5,9 @@
 ///   @brief 
 ///
 //////////////////////////////////////////////////////////////////////////
-#pragma once
+#ifndef __CLLIB_UTILITY_CONVERT_H__
+#define __CLLIB_UTILITY_CONVERT_H__
+
 #include <msclr/marshal.h>          // .NET string to C-style string
 #include <msclr/marshal_cppstd.h>   // .NET string to STL string
 #include <string>
@@ -46,5 +48,7 @@ namespace CLLib
                 return netString;
             }
         };
-    }
-}
+    }//Utility
+}//CLLib
+
+#endif//__CLLIB_UTILITY_CONVERT_H__

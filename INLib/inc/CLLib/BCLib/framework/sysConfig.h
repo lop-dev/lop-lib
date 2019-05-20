@@ -14,41 +14,39 @@
 
 namespace CLLib
 {
-namespace Framework
-{
-
-class CNativeSysConfig : public BCLib::Utility::CIniFile
-{
-public:
-    BCLIB_SINGLETON_DECLARE(CNativeSysConfig);
-
-    CNativeSysConfig();
-
-    virtual ~CNativeSysConfig();
-
-protected:
-
-};
-
-public ref class CSysConfig : CLLib::Utility::CIniFile
-{
-public:
-    static CSysConfig^ singleton()
+    namespace BCLib_Framework
     {
-        return m_Instance;
-    }
+        class CNativeSysConfig : public BCLib::Utility::CIniFile
+        {
+        public:
+            BCLIB_SINGLETON_DECLARE(CNativeSysConfig);
 
-    CSysConfig();
-    virtual ~CSysConfig();
+            CNativeSysConfig();
 
-    virtual void Init() override;
+            virtual ~CNativeSysConfig();
 
-private:
-    static CSysConfig^ m_Instance = gcnew CSysConfig();
-};
+        protected:
 
-}//Framework
+        };
 
+        public ref class CSysConfig : CLLib::BCLib_Utility::CIniFile
+        {
+        public:
+            static CSysConfig^ singleton()
+            {
+                return m_Instance;
+            }
+
+            CSysConfig();
+            virtual ~CSysConfig();
+
+            virtual void Init() override;
+
+        private:
+            static CSysConfig^ m_Instance = gcnew CSysConfig();
+        };
+
+    }//BCLib_Framework
 }//CLLib
 
 #endif//__CLLIB_FRAMEWORK_SYSCONFIG_H__

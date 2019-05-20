@@ -18,40 +18,38 @@ namespace BCLib
 
 namespace CLLib
 {
-namespace Utility
-{
+    namespace BCLib_Utility
+    {
+        public ref class CIniFile
+        {
+        public:
+            CIniFile();
+            virtual ~CIniFile();
 
-public ref class CIniFile
-{
-public:
-    CIniFile();
-    virtual ~CIniFile();
+            virtual void Init();
 
-    virtual void Init();
+            bool Open(System::String^ strFile);
 
-    bool Open(System::String^ strFile);
+            System::String^ GetValue(System::String^ key);
+            void SetValue(System::String^ key, System::String^ value);
 
-    System::String^ GetValue(System::String^ key);
-    void SetValue(System::String^ key, System::String^ value);
-    
-    void Remove(System::String^ key);
-    bool Find(System::String^ key);
-    void Clear();
-    System::UInt32 Size();
+            void Remove(System::String^ key);
+            bool Find(System::String^ key);
+            void Clear();
+            System::UInt32 Size();
 
-    int GetValueInt(System::String^ key);
-    int GetValueInt(System::String^ appName, System::String^ paramName);
-    System::String^ GetValueStr(System::String^ key);
-    System::String^ GetValueStr(System::String^ appName, System::String^ paramName);
+            int GetValueInt(System::String^ key);
+            int GetValueInt(System::String^ appName, System::String^ paramName);
+            System::String^ GetValueStr(System::String^ key);
+            System::String^ GetValueStr(System::String^ appName, System::String^ paramName);
 
-    void ShowAllData();
+            void ShowAllData();
 
-protected:
-    BCLib::Utility::CIniFile* m_iniFile;
-};
+        protected:
+            BCLib::Utility::CIniFile* m_iniFile;
+        };
 
-}//Utility
-
+    }//BCLib_Utility
 }//CLLib
 
 #endif//__CLLIB_UTILITY_INIFILE_H__

@@ -5,7 +5,9 @@
 ///   @brief 
 ///
 //////////////////////////////////////////////////////////////////////////
-#pragma once
+#ifndef __CLLIB_UTILITY_MANAGERBUFFERHELPER_H__
+#define __CLLIB_UTILITY_MANAGERBUFFERHELPER_H__
+
 #include <msclr/lock.h>
 using namespace System::Collections;
 using namespace System::Collections::Generic;
@@ -33,19 +35,19 @@ namespace CLLib
                 }
             }
 
-            array<System::Byte>^ GetByteArray() 
-            { 
-                return m_byteArray; 
+            array<System::Byte>^ GetByteArray()
+            {
+                return m_byteArray;
             }
 
-            unsigned int GetSize() 
-            { 
-                return m_size; 
+            unsigned int GetSize()
+            {
+                return m_size;
             }
 
             void Reset()
             {
-                if (m_byteArray!=nullptr)
+                if (m_byteArray != nullptr)
                 {
                     m_byteArray->Initialize();
                 }
@@ -66,28 +68,28 @@ namespace CLLib
                 return %m_Instance;
             }
 
-            CManagerBufferHelper():m_beginningPoolSize(0),m_maxByteArraySize(0)
+            CManagerBufferHelper() :m_beginningPoolSize(0), m_maxByteArraySize(0)
             {
                 m_MemoryPoolEvent = gcnew AutoResetEvent(true);
                 m_byteArrayList = gcnew System::Collections::Generic::LinkedList<CByteArray^>();
             }
 
-            void Init(int maxConcurrentThreads,unsigned int maxSize)
+            void Init(int maxConcurrentThreads, unsigned int maxSize)
             {
-                if (m_maxByteArraySize!=0)
+                if (m_maxByteArraySize != 0)
                 {
                     return;
                 }
                 m_beginningPoolSize = 0;
                 m_maxByteArraySize = maxSize;
 
-                if (maxConcurrentThreads<1)
+                if (maxConcurrentThreads < 1)
                 {
                     throw gcnew System::Exception("maxConcurrentThreads is less than 1");
                 }
                 try
                 {
-                    for (int i=0;i<maxConcurrentThreads;++i)
+                    for (int i = 0; i < maxConcurrentThreads; ++i)
                     {
                         m_byteArrayList->AddFirst(gcnew CByteArray(maxSize));
                     }
@@ -110,26 +112,26 @@ namespace CLLib
                 m_MemoryPoolEvent->WaitOne();
                 if (m_byteArrayList->Count > 0)
                 {
-                    if (memorySize<=m_maxByteArraySize)
+                    if (memorySize <= m_maxByteArraySize)
                     {
                         byteArray = m_byteArrayList->First->Value;
                         m_byteArrayList->RemoveFirst();
                     }
                     else
                     {
-                        byteArray =  m_byteArrayList->Last->Value;
-                        if (byteArray->GetSize()>memorySize)
+                        byteArray = m_byteArrayList->Last->Value;
+                        if (byteArray->GetSize() > memorySize)
                         {
                             System::Collections::Generic::LinkedListNode<CByteArray^>^ currentNode = m_byteArrayList->Last;
-                            System::Collections::Generic::LinkedListNode<CByteArray^>^ preNode =  currentNode->Previous;                        
-                            CByteArray^ preByteArray = preNode==nullptr?nullptr:preNode->Value;
+                            System::Collections::Generic::LinkedListNode<CByteArray^>^ preNode = currentNode->Previous;
+                            CByteArray^ preByteArray = preNode == nullptr ? nullptr : preNode->Value;
 
-                            while (preByteArray!=nullptr && preByteArray->GetSize()>memorySize)
+                            while (preByteArray != nullptr && preByteArray->GetSize() > memorySize)
                             {
                                 byteArray = preByteArray;
                                 currentNode = preNode;
                                 preNode = preNode->Previous;
-                                preByteArray = preNode==nullptr?nullptr:preNode->Value;
+                                preByteArray = preNode == nullptr ? nullptr : preNode->Value;
                             }
                             m_byteArrayList->Remove(currentNode);
                         }
@@ -137,7 +139,7 @@ namespace CLLib
                         {
                             byteArray = gcnew CByteArray(memorySize);
                         }
-                    }                    
+                    }
                 }
                 else
                     byteArray = gcnew CByteArray(memorySize);
@@ -148,7 +150,7 @@ namespace CLLib
             void FreeMemory(CByteArray^ byteArray)
             {
                 m_MemoryPoolEvent->WaitOne();
-                if (byteArray->GetSize()==m_maxByteArraySize||m_byteArrayList->Count==0)
+                if (byteArray->GetSize() == m_maxByteArraySize || m_byteArrayList->Count == 0)
                 {
                     m_byteArrayList->AddFirst(byteArray);
                 }
@@ -156,16 +158,16 @@ namespace CLLib
                 {
                     System::Collections::Generic::LinkedListNode<CByteArray^>^ currentNode = m_byteArrayList->Last;
                     CByteArray^ currentByteArray = currentNode->Value;
-                    while (currentByteArray!=nullptr&&currentByteArray->GetSize()>byteArray->GetSize())
+                    while (currentByteArray != nullptr&&currentByteArray->GetSize() > byteArray->GetSize())
                     {
-                        if(currentNode->Previous!=nullptr)
+                        if (currentNode->Previous != nullptr)
                         {
                             currentNode = currentNode->Previous;
-                            currentByteArray = currentNode==nullptr?nullptr:currentNode->Value;
+                            currentByteArray = currentNode == nullptr ? nullptr : currentNode->Value;
                         }
 
                     }
-                    m_byteArrayList->AddAfter(currentNode,byteArray);
+                    m_byteArrayList->AddAfter(currentNode, byteArray);
                 }
                 m_MemoryPoolEvent->Set();
             }
@@ -173,14 +175,14 @@ namespace CLLib
             CByteArray^ ConvertNavtiveByteArray(const char* msgBuff, unsigned int buffSize, array<System::Byte>^& managedBuffer)
             {
                 CByteArray^ byteArray = GetMemory(buffSize);
-                if (byteArray!=nullptr)
+                if (byteArray != nullptr)
                 {
                     managedBuffer = byteArray->GetByteArray();
-                    for (System::UInt32 i = 0; i< buffSize ; ++i)
+                    for (System::UInt32 i = 0; i < buffSize; ++i)
                     {
                         managedBuffer[i] = msgBuff[i];
                     }
-                }            
+                }
                 return byteArray;
             }
 
@@ -191,5 +193,7 @@ namespace CLLib
             unsigned int m_maxByteArraySize;
             AutoResetEvent^ m_MemoryPoolEvent;
         };
-    }
-}
+    }//Utility
+}//CLLib
+
+#endif//__CLLIB_UTILITY_MANAGERBUFFERHELPER_H__

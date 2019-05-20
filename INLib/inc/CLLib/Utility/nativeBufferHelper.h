@@ -5,7 +5,9 @@
 ///   @brief 
 ///
 //////////////////////////////////////////////////////////////////////////
-#pragma once
+#ifndef __CLLIB_UTILITY_NATIVEBUFFERHELPER_H__
+#define __CLLIB_UTILITY_NATIVEBUFFERHELPER_H__
+
 #include <CLLib/Utility/memoryPool.h>
 using namespace System::Threading;
 
@@ -21,7 +23,7 @@ namespace CLLib
                 return %m_Instance;
             }
 
-            CNativeBufferHelper():m_NativeMemoryPool(NULL),m_RefCount(0)
+            CNativeBufferHelper() :m_NativeMemoryPool(NULL), m_RefCount(0)
             {
                 m_MemoryPoolEvent = gcnew AutoResetEvent(true);
             }
@@ -29,36 +31,36 @@ namespace CLLib
             void Init()
             {
                 m_RefCount++;
-                if (m_NativeMemoryPool==NULL)
+                if (m_NativeMemoryPool == NULL)
                 {
                     m_NativeMemoryPool = new CMemoryPool(65536);
-                }                
+                }
             }
 
             void Release()
             {
                 m_RefCount--;
-                if (m_RefCount==0&&m_NativeMemoryPool!=NULL)
+                if (m_RefCount == 0 && m_NativeMemoryPool != NULL)
                 {
-                    delete m_NativeMemoryPool; 
+                    delete m_NativeMemoryPool;
                     m_NativeMemoryPool = NULL;
                 }
             }
 
             void* GetMemory(unsigned int memorySize)
             {
-                if (m_NativeMemoryPool!=NULL)
+                if (m_NativeMemoryPool != NULL)
                 {
                     return m_NativeMemoryPool->getMemory(memorySize);
                 }
                 return NULL;
             }
 
-            void FreeMemory(void* ptrMem,unsigned int memorySize)
+            void FreeMemory(void* ptrMem, unsigned int memorySize)
             {
-                if (m_NativeMemoryPool!=NULL)
+                if (m_NativeMemoryPool != NULL)
                 {
-                    m_NativeMemoryPool->freeMemory(ptrMem,memorySize);
+                    m_NativeMemoryPool->freeMemory(ptrMem, memorySize);
                 }
             }
 
@@ -67,9 +69,9 @@ namespace CLLib
                 m_MemoryPoolEvent->WaitOne();
                 char* nativeBuffer = (char*)GetMemory(buffSize);
                 m_MemoryPoolEvent->Set();
-                if (nativeBuffer!=NULL)
+                if (nativeBuffer != NULL)
                 {
-                    for (System::UInt32 i=0;i< buffSize ;++i)
+                    for (System::UInt32 i = 0; i < buffSize; ++i)
                     {
                         nativeBuffer[i] = msgBuff[i];
                     }
@@ -77,9 +79,9 @@ namespace CLLib
                 return nativeBuffer;
             }
 
-            void ReleaseNativeByteArray(void* nativeBuffer,System::UInt32 buffSize)
+            void ReleaseNativeByteArray(void* nativeBuffer, System::UInt32 buffSize)
             {
-                FreeMemory(nativeBuffer,buffSize);
+                FreeMemory(nativeBuffer, buffSize);
             }
 
         private:
@@ -88,5 +90,7 @@ namespace CLLib
             int m_RefCount;
             AutoResetEvent^ m_MemoryPoolEvent;
         };
-    }
-}
+    }//Utility
+}//CLLib
+
+#endif//__CLLIB_UTILITY_NATIVEBUFFERHELPER_H__

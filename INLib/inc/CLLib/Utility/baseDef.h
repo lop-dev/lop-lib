@@ -17,6 +17,3 @@
 #endif // CLLIB_SAFE_DELETE_ARRAY  
 
 #endif //__CLLIB_UTILITY_BASEDEF_H__
-
-
-
