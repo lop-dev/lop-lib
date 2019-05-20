@@ -43,7 +43,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\CSLib\win-x86-32\TableGeneration\</OutputPath>
+    <OutputPath>..\..\..\bin\TSLib\win-x86-32\TableGeneration\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -54,7 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="cspGeneration">
-      <HintPath>..\..\..\lib\CSLib\win-x86-32\release\cspGeneration.dll</HintPath>
+      <HintPath>..\..\..\lib\TSLib\win-x86-32\release\cspGeneration.dll</HintPath>
     </Reference>
     <Reference Include="cspSecurity">
       <HintPath>..\..\..\lib\CSLib\win-x86-32\release\cspSecurity.dll</HintPath>
