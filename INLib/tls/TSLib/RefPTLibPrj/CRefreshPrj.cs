@@ -24,7 +24,6 @@ namespace RefreshPTPrj
 
         public void Start()
         {
-            Console.ReadKey();
             incFiles.AddRange(Directory.GetFiles(incFilesRoot, "*.h",SearchOption.AllDirectories));
             srcFiles.AddRange(Directory.GetFiles(srcFilesRoot, "*.cc", SearchOption.AllDirectories));
             protoFiles.AddRange(Directory.GetFiles(protoFilesRoot, "*.proto", SearchOption.AllDirectories));
