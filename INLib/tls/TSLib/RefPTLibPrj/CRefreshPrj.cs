@@ -51,7 +51,7 @@ namespace RefreshPTPrj
             int itemGroupIndex = 1;
             for(int i =0; i < vcxprojContent.Count; i++)
             {
-                if(vcxprojContent[i] == "<ItemGroup>")
+                if(vcxprojContent[i] == "  <ItemGroup>")
                 {
                     sw.WriteLine(vcxprojContent[i]);
                     if(itemGroupIndex == 1)
@@ -60,7 +60,7 @@ namespace RefreshPTPrj
                         {
                             string file = f.Replace('/','\\');
                             int subIndex = file.LastIndexOf("\\inc\\");
-                            string line = "ClInclude Include=\"..\\..\\.." + file.Substring(subIndex) + "\"/>";
+                            string line = "    <ClInclude Include=\"..\\..\\.." + file.Substring(subIndex) + "\" />";
                             sw.WriteLine(line);
                         }
                     }
@@ -70,7 +70,7 @@ namespace RefreshPTPrj
                         {
                             string file = f.Replace('/', '\\');
                             int subIndex = file.LastIndexOf("\\inc\\");
-                            string line = "None Include=\"..\\..\\.." + file.Substring(subIndex) + "\"/>";
+                            string line = "    <None Include=\"..\\..\\.." + file.Substring(subIndex) + "\" />";
                             sw.WriteLine(line);
                         }
                     }
@@ -80,14 +80,14 @@ namespace RefreshPTPrj
                         {
                             string file = f.Replace('/', '\\');
                             int subIndex = file.LastIndexOf("\\src\\");
-                            string line = "ClCompile Include=\"..\\..\\.." + file.Substring(subIndex) + "\"/>";
+                            string line = "    <ClCompile Include=\"..\\..\\.." + file.Substring(subIndex) + "\" />";
                             sw.WriteLine(line);
                         }
                     }
                     itemGroupIndex++;
                     write = false;
                 }
-                else if(vcxprojContent[i] == "</ItemGroup>")
+                else if(vcxprojContent[i] == "  </ItemGroup>")
                 {
                     sw.WriteLine(vcxprojContent[i]);
                     write = true;
@@ -111,7 +111,7 @@ namespace RefreshPTPrj
             int itemGroupIndex = 0;
             for (int i = 0; i < vcxprojFilterContent.Count; i++)
             {
-                if (vcxprojFilterContent[i] == "<ItemGroup>")
+                if (vcxprojFilterContent[i] == "  <ItemGroup>")
                 {
                     sw.WriteLine(vcxprojFilterContent[i]);
                     if(itemGroupIndex == 0)
@@ -121,58 +121,61 @@ namespace RefreshPTPrj
                     }
                     else if (itemGroupIndex == 1)
                     {
-                        foreach (var file in incFiles)
+                        foreach (var f in incFiles)
                         {
+                            string file = f.Replace('/', '\\');
                             int subIndex = file.LastIndexOf("\\inc\\");
-                            string line = "ClInclude Include=\"..\\..\\.." + file.Substring(subIndex) + "\">";
+                            string line = "    <ClInclude Include=\"..\\..\\.." + file.Substring(subIndex) + "\">";
                             sw.WriteLine(line);
                             if(file.EndsWith(".pb.h"))
                             {
-                                line = "<Filter>inc\\protobuf</Filter>";
+                                line = "      <Filter>inc\\protobuf</Filter>";
                             }
                             else
                             {
-                                line = "<Filter>inc\\protoext</Filter>";
+                                line = "      <Filter>inc\\protoext</Filter>";
                             }
                             sw.WriteLine(line);
-                            sw.WriteLine("</ClInclude>");
+                            sw.WriteLine("    </ClInclude>");
                         }
                     }
                     else if (itemGroupIndex == 2)
                     {
-                        foreach (var file in srcFiles)
+                        foreach (var f in srcFiles)
                         {
+                            string file = f.Replace('/', '\\');
                             int subIndex = file.LastIndexOf("\\src\\");
-                            string line = "ClCompile Include=\"..\\..\\.." + file.Substring(subIndex) + "\">";
+                            string line = "    <ClCompile Include=\"..\\..\\.." + file.Substring(subIndex) + "\">";
                             sw.WriteLine(line);
                             if (file.EndsWith(".pb.cc"))
                             {
-                                line = "<Filter>src\\protobuf</Filter>";
+                                line = "      <Filter>src\\protobuf</Filter>";
                             }
                             else
                             {
-                                line = "<Filter>src\\protoext</Filter>";
+                                line = "      <Filter>src\\protoext</Filter>";
                             }
                             sw.WriteLine(line);
-                            sw.WriteLine("</ClCompile>");
+                            sw.WriteLine("    </ClCompile>");
                         }
                     }
                     else if (itemGroupIndex == 3)
                     {
-                        foreach (var file in protoFiles)
+                        foreach (var f in protoFiles)
                         {
-                            int subIndex = file.LastIndexOf("\\inc\\");
-                            string line = "None Include=\"..\\..\\.." + file.Substring(subIndex) + "\">";
+                            string file = f.Replace('/', '\\');
+                            int subIndex = file.Replace('/', '\\').LastIndexOf("\\inc\\");
+                            string line = "    <None Include=\"..\\..\\.." + file.Substring(subIndex) + "\">";
                             sw.WriteLine(line);
-                            line = "<Filter>inc\\protofile</Filter>";
+                            line = "      <Filter>inc\\protofile</Filter>";
                             sw.WriteLine(line);
-                            sw.WriteLine("</None>");
+                            sw.WriteLine("    </None>");
                         }
                     }
                     itemGroupIndex++;
                     write = false;
                 }
-                else if (vcxprojFilterContent[i] == "</ItemGroup>")
+                else if (vcxprojFilterContent[i] == "  </ItemGroup>")
                 {
                     sw.WriteLine(vcxprojFilterContent[i]);
                     write = true;
