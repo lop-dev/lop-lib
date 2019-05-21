@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="inc">
+      <UniqueIdentifier>{81f23bf9-4527-4ead-a167-3d2299aed7ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{1ea413c3-bb3e-4873-975a-a7192a606e08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\lua">
+      <UniqueIdentifier>{6004765a-f864-40d0-b053-fa16c4012919}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lua">
+      <UniqueIdentifier>{4dc12389-98ea-4fed-a040-41b76c853e35}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\gen\SHLib\message\chatSystemMsg.h">
+      <Filter>chatSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gen\SHLib\message\chatSystemMsg.h">
+      <Filter>chatSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gen\SHLib\message\dailyGoalSystemMsg.h">
+      <Filter>dailyGoalSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gen\SHLib\message\entitySystemMsg.h">
+      <Filter>entitySystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gen\SHLib\message\friendshipSystemMsg.h">
+      <Filter>friendshipSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gen\SHLib\message\itemSystemMsg.h">
+      <Filter>itemSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gen\SHLib\message\mailSystemMsg.h">
+      <Filter>mailSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gen\SHLib\message\miscSystemMsg.h">
+      <Filter>miscSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gen\SHLib\message\taskSystemMsg.h">
+      <Filter>taskSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lapi.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lauxlib.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lcode.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lctype.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\ldebug.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\ldo.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lfunc.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lgc.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\llex.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\llimits.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lmem.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lobject.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lopcodes.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lparser.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lprefix.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lstate.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lstring.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\ltable.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\ltm.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lua.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lua.hpp">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\luaconf.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lualib.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lundump.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lvm.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua\lzio.h">
+      <Filter>inc\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua_tinker.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\lua_tinker_stackobj.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\type_traits_ext.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\gen\SHLib\message\chatSystemMsg.cc">
+      <Filter>chatSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gen\SHLib\message\chatSystemMsg.cc">
+      <Filter>chatSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gen\SHLib\message\dailyGoalSystemMsg.cc">
+      <Filter>dailyGoalSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gen\SHLib\message\entitySystemMsg.cc">
+      <Filter>entitySystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gen\SHLib\message\friendshipSystemMsg.cc">
+      <Filter>friendshipSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gen\SHLib\message\itemSystemMsg.cc">
+      <Filter>itemSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gen\SHLib\message\mailSystemMsg.cc">
+      <Filter>mailSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gen\SHLib\message\miscSystemMsg.cc">
+      <Filter>miscSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gen\SHLib\message\taskSystemMsg.cc">
+      <Filter>taskSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lapi.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lauxlib.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lbaselib.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lbitlib.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lcode.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lcorolib.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lctype.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\ldblib.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\ldebug.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\ldo.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\ldump.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lfunc.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lgc.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\linit.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\liolib.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\llex.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lmathlib.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lmem.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\loadlib.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lobject.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lopcodes.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\loslib.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lparser.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lstate.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lstring.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lstrlib.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\ltable.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\ltablib.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\ltm.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lundump.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lutf8lib.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lvm.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua\lzio.c">
+      <Filter>src\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lua_tinker.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
