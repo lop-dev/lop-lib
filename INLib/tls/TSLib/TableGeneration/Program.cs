@@ -319,12 +319,13 @@ namespace Proto2Code
             Copy2Dir(SERVER_PTLIB_PB_TABLE_SRC, "*.pb.h", SERVER_PTLIB_PB_TABLE_DES_H);
             Copy2Dir(SERVER_PTLIB_PB_TABLE_SRC, "*.pb.cc", SERVER_PTLIB_PB_TABLE_DES_CC);
 
-            //string SERVER_PTLIB_PROFILEGEN_SRC = @"..\14_ProFileGen_Out\C++\";
-            //string SERVER_PTLIB_PROFILEGEN_DES_H = @"..\..\TableOut\C++\PTLib\inc\PTLib\message\";
-            //string SERVER_PTLIB_PROFILEGEN_DES_CPP = @"..\..\TableOut\C++\PTLib\src\PTLib\message\";
-            //Copy2Dir(SERVER_PTLIB_PROFILEGEN_SRC, "*.h", SERVER_PTLIB_PROFILEGEN_DES_H);
-            //Copy2Dir(SERVER_PTLIB_PROFILEGEN_SRC, "*.cc", SERVER_PTLIB_PROFILEGEN_DES_CPP);
-            
+            //拷贝到MSLib目录
+            string SERVER_MSLIB_PROFILEGEN_SRC = @"..\14_ProFileGen_Out\C++\";
+            string SERVER_MSLIB_PROFILEGEN_DES_H = @"..\..\TableOut\C++\MSLib\inc\MSLib\message\";
+            string SERVER_MSLIB_PROFILEGEN_DES_CPP = @"..\..\TableOut\C++\MSLib\src\MSLib\message\";
+            Copy2Dir(SERVER_MSLIB_PROFILEGEN_SRC, "*.h", SERVER_MSLIB_PROFILEGEN_DES_H);
+            Copy2Dir(SERVER_MSLIB_PROFILEGEN_SRC, "*.cc", SERVER_MSLIB_PROFILEGEN_DES_CPP);
+
             Console.WriteLine("拷贝bin文件");
             string BIN_SRC = @"..\13_DesTableGen_Out\";
             string BIN_DES = @"..\..\TableOut\Protobin\";
