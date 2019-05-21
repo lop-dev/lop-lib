@@ -25,7 +25,7 @@
     <ClCompile Include="..\..\..\src\MWLib\zookeeper\client.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1B27F014-2C87-4CB0-9864-4584098CEB6F}</ProjectGuid>
+    <ProjectGuid>{3A0194D3-64F3-46A7-ABDC-401DAE8CDCD2}</ProjectGuid>
     <RootNamespace>Zookeeper</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <ProjectName>ZookeeperClient</ProjectName>
