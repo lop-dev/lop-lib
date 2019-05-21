@@ -123,18 +123,18 @@ namespace Proto2Code
             if (!Program.IsNewFile(m_strDataFile) && File.Exists(m_strOutputFile))return 0;
             Program.SetFileNew(m_strOutputFile);
             
-            CSLib.Generation.CDesTmpl.EnumName = m_strEnumName;
-            CSLib.Generation.CDesTmpl.EnumValue = m_strEnumValue;
-            CSLib.Generation.CDesTmpl.EnumDesc = m_strEnumDesc;
+            TSLib.Generation.CDesTmpl.EnumName = m_strEnumName;
+            TSLib.Generation.CDesTmpl.EnumValue = m_strEnumValue;
+            TSLib.Generation.CDesTmpl.EnumDesc = m_strEnumDesc;
 
-            CSLib.Generation.CDesTable.Clear();
-            if (!CSLib.Generation.CDesTable.Instance.LoadTable(m_strDataFile, null))
+            TSLib.Generation.CDesTable.Clear();
+            if (!TSLib.Generation.CDesTable.Instance.LoadTable(m_strDataFile, null))
             {
                 CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDataFile));
                 return 3; // 文件加载失败
             }
 
-            CSLib.Generation.CGenerateEnum.Generate(m_strDataFile, m_strOutputFile);
+            TSLib.Generation.CGenerateEnum.Generate(m_strDataFile, m_strOutputFile);
             return 0;
         }
 
@@ -155,27 +155,27 @@ namespace Proto2Code
                     if (!Program.IsNewFile(m_strDescFile) && File.Exists(Program.FirstCharToLower(m_strOutputFile))) continue;
                     Program.SetFileNew(Program.FirstCharToLower(m_strOutputFile));
 
-                    CSLib.Generation.CProTable.Clear();
-                    if (!CSLib.Generation.CProTable.Instance.LoadTable(m_strDescFile, null))
+                    TSLib.Generation.CProTable.Clear();
+                    if (!TSLib.Generation.CProTable.Instance.LoadTable(m_strDescFile, null))
                     {
                         CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDescFile));
                         continue;
                     }
 
-                    CSLib.Generation.CGenerateProtobuf.Generate(m_strDescFile, m_strOutputFile);
-                    CSLib.Generation.CGenerateProtoext.Generate(m_strDescFile, m_strOutputFile, m_strLanguage);
+                    TSLib.Generation.CGenerateProtobuf.Generate(m_strDescFile, m_strOutputFile);
+                    TSLib.Generation.CGenerateProtoext.Generate(m_strDescFile, m_strOutputFile, m_strLanguage);
                 }
             }
             else if ((m_strDescFile != "") && (m_strOutputFile != "") && (Program.IsNewFile(m_strDescFile) || !File.Exists(m_strOutputFile)))
             {
-                if (!CSLib.Generation.CProTable.Instance.LoadTable(m_strDescFile, null))
+                if (!TSLib.Generation.CProTable.Instance.LoadTable(m_strDescFile, null))
                 {
                     CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDescFile));
                     return 3; // 文件加载失败
                 }
                 Program.SetFileNew(m_strOutputFile);
-                CSLib.Generation.CGenerateProtobuf.Generate(m_strDescFile, m_strOutputFile);
-                CSLib.Generation.CGenerateProtoext.Generate(m_strDescFile, m_strOutputFile, m_strLanguage);
+                TSLib.Generation.CGenerateProtobuf.Generate(m_strDescFile, m_strOutputFile);
+                TSLib.Generation.CGenerateProtoext.Generate(m_strDescFile, m_strOutputFile, m_strLanguage);
             }
             return 0;
         }
@@ -307,10 +307,10 @@ namespace Proto2Code
                     m_strOutputFile = m_strOutputPath + tmpFileInfo.Name;
                     m_strOutputFile = m_strOutputFile.Replace(".xlsx", ".txt");
 
-                    CSLib.Generation.CProTable.Clear();
-                    CSLib.Generation.CDesTable.Clear();
+                    TSLib.Generation.CProTable.Clear();
+                    TSLib.Generation.CDesTable.Clear();
 
-                    if (!CSLib.Generation.CProTable.Instance.LoadTable(m_strDescFile, null))
+                    if (!TSLib.Generation.CProTable.Instance.LoadTable(m_strDescFile, null))
                     {
                         CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDescFile));
                         continue;
@@ -321,20 +321,20 @@ namespace Proto2Code
                         CSLib.Utility.CDebugOut.LogError(string.Format("pb文件不存在{0}", m_strPBSrcFile));
                         continue;
                     }
-                    if (!CSLib.Generation.CSerializationFile.Instance.DynamicCompileProtobufCsharpFile(m_strPBSrcFile))
+                    if (!TSLib.Generation.CSerializationFile.Instance.DynamicCompileProtobufCsharpFile(m_strPBSrcFile))
                     {
                         CSLib.Utility.CDebugOut.LogError(string.Format("动态编译{0}失败", m_strPBSrcFile));
                         continue;
                     }
 
-                    CSLib.Generation.CSerializationFile.Instance.SetClassName(m_strDataFile);
+                    TSLib.Generation.CSerializationFile.Instance.SetClassName(m_strDataFile);
 
-                    if (!CSLib.Generation.CSerializationFile.Instance.LoadTable(m_strDataFile, null))
+                    if (!TSLib.Generation.CSerializationFile.Instance.LoadTable(m_strDataFile, null))
                     {
                         CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDataFile));
                         continue;
                     }
-                    CSLib.Generation.CSerializationFile.Instance.GenerateSerializationFile(m_strOutputFile);
+                    TSLib.Generation.CSerializationFile.Instance.GenerateSerializationFile(m_strOutputFile);
                 }
             }
             else if ((m_strDataFile != "") && (m_strDescFile != "") && (m_strPBSrcFile != "") && (m_strOutputFile != "") 
@@ -343,27 +343,27 @@ namespace Proto2Code
                  if (File.Exists(Program.FirstCharToLower(m_strOutputFile)))
                      File.Delete(Program.FirstCharToLower(m_strOutputFile));
                     
-                if (!CSLib.Generation.CProTable.Instance.LoadTable(m_strDescFile, null))
+                if (!TSLib.Generation.CProTable.Instance.LoadTable(m_strDescFile, null))
                 {
                     CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDescFile));
                     return 3; // 文件加载失败
                 }
 
-                if (!CSLib.Generation.CSerializationFile.Instance.DynamicCompileProtobufCsharpFile(m_strPBSrcFile))
+                if (!TSLib.Generation.CSerializationFile.Instance.DynamicCompileProtobufCsharpFile(m_strPBSrcFile))
                 {
                     CSLib.Utility.CDebugOut.LogError(string.Format("动态编译{0}失败", m_strPBSrcFile));
                     return 3; // 文件加载失败
                 }
 
-                CSLib.Generation.CSerializationFile.Instance.SetClassName(m_strDataFile);
+                TSLib.Generation.CSerializationFile.Instance.SetClassName(m_strDataFile);
 
-                if (!CSLib.Generation.CSerializationFile.Instance.LoadTable(m_strDataFile, null))
+                if (!TSLib.Generation.CSerializationFile.Instance.LoadTable(m_strDataFile, null))
                 {
                     CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDataFile));
                     return 3; // 文件加载失败
                 }
 
-                CSLib.Generation.CSerializationFile.Instance.GenerateSerializationFile(m_strOutputFile);
+                TSLib.Generation.CSerializationFile.Instance.GenerateSerializationFile(m_strOutputFile);
             }
             return 0;
         }

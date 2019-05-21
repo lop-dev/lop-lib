@@ -53,9 +53,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="cspGeneration">
-      <HintPath>..\..\..\lib\TSLib\win-x86-32\release\cspGeneration.dll</HintPath>
-    </Reference>
     <Reference Include="cspSecurity">
       <HintPath>..\..\..\lib\CSLib\win-x86-32\release\cspSecurity.dll</HintPath>
     </Reference>
@@ -65,6 +62,9 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="tableGeneration">
+      <HintPath>..\..\..\lib\TSLib\win-x86-32\release\tableGeneration.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CGeneration.cs" />
