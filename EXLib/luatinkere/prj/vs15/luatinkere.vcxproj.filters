@@ -18,30 +18,6 @@
     <ClInclude Include="..\..\..\gen\SHLib\message\chatSystemMsg.h">
       <Filter>chatSystem</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\gen\SHLib\message\chatSystemMsg.h">
-      <Filter>chatSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gen\SHLib\message\dailyGoalSystemMsg.h">
-      <Filter>dailyGoalSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gen\SHLib\message\entitySystemMsg.h">
-      <Filter>entitySystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gen\SHLib\message\friendshipSystemMsg.h">
-      <Filter>friendshipSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gen\SHLib\message\itemSystemMsg.h">
-      <Filter>itemSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gen\SHLib\message\mailSystemMsg.h">
-      <Filter>mailSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gen\SHLib\message\miscSystemMsg.h">
-      <Filter>miscSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gen\SHLib\message\taskSystemMsg.h">
-      <Filter>taskSystem</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\lua\lapi.h">
       <Filter>inc\lua</Filter>
     </ClInclude>
@@ -133,30 +109,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\gen\SHLib\message\chatSystemMsg.cc">
       <Filter>chatSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gen\SHLib\message\chatSystemMsg.cc">
-      <Filter>chatSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gen\SHLib\message\dailyGoalSystemMsg.cc">
-      <Filter>dailyGoalSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gen\SHLib\message\entitySystemMsg.cc">
-      <Filter>entitySystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gen\SHLib\message\friendshipSystemMsg.cc">
-      <Filter>friendshipSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gen\SHLib\message\itemSystemMsg.cc">
-      <Filter>itemSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gen\SHLib\message\mailSystemMsg.cc">
-      <Filter>mailSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gen\SHLib\message\miscSystemMsg.cc">
-      <Filter>miscSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gen\SHLib\message\taskSystemMsg.cc">
-      <Filter>taskSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\lua\lapi.c">
       <Filter>src\lua</Filter>
