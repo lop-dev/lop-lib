@@ -8,25 +8,25 @@ include $(MAKE_PATH)/makecmd.inc
 #编译参数设置
 ################################################################
 # 多个编译源文件目录的共同根目录
-CPP_ROOT_DIR=../../..
+CPP_ROOT_DIR=../..
 
 # 多个编译源文件目录
-CPP_SRC_DIR=../../../src/SHLib ../../../gen/SHLib
+CPP_SRC_DIR=../../src
 
 # 包含头文件目录
-DEBUG_INCS=-I../../../../EXLib -I../../../../INLib/inc -I../../../../EXLib/hiredis/cos -I../../../../EXLib/jsoncpp/include -I../../../../EXLib/protobuf/inc -I../../../../EXLib/jaegertracing/include -I../../../gen -I../../../gen/SHLib/protobuf -I../../../gen/SHLib/protoext -I../../../inc -I../../../inc/SHLib/luatinkere -I../../../inc/SHLib/luatinkere/lua -I../../../../EXLib/jaegertracing/include
-RELEASE_INCS=-I../../../../EXLib -I../../../../INLib/inc -I../../../../EXLib/hiredis/cos -I../../../../EXLib/jsoncpp/include -I../../../../EXLib/protobuf/inc -I../../../../EXLib/jaegertracing/include -I../../../gen -I../../../gen/SHLib/protobuf -I../../../gen/SHLib/protoext -I../../../inc -I../../../inc/SHLib/luatinkere -I../../../inc/SHLib/luatinkere/lua
+DEBUG_INCS=-I../../inc -I../../inc/lua
+RELEASE_INCS=-I../../inc -I../../inc/lua
 
 # 包含库文件目录
 DEBUG_LIBS=
 RELEASE_LIBS=
 
 # 输出中间文件目录
-DEBUG_OUT_DIR=../../../../SHLibOut/cos-x86-64/debug
-RELEASE_OUT_DIR=../../../../SHLibOut/cos-x86-64/release
+DEBUG_OUT_DIR=../../../../EXLibOut/luatinkere/cos-x86-64/debug
+RELEASE_OUT_DIR=../../../../EXLibOut/luatinkere/cos-x86-64/release
 
 # 输出目标文件目录
-OUT_TARGET_DIR=../../../lib/SHLib/cos-x86-64
+OUT_TARGET_DIR=../../lib/cos-x86-64
 
 # 额外的宏定义
 DEBUG_DEFS=-DLOG4CXX_STATIC -D__NEW_ADDITION_SAVE__
@@ -56,8 +56,8 @@ DEBUG_LIB_FLAGS=
 RELEASE_LIB_FLAGS=
 
 # 输出静态库
-DEBUG_LIB_FILE=$(OUT_TARGET_DIR)/libSHLib_d.a
-RELEASE_LIB_FILE=$(OUT_TARGET_DIR)/libSHLib.a
+DEBUG_LIB_FILE=$(OUT_TARGET_DIR)/libluatinkere_d.a
+RELEASE_LIB_FILE=$(OUT_TARGET_DIR)/libluatinkere.a
 
 ################################################################
 #动态库参数设置
@@ -67,8 +67,8 @@ DEBUG_DLL_FLAGS=
 RELEASE_DLL_FLAGS=
 
 # 输出动态库
-DEBUG_DLL_FILE=$(OUT_TARGET_DIR)/libSHLib_d.so
-RELEASE_DLL_FILE=$(OUT_TARGET_DIR)/libSHLib.so
+DEBUG_DLL_FILE=$(OUT_TARGET_DIR)/libluatinkere_d.so
+RELEASE_DLL_FILE=$(OUT_TARGET_DIR)/libluatinkere.so
 
 ################################################################
 #可执行文件参数设置
