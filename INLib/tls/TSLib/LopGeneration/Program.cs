@@ -52,11 +52,12 @@ namespace Proto2Code
             DirectoryInfo srcDir1 = new DirectoryInfo(src1);
             DirectoryInfo srcDir2 = new DirectoryInfo(src2);
             DirectoryInfo desDir = new DirectoryInfo(des);
-            if (!desDir.Exists)
+            if (desDir.Exists)
             {
-                desDir.Create();
+                desDir.Delete(true);
             }
-            if(srcDir1.Exists)
+            desDir.Create();
+            if (srcDir1.Exists)
             {
                 Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir1.FullName, desDir.FullName));
                 foreach (string file in Directory.GetFiles(srcDir1.FullName, "*.proto", SearchOption.TopDirectoryOnly))
