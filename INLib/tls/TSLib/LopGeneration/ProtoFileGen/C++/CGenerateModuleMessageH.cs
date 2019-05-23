@@ -98,7 +98,7 @@ namespace Proto2Code
 
             m_writer.WriteLine("namespace SHLib");
             m_writer.WriteLine("{");
-            m_writer.WriteLine("std::string SHLIB_SH_API {0}(BCLib::int32 msgID);", m_nameUnit.MoudleSysName + "Msg2Str");
+            m_writer.WriteLine("std::string {0}(BCLib::int32 msgID);", m_nameUnit.MoudleSysName + "Msg2Str");
             m_writer.WriteLine("");
 
             m_writer.WriteLine("namespace Message");
