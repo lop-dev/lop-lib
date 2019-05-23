@@ -20,7 +20,7 @@ class MWLIB_MISC_API CStringFilter
 {
 public:
     CStringFilter();
-    ~CStringFilter();
+    virtual ~CStringFilter();
 
     void setMark(char cMark);
 

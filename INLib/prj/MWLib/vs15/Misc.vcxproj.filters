@@ -14,12 +14,18 @@
     <ClCompile Include="..\..\..\src\MWLib\misc\stringFilter.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\MWLib\misc\pbPrinter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\inc\MWLib\misc\miscDef.h">
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\inc\MWLib\misc\stringFilter.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\MWLib\misc\pbPrinter.h">
       <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>
