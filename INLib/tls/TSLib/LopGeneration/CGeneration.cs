@@ -287,7 +287,7 @@ namespace Proto2Code
         {
             if ((m_strDataPath != "") && (m_strDescPath != "") && (m_strPBSrcPath != "") && (m_strOutputPath != ""))
             {
-                Environment.CurrentDirectory = Environment.CurrentDirectory + "/../01_LopGeneration/";
+                Environment.CurrentDirectory = Environment.CurrentDirectory + "/./TableGen/01_LopGeneration/";
                 DirectoryInfo dataDirectoryInfo = new DirectoryInfo(m_strDataPath);
                 DirectoryInfo descDirectoryInfo = new DirectoryInfo(m_strDescPath);
                 DirectoryInfo pbsrcDirectoryInfo = new DirectoryInfo(m_strPBSrcPath);
@@ -377,9 +377,6 @@ namespace Proto2Code
                 DirectoryInfo outputDirectoryInfo = new DirectoryInfo(m_strOutputPath);
 
                 TSLib.ProtoGeneration.CProtoFileGen.Generate(new string[] { dataDirectoryInfo.FullName, outputDirectoryInfo.FullName , m_strLanguage });
-
-
-                //FileInfo FileInfo = new FileInfo(Environment.CurrentDirectory + "/../04_ProtoFileGen/ProtoFileGen.exe");
 
                 System.Diagnostics.ProcessStartInfo Info = new System.Diagnostics.ProcessStartInfo();
                     

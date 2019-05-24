@@ -114,19 +114,19 @@ namespace Proto2Code
                     Console.WriteLine("删除" + v.Key + "生成的残留文件");
                     string name = GetFileNameAndFirstCharToLower(v.Key);
 
-                    string proto = Environment.CurrentDirectory + string.Format("/../../TableOut/Temp/11_ProTableGen_Out/{0}.proto", name);
-                    string cspe = Environment.CurrentDirectory + string.Format("/../../TableOut/Temp/11_ProTableGen_Out/C#/{0}.pe.cs", name);
-                    string ccpeh = Environment.CurrentDirectory + string.Format("/../../TableOut/Temp/11_ProTableGen_Out/C++/{0}.pe.h", name);
-                    string ccpecc = Environment.CurrentDirectory + string.Format("/../../TableOut/Temp/11_ProTableGen_Out/C++/{0}.pe.cc", name);
-                    string gope = Environment.CurrentDirectory + string.Format("/../../TableOut/Temp/11_ProTableGen_Out/GO/{0}.pe.go", name);
+                    string proto = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/11_ProTableGen_Out/{0}.proto", name);
+                    string cspe = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/11_ProTableGen_Out/C#/{0}.pe.cs", name);
+                    string ccpeh = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/11_ProTableGen_Out/C++/{0}.pe.h", name);
+                    string ccpecc = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/11_ProTableGen_Out/C++/{0}.pe.cc", name);
+                    string gope = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/11_ProTableGen_Out/GO/{0}.pe.go", name);
 
-                    string txt = Environment.CurrentDirectory + string.Format("/../../TableOut/Temp/13_DesTableGen_Out/{0}.txt", name);
-                    string dbg = Environment.CurrentDirectory + string.Format("/../../TableOut/Temp/13_DesTableGen_Out/{0}.txt.dbg", name);
+                    string txt = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/13_DesTableGen_Out/{0}.txt", name);
+                    string dbg = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/13_DesTableGen_Out/{0}.txt.dbg", name);
 
-                    string cspb = Environment.CurrentDirectory + string.Format("/../../TableOut/Temp/12_ProtobufSrc_Out/C#/{0}.pb.cs", name);
-                    string ccpbh = Environment.CurrentDirectory + string.Format("/../../TableOut/Temp/12_ProtobufSrc_Out/C++/{0}.pb.h", name);
-                    string ccpbcc = Environment.CurrentDirectory + string.Format("/../../TableOut/Temp/12_ProtobufSrc_Out/C++/{0}.pb.cc", name);
-                    string luapb = Environment.CurrentDirectory + string.Format("/../../TableOut/Temp/12_ProtobufSrc_Out/Lua/{0}_pb.lua", name);
+                    string cspb = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/12_ProtobufSrc_Out/C#/{0}.pb.cs", name);
+                    string ccpbh = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/12_ProtobufSrc_Out/C++/{0}.pb.h", name);
+                    string ccpbcc = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/12_ProtobufSrc_Out/C++/{0}.pb.cc", name);
+                    string luapb = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/12_ProtobufSrc_Out/Lua/{0}_pb.lua", name);
 
                     if (File.Exists(proto)) File.Delete(proto);
                     if (File.Exists(cspe)) File.Delete(cspe);
@@ -225,7 +225,7 @@ namespace Proto2Code
             return temp.Substring(0,temp.IndexOf('.'));
         }
 
-        private readonly string m_strFileList = @"..\..\TableOut\FileList.txt";
+        private readonly string m_strFileList = @".\TableOut\FileList.txt";
         private Dictionary<string, CFileInfo> m_dicFileList = new Dictionary<string, CFileInfo>();
     }
 }

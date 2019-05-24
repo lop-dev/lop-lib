@@ -9,10 +9,19 @@ namespace Proto2Code
     {
         static int Main()
         {
+            string strMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+            FileInfo fiMainModule = new FileInfo(strMainModule);
+            Environment.CurrentDirectory = fiMainModule.Directory.FullName;
+            string strRoot = "../../";
+            DirectoryInfo dirRoot = new DirectoryInfo(strRoot);
+            Environment.CurrentDirectory = dirRoot.FullName;
+            Console.WriteLine("AAAAAAAA = " + Environment.CurrentDirectory);
+
             Console.WriteLine("检查数据表");
-            System.Diagnostics.ProcessStartInfo Info = new System.Diagnostics.ProcessStartInfo();
-            string dataTableCheckExe = Info.FileName = Environment.CurrentDirectory + "/../../DesTable/DataTableCheck/DataTableCheck.exe";
+            string dataTableCheckExe = dirRoot.FullName + "/DesTable/DataTableCheck/DataTableCheck.exe";
             FileInfo fileinfo = new FileInfo(dataTableCheckExe);
+            System.Diagnostics.ProcessStartInfo Info = new System.Diagnostics.ProcessStartInfo();
+            Info.FileName = dataTableCheckExe;
             Info.UseShellExecute = false;
             Info.WorkingDirectory = fileinfo.Directory.FullName;
             Info.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
@@ -27,9 +36,12 @@ namespace Proto2Code
 
             //拷贝proto文件
             Console.WriteLine("拷贝Proto文件");
-            string src1 = @"..\10_ProtobufDef\";
-            string src2 = @"..\10_ProtobufClt\";
-            string des1 = @"..\..\TableOut\Temp\1_ProTableGen_Out\";
+            Environment.CurrentDirectory = dirRoot.FullName;
+            Console.WriteLine("AAAAAAAA = " + Environment.CurrentDirectory);
+
+            string src1 = @".\TableGen\10_ProtobufDef\";
+            string src2 = @".\TableGen\10_ProtobufClt\";
+            string des1 = @".\TableOut\Temp\1_ProTableGen_Out\";
 
             DirectoryInfo srcDir1 = new DirectoryInfo(src1);
             DirectoryInfo srcDir2 = new DirectoryInfo(src2);
@@ -61,85 +73,93 @@ namespace Proto2Code
             }
 
             //
+            Environment.CurrentDirectory = dirRoot.FullName;
             CFileList.Instance.ReadFileList();
 
             //生成Proto，PE文件
             Console.WriteLine("生成Proto，PE文件");
-            string csPeDir = @"..\..\TableOut\Temp\1_ProTableGen_Out\C#";
-            string ccPeDir = @"..\..\TableOut\Temp\1_ProTableGen_Out\C++";
-            string goPeDir = @"..\..\TableOut\Temp\1_ProTableGen_Out\GO";
+            Environment.CurrentDirectory = dirRoot.FullName;
+            Console.WriteLine("AAAAAAAA = " + Environment.CurrentDirectory);
+
+            string csPeDir = @".\TableOut\Temp\1_ProTableGen_Out\C#";
+            string ccPeDir = @".\TableOut\Temp\1_ProTableGen_Out\C++";
+            string goPeDir = @".\TableOut\Temp\1_ProTableGen_Out\GO";
 
             if (!Directory.Exists(csPeDir)) Directory.CreateDirectory(csPeDir);
             if (!Directory.Exists(ccPeDir)) Directory.CreateDirectory(ccPeDir);
             if (!Directory.Exists(goPeDir)) Directory.CreateDirectory(goPeDir);
 
-            argsStr = @"-GenType=Enum -DataFile=..\..\DesTable\DataTable\GlobalTable.xlsx -OutputFile=..\..\TableOut\Temp\1_ProTableGen_Out\globalEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Description";
+            argsStr = @"-GenType=Enum -DataFile=.\DesTable\DataTable\GlobalTable.xlsx -OutputFile=.\TableOut\Temp\1_ProTableGen_Out\globalEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Description";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
-            argsStr = @"-GenType=Enum -DataFile=..\..\DesTable\DataTable\MailMsgTable.xlsx -OutputFile=..\..\TableOut\Temp\1_ProTableGen_Out\mailIDEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Title";
+            argsStr = @"-GenType=Enum -DataFile=.\DesTable\DataTable\MailMsgTable.xlsx -OutputFile=.\TableOut\Temp\1_ProTableGen_Out\mailIDEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Title";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
-            argsStr = @"-GenType=Proto -DescPath=..\..\ProTable\GlobalServer\ -OutputPath=..\..\TableOut\Temp\1_ProTableGen_Out\";
+            argsStr = @"-GenType=Proto -DescPath=.\ProTable\GlobalServer\ -OutputPath=.\TableOut\Temp\1_ProTableGen_Out\";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
-            argsStr = @"-GenType=Proto -DescPath=..\..\ProTable\DatabaseServer\ -OutputPath=..\..\TableOut\Temp\1_ProTableGen_Out\";
+            argsStr = @"-GenType=Proto -DescPath=.\ProTable\DatabaseServer\ -OutputPath=.\TableOut\Temp\1_ProTableGen_Out\";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
-            argsStr = @"-GenType=Proto -DescPath=..\..\ProTable\LogServer\ -OutputPath=..\..\TableOut\Temp\1_ProTableGen_Out\";
+            argsStr = @"-GenType=Proto -DescPath=.\ProTable\LogServer\ -OutputPath=.\TableOut\Temp\1_ProTableGen_Out\";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
-            argsStr = @"-GenType=Proto -DescPath=..\..\ProTable\LogicTable\ -OutputPath=..\..\TableOut\Temp\1_ProTableGen_Out\";
+            argsStr = @"-GenType=Proto -DescPath=.\ProTable\LogicTable\ -OutputPath=.\TableOut\Temp\1_ProTableGen_Out\";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
-            argsStr = @"-GenType=Proto -DescPath=..\..\ProTable\BattleTable\ -OutputPath=..\..\TableOut\Temp\1_ProTableGen_Out\";
+            argsStr = @"-GenType=Proto -DescPath=.\ProTable\BattleTable\ -OutputPath=.\TableOut\Temp\1_ProTableGen_Out\";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
-            argsStr = @"-GenType=Proto -DescPath=..\..\DesTable\DescTable\ -OutputPath=..\..\TableOut\Temp\1_ProTableGen_Out\";
+            argsStr = @"-GenType=Proto -DescPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Temp\1_ProTableGen_Out\";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
             //生成PB文件
             Environment.CurrentDirectory = desDir1.FullName;
+            Console.WriteLine("AAAAAAAA = " + Environment.CurrentDirectory);
 
             Console.WriteLine("生成PB文件");
-            argsStr = @"-GenType=Pbsrc -ProtoPath=..\..\TableOut\Temp\1_ProTableGen_Out -OutputPath=..\..\TableOut\Temp\2_ProtobufSrc_Out\ -Language=C++";
+            argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_ProtobufSrc_Out\ -Language=C++";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
-            argsStr = @"-GenType=Pbsrc -ProtoPath=..\..\TableOut\Temp\1_ProTableGen_Out -OutputPath=..\..\TableOut\Temp\2_ProtobufSrc_Out\ -Language=C#";
+            argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_ProtobufSrc_Out\ -Language=C#";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '),true);
 
-            argsStr = @"-GenType=Pbsrc -ProtoPath=..\..\TableOut\Temp\1_ProTableGen_Out -OutputPath=..\..\TableOut\Temp\2_ProtobufSrc_Out\ -Language=Lua";
+            argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_ProtobufSrc_Out\ -Language=Lua";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
-            argsStr = @"-GenType=Pbsrc -ProtoPath=..\..\TableOut\Temp\1_ProTableGen_Out -OutputPath=..\..\TableOut\Temp\2_ProtobufSrc_Out\ -Language=Python";
+            argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_ProtobufSrc_Out\ -Language=Python";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
             //生成bin文件
             Console.WriteLine("生成bin文件");
-            argsStr = @"-GenType=Binary -DataPath=..\..\DesTable\DataTable\ -DescPath=..\..\DesTable\DescTable\ -PBSrcPath=..\..\TableOut\Temp\2_ProtobufSrc_Out\C#\ -OutputPath=..\..\TableOut\Temp\3_DesTableGen_Out\";
+            Environment.CurrentDirectory = dirRoot.FullName;
+            argsStr = @"-GenType=Binary -DataPath=.\DesTable\DataTable\ -DescPath=.\DesTable\DescTable\ -PBSrcPath=.\TableOut\Temp\2_ProtobufSrc_Out\C#\ -OutputPath=.\TableOut\Temp\3_DesTableGen_Out\";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
             //生成Msg文件
             Console.WriteLine("生成Msg文件");
-            argsStr = @"-GenType=Msg -DataPath=..\..\TableOut\Temp\0_ProtobufDef\ -OutputPath=..\..\TableOut\Temp\4_ProFileGen_Out\ -Language=cpp_lua_cs";
+            Environment.CurrentDirectory = dirRoot.FullName;
+            argsStr = @"-GenType=Msg -DataPath=.\TableOut\Temp\0_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_ProFileGen_Out\ -Language=cpp_lua_cs";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
             //生成LuaCfg文件
             Console.WriteLine("生成LuaCfg文件");
-            argsStr = @"-GenType=LuaConfig -DataPath=..\..\DesTable\DescTable\ -OutputPath=..\..\TableOut\Lua\Generate\Parser\";
+            Environment.CurrentDirectory = dirRoot.FullName;
+            argsStr = @"-GenType=LuaConfig -DataPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Lua\Generate\Parser\";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
@@ -152,8 +172,8 @@ namespace Proto2Code
 
             #region
             //删掉后端C++相关文件（临时方案）
-            string targetDic = "../../TableOut/C++/gen/SHLib/";
-            string[] protos = Directory.GetFiles("../10_ProtobufClt/","*.proto");
+            string targetDic = "./TableOut/C++/gen/SHLib/";
+            string[] protos = Directory.GetFiles("./TableGen/10_ProtobufClt/", "*.proto");
             foreach (var v in protos)
             {
                 FileInfo file = new FileInfo(v);
@@ -177,7 +197,7 @@ namespace Proto2Code
             #endregion
 
             //自动生成lua.pb和config文件的require()到configFiles文件
-            string path = new DirectoryInfo("../../").FullName + "\\TableOut\\Lua\\Generate\\";
+            string path = ".\\TableOut\\Lua\\Generate\\";
             TSLib.ProtoGeneration.CGenerateLuaConfigFiles luaConfig = new TSLib.ProtoGeneration.CGenerateLuaConfigFiles(path);
             luaConfig.TransConfig();
             
