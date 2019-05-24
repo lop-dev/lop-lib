@@ -5,25 +5,26 @@ using System.IO;
 
 namespace Proto2Code
 {
-    public enum EFileType
-    {
-        Deleted,    //已被删除
-        New,        //新文件或被修改过
-        UnModified,   //未被修改
-    }
+    //public enum EFileType
+    //{
+    //    Deleted,    //已被删除
+    //    New,        //新文件或被修改过
+    //    UnModified,   //未被修改
+    //}
 
-    class CFileInfo
-    {
-        public string name;
-        public string md5;
-        public EFileType type;
-        public CFileInfo(string name,string md5,EFileType type)
-        {
-            this.name = name;
-            this.md5 = md5;
-            this.type = type;
-        }
-    }
+    //class CFileInfo
+    //{
+    //    public string name;
+    //    public string md5;
+    //    public EFileType type;
+    //    public CFileInfo(string name,string md5,EFileType type)
+    //    {
+    //        this.name = name;
+    //        this.md5 = md5;
+    //        this.type = type;
+    //    }
+    //}
+
     class Program
     {
         static int Main()
