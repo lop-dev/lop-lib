@@ -63,7 +63,7 @@ namespace Proto2Code
                 }
             }
 
-            CFileList.Instance.GetHistoryFileInfo();
+            CFileList.Instance.ReadFileList();
 
             //生成Proto，PE文件
             Console.WriteLine("生成Proto，PE文件");
@@ -144,7 +144,8 @@ namespace Proto2Code
             Execute(argsStr.Split(' '));
 
             //保存文件信息
-            CFileList.Instance.SaveFileInfo();
+            CFileList.Instance.SaveFileList();
+            CFileList.Instance.ClearUnuseFile();
 
             //拷贝到工程目录下
             CSyncFile.Instance.Copy2TableOut();

@@ -10,7 +10,7 @@ namespace Proto2Code
         //拷贝到工程目录下
         public void Copy2TableOut()
         {
-            Console.WriteLine("拷贝文件到客户端目录");
+            Console.WriteLine("拷贝文件之：C#");
             string CLIENT_PB_CS_SRC = @"..\12_ProtobufSrc_Out\C#\";
             string CLIENT_PB_CS_DES = @"..\..\TableOut\C#\Generate\Protobuf\";
             _CopyDirectory(CLIENT_PB_CS_SRC, "*.cs", CLIENT_PB_CS_DES);
@@ -19,6 +19,7 @@ namespace Proto2Code
             string CLIENT__PE_CS_DES = @"..\..\TableOut\C#\Generate\Protoext\";
             _CopyDirectory(CLIENT_PE_CS_SRC, "*.cs", CLIENT__PE_CS_DES);
 
+            Console.WriteLine("拷贝文件之：Lua");
             string CLIENT_PB_LUA_SRC = @"..\12_ProtobufSrc_Out\Lua\";
             string CLIENT_PB_LUA_DES = @"..\..\TableOut\Lua\Generate\Protobuf\";
             _CopyDirectory(CLIENT_PB_LUA_SRC,"*.lua", CLIENT_PB_LUA_DES);
@@ -30,8 +31,8 @@ namespace Proto2Code
             string CLIENT_MSG_SERVICES_SRC = @"..\14_ProFileGen_Out\Lua\Services\";
             string CLIENT_MSG_SERVICES_DES = @"..\..\TableOut\Lua\Generate\Services\";
             _CopyDirectory(CLIENT_MSG_SERVICES_SRC, "*.lua", CLIENT_MSG_SERVICES_DES);
-            
-            Console.WriteLine("拷贝文件到服务器目录");
+
+            Console.WriteLine("拷贝文件之：C++");
             string SERVER_PROTO_SRC = @"..\11_ProTableGen_Out\";
             string SERVER_PROTO_DES = @"..\..\TableOut\C++\gen\SHLib\protofile\";
             _CopyDirectory(SERVER_PROTO_SRC, "*.proto", SERVER_PROTO_DES);
@@ -78,17 +79,22 @@ namespace Proto2Code
             _CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, "*.h", SERVER_MSLIB_PROFILEGEN_DES_H);
             _CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, "*.cc", SERVER_MSLIB_PROFILEGEN_DES_CPP);
 
-            Console.WriteLine("拷贝bin文件");
+            Console.WriteLine("拷贝文件之：Proto");
+            string BIN_SRC = @"..\11_ProTableGen_Out\";
+            string BIN_DES = @"..\..\TableOut\Proto\";
+            _CopyDirectory(BIN_SRC, "*.proto", BIN_DES);
+
+            Console.WriteLine("拷贝文件之：Protobin");
             string BIN_SRC = @"..\13_DesTableGen_Out\";
             string BIN_DES = @"..\..\TableOut\Protobin\";
             _CopyDirectory(BIN_SRC, "*.txt", BIN_DES);
 
-            Console.WriteLine("拷贝dbg文件");
+            Console.WriteLine("拷贝文件之：Protobindbg");
             string DBG_SRC = @"..\13_DesTableGen_Out\";
             string DBG_DES= @"..\..\TableOut\Protobindbg\";
             _CopyDirectory(DBG_SRC, "*.dbg", DBG_DES);
 
-            //python 文件
+            Console.WriteLine("拷贝文件之：Python");
             string CLIENT_PB_PY_SRC = @"..\12_ProtobufSrc_Out\Python\";
             string CLIENT_PB_PY_DES = @"..\..\TableOut\Python\gen\protobuf\";
             _CopyDirectory(CLIENT_PB_PY_SRC, "*.py", CLIENT_PB_PY_DES);

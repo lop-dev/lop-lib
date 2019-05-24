@@ -121,7 +121,7 @@ namespace Proto2Code
             }
 
             if (!CFileList.Instance.IsNewFile(m_strDataFile) && File.Exists(m_strOutputFile))return 0;
-            CFileList.Instance.SetFileNew(m_strOutputFile);
+            CFileList.Instance.SetNewFile(m_strOutputFile);
             
             TSLib.TableGeneration.CDesTmpl.EnumName = m_strEnumName;
             TSLib.TableGeneration.CDesTmpl.EnumValue = m_strEnumValue;
@@ -153,7 +153,7 @@ namespace Proto2Code
                     m_strOutputFile = m_strOutputFile.Replace(".xlsx", ".proto");
 
                     if (!CFileList.Instance.IsNewFile(m_strDescFile) && File.Exists(CFileList.Instance.FirstCharToLower(m_strOutputFile))) continue;
-                    CFileList.Instance.SetFileNew(CFileList.Instance.FirstCharToLower(m_strOutputFile));
+                    CFileList.Instance.SetNewFile(CFileList.Instance.FirstCharToLower(m_strOutputFile));
 
                     TSLib.TableGeneration.CProTable.Clear();
                     if (!TSLib.TableGeneration.CProTable.Instance.LoadTable(m_strDescFile, null))
@@ -173,7 +173,7 @@ namespace Proto2Code
                     CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDescFile));
                     return 3; // 文件加载失败
                 }
-                CFileList.Instance.SetFileNew(m_strOutputFile);
+                CFileList.Instance.SetNewFile(m_strOutputFile);
                 TSLib.TableGeneration.CGenerateProtobuf.Generate(m_strDescFile, m_strOutputFile);
                 TSLib.TableGeneration.CGenerateProtoext.Generate(m_strDescFile, m_strOutputFile, m_strLanguage);
             }
