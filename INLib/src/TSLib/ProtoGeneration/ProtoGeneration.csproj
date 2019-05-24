@@ -45,6 +45,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="C++\CGenerateCpp.cs" />
+    <Compile Include="C++\CGenerateModuleMessageCC.cs" />
+    <Compile Include="C++\CGenerateModuleMessageH.cs" />
+    <Compile Include="CHelper.cs" />
+    <Compile Include="CNameUnit.cs" />
+    <Compile Include="CProtoFile.cs" />
+    <Compile Include="CProtoFileGen.cs" />
+    <Compile Include="Csp\CGenerateCsp.cs" />
+    <Compile Include="Csp\CGenerateCspMessage.cs" />
+    <Compile Include="Lua\CGenerateLua.cs" />
+    <Compile Include="Lua\CGenerateLuaConfig.cs" />
+    <Compile Include="Lua\CGenerateLuaConfigFiles.cs" />
+    <Compile Include="Lua\CGenerateLuaMessage.cs" />
+    <Compile Include="Lua\CGenerateLuaService.cs" />
+    <Compile Include="Lua\CGenerateLuaSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
