@@ -384,6 +384,7 @@ namespace Proto2Code
         private static void GetHistoryFileInfo()
         {
             m_fileInfoDic.Clear();
+
             string tool = Environment.CurrentDirectory + "/LopGeneration.exe";
             string DLL_1 = Environment.CurrentDirectory + "/tableGeneration.dll";
             if (!File.Exists(m_historyFileInfoPath))
@@ -393,6 +394,7 @@ namespace Proto2Code
                 IsNewFile(DLL_1);
                 return;
             }
+
             StreamReader reader = new StreamReader(m_historyFileInfoPath, Encoding.UTF8);
             string line;
             while ((line = reader.ReadLine()) != null)
@@ -400,8 +402,6 @@ namespace Proto2Code
                 if (string.IsNullOrEmpty(line))
                     continue;
                 string[] infos = line.Split('|');
-//                 if (infos[0].Split('/')[infos[0].Split('/').Length - 1] == "petTable.proto")
-//                     Console.ReadLine();
                 if(!File.Exists(infos[0]))
                 {
                     m_fileInfoDic.Add(infos[0],new CFileInfo(infos[0],infos[1],EFileType.Deleted));
@@ -492,23 +492,24 @@ namespace Proto2Code
                 Console.WriteLine("文件不存在。\r{0}", file);
                 return false;
             }
-            FileInfo fi = new FileInfo(mfile);
-            mfile = fi.FullName.Replace('\\','/');
-            string md5 = CSLib.Security.CMd5.EncodeFile(mfile);
+
             CFileInfo cfi = null;
             m_fileInfoDic.TryGetValue(mfile, out cfi);
             if (null == cfi)
             {
-                m_fileInfoDic.Add(mfile, new CFileInfo(mfile,md5,EFileType.New));
-                return true;
+                FileInfo fi = new FileInfo(mfile);
+                mfile = fi.FullName.Replace('\\', '/');
+                string md5 = CSLib.Security.CMd5.EncodeFile(mfile);
+
+                cfi = new CFileInfo(mfile, md5, EFileType.New);
+                m_fileInfoDic.Add(mfile, cfi);
             }
+
             if (cfi.type == EFileType.New)
             {
                 return true;
-            }else if(cfi.type == EFileType.UnModified)
-            {
-                return false;
             }
+
             return false;
         }
 
@@ -522,12 +523,14 @@ namespace Proto2Code
                 //CSLib.Utility.CDebugOut.LogError("文件不存在:"+f);
                 return false;
             }
+
             f = fi.FullName.Replace('\\','/');
             if(m_fileInfoDic.ContainsKey(f))
             {
                 m_fileInfoDic[f].type = EFileType.New;
                 return true;
             }
+
             return false;
         }
 
