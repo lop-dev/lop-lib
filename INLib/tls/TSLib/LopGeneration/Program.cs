@@ -15,7 +15,6 @@ namespace Proto2Code
             string strRoot = "../../";
             DirectoryInfo dirRoot = new DirectoryInfo(strRoot);
             Environment.CurrentDirectory = dirRoot.FullName;
-            Console.WriteLine("AAAAAAAA = " + Environment.CurrentDirectory);
 
             Console.WriteLine("检查数据表");
             string dataTableCheckExe = dirRoot.FullName + "/DesTable/DataTableCheck/DataTableCheck.exe";
@@ -37,7 +36,6 @@ namespace Proto2Code
             //拷贝proto文件
             Console.WriteLine("拷贝Proto文件");
             Environment.CurrentDirectory = dirRoot.FullName;
-            Console.WriteLine("AAAAAAAA = " + Environment.CurrentDirectory);
 
             string src1 = @".\TableGen\10_ProtobufDef\";
             string src2 = @".\TableGen\10_ProtobufClt\";
@@ -79,7 +77,6 @@ namespace Proto2Code
             //生成Proto，PE文件
             Console.WriteLine("生成Proto，PE文件");
             Environment.CurrentDirectory = dirRoot.FullName;
-            Console.WriteLine("AAAAAAAA = " + Environment.CurrentDirectory);
 
             string csPeDir = @".\TableOut\Temp\1_ProTableGen_Out\C#";
             string ccPeDir = @".\TableOut\Temp\1_ProTableGen_Out\C++";
@@ -123,7 +120,6 @@ namespace Proto2Code
 
             //生成PB文件
             Environment.CurrentDirectory = desDir1.FullName;
-            Console.WriteLine("AAAAAAAA = " + Environment.CurrentDirectory);
 
             Console.WriteLine("生成PB文件");
             argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_ProtobufSrc_Out\ -Language=C++";

@@ -287,7 +287,7 @@ namespace Proto2Code
         {
             if ((m_strDataPath != "") && (m_strDescPath != "") && (m_strPBSrcPath != "") && (m_strOutputPath != ""))
             {
-                Environment.CurrentDirectory = Environment.CurrentDirectory + "/./TableGen/01_LopGeneration/";
+                //Environment.CurrentDirectory = Environment.CurrentDirectory + "/./TableGen/01_LopGeneration/";
                 DirectoryInfo dataDirectoryInfo = new DirectoryInfo(m_strDataPath);
                 DirectoryInfo descDirectoryInfo = new DirectoryInfo(m_strDescPath);
                 DirectoryInfo pbsrcDirectoryInfo = new DirectoryInfo(m_strPBSrcPath);
