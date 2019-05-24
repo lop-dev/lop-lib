@@ -30,7 +30,7 @@ namespace Proto2Code
         /// <summary>
         /// 获取之前的生成记录
         /// </summary>
-        private static void GetHistoryFileInfo()
+        public void GetHistoryFileInfo()
         {
             m_fileInfoDic.Clear();
 
@@ -78,7 +78,7 @@ namespace Proto2Code
         /// <summary>
         /// 保存生成记录
         /// </summary>
-        private static void SaveFileInfo()
+        public void SaveFileInfo()
         {
             StreamWriter writer = new StreamWriter(m_historyFileInfoPath, false,Encoding.UTF8);
             foreach (var v in m_fileInfoDic)
@@ -132,7 +132,7 @@ namespace Proto2Code
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public static bool IsNewFile(string file)
+        public bool IsNewFile(string file)
         {
             string mfile = file.Replace('\\', '/');
             if (!File.Exists(mfile))
@@ -163,7 +163,7 @@ namespace Proto2Code
         }
 
         //将文件标记为新文件
-        public static bool SetFileNew(string file)
+        public bool SetFileNew(string file)
         {
             string f = file.Replace('\\','/');
             FileInfo fi = new FileInfo(f);
@@ -184,7 +184,7 @@ namespace Proto2Code
         }
 
         //将文件名首字母转为小写
-        public static string FirstCharToLower(string str)
+        public string FirstCharToLower(string str)
         {
             if (string.IsNullOrEmpty(str))
                 return "";
@@ -199,7 +199,7 @@ namespace Proto2Code
         }
 
         //根据文件的绝对路径获取首字母小写的文件名
-        public static string GetFileNameAndFirstCharToLower(string file)
+        public string GetFileNameAndFirstCharToLower(string file)
         {
             if (string.IsNullOrEmpty(file))
                 return "";
@@ -209,7 +209,7 @@ namespace Proto2Code
             return temp.Substring(0,temp.IndexOf('.'));
         }
 
-        private static readonly string m_historyFileInfoPath = @"..\\HistoryFileInfo.txt";
-        public static Dictionary<string, CFileInfo> m_fileInfoDic = new Dictionary<string, CFileInfo>();
+        private readonly string m_historyFileInfoPath = @"..\\HistoryFileInfo.txt";
+        private Dictionary<string, CFileInfo> m_fileInfoDic = new Dictionary<string, CFileInfo>();
     }
 }

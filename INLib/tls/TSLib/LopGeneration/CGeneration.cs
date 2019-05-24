@@ -120,8 +120,8 @@ namespace Proto2Code
                 return 4; // 文件后缀名不正确
             }
 
-            if (!Program.IsNewFile(m_strDataFile) && File.Exists(m_strOutputFile))return 0;
-            Program.SetFileNew(m_strOutputFile);
+            if (!CFileList.Instance.IsNewFile(m_strDataFile) && File.Exists(m_strOutputFile))return 0;
+            CFileList.Instance.SetFileNew(m_strOutputFile);
             
             TSLib.TableGeneration.CDesTmpl.EnumName = m_strEnumName;
             TSLib.TableGeneration.CDesTmpl.EnumValue = m_strEnumValue;
@@ -152,8 +152,8 @@ namespace Proto2Code
                     m_strOutputFile = m_strOutputPath + tmpFileInfo.Name;
                     m_strOutputFile = m_strOutputFile.Replace(".xlsx", ".proto");
 
-                    if (!Program.IsNewFile(m_strDescFile) && File.Exists(Program.FirstCharToLower(m_strOutputFile))) continue;
-                    Program.SetFileNew(Program.FirstCharToLower(m_strOutputFile));
+                    if (!CFileList.Instance.IsNewFile(m_strDescFile) && File.Exists(CFileList.Instance.FirstCharToLower(m_strOutputFile))) continue;
+                    CFileList.Instance.SetFileNew(CFileList.Instance.FirstCharToLower(m_strOutputFile));
 
                     TSLib.TableGeneration.CProTable.Clear();
                     if (!TSLib.TableGeneration.CProTable.Instance.LoadTable(m_strDescFile, null))
@@ -166,14 +166,14 @@ namespace Proto2Code
                     TSLib.TableGeneration.CGenerateProtoext.Generate(m_strDescFile, m_strOutputFile, m_strLanguage);
                 }
             }
-            else if ((m_strDescFile != "") && (m_strOutputFile != "") && (Program.IsNewFile(m_strDescFile) || !File.Exists(m_strOutputFile)))
+            else if ((m_strDescFile != "") && (m_strOutputFile != "") && (CFileList.Instance.IsNewFile(m_strDescFile) || !File.Exists(m_strOutputFile)))
             {
                 if (!TSLib.TableGeneration.CProTable.Instance.LoadTable(m_strDescFile, null))
                 {
                     CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDescFile));
                     return 3; // 文件加载失败
                 }
-                Program.SetFileNew(m_strOutputFile);
+                CFileList.Instance.SetFileNew(m_strOutputFile);
                 TSLib.TableGeneration.CGenerateProtobuf.Generate(m_strDescFile, m_strOutputFile);
                 TSLib.TableGeneration.CGenerateProtoext.Generate(m_strDescFile, m_strOutputFile, m_strLanguage);
             }
@@ -230,7 +230,7 @@ namespace Proto2Code
                     if (m_strLanguage == "c++")
                     {
                         string ccFile = outputDirectoryInfo.FullName + "/C++/" + tmpFileInfo.Name;
-                        if (!Program.IsNewFile(tmpFileInfo.FullName) && File.Exists(ccFile.Replace(".proto", ".pb.cc")) && File.Exists(ccFile.Replace(".proto", ".pb.h")))
+                        if (!CFileList.Instance.IsNewFile(tmpFileInfo.FullName) && File.Exists(ccFile.Replace(".proto", ".pb.cc")) && File.Exists(ccFile.Replace(".proto", ".pb.h")))
                             continue;
                         Info.Arguments = "--cpp_out=" + outputDirectoryInfo.FullName + "/C++      " + tmpFileInfo.Name;
                     }
@@ -238,7 +238,7 @@ namespace Proto2Code
                     {
                         string pythonFile = outputDirectoryInfo.FullName + "/Python/" + tmpFileInfo.Name;
 
-                        if(!Program.IsNewFile(tmpFileInfo.FullName) && File.Exists(pythonFile.Replace(".proto", "_pb2.py")))
+                        if(!CFileList.Instance.IsNewFile(tmpFileInfo.FullName) && File.Exists(pythonFile.Replace(".proto", "_pb2.py")))
                             continue;
                         Info.Arguments = "--python_out=" + outputDirectoryInfo.FullName + "/Python      " + tmpFileInfo.Name;
                     }
@@ -246,14 +246,14 @@ namespace Proto2Code
                     {
                         string csFile = outputDirectoryInfo.FullName + "/C#/" + tmpFileInfo.Name.Replace(".proto", ".pb.cs");
 
-                        if (!Program.IsNewFile(tmpFileInfo.FullName) && File.Exists(csFile))
+                        if (!CFileList.Instance.IsNewFile(tmpFileInfo.FullName) && File.Exists(csFile))
                             continue;
                         Info.Arguments = "-i:" + tmpFileInfo.Name + "       -o:" + outputDirectoryInfo.FullName + "/C#/" + tmpFileInfo.Name.Replace(".proto", ".pb.cs");
                     }
                     else if (m_strLanguage == "lua")
                     {
                         string luaFile = outputDirectoryInfo.FullName + "/Lua/" + tmpFileInfo.Name.Replace(".proto", "_pb.lua");
-                        if (!Program.IsNewFile(tmpFileInfo.FullName) && File.Exists(luaFile))
+                        if (!CFileList.Instance.IsNewFile(tmpFileInfo.FullName) && File.Exists(luaFile))
                             continue;
 
                         string luaOut = Path.Combine(outputDirectoryInfo.FullName, "Lua\\");
@@ -295,9 +295,9 @@ namespace Proto2Code
                 foreach (FileInfo tmpFileInfo in dataDirectoryInfo.GetFiles("*.xlsx"))
                 {
                     if (tmpFileInfo.Name.StartsWith("~$")) continue;
-                    if (!Program.IsNewFile(tmpFileInfo.FullName) && File.Exists(Program.FirstCharToLower((m_strOutputPath + tmpFileInfo.Name).Replace(".xlsx", ".txt")))) continue;
-                    if (File.Exists(Program.FirstCharToLower((m_strOutputPath + tmpFileInfo.Name).Replace(".xlsx", ".txt"))))
-                        File.Delete(Program.FirstCharToLower((m_strOutputPath + tmpFileInfo.Name).Replace(".xlsx", ".txt")));
+                    if (!CFileList.Instance.IsNewFile(tmpFileInfo.FullName) && File.Exists(CFileList.Instance.FirstCharToLower((m_strOutputPath + tmpFileInfo.Name).Replace(".xlsx", ".txt")))) continue;
+                    if (File.Exists(CFileList.Instance.FirstCharToLower((m_strOutputPath + tmpFileInfo.Name).Replace(".xlsx", ".txt"))))
+                        File.Delete(CFileList.Instance.FirstCharToLower((m_strOutputPath + tmpFileInfo.Name).Replace(".xlsx", ".txt")));
                     m_strDataFile = tmpFileInfo.FullName;
                     m_strDescFile = m_strDescPath + tmpFileInfo.Name;
 
@@ -338,10 +338,10 @@ namespace Proto2Code
                 }
             }
             else if ((m_strDataFile != "") && (m_strDescFile != "") && (m_strPBSrcFile != "") && (m_strOutputFile != "") 
-                && (Program.IsNewFile(m_strDataFile) || !File.Exists(m_strOutputFile)))
+                && (CFileList.Instance.IsNewFile(m_strDataFile) || !File.Exists(m_strOutputFile)))
             {
-                 if (File.Exists(Program.FirstCharToLower(m_strOutputFile)))
-                     File.Delete(Program.FirstCharToLower(m_strOutputFile));
+                 if (File.Exists(CFileList.Instance.FirstCharToLower(m_strOutputFile)))
+                     File.Delete(CFileList.Instance.FirstCharToLower(m_strOutputFile));
                     
                 if (!TSLib.TableGeneration.CProTable.Instance.LoadTable(m_strDescFile, null))
                 {

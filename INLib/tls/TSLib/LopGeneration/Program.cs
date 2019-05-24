@@ -5,26 +5,6 @@ using System.IO;
 
 namespace Proto2Code
 {
-    //public enum EFileType
-    //{
-    //    Deleted,    //已被删除
-    //    New,        //新文件或被修改过
-    //    UnModified,   //未被修改
-    //}
-
-    //class CFileInfo
-    //{
-    //    public string name;
-    //    public string md5;
-    //    public EFileType type;
-    //    public CFileInfo(string name,string md5,EFileType type)
-    //    {
-    //        this.name = name;
-    //        this.md5 = md5;
-    //        this.type = type;
-    //    }
-    //}
-
     class Program
     {
         static int Main()
@@ -50,14 +30,17 @@ namespace Proto2Code
             string src1 = @"..\10_ProtobufDef\";
             string src2 = @"..\10_ProtobufClt\";
             string des = @"..\11_ProTableGen_Out\";
+
             DirectoryInfo srcDir1 = new DirectoryInfo(src1);
             DirectoryInfo srcDir2 = new DirectoryInfo(src2);
             DirectoryInfo desDir = new DirectoryInfo(des);
+
             if (desDir.Exists)
             {
                 desDir.Delete(true);
             }
             desDir.Create();
+
             if (srcDir1.Exists)
             {
                 Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir1.FullName, desDir.FullName));
@@ -65,10 +48,7 @@ namespace Proto2Code
                 {
                     string newfile = file.Replace('\\', '/');
                     newfile = newfile.Replace(srcDir1.FullName.Replace('\\', '/'), desDir.FullName.Replace('\\', '/'));
-                    //if(IsNewFile(file))
-                    {
-                        File.Copy(file, newfile, true);
-                    }
+                    File.Copy(file, newfile, true);
                 }
             }
 
@@ -79,20 +59,18 @@ namespace Proto2Code
                 {
                     string newfile = file.Replace('\\', '/');
                     newfile = newfile.Replace(srcDir2.FullName.Replace('\\', '/'), desDir.FullName.Replace('\\', '/'));
-                    //if(IsNewFile(file))
-                    {
-                        File.Copy(file, newfile, true);
-                    }
+                    File.Copy(file, newfile, true);
                 }
             }
-            
-            GetHistoryFileInfo();
+
+            CFileList.Instance.GetHistoryFileInfo();
 
             //生成Proto，PE文件
             Console.WriteLine("生成Proto，PE文件");
             string csPeDir = @"..\11_ProTableGen_Out\C#";
             string ccPeDir = @"..\11_ProTableGen_Out\C++";
             string goPeDir = @"..\11_ProTableGen_Out\GO";
+
             if (!Directory.Exists(csPeDir)) Directory.CreateDirectory(csPeDir);
             if (!Directory.Exists(ccPeDir)) Directory.CreateDirectory(ccPeDir);
             if (!Directory.Exists(goPeDir)) Directory.CreateDirectory(goPeDir);
@@ -166,10 +144,10 @@ namespace Proto2Code
             Execute(argsStr.Split(' '));
 
             //保存文件信息
-            SaveFileInfo();
+            CFileList.Instance.SaveFileInfo();
 
             //拷贝到工程目录下
-            Copy2WorkDir();
+            _Copy2TableOut();
 
             #region
             //删掉后端C++相关文件（临时方案）
@@ -257,106 +235,110 @@ namespace Proto2Code
         }
 
         //拷贝到工程目录下
-        private static void Copy2WorkDir()
+        private static void _Copy2TableOut()
         {
             Console.WriteLine("拷贝文件到客户端目录");
             string CLIENT_PB_CS_SRC = @"..\12_ProtobufSrc_Out\C#\";
             string CLIENT_PB_CS_DES = @"..\..\TableOut\C#\Generate\Protobuf\";
-            Copy2Dir(CLIENT_PB_CS_SRC, "*.cs", CLIENT_PB_CS_DES);
+            _CopyDirectory(CLIENT_PB_CS_SRC, "*.cs", CLIENT_PB_CS_DES);
 
             string CLIENT_PE_CS_SRC = @"..\11_ProTableGen_Out\C#\";
             string CLIENT__PE_CS_DES = @"..\..\TableOut\C#\Generate\Protoext\";
-            Copy2Dir(CLIENT_PE_CS_SRC, "*.cs", CLIENT__PE_CS_DES);
+            _CopyDirectory(CLIENT_PE_CS_SRC, "*.cs", CLIENT__PE_CS_DES);
 
             string CLIENT_PB_LUA_SRC = @"..\12_ProtobufSrc_Out\Lua\";
             string CLIENT_PB_LUA_DES = @"..\..\TableOut\Lua\Generate\Protobuf\";
-            Copy2Dir(CLIENT_PB_LUA_SRC,"*.lua", CLIENT_PB_LUA_DES);
+            _CopyDirectory(CLIENT_PB_LUA_SRC,"*.lua", CLIENT_PB_LUA_DES);
 
             string CLIENT_MSG_DEFINE_SRC = @"..\14_ProFileGen_Out\Lua\Message\";
             string CLIENT_MSG_DEFINE_DES = @"..\..\TableOut\Lua\Generate\Message\";
-            Copy2Dir(CLIENT_MSG_DEFINE_SRC, "*.lua", CLIENT_MSG_DEFINE_DES);
+            _CopyDirectory(CLIENT_MSG_DEFINE_SRC, "*.lua", CLIENT_MSG_DEFINE_DES);
 
             string CLIENT_MSG_SERVICES_SRC = @"..\14_ProFileGen_Out\Lua\Services\";
             string CLIENT_MSG_SERVICES_DES = @"..\..\TableOut\Lua\Generate\Services\";
-            Copy2Dir(CLIENT_MSG_SERVICES_SRC, "*.lua", CLIENT_MSG_SERVICES_DES);
+            _CopyDirectory(CLIENT_MSG_SERVICES_SRC, "*.lua", CLIENT_MSG_SERVICES_DES);
             
             Console.WriteLine("拷贝文件到服务器目录");
             string SERVER_PROTO_SRC = @"..\11_ProTableGen_Out\";
             string SERVER_PROTO_DES = @"..\..\TableOut\C++\gen\SHLib\protofile\";
-            Copy2Dir(SERVER_PROTO_SRC, "*.proto", SERVER_PROTO_DES);
+            _CopyDirectory(SERVER_PROTO_SRC, "*.proto", SERVER_PROTO_DES);
 
             string SERVER_PE_TABLE_SRC = @"..\11_ProTableGen_Out\C++\";
             string SERVER_PE_TABLE_DES_H = @"..\..\TableOut\C++\gen\SHLib\protoext\";
             string SERVER_PE_TABLE_DES_CC = @"..\..\TableOut\C++\gen\SHLib\protoext\";
-            Copy2Dir(SERVER_PE_TABLE_SRC, "*.pe.h", SERVER_PE_TABLE_DES_H);
-            Copy2Dir(SERVER_PE_TABLE_SRC, "*.pe.cc", SERVER_PE_TABLE_DES_CC);
+            _CopyDirectory(SERVER_PE_TABLE_SRC, "*.pe.h", SERVER_PE_TABLE_DES_H);
+            _CopyDirectory(SERVER_PE_TABLE_SRC, "*.pe.cc", SERVER_PE_TABLE_DES_CC);
 
             string SERVER_PB_TABLE_SRC = @"..\12_ProtobufSrc_Out\C++\";
             string SERVER_PB_TABLE_DES_H = @"..\..\TableOut\C++\gen\SHLib\protobuf\";
             string SERVER_PB_TABLE_DES_CC = @"..\..\TableOut\C++\gen\SHLib\protobuf\";
-            Copy2Dir(SERVER_PB_TABLE_SRC, "*.pb.h", SERVER_PB_TABLE_DES_H);
-            Copy2Dir(SERVER_PB_TABLE_SRC, "*.pb.cc", SERVER_PB_TABLE_DES_CC);
+            _CopyDirectory(SERVER_PB_TABLE_SRC, "*.pb.h", SERVER_PB_TABLE_DES_H);
+            _CopyDirectory(SERVER_PB_TABLE_SRC, "*.pb.cc", SERVER_PB_TABLE_DES_CC);
 
             string SERVER_PROFILEGEN_SRC = @"..\14_ProFileGen_Out\C++\";
             string SERVER_PROFILEGEN_DES_H = @"..\..\TableOut\C++\gen\SHLib\message\";
             string SERVER_PROFILEGEN_DES_CPP = @"..\..\TableOut\C++\gen\SHLib\message\";
-            Copy2Dir(SERVER_PROFILEGEN_SRC, "*.h", SERVER_PROFILEGEN_DES_H);
-            Copy2Dir(SERVER_PROFILEGEN_SRC, "*.cc", SERVER_PROFILEGEN_DES_CPP);
-
+            _CopyDirectory(SERVER_PROFILEGEN_SRC, "*.h", SERVER_PROFILEGEN_DES_H);
+            _CopyDirectory(SERVER_PROFILEGEN_SRC, "*.cc", SERVER_PROFILEGEN_DES_CPP);
 
             //拷贝到PTLib目录
             string SERVER_PTLIB_PROTO_SRC = @"..\11_ProTableGen_Out\";
             string SERVER_PTLIB_PROTO_DES = @"..\..\TableOut\C++\PTLib\inc\PTLib\protofile\";
-            Copy2Dir(SERVER_PTLIB_PROTO_SRC, "*.proto", SERVER_PTLIB_PROTO_DES);
+            _CopyDirectory(SERVER_PTLIB_PROTO_SRC, "*.proto", SERVER_PTLIB_PROTO_DES);
 
             string SERVER_PTLIB_PE_TABLE_SRC = @"..\11_ProTableGen_Out\C++\";
             string SERVER_PTLIB_PE_TABLE_DES_H = @"..\..\TableOut\C++\PTLib\inc\PTLib\protoext\";
             string SERVER_PTLIB_PE_TABLE_DES_CC = @"..\..\TableOut\C++\PTLib\src\PTLib\protoext\";
-            Copy2Dir(SERVER_PTLIB_PE_TABLE_SRC, "*.pe.h", SERVER_PTLIB_PE_TABLE_DES_H);
-            Copy2Dir(SERVER_PTLIB_PE_TABLE_SRC, "*.pe.cc", SERVER_PTLIB_PE_TABLE_DES_CC);
+            _CopyDirectory(SERVER_PTLIB_PE_TABLE_SRC, "*.pe.h", SERVER_PTLIB_PE_TABLE_DES_H);
+            _CopyDirectory(SERVER_PTLIB_PE_TABLE_SRC, "*.pe.cc", SERVER_PTLIB_PE_TABLE_DES_CC);
 
             string SERVER_PTLIB_PB_TABLE_SRC = @"..\12_ProtobufSrc_Out\C++\";
             string SERVER_PTLIB_PB_TABLE_DES_H = @"..\..\TableOut\C++\PTLib\inc\PTLib\protobuf\";
             string SERVER_PTLIB_PB_TABLE_DES_CC = @"..\..\TableOut\C++\PTLib\src\PTLib\protobuf\";
-            Copy2Dir(SERVER_PTLIB_PB_TABLE_SRC, "*.pb.h", SERVER_PTLIB_PB_TABLE_DES_H);
-            Copy2Dir(SERVER_PTLIB_PB_TABLE_SRC, "*.pb.cc", SERVER_PTLIB_PB_TABLE_DES_CC);
+            _CopyDirectory(SERVER_PTLIB_PB_TABLE_SRC, "*.pb.h", SERVER_PTLIB_PB_TABLE_DES_H);
+            _CopyDirectory(SERVER_PTLIB_PB_TABLE_SRC, "*.pb.cc", SERVER_PTLIB_PB_TABLE_DES_CC);
 
             //拷贝到MSLib目录
             string SERVER_MSLIB_PROFILEGEN_SRC = @"..\14_ProFileGen_Out\C++\";
             string SERVER_MSLIB_PROFILEGEN_DES_H = @"..\..\TableOut\C++\MSLib\inc\MSLib\message\";
             string SERVER_MSLIB_PROFILEGEN_DES_CPP = @"..\..\TableOut\C++\MSLib\src\MSLib\message\";
-            Copy2Dir(SERVER_MSLIB_PROFILEGEN_SRC, "*.h", SERVER_MSLIB_PROFILEGEN_DES_H);
-            Copy2Dir(SERVER_MSLIB_PROFILEGEN_SRC, "*.cc", SERVER_MSLIB_PROFILEGEN_DES_CPP);
+            _CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, "*.h", SERVER_MSLIB_PROFILEGEN_DES_H);
+            _CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, "*.cc", SERVER_MSLIB_PROFILEGEN_DES_CPP);
 
             Console.WriteLine("拷贝bin文件");
             string BIN_SRC = @"..\13_DesTableGen_Out\";
             string BIN_DES = @"..\..\TableOut\Protobin\";
-            Copy2Dir(BIN_SRC, "*.txt", BIN_DES);
+            _CopyDirectory(BIN_SRC, "*.txt", BIN_DES);
 
             Console.WriteLine("拷贝dbg文件");
             string DBG_SRC = @"..\13_DesTableGen_Out\";
             string DBG_DES= @"..\..\TableOut\Protobindbg\";
-            Copy2Dir(DBG_SRC, "*.dbg", DBG_DES);
+            _CopyDirectory(DBG_SRC, "*.dbg", DBG_DES);
 
             //python 文件
             string CLIENT_PB_PY_SRC = @"..\12_ProtobufSrc_Out\Python\";
             string CLIENT_PB_PY_DES = @"..\..\TableOut\Python\gen\protobuf\";
-            Copy2Dir(CLIENT_PB_PY_SRC, "*.py", CLIENT_PB_PY_DES);
+            _CopyDirectory(CLIENT_PB_PY_SRC, "*.py", CLIENT_PB_PY_DES);
         }
 
-        private static int Copy2Dir(string srcDir,string searchOption, string desDir)
+        private static int _CopyDirectory(string srcDir,string searchOption, string desDir)
         {
             if(!Directory.Exists(srcDir))
             {
                 Console.WriteLine(string.Format("源目录不存在，请检查{0}", srcDir));
                 return -1;
             }
+
             if(!Directory.Exists(desDir))
             {
                 Directory.CreateDirectory(desDir);
             }
+
+            Console.WriteLine(string.Format("Copy {0}\\{1} to {2}", srcDir, searchOption, desDir));
+
+            //
             DirectoryInfo dd = new DirectoryInfo(desDir);
-            Console.WriteLine(string.Format("Copy {0}\\{1} to {2}", srcDir,searchOption, desDir));
+            
             List<string> fileList = new List<string>();
             foreach (string file in Directory.GetFiles(srcDir, searchOption, SearchOption.TopDirectoryOnly))
             {
@@ -366,203 +348,22 @@ namespace Proto2Code
                 fileList.Add(desFile);
                 fileList.Add(desFile+".meta");
             }
+
             foreach(string file in Directory.GetFiles(dd.FullName, searchOption, SearchOption.TopDirectoryOnly))
             {
                 if (!fileList.Contains(file.Replace('\\', '/')))
                     File.Delete(file);
             }
+
             foreach (string file in Directory.GetFiles(dd.FullName, searchOption +".meta", SearchOption.TopDirectoryOnly))
             {
                 if (!fileList.Contains(file.Replace('\\', '/')))
                     File.Delete(file);
             }
+
             return 0;
         }
 
-        /// <summary>
-        /// 获取之前的生成记录
-        /// </summary>
-        private static void GetHistoryFileInfo()
-        {
-            m_fileInfoDic.Clear();
-
-            string tool = Environment.CurrentDirectory + "/LopGeneration.exe";
-            string DLL_1 = Environment.CurrentDirectory + "/tableGeneration.dll";
-            if (!File.Exists(m_historyFileInfoPath))
-            {
-                File.Create(m_historyFileInfoPath).Close();
-                IsNewFile(tool);    //把工具文件信息放进去
-                IsNewFile(DLL_1);
-                return;
-            }
-
-            StreamReader reader = new StreamReader(m_historyFileInfoPath, Encoding.UTF8);
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                if (string.IsNullOrEmpty(line))
-                    continue;
-                string[] infos = line.Split('|');
-                if(!File.Exists(infos[0]))
-                {
-                    m_fileInfoDic.Add(infos[0],new CFileInfo(infos[0],infos[1],EFileType.Deleted));
-                    continue;
-                }
-                string newMd5 = "";
-                newMd5 = CSLib.Security.CMd5.EncodeFile(infos[0]);
-                if (newMd5 == infos[1])
-                {
-                    m_fileInfoDic.Add(infos[0], new CFileInfo(infos[0], infos[1], EFileType.UnModified));
-                }else
-                {
-                    m_fileInfoDic.Add(infos[0], new CFileInfo(infos[0], newMd5, EFileType.New));
-                }
-            }
-            reader.Close();
-            if (IsNewFile(tool) || IsNewFile(DLL_1))
-            {
-                m_fileInfoDic.Clear();
-                IsNewFile(tool);
-                IsNewFile(DLL_1);
-            }
-        }
-
-        /// <summary>
-        /// 保存生成记录
-        /// </summary>
-        private static void SaveFileInfo()
-        {
-            StreamWriter writer = new StreamWriter(m_historyFileInfoPath, false,Encoding.UTF8);
-            foreach (var v in m_fileInfoDic)
-            {
-                if(v.Value.type != EFileType.Deleted)
-                {
-                    writer.WriteLine(v.Key + "|" + v.Value.md5);
-                }
-                else
-                {
-                    //残留的生成文件要删掉，先写死。
-                    if (v.Key.EndsWith(".xlsx"))
-                    {
-                        //删掉proto,pe,txt,dbg文件
-                        Console.WriteLine("删除"+v.Key+"生成的残留文件");
-                        string name = GetFileNameAndFirstCharToLower(v.Key);
-
-                        string proto = Environment.CurrentDirectory + string.Format("/../11_ProTableGen_Out/{0}.proto",name);
-                        string cspe = Environment.CurrentDirectory + string.Format("/../11_ProTableGen_Out/C#/{0}.pe.cs",name);
-                        string ccpeh = Environment.CurrentDirectory + string.Format("/../11_ProTableGen_Out/C++/{0}.pe.h",name);
-                        string ccpecc = Environment.CurrentDirectory + string.Format("/../11_ProTableGen_Out/C++/{0}.pe.cc",name);
-                        string gope = Environment.CurrentDirectory + string.Format("/../11_ProTableGen_Out/GO/{0}.pe.go",name);
-
-                        string txt = Environment.CurrentDirectory + string.Format("/../13_DesTableGen_Out/{0}.txt",name);
-                        string dbg = Environment.CurrentDirectory + string.Format("/../13_DesTableGen_Out/{0}.txt.dbg",name);
-
-                        string cspb = Environment.CurrentDirectory + string.Format("/../12_ProtobufSrc_Out/C#/{0}.pb.cs", name);
-                        string ccpbh = Environment.CurrentDirectory + string.Format("/../12_ProtobufSrc_Out/C++/{0}.pb.h", name);
-                        string ccpbcc = Environment.CurrentDirectory + string.Format("/../12_ProtobufSrc_Out/C++/{0}.pb.cc", name);
-                        string luapb = Environment.CurrentDirectory + string.Format("/../12_ProtobufSrc_Out/Lua/{0}_pb.lua", name);
-
-                        if (File.Exists(proto)) File.Delete(proto);
-                        if (File.Exists(cspe)) File.Delete(cspe);
-                        if (File.Exists(ccpeh)) File.Delete(ccpeh);
-                        if (File.Exists(ccpecc)) File.Delete(ccpecc);
-                        if (File.Exists(gope)) File.Delete(gope);
-                        if (File.Exists(txt)) File.Delete(txt);
-                        if (File.Exists(dbg)) File.Delete(dbg);
-                        if (File.Exists(cspb)) File.Delete(cspb);
-                        if (File.Exists(ccpbh)) File.Delete(ccpbh);
-                        if (File.Exists(ccpbcc)) File.Delete(ccpbcc);
-                        if (File.Exists(luapb)) File.Delete(luapb);
-                    }
-                }
-            }
-            writer.Close();
-        }
-        
-        /// <summary>
-        /// 文件是否被修改过
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        public static bool IsNewFile(string file)
-        {
-            string mfile = file.Replace('\\', '/');
-            if (!File.Exists(mfile))
-            {
-                CSLib.Utility.CDebugOut.LogError(string.Format("文件不存在。\r{0}", file));
-                Console.WriteLine("文件不存在。\r{0}", file);
-                return false;
-            }
-
-            CFileInfo cfi = null;
-            m_fileInfoDic.TryGetValue(mfile, out cfi);
-            if (null == cfi)
-            {
-                FileInfo fi = new FileInfo(mfile);
-                mfile = fi.FullName.Replace('\\', '/');
-                string md5 = CSLib.Security.CMd5.EncodeFile(mfile);
-
-                cfi = new CFileInfo(mfile, md5, EFileType.New);
-                m_fileInfoDic.Add(mfile, cfi);
-            }
-
-            if (cfi.type == EFileType.New)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        //将文件标记为新文件
-        public static bool SetFileNew(string file)
-        {
-            string f = file.Replace('\\','/');
-            FileInfo fi = new FileInfo(f);
-            if(!fi.Exists)
-            {
-                //CSLib.Utility.CDebugOut.LogError("文件不存在:"+f);
-                return false;
-            }
-
-            f = fi.FullName.Replace('\\','/');
-            if(m_fileInfoDic.ContainsKey(f))
-            {
-                m_fileInfoDic[f].type = EFileType.New;
-                return true;
-            }
-
-            return false;
-        }
-
-        //将文件名首字母转为小写
-        public static string FirstCharToLower(string str)
-        {
-            if (string.IsNullOrEmpty(str))
-                return "";
-            string s = str.Replace('\\', '/');
-            string[] strArray = s.Split('/');
-            string result = "";
-            for(int i=0;i<strArray.Length-1;i++)
-            {
-                result = result + strArray[i] + "/";
-            }
-            return result + char.ToLower(strArray[strArray.Length-1][0]) + strArray[strArray.Length - 1].Substring(1);
-        }
-
-        //根据文件的绝对路径获取首字母小写的文件名
-        public static string GetFileNameAndFirstCharToLower(string file)
-        {
-            if (string.IsNullOrEmpty(file))
-                return "";
-            string s = file.Replace('\\', '/');
-            string[] strArray = s.Split('/');
-            string temp = char.ToLower(strArray[strArray.Length - 1][0]) + strArray[strArray.Length - 1].Substring(1);
-            return temp.Substring(0,temp.IndexOf('.'));
-        }
-
         private static string argsStr = "";
-        private static readonly string m_historyFileInfoPath = @"..\\HistoryFileInfo.txt";
-        public static Dictionary<string, CFileInfo> m_fileInfoDic = new Dictionary<string, CFileInfo>();
     }
 }
