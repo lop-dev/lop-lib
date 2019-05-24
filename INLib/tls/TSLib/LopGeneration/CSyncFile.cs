@@ -11,96 +11,96 @@ namespace Proto2Code
         public void Copy2TableOut()
         {
             Console.WriteLine("拷贝文件之：C#");
-            string CLIENT_PB_CS_SRC = @"..\12_ProtobufSrc_Out\C#\";
+            string CLIENT_PB_CS_SRC = @"..\..\TableOut\Temp\2_ProtobufSrc_Out\C#\";
             string CLIENT_PB_CS_DES = @"..\..\TableOut\C#\Generate\Protobuf\";
-            _CopyDirectory(CLIENT_PB_CS_SRC, "*.cs", CLIENT_PB_CS_DES);
+            CopyDirectory(CLIENT_PB_CS_SRC, CLIENT_PB_CS_DES, "*.cs");
 
-            string CLIENT_PE_CS_SRC = @"..\11_ProTableGen_Out\C#\";
+            string CLIENT_PE_CS_SRC = @"..\..\TableOut\Temp\1_ProTableGen_Out\C#\";
             string CLIENT__PE_CS_DES = @"..\..\TableOut\C#\Generate\Protoext\";
-            _CopyDirectory(CLIENT_PE_CS_SRC, "*.cs", CLIENT__PE_CS_DES);
+            CopyDirectory(CLIENT_PE_CS_SRC, CLIENT__PE_CS_DES, "*.cs");
 
             Console.WriteLine("拷贝文件之：Lua");
-            string CLIENT_PB_LUA_SRC = @"..\12_ProtobufSrc_Out\Lua\";
+            string CLIENT_PB_LUA_SRC = @"..\..\TableOut\Temp\2_ProtobufSrc_Out\Lua\";
             string CLIENT_PB_LUA_DES = @"..\..\TableOut\Lua\Generate\Protobuf\";
-            _CopyDirectory(CLIENT_PB_LUA_SRC,"*.lua", CLIENT_PB_LUA_DES);
+            CopyDirectory(CLIENT_PB_LUA_SRC, CLIENT_PB_LUA_DES, "*.lua");
 
-            string CLIENT_MSG_DEFINE_SRC = @"..\14_ProFileGen_Out\Lua\Message\";
+            string CLIENT_MSG_DEFINE_SRC = @"..\..\TableOut\Temp\4_ProFileGen_Out\Lua\Message\";
             string CLIENT_MSG_DEFINE_DES = @"..\..\TableOut\Lua\Generate\Message\";
-            _CopyDirectory(CLIENT_MSG_DEFINE_SRC, "*.lua", CLIENT_MSG_DEFINE_DES);
+            CopyDirectory(CLIENT_MSG_DEFINE_SRC, CLIENT_MSG_DEFINE_DES, "*.lua");
 
-            string CLIENT_MSG_SERVICES_SRC = @"..\14_ProFileGen_Out\Lua\Services\";
+            string CLIENT_MSG_SERVICES_SRC = @"..\..\TableOut\Temp\4_ProFileGen_Out\Lua\Services\";
             string CLIENT_MSG_SERVICES_DES = @"..\..\TableOut\Lua\Generate\Services\";
-            _CopyDirectory(CLIENT_MSG_SERVICES_SRC, "*.lua", CLIENT_MSG_SERVICES_DES);
+            CopyDirectory(CLIENT_MSG_SERVICES_SRC, CLIENT_MSG_SERVICES_DES, "*.lua");
 
             Console.WriteLine("拷贝文件之：C++");
-            string SERVER_PROTO_SRC = @"..\11_ProTableGen_Out\";
+            string SERVER_PROTO_SRC = @"..\..\TableOut\Temp\1_ProTableGen_Out\";
             string SERVER_PROTO_DES = @"..\..\TableOut\C++\gen\SHLib\protofile\";
-            _CopyDirectory(SERVER_PROTO_SRC, "*.proto", SERVER_PROTO_DES);
+            CopyDirectory(SERVER_PROTO_SRC, SERVER_PROTO_DES, "*.proto");
 
-            string SERVER_PE_TABLE_SRC = @"..\11_ProTableGen_Out\C++\";
+            string SERVER_PE_TABLE_SRC = @"..\..\TableOut\Temp\1_ProTableGen_Out\C++\";
             string SERVER_PE_TABLE_DES_H = @"..\..\TableOut\C++\gen\SHLib\protoext\";
             string SERVER_PE_TABLE_DES_CC = @"..\..\TableOut\C++\gen\SHLib\protoext\";
-            _CopyDirectory(SERVER_PE_TABLE_SRC, "*.pe.h", SERVER_PE_TABLE_DES_H);
-            _CopyDirectory(SERVER_PE_TABLE_SRC, "*.pe.cc", SERVER_PE_TABLE_DES_CC);
+            CopyDirectory(SERVER_PE_TABLE_SRC, SERVER_PE_TABLE_DES_H, "*.pe.h");
+            CopyDirectory(SERVER_PE_TABLE_SRC, SERVER_PE_TABLE_DES_CC, "*.pe.cc");
 
-            string SERVER_PB_TABLE_SRC = @"..\12_ProtobufSrc_Out\C++\";
+            string SERVER_PB_TABLE_SRC = @"..\..\TableOut\Temp\2_ProtobufSrc_Out\C++\";
             string SERVER_PB_TABLE_DES_H = @"..\..\TableOut\C++\gen\SHLib\protobuf\";
             string SERVER_PB_TABLE_DES_CC = @"..\..\TableOut\C++\gen\SHLib\protobuf\";
-            _CopyDirectory(SERVER_PB_TABLE_SRC, "*.pb.h", SERVER_PB_TABLE_DES_H);
-            _CopyDirectory(SERVER_PB_TABLE_SRC, "*.pb.cc", SERVER_PB_TABLE_DES_CC);
+            CopyDirectory(SERVER_PB_TABLE_SRC, SERVER_PB_TABLE_DES_H, "*.pb.h");
+            CopyDirectory(SERVER_PB_TABLE_SRC, SERVER_PB_TABLE_DES_CC, "*.pb.cc");
 
-            string SERVER_PROFILEGEN_SRC = @"..\14_ProFileGen_Out\C++\";
+            string SERVER_PROFILEGEN_SRC = @"..\..\TableOut\Temp\4_ProFileGen_Out\C++\";
             string SERVER_PROFILEGEN_DES_H = @"..\..\TableOut\C++\gen\SHLib\message\";
             string SERVER_PROFILEGEN_DES_CPP = @"..\..\TableOut\C++\gen\SHLib\message\";
-            _CopyDirectory(SERVER_PROFILEGEN_SRC, "*.h", SERVER_PROFILEGEN_DES_H);
-            _CopyDirectory(SERVER_PROFILEGEN_SRC, "*.cc", SERVER_PROFILEGEN_DES_CPP);
+            CopyDirectory(SERVER_PROFILEGEN_SRC, SERVER_PROFILEGEN_DES_H, "*.h");
+            CopyDirectory(SERVER_PROFILEGEN_SRC, SERVER_PROFILEGEN_DES_CPP, "*.cc");
 
             //拷贝到PTLib目录
-            string SERVER_PTLIB_PROTO_SRC = @"..\11_ProTableGen_Out\";
+            string SERVER_PTLIB_PROTO_SRC = @"..\..\TableOut\Temp\1_ProTableGen_Out\";
             string SERVER_PTLIB_PROTO_DES = @"..\..\TableOut\C++\PTLib\inc\PTLib\protofile\";
-            _CopyDirectory(SERVER_PTLIB_PROTO_SRC, "*.proto", SERVER_PTLIB_PROTO_DES);
+            CopyDirectory(SERVER_PTLIB_PROTO_SRC, SERVER_PTLIB_PROTO_DES, "*.proto");
 
-            string SERVER_PTLIB_PE_TABLE_SRC = @"..\11_ProTableGen_Out\C++\";
+            string SERVER_PTLIB_PE_TABLE_SRC = @"..\..\TableOut\Temp\1_ProTableGen_Out\C++\";
             string SERVER_PTLIB_PE_TABLE_DES_H = @"..\..\TableOut\C++\PTLib\inc\PTLib\protoext\";
             string SERVER_PTLIB_PE_TABLE_DES_CC = @"..\..\TableOut\C++\PTLib\src\PTLib\protoext\";
-            _CopyDirectory(SERVER_PTLIB_PE_TABLE_SRC, "*.pe.h", SERVER_PTLIB_PE_TABLE_DES_H);
-            _CopyDirectory(SERVER_PTLIB_PE_TABLE_SRC, "*.pe.cc", SERVER_PTLIB_PE_TABLE_DES_CC);
+            CopyDirectory(SERVER_PTLIB_PE_TABLE_SRC, SERVER_PTLIB_PE_TABLE_DES_H, "*.pe.h");
+            CopyDirectory(SERVER_PTLIB_PE_TABLE_SRC, SERVER_PTLIB_PE_TABLE_DES_CC, "*.pe.cc");
 
-            string SERVER_PTLIB_PB_TABLE_SRC = @"..\12_ProtobufSrc_Out\C++\";
+            string SERVER_PTLIB_PB_TABLE_SRC = @"..\..\TableOut\Temp\2_ProtobufSrc_Out\C++\";
             string SERVER_PTLIB_PB_TABLE_DES_H = @"..\..\TableOut\C++\PTLib\inc\PTLib\protobuf\";
             string SERVER_PTLIB_PB_TABLE_DES_CC = @"..\..\TableOut\C++\PTLib\src\PTLib\protobuf\";
-            _CopyDirectory(SERVER_PTLIB_PB_TABLE_SRC, "*.pb.h", SERVER_PTLIB_PB_TABLE_DES_H);
-            _CopyDirectory(SERVER_PTLIB_PB_TABLE_SRC, "*.pb.cc", SERVER_PTLIB_PB_TABLE_DES_CC);
+            CopyDirectory(SERVER_PTLIB_PB_TABLE_SRC, SERVER_PTLIB_PB_TABLE_DES_H, "*.pb.h");
+            CopyDirectory(SERVER_PTLIB_PB_TABLE_SRC, SERVER_PTLIB_PB_TABLE_DES_CC, "*.pb.cc");
 
             //拷贝到MSLib目录
-            string SERVER_MSLIB_PROFILEGEN_SRC = @"..\14_ProFileGen_Out\C++\";
+            string SERVER_MSLIB_PROFILEGEN_SRC = @"..\..\TableOut\Temp\4_ProFileGen_Out\C++\";
             string SERVER_MSLIB_PROFILEGEN_DES_H = @"..\..\TableOut\C++\MSLib\inc\MSLib\message\";
             string SERVER_MSLIB_PROFILEGEN_DES_CPP = @"..\..\TableOut\C++\MSLib\src\MSLib\message\";
-            _CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, "*.h", SERVER_MSLIB_PROFILEGEN_DES_H);
-            _CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, "*.cc", SERVER_MSLIB_PROFILEGEN_DES_CPP);
+            CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_H, "*.h");
+            CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_CPP, "*.cc");
 
             Console.WriteLine("拷贝文件之：Proto");
-            string BIN_SRC = @"..\11_ProTableGen_Out\";
-            string BIN_DES = @"..\..\TableOut\Proto\";
-            _CopyDirectory(BIN_SRC, "*.proto", BIN_DES);
+            string PROTO_SRC = @"..\..\TableOut\Temp\1_ProTableGen_Out\";
+            string PROTO_DES = @"..\..\TableOut\Proto\";
+            CopyDirectory(PROTO_SRC, PROTO_DES, "*.proto");
 
             Console.WriteLine("拷贝文件之：Protobin");
-            string BIN_SRC = @"..\13_DesTableGen_Out\";
-            string BIN_DES = @"..\..\TableOut\Protobin\";
-            _CopyDirectory(BIN_SRC, "*.txt", BIN_DES);
+            string PROTOBIN_SRC = @"..\..\TableOut\Temp\3_DesTableGen_Out\";
+            string PROTOBIN_DES = @"..\..\TableOut\Protobin\";
+            CopyDirectory(PROTOBIN_SRC, PROTOBIN_DES, "*.txt");
 
             Console.WriteLine("拷贝文件之：Protobindbg");
-            string DBG_SRC = @"..\13_DesTableGen_Out\";
-            string DBG_DES= @"..\..\TableOut\Protobindbg\";
-            _CopyDirectory(DBG_SRC, "*.dbg", DBG_DES);
+            string PROTOBINDBG_SRC = @"..\..\TableOut\Temp\3_DesTableGen_Out\";
+            string PROTOBINDBG_DES = @"..\..\TableOut\Protobindbg\";
+            CopyDirectory(PROTOBINDBG_SRC, PROTOBINDBG_DES, "*.dbg");
 
             Console.WriteLine("拷贝文件之：Python");
-            string CLIENT_PB_PY_SRC = @"..\12_ProtobufSrc_Out\Python\";
+            string CLIENT_PB_PY_SRC = @"..\..\TableOut\Temp\2_ProtobufSrc_Out\Python\";
             string CLIENT_PB_PY_DES = @"..\..\TableOut\Python\gen\protobuf\";
-            _CopyDirectory(CLIENT_PB_PY_SRC, "*.py", CLIENT_PB_PY_DES);
+            CopyDirectory(CLIENT_PB_PY_SRC, CLIENT_PB_PY_DES, "*.py");
         }
 
-        private int _CopyDirectory(string srcDir,string searchOption, string desDir)
+        public int CopyDirectory(string srcDir, string desDir, string searchOption)
         {
             if(!Directory.Exists(srcDir))
             {
@@ -124,6 +124,7 @@ namespace Proto2Code
                 FileInfo info = new FileInfo(file);
                 string desFile = Path.Combine(dd.FullName, info.Name).Replace('\\','/');
                 File.Copy(file, desFile, true);
+
                 fileList.Add(desFile);
                 fileList.Add(desFile+".meta");
             }

@@ -38,6 +38,7 @@ namespace Proto2Code
             {
                 m_strLanguage = m_strLanguage.ToLower();
             }
+
             //
             if (m_strOutputPath != "")
             {
@@ -186,32 +187,32 @@ namespace Proto2Code
             {
                 DirectoryInfo protoDirectoryInfo = new DirectoryInfo(m_strProtoPath);
                 DirectoryInfo outputDirectoryInfo = new DirectoryInfo(m_strOutputPath);
-                Environment.CurrentDirectory = protoDirectoryInfo.FullName;
+                //Environment.CurrentDirectory = protoDirectoryInfo.FullName;
 
                 FileInfo fileInfo = null;
                 FileInfo luafileInfo = null;
                 if (m_strLanguage == "c++")
                 {
-                    fileInfo = new FileInfo(Environment.CurrentDirectory + "/../../../EXLib/protobuf/bin/protoc.exe");
+                    fileInfo = new FileInfo(Environment.CurrentDirectory + "/../../../../EXLib/protobuf/bin/protoc.exe");
                     if (!Directory.Exists(outputDirectoryInfo.FullName + "/C++/"))
                         Directory.CreateDirectory(outputDirectoryInfo.FullName + "/C++/");
                 }
                 else if (m_strLanguage == "python")
                 {
-                    fileInfo = new FileInfo(Environment.CurrentDirectory + "/../../../EXLib/protobuf/bin/protoc.exe");
+                    fileInfo = new FileInfo(Environment.CurrentDirectory + "/../../../../EXLib/protobuf/bin/protoc.exe");
                     if (!Directory.Exists(outputDirectoryInfo.FullName + "/Python/"))
                         Directory.CreateDirectory(outputDirectoryInfo.FullName + "/Python/");
                 }
                 else if (m_strLanguage == "c#")
                 {
-                    fileInfo = new FileInfo(Environment.CurrentDirectory + "/../../../EXLib/csharp/Protobuf-net/bin/protogen.exe");
+                    fileInfo = new FileInfo(Environment.CurrentDirectory + "/../../../../EXLib/csharp/Protobuf-net/bin/protogen.exe");
                     if (!Directory.Exists(outputDirectoryInfo.FullName + "/C#/"))
                         Directory.CreateDirectory(outputDirectoryInfo.FullName + "/C#/");
                 }
                 else if (m_strLanguage == "lua")
                 {
-                    fileInfo = new FileInfo(Environment.CurrentDirectory + "/../../../EXLib/protobuf/bin/protoc.exe");
-                    luafileInfo = new FileInfo(Environment.CurrentDirectory + "/../../../EXLib/protobuf-lua/protoc-gen-lua.bat");
+                    fileInfo = new FileInfo(Environment.CurrentDirectory + "/../../../../EXLib/protobuf/bin/protoc.exe");
+                    luafileInfo = new FileInfo(Environment.CurrentDirectory + "/../../../../EXLib/protobuf-lua/protoc-gen-lua.bat");
                     if (!Directory.Exists(outputDirectoryInfo.FullName + "/Lua/"))
                         Directory.CreateDirectory(outputDirectoryInfo.FullName + "/Lua/");
                 }
