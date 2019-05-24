@@ -32,6 +32,16 @@ const EErrorCode EERROR_UNKNOW = 1;   //! Î´Öª´íÎó
 	BCLib::EErrorCode __errCode__(BCLib::EERROR_OK);						\
 	std::string __actPrompt__(#__action__)
 
+#define BCLIB_DEF_ACTION(__action__)									    \
+	std::string __actPrompt__(#__action__)
+
+#define BCLIB_DEF_ACTION_FUNCTION											\
+	std::string __actPrompt__(__FUNCTION__)
+
+#define BCLIB_DEF_ERRORCODE_WITH_FUNCTION									\
+	BCLib::EErrorCode __errCode__(BCLib::EERROR_OK);						\
+	std::string __actPrompt__(__FUNCTION__)
+
 #define BCLIB_DEF_ERR_EXIT                                                  \
 		return;																\
 	ERR_EXIT:
