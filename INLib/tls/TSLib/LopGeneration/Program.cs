@@ -198,7 +198,7 @@ namespace Proto2Code
 
             //自动生成lua.pb和config文件的require()到configFiles文件
             string path = new DirectoryInfo("../../").FullName + "\\TableOut\\Lua\\Generate\\";
-            CGenerateLuaConfigFiles luaConfig = new CGenerateLuaConfigFiles(path);
+            TSLib.ProtoGeneration.CGenerateLuaConfigFiles luaConfig = new TSLib.ProtoGeneration.CGenerateLuaConfigFiles(path);
             luaConfig.TransConfig();
             
             Console.WriteLine("按任意键继续...");
