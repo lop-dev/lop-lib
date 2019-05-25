@@ -15,7 +15,8 @@ namespace Proto2Code
             string strRoot = "../../";
             DirectoryInfo dirRoot = new DirectoryInfo(strRoot);
             Environment.CurrentDirectory = dirRoot.FullName;
-            CFileList.Instance.RootDirectory = dirRoot.FullName;
+            CFileList.Instance.RootDirectory = Environment.CurrentDirectory;
+            CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
             Console.WriteLine("检查数据表");
             string dataTableCheckExe = dirRoot.FullName + "/DesTable/DataTableCheck/DataTableCheck.exe";
@@ -38,7 +39,7 @@ namespace Proto2Code
             Console.WriteLine("拷贝Proto文件");
             string exe1 = @".\TableGen\01_LopGeneration\";
             string src1 = @".\TableGen\10_ProtobufDef\";
-            string src2 = @".\TableGen\10_ProtobufClt\";
+            string src2 = @".\TableGen\11_ProtobufClt\";
             string des1 = @".\TableOut\Temp\1_Protoext\";
 
             DirectoryInfo exeDir1 = new DirectoryInfo(exe1);
@@ -118,6 +119,7 @@ namespace Proto2Code
 
             //生成PB文件
             Environment.CurrentDirectory = desDir1.FullName;
+            CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
             Console.WriteLine("生成PB文件");
             argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=C++";
@@ -137,9 +139,11 @@ namespace Proto2Code
             Execute(argsStr.Split(' '));
 
             Environment.CurrentDirectory = dirRoot.FullName;
+            CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
             //生成bin文件
             Environment.CurrentDirectory = exeDir1.FullName;
+            CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
             Console.WriteLine("生成bin文件");
             argsStr = @"-GenType=Binary -DataPath=..\..\DesTable\DataTable\ -DescPath=..\..\DesTable\DescTable\ -PBSrcPath=..\..\TableOut\Temp\2_Protobuf\C#\ -OutputPath=..\..\TableOut\Temp\3_Protobin\";
@@ -147,6 +151,7 @@ namespace Proto2Code
             Execute(argsStr.Split(' '));
 
             Environment.CurrentDirectory = dirRoot.FullName;
+            CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
             //生成Msg文件
             Console.WriteLine("生成Msg文件");
@@ -170,7 +175,7 @@ namespace Proto2Code
             #region
             //删掉后端C++相关文件（临时方案）
             string targetDic = "./TableOut/C++/gen/SHLib/";
-            string[] protos = Directory.GetFiles("./TableGen/10_ProtobufClt/", "*.proto");
+            string[] protos = Directory.GetFiles("./TableGen/11_ProtobufClt/", "*.proto");
             foreach (var v in protos)
             {
                 FileInfo file = new FileInfo(v);
