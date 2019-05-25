@@ -150,7 +150,7 @@ namespace Proto2Code
 
             //生成Msg文件
             Console.WriteLine("生成Msg文件");
-            argsStr = @"-GenType=Msg -DataPath=.\TableGen\0_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_lua_cs";
+            argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_lua_cs";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
