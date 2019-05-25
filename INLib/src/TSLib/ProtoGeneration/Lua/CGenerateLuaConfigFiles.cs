@@ -7,33 +7,33 @@ namespace TSLib.ProtoGeneration
 
     public class CGenerateLuaConfigFiles
     {
-        private string rootpath;
-        private string configPath;
-        private string parserPath;
-        private string protobufPath;
-        private string messagePath;
-        
+        private string m_rootpath;
+        private string m_configPath;
+        private string m_parserPath;
+        private string m_protobufPath;
+        private string m_messagePath;
  
         public CGenerateLuaConfigFiles(string path)
         {
-            rootpath = path;
-            configPath = rootpath + "ConfigFiles.lua";
-            parserPath = rootpath + "Parser\\";
-            protobufPath = rootpath + "Protobuf\\";
-            messagePath = rootpath + "Message\\";
+            m_rootpath = path;
+            m_configPath = m_rootpath + "ConfigFiles.lua";
+            m_parserPath = m_rootpath + "Parser\\";
+            m_protobufPath = m_rootpath + "Protobuf\\";
+            m_messagePath = m_rootpath + "Message\\";
         }
+
         public void TransConfig()
         {
-            List<FileInfo> luaList = GetFileList(parserPath);
-            List<FileInfo> protoList = GetFileList(protobufPath);
-            List<FileInfo> messageList = GetFileList(messagePath);
+            List<FileInfo> luaList = GetFileList(m_parserPath);
+            List<FileInfo> protoList = GetFileList(m_protobufPath);
+            List<FileInfo> messageList = GetFileList(m_messagePath);
 
             List<FileInfo> fileList = MergeList(protoList, luaList);
             fileList = MergeList(fileList, messageList);
 
-            List<string> configLines = GetFileText(configPath);
+            List<string> configLines = GetFileText(m_configPath);
             List<string> replaceLines = RaplaceFile(configLines, fileList);
-            SaveConfigFile(replaceLines, configPath);
+            SaveConfigFile(replaceLines, m_configPath);
         }
 
         private List<FileInfo> GetFileList(string path)
