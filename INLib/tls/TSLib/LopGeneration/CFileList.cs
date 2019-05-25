@@ -48,9 +48,9 @@ namespace Proto2Code
         {
             m_dicFileList.Clear();
 
-            string strExe = m_strRootDirectory + "TableGen/01_LopGeneration/LopGeneration.exe";
-            string strDll1 = m_strRootDirectory + "TableGen/01_LopGeneration/tableGeneration.dll";
-            string strDll2 = m_strRootDirectory + "TableGen/01_LopGeneration/protoGeneration.dll";
+            string strExe = m_strRootDirectory + "/TableGen/01_LopGeneration/LopGeneration.exe";
+            string strDll1 = m_strRootDirectory + "/TableGen/01_LopGeneration/tableGeneration.dll";
+            string strDll2 = m_strRootDirectory + "/TableGen/01_LopGeneration/protoGeneration.dll";
 
             if (!File.Exists(m_strFileList))
             {
@@ -59,15 +59,6 @@ namespace Proto2Code
                 IsNewFile(strDll1);
                 IsNewFile(strDll2);
                 return;
-            }
-
-            //
-            if (IsNewFile(strExe) || IsNewFile(strDll1) || IsNewFile(strDll2))
-            {
-                m_dicFileList.Clear();
-                IsNewFile(strExe); // 把工具文件信息放进去
-                IsNewFile(strDll1);
-                IsNewFile(strDll2);
             }
 
             //
@@ -98,6 +89,15 @@ namespace Proto2Code
                 }
             }
             reader.Close();
+
+            //
+            if (IsNewFile(strExe) || IsNewFile(strDll1) || IsNewFile(strDll2))
+            {
+                m_dicFileList.Clear();
+                IsNewFile(strExe); // 把工具文件信息放进去
+                IsNewFile(strDll1);
+                IsNewFile(strDll2);
+            }
         }
 
         /// <summary>

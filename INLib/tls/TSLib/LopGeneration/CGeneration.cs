@@ -21,8 +21,9 @@ namespace Proto2Code
 
         public bool Analysis(string[] args)
         {
-            string[] arrResult = null;
+            _Reset();
 
+            string[] arrResult = null;
             for (int i = 0; i < args.Length; ++i)
             {
                 arrResult = args[i].Split('=');
@@ -90,6 +91,28 @@ namespace Proto2Code
             }
 
             return true;
+        }
+
+        private void _Reset()
+        {
+            m_strEnumName = "";
+            m_strEnumValue = "";
+            m_strEnumDesc = "";
+
+            m_strGenType = "";
+
+            m_strDescPath = "";
+            m_strDescFile = "";
+            m_strLanguage = "";
+
+            m_strProtoPath = "";
+            m_strPBSrcPath = "";
+            m_strPBSrcFile = "";
+
+            m_strDataPath = "";
+            m_strDataFile = "";
+            m_strOutputPath = "";
+            m_strOutputFile = "";
         }
 
         public int Generation(bool bSync)
@@ -414,8 +437,12 @@ namespace Proto2Code
         {
             if ((m_strDataPath != "") && (m_strOutputPath != ""))
             {
+                string strDataPath = Path.Combine(m_strRootDirectory, m_strDataPath);
+                string strTempPath = Path.Combine(m_strRootDirectory, @".\TableOut\Temp\5_Luaconfig");
+                string strOutputPath = Path.Combine(m_strRootDirectory, m_strOutputPath);
+
                 TSLib.ProtoGeneration.CGenerateLuaConfig glc = new TSLib.ProtoGeneration.CGenerateLuaConfig();
-                glc.Start(m_strDataPath, m_strOutputPath);
+                glc.Start(strDataPath, strTempPath, strOutputPath);
             }
             return 0;
         }
