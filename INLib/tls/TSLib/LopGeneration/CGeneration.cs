@@ -437,9 +437,9 @@ namespace Proto2Code
         {
             if ((m_strDataPath != "") && (m_strOutputPath != ""))
             {
-                string strDataPath = Path.Combine(m_strRootDirectory, m_strDataPath);
-                string strTempPath = Path.Combine(m_strRootDirectory, @".\TableOut\Temp\5_Luaconfig");
-                string strOutputPath = Path.Combine(m_strRootDirectory, m_strOutputPath);
+                string strDataPath = m_strRootDirectory + m_strDataPath;
+                string strTempPath = m_strRootDirectory + @".\TableOut\Temp\5_Luaconfig";
+                string strOutputPath = m_strRootDirectory + m_strOutputPath;
 
                 TSLib.ProtoGeneration.CGenerateLuaConfig glc = new TSLib.ProtoGeneration.CGenerateLuaConfig();
                 glc.Start(strDataPath, strTempPath, strOutputPath);
