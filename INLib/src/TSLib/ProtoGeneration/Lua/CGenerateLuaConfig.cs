@@ -56,29 +56,32 @@ return {0}Config
         /// <param name="strOutputPath"></param>
         public void Start(string strProtobufDef, string strTempDirectory, string strOutputPath)
         {
-            m_strProtobufDef = strProtobufDef;
+            DirectoryInfo di1 = new DirectoryInfo(strProtobufDef);
+            m_strProtobufDef = di1.FullName;
             m_strProtobufDef = m_strProtobufDef.Replace('\\', '/');
 
-            m_strTempDirectory = strTempDirectory;
+            DirectoryInfo di2 = new DirectoryInfo(strTempDirectory);
+            m_strTempDirectory = di2.FullName;
             m_strTempDirectory = m_strTempDirectory.Replace('\\', '/');
 
-            m_strOutputPath = strOutputPath;
+            DirectoryInfo di3 = new DirectoryInfo(strOutputPath);
+            m_strOutputPath = di3.FullName;
             m_strOutputPath = m_strOutputPath.Replace('\\', '/');
 
-            CGenerateLuaConfig p = new CGenerateLuaConfig();
-            p._GenFile();
+            _GenFile();
         }
 
         private void _GenFile()
         {
             //----------------------- 生成XxxConfig.lua文件 -------------------------------------
-            string tOutPath = m_strTempDirectory + @"/Lua";
-            if (!Directory.Exists(tOutPath))
+            string strTempLuaPath = m_strTempDirectory + @"/Lua";
+            if (!Directory.Exists(strTempLuaPath))
             {
-                Directory.CreateDirectory(tOutPath);
+                Directory.CreateDirectory(strTempLuaPath);
             }
+
             //先删除当前目录下lua文件
-            _RemoveSpecifiedFiles(tOutPath, ".lua");
+            _RemoveSpecifiedFiles(strTempLuaPath, ".lua");
             string[] fileNamesPro = _FilterFiles(m_strProtobufDef).ToArray();
             string tContent = "", tStrDefine = "", tFileName = "";
             foreach (string fnp in fileNamesPro)
@@ -89,7 +92,7 @@ return {0}Config
 
                 //生成xxxConfig.lua
                 string fileName = fnp + "Config.lua";
-                FileStream fs = File.Open(tOutPath + "\\" + fileName, FileMode.OpenOrCreate);
+                FileStream fs = File.Open(strTempLuaPath + "\\" + fileName, FileMode.OpenOrCreate);
                 string code = LUA_CONFIG_TEMPLATE.Replace("{0}", fnp);
                 byte[] data = System.Text.Encoding.UTF8.GetBytes(code);
                 fs.Write(data, 0, data.Length);
@@ -97,7 +100,7 @@ return {0}Config
                 fs.Close();
                 if (!File.Exists(m_strOutputPath + fileName))
                 {
-                    File.Copy(tOutPath + "\\" + fileName, m_strOutputPath + fileName);
+                    File.Copy(strTempLuaPath + "\\" + fileName, m_strOutputPath + fileName);
                 }
             }
             if (File.Exists(m_strTempDirectory + @"/ConfigFiles.lua"))
