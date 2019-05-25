@@ -27,6 +27,8 @@ namespace Proto2Code
     
     class CFileList : CSLib.Utility.CSingleton<CFileList>
     {
+        public string RootDirectory { get; set; }
+
         /// <summary>
         /// 读取生成记录
         /// </summary>
@@ -34,8 +36,8 @@ namespace Proto2Code
         {
             m_dicFileList.Clear();
 
-            string tool = Environment.CurrentDirectory + "/LopGeneration.exe";
-            string DLL_1 = Environment.CurrentDirectory + "/tableGeneration.dll";
+            string tool = RootDirectory + "/TableGen/01_LopGeneration/LopGeneration.exe";
+            string DLL_1 = RootDirectory + "/TableGen/01_LopGeneration/tableGeneration.dll";
             if (!File.Exists(m_strFileList))
             {
                 File.Create(m_strFileList).Close();
@@ -114,19 +116,19 @@ namespace Proto2Code
                     Console.WriteLine("删除" + v.Key + "生成的残留文件");
                     string name = GetFileNameAndFirstCharToLower(v.Key);
 
-                    string proto = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/1_ProTableGen_Out/{0}.proto", name);
-                    string cspe = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/1_ProTableGen_Out/C#/{0}.pe.cs", name);
-                    string ccpeh = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/1_ProTableGen_Out/C++/{0}.pe.h", name);
-                    string ccpecc = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/1_ProTableGen_Out/C++/{0}.pe.cc", name);
-                    string gope = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/1_ProTableGen_Out/GO/{0}.pe.go", name);
+                    string proto = RootDirectory + string.Format("/TableOut/Temp/1_Protoext/{0}.proto", name);
+                    string cspe = RootDirectory + string.Format("/TableOut/Temp/1_Protoext/C#/{0}.pe.cs", name);
+                    string ccpeh = RootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.pe.h", name);
+                    string ccpecc = RootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.pe.cc", name);
+                    string gope = RootDirectory + string.Format("/TableOut/Temp/1_Protoext/GO/{0}.pe.go", name);
 
-                    string txt = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/3_DesTableGen_Out/{0}.txt", name);
-                    string dbg = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/3_DesTableGen_Out/{0}.txt.dbg", name);
+                    string txt = RootDirectory + string.Format("/TableOut/Temp/3_Protobin/{0}.txt", name);
+                    string dbg = RootDirectory + string.Format("/TableOut/Temp/3_Protobin/{0}.txt.dbg", name);
 
-                    string cspb = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/2_ProtobufSrc_Out/C#/{0}.pb.cs", name);
-                    string ccpbh = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/2_ProtobufSrc_Out/C++/{0}.pb.h", name);
-                    string ccpbcc = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/2_ProtobufSrc_Out/C++/{0}.pb.cc", name);
-                    string luapb = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/2_ProtobufSrc_Out/Lua/{0}_pb.lua", name);
+                    string cspb = RootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C#/{0}.pb.cs", name);
+                    string ccpbh = RootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.h", name);
+                    string ccpbcc = RootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.cc", name);
+                    string luapb = RootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Lua/{0}_pb.lua", name);
 
                     if (File.Exists(proto)) File.Delete(proto);
                     if (File.Exists(cspe)) File.Delete(cspe);
@@ -146,10 +148,10 @@ namespace Proto2Code
                     Console.WriteLine("删除" + v.Key + "生成的残留文件");
                     string name = GetFileNameAndFirstCharToLower(v.Key);
 
-                    string cspb = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/2_ProtobufSrc_Out/C#/{0}.pb.cs", name);
-                    string ccpbh = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/2_ProtobufSrc_Out/C++/{0}.pb.h", name);
-                    string ccpbcc = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/2_ProtobufSrc_Out/C++/{0}.pb.cc", name);
-                    string luapb = Environment.CurrentDirectory + string.Format("/./TableOut/Temp/2_ProtobufSrc_Out/Lua/{0}_pb.lua", name);
+                    string cspb = RootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C#/{0}.pb.cs", name);
+                    string ccpbh = RootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.h", name);
+                    string ccpbcc = RootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.cc", name);
+                    string luapb = RootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Lua/{0}_pb.lua", name);
 
                     if (File.Exists(cspb)) File.Delete(cspb);
                     if (File.Exists(ccpbh)) File.Delete(ccpbh);
@@ -166,24 +168,24 @@ namespace Proto2Code
         /// <returns></returns>
         public bool IsNewFile(string file)
         {
-            string mfile = file.Replace('\\', '/');
-            if (!File.Exists(mfile))
+            string strFileName = file.Replace('\\', '/');
+            if (!File.Exists(strFileName))
             {
                 CSLib.Utility.CDebugOut.LogError(string.Format("文件不存在。\r{0}", file));
                 Console.WriteLine("文件不存在。\r{0}", file);
                 return false;
             }
+            string strFileKey = strFileName.Replace(RootDirectory, "");
 
             CFileInfo cfi = null;
-            m_dicFileList.TryGetValue(mfile, out cfi);
+            m_dicFileList.TryGetValue(strFileKey, out cfi);
             if (null == cfi)
             {
-                FileInfo fi = new FileInfo(mfile);
-                mfile = fi.FullName.Replace('\\', '/');
-                string md5 = CSLib.Security.CMd5.EncodeFile(mfile);
-
-                cfi = new CFileInfo(mfile, md5, EFileType.New);
-                m_dicFileList.Add(mfile, cfi);
+                //FileInfo fi = new FileInfo(strFileName);
+                //strFileName = fi.FullName.Replace('\\', '/');
+                string strMD5 = CSLib.Security.CMd5.EncodeFile(strFileName);
+                cfi = new CFileInfo(strFileKey, strMD5, EFileType.New);
+                m_dicFileList.Add(strFileKey, cfi);
             }
 
             if (cfi.type == EFileType.New)
@@ -197,18 +199,18 @@ namespace Proto2Code
         //将文件标记为新文件
         public bool SetNewFile(string file)
         {
-            string f = file.Replace('\\','/');
-            FileInfo fi = new FileInfo(f);
+            string strFileName = file.Replace('\\','/');
+            FileInfo fi = new FileInfo(strFileName);
             if(!fi.Exists)
             {
-                //CSLib.Utility.CDebugOut.LogError("文件不存在:"+f);
                 return false;
             }
+            string strFileKey = strFileName.Replace(RootDirectory, "");
 
-            f = fi.FullName.Replace('\\','/');
-            if(m_dicFileList.ContainsKey(f))
+            //strFileName = fi.FullName.Replace('\\','/');
+            if (m_dicFileList.ContainsKey(strFileKey))
             {
-                m_dicFileList[f].type = EFileType.New;
+                m_dicFileList[strFileKey].type = EFileType.New;
                 return true;
             }
 

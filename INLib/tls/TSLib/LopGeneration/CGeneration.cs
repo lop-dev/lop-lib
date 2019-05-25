@@ -187,7 +187,6 @@ namespace Proto2Code
             {
                 DirectoryInfo protoDirectoryInfo = new DirectoryInfo(m_strProtoPath);
                 DirectoryInfo outputDirectoryInfo = new DirectoryInfo(m_strOutputPath);
-                //Environment.CurrentDirectory = protoDirectoryInfo.FullName;
 
                 FileInfo fileInfo = null;
                 FileInfo luafileInfo = null;
@@ -216,6 +215,7 @@ namespace Proto2Code
                     if (!Directory.Exists(outputDirectoryInfo.FullName + "/Lua/"))
                         Directory.CreateDirectory(outputDirectoryInfo.FullName + "/Lua/");
                 }
+
                 if(null == fileInfo)
                 {
                     CSLib.Utility.CDebugOut.LogError(string.Format("未识别的语言类型{0}",m_strLanguage));
@@ -287,7 +287,6 @@ namespace Proto2Code
         {
             if ((m_strDataPath != "") && (m_strDescPath != "") && (m_strPBSrcPath != "") && (m_strOutputPath != ""))
             {
-                //Environment.CurrentDirectory = Environment.CurrentDirectory + "/./TableGen/01_LopGeneration/";
                 DirectoryInfo dataDirectoryInfo = new DirectoryInfo(m_strDataPath);
                 DirectoryInfo descDirectoryInfo = new DirectoryInfo(m_strDescPath);
                 DirectoryInfo pbsrcDirectoryInfo = new DirectoryInfo(m_strPBSrcPath);
