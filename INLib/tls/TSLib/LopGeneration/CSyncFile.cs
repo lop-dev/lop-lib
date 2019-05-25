@@ -100,44 +100,44 @@ namespace Proto2Code
             CopyDirectory(CLIENT_PB_PY_SRC, CLIENT_PB_PY_DES, "*.py");
         }
 
-        public int CopyDirectory(string srcDir, string desDir, string searchOption)
+        public int CopyDirectory(string strSrc, string strDes, string searchOption)
         {
-            if(!Directory.Exists(srcDir))
+            if(!Directory.Exists(strSrc))
             {
-                Console.WriteLine(string.Format("源目录不存在，请检查{0}", srcDir));
+                Console.WriteLine(string.Format("源目录不存在，请检查{0}", strSrc));
                 return -1;
             }
 
-            if(!Directory.Exists(desDir))
+            if(!Directory.Exists(strDes))
             {
-                Directory.CreateDirectory(desDir);
+                Directory.CreateDirectory(strDes);
             }
 
-            Console.WriteLine(string.Format("Copy {0}{1} to {2}", srcDir, searchOption, desDir));
+            Console.WriteLine(string.Format("Copy {0}{1} to {2}", strSrc, searchOption, strDes));
 
             //
-            DirectoryInfo dd = new DirectoryInfo(desDir);
-            
-            List<string> fileList = new List<string>();
-            foreach (string file in Directory.GetFiles(srcDir, searchOption, SearchOption.TopDirectoryOnly))
+            List<string> srcFileList = new List<string>();
+
+            DirectoryInfo dirDes = new DirectoryInfo(strDes);
+            foreach (string file in Directory.GetFiles(strSrc, searchOption, SearchOption.TopDirectoryOnly))
             {
                 FileInfo info = new FileInfo(file);
-                string desFile = Path.Combine(dd.FullName, info.Name).Replace('\\','/');
+                string desFile = Path.Combine(dirDes.FullName, info.Name).Replace('\\','/');
                 File.Copy(file, desFile, true);
 
-                fileList.Add(desFile);
-                fileList.Add(desFile+".meta");
+                srcFileList.Add(desFile);
+                srcFileList.Add(desFile+".meta");
             }
 
-            foreach(string file in Directory.GetFiles(dd.FullName, searchOption, SearchOption.TopDirectoryOnly))
+            foreach(string file in Directory.GetFiles(dirDes.FullName, searchOption, SearchOption.TopDirectoryOnly))
             {
-                if (!fileList.Contains(file.Replace('\\', '/')))
+                if (!srcFileList.Contains(file.Replace('\\', '/')))
                     File.Delete(file);
             }
 
-            foreach (string file in Directory.GetFiles(dd.FullName, searchOption +".meta", SearchOption.TopDirectoryOnly))
+            foreach (string file in Directory.GetFiles(dirDes.FullName, searchOption +".meta", SearchOption.TopDirectoryOnly))
             {
-                if (!fileList.Contains(file.Replace('\\', '/')))
+                if (!srcFileList.Contains(file.Replace('\\', '/')))
                     File.Delete(file);
             }
 
