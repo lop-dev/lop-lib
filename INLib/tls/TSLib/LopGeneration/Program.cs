@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 namespace Proto2Code
@@ -28,7 +27,7 @@ namespace Proto2Code
             Info.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
             var proc = System.Diagnostics.Process.Start(Info);
             proc.WaitForExit();
-            if(proc.ExitCode!=0)
+            if (proc.ExitCode != 0)
             {
                 Console.WriteLine("配置表异常，请运行\"Shared/SrcGen/DesTable/数据表检查.bat\"进行检查。");
                 Console.ReadLine();
@@ -39,7 +38,7 @@ namespace Proto2Code
             Console.WriteLine("拷贝Proto文件");
             string exe1 = @".\TableGen\01_LopGeneration\";
             string src1 = @".\TableGen\10_ProtobufDef\";
-            string src2 = @".\TableGen\11_ProtobufClt\";
+            string src2 = @".\TableGen\10_ProtobufClt\";
             string des1 = @".\TableOut\Temp\1_Protoext\";
 
             DirectoryInfo exeDir1 = new DirectoryInfo(exe1);
@@ -47,32 +46,56 @@ namespace Proto2Code
             DirectoryInfo srcDir2 = new DirectoryInfo(src2);
             DirectoryInfo desDir1 = new DirectoryInfo(des1);
 
-            if (desDir1.Exists) desDir1.Delete(true);
-            desDir1.Create();
-
+            if (!desDir1.Exists)
+            {
+                desDir1.Create();
+            }
+            
+            List<string> protoList = new List<string>();        //所有的proto文件
             if (srcDir1.Exists)
             {
                 Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir1.FullName, desDir1.FullName));
-                foreach (string file in Directory.GetFiles(srcDir1.FullName, "*.proto", SearchOption.TopDirectoryOnly))
+                foreach (var fileInfo in srcDir1.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
                 {
-                    string newfile = file.Replace('\\', '/');
+                    string newfile = fileInfo.FullName.Replace('\\', '/');
+                    protoList.Add(fileInfo.Name.ToLower());
                     newfile = newfile.Replace(srcDir1.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
-                    File.Copy(file, newfile, true);
+                    File.Copy(fileInfo.FullName, newfile, true);
                 }
             }
 
             if(srcDir2.Exists)
             {
                 Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir2.FullName, desDir1.FullName));
-                foreach (string file in Directory.GetFiles(srcDir2.FullName, "*.proto", SearchOption.TopDirectoryOnly))
+                foreach (var fileInfo in srcDir2.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
                 {
-                    string newfile = file.Replace('\\', '/');
+                    string newfile = fileInfo.FullName.Replace('\\', '/');
+                    protoList.Add(fileInfo.Name.ToLower());
                     newfile = newfile.Replace(srcDir2.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
-                    File.Copy(file, newfile, true);
+                    File.Copy(fileInfo.FullName, newfile, true);
+                }
+            }
+            DirectoryInfo desTableDir = new DirectoryInfo("./DesTable/DataTable");
+            DirectoryInfo proTableDir = new DirectoryInfo("./ProTable");
+            foreach(var fileInfo in desTableDir.GetFiles("*.xlsx", SearchOption.AllDirectories))
+            {
+                protoList.Add(fileInfo.Name.Replace("xlsx","proto").ToLower());
+            }
+            foreach(var fileInfo in proTableDir.GetFiles("*.xlsx", SearchOption.AllDirectories))
+            {
+                protoList.Add(fileInfo.Name.Replace("xlsx", "proto").ToLower());
+            }
+
+            protoList.Add("globalenum.proto");
+            protoList.Add("mailidenum.proto");
+            foreach (var fileInfo in desDir1.GetFiles("*.proto",SearchOption.TopDirectoryOnly))
+            {
+                if (!protoList.Contains(fileInfo.Name.ToLower()))
+                {
+                    fileInfo.Delete();
                 }
             }
 
-            //
             CFileList.Instance.ReadFileList();
 
             //生成Proto，PE文件
@@ -175,7 +198,7 @@ namespace Proto2Code
             #region
             //删掉后端C++相关文件（临时方案）
             string targetDic = "./TableOut/C++/gen/SHLib/";
-            string[] protos = Directory.GetFiles("./TableGen/11_ProtobufClt/", "*.proto");
+            string[] protos = Directory.GetFiles("./TableGen/10_ProtobufClt/", "*.proto");
             foreach (var v in protos)
             {
                 FileInfo file = new FileInfo(v);
@@ -256,7 +279,6 @@ namespace Proto2Code
 
             return CGeneration.Instance.Generation(bSync);
         }
-
         private static string argsStr = "";
     }
 }

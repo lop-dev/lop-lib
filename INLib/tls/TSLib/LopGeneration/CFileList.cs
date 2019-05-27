@@ -72,13 +72,16 @@ namespace Proto2Code
                 }
                     
                 string[] infos = line.Split('|');
-                if(!File.Exists(infos[0]))
+                string fileFullPath = m_strRootDirectory + "/" + infos[0];
+                FileInfo fi = new FileInfo(fileFullPath);
+                if (!fi.Exists)
                 {
+                    Console.WriteLine("file deleted:"+ infos[0]);
                     m_dicFileList.Add(infos[0],new CFileInfo(infos[0],infos[1],EFileType.Deleted));
                     continue;
                 }
 
-                string newMd5 = CSLib.Security.CMd5.EncodeFile(infos[0]);
+                string newMd5 = CSLib.Security.CMd5.EncodeFile(fileFullPath);
                 if (newMd5 == infos[1])
                 {
                     m_dicFileList.Add(infos[0], new CFileInfo(infos[0], infos[1], EFileType.UnModified));
@@ -145,18 +148,68 @@ namespace Proto2Code
                     string ccpbh = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.h", name);
                     string ccpbcc = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.cc", name);
                     string luapb = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Lua/{0}_pb.lua", name);
+                    string pybp = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Python/{0}_pb2.py", name);
 
-                    if (File.Exists(proto)) File.Delete(proto);
-                    if (File.Exists(cspe)) File.Delete(cspe);
-                    if (File.Exists(ccpeh)) File.Delete(ccpeh);
-                    if (File.Exists(ccpecc)) File.Delete(ccpecc);
-                    if (File.Exists(gope)) File.Delete(gope);
-                    if (File.Exists(txt)) File.Delete(txt);
-                    if (File.Exists(dbg)) File.Delete(dbg);
-                    if (File.Exists(cspb)) File.Delete(cspb);
-                    if (File.Exists(ccpbh)) File.Delete(ccpbh);
-                    if (File.Exists(ccpbcc)) File.Delete(ccpbcc);
-                    if (File.Exists(luapb)) File.Delete(luapb);
+                    if (File.Exists(proto))
+                    {
+                        Console.WriteLine("删除" + proto);
+                        File.Delete(proto);
+                    }
+                    if (File.Exists(cspe))
+                    {
+                        Console.WriteLine("删除" + cspe);
+                        File.Delete(cspe);
+                    }
+                    if (File.Exists(ccpeh))
+                    {
+                        Console.WriteLine("删除" + ccpeh);
+                        File.Delete(ccpeh);
+                    }
+                    if (File.Exists(ccpecc))
+                    {
+                        Console.WriteLine("删除" + ccpecc);
+                        File.Delete(ccpecc);
+                    }
+                    if (File.Exists(gope))
+                    {
+                        Console.WriteLine("删除" + gope);
+                        File.Delete(gope);
+                    }
+                    if (File.Exists(txt))
+                    {
+                        Console.WriteLine("删除" + txt);
+                        File.Delete(txt);
+                    }
+                    if (File.Exists(dbg))
+                    {
+                        Console.WriteLine("删除" + dbg);
+                        File.Delete(dbg);
+                    }
+                    if (File.Exists(cspb))
+                    {
+                        Console.WriteLine("删除" + cspb);
+                        File.Delete(cspb);
+                    }
+                    if (File.Exists(ccpbh))
+                    {
+                        Console.WriteLine("删除" + ccpbh);
+                        File.Delete(ccpbh);
+                    }
+                    if (File.Exists(ccpbcc))
+                    {
+                        Console.WriteLine("删除" + ccpbcc);
+                        File.Delete(ccpbcc);
+                    }
+                    if (File.Exists(luapb))
+                    {
+                        Console.WriteLine("删除" + luapb);
+                        File.Delete(luapb);
+                    }
+                    if (File.Exists(pybp))
+                    {
+                        Console.WriteLine("删除" + pybp);
+                        File.Delete(pybp);
+                    }
                 }
                 if (v.Key.EndsWith(".proto"))
                 {
@@ -168,11 +221,33 @@ namespace Proto2Code
                     string ccpbh = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.h", name);
                     string ccpbcc = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.cc", name);
                     string luapb = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Lua/{0}_pb.lua", name);
+                    string pybp = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Python/{0}_pb2.py", name);
 
-                    if (File.Exists(cspb)) File.Delete(cspb);
-                    if (File.Exists(ccpbh)) File.Delete(ccpbh);
-                    if (File.Exists(ccpbcc)) File.Delete(ccpbcc);
-                    if (File.Exists(luapb)) File.Delete(luapb);
+                    if (File.Exists(cspb))
+                    {
+                        Console.WriteLine("删除" + cspb);
+                        File.Delete(cspb);
+                    }
+                    if (File.Exists(ccpbh))
+                    {
+                        Console.WriteLine("删除" + ccpbh);
+                        File.Delete(ccpbh);
+                    }
+                    if (File.Exists(ccpbcc))
+                    {
+                        Console.WriteLine("删除" + ccpbcc);
+                        File.Delete(ccpbcc);
+                    }
+                    if (File.Exists(luapb))
+                    {
+                        Console.WriteLine("删除" + luapb);
+                        File.Delete(luapb);
+                    }
+                    if (File.Exists(pybp))
+                    {
+                        Console.WriteLine("删除" + pybp);
+                        File.Delete(pybp);
+                    }
                 }
             }
         }
