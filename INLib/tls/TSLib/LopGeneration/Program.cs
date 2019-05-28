@@ -38,7 +38,7 @@ namespace Proto2Code
             Console.WriteLine("拷贝Proto文件");
             string exe1 = @".\TableGen\01_LopGeneration\";
             string src1 = @".\TableGen\10_ProtobufDef\";
-            string src2 = @".\TableGen\10_ProtobufClt\";
+            string src2 = @".\TableGen\11_ProtobufClt\";
             string des1 = @".\TableOut\Temp\1_Protoext\";
 
             DirectoryInfo exeDir1 = new DirectoryInfo(exe1);
@@ -198,7 +198,7 @@ namespace Proto2Code
             #region
             //删掉后端C++相关文件（临时方案）
             string targetDic = "./TableOut/C++/gen/SHLib/";
-            string[] protos = Directory.GetFiles("./TableGen/10_ProtobufClt/", "*.proto");
+            string[] protos = Directory.GetFiles("./TableGen/11_ProtobufClt/", "*.proto");
             foreach (var v in protos)
             {
                 FileInfo file = new FileInfo(v);
