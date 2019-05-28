@@ -79,6 +79,11 @@ namespace Proto2Code
             CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_H, "*.h");
             CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_CPP, "*.cc");
 
+            Console.WriteLine("拷贝文件之：Python");
+            string CLIENT_PB_PY_SRC = @".\TableOut\Temp\2_Protobuf\Python\";
+            string CLIENT_PB_PY_DES = @".\TableOut\Python\gen\protobuf\";
+            CopyDirectory(CLIENT_PB_PY_SRC, CLIENT_PB_PY_DES, "*.py");
+
             Console.WriteLine("拷贝文件之：Proto");
             string PROTO_SRC = @".\TableOut\Temp\1_Protoext\";
             string PROTO_DES = @".\TableOut\Proto\";
@@ -93,11 +98,6 @@ namespace Proto2Code
             string PROTOBINDBG_SRC = @".\TableOut\Temp\3_Protobin\";
             string PROTOBINDBG_DES = @".\TableOut\Protobindbg\";
             CopyDirectory(PROTOBINDBG_SRC, PROTOBINDBG_DES, "*.dbg");
-
-            Console.WriteLine("拷贝文件之：Python");
-            string CLIENT_PB_PY_SRC = @".\TableOut\Temp\2_Protobuf\Python\";
-            string CLIENT_PB_PY_DES = @".\TableOut\Python\gen\protobuf\";
-            CopyDirectory(CLIENT_PB_PY_SRC, CLIENT_PB_PY_DES, "*.py");
         }
 
         public int CopyDirectory(string strSrc, string strDes, string searchOption)
