@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace TSLib.ProtoGeneration
@@ -77,10 +78,8 @@ namespace TSLib.ProtoGeneration
                     continue;
                 }
                 string head = item.enumPTBuf.Split(':')[2];
-                string path = new DirectoryInfo("../").FullName + "\\11_ProTableGen_Out\\";
-
+                string path = new DirectoryInfo("../").FullName + "\\SrcGen\\TableOut\\Temp\\1_Protoext\\";
                 string headFile = CHelper.WriteHead(head);
-
                 if (!m_PTBufList.Contains(headFile) && File.Exists(path + headFile + ".proto"))
                 {
                     m_writer.WriteLine("#include <SHLib/protobuf/{0}.pb.h>", headFile);
