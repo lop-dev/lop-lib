@@ -78,7 +78,7 @@ namespace TSLib.ProtoGeneration
                     continue;
                 }
                 string head = item.enumPTBuf.Split(':')[2];
-                string path = new DirectoryInfo("../").FullName + "\\SrcGen\\TableOut\\Temp\\1_Protoext\\";
+                string path = new DirectoryInfo("./").FullName + "\\TableOut\\Temp\\1_Protoext\\";
                 string headFile = CHelper.WriteHead(head);
                 if (!m_PTBufList.Contains(headFile) && File.Exists(path + headFile + ".proto"))
                 {
