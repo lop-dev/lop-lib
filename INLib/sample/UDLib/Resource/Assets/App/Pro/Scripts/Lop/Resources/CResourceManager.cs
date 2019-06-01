@@ -10,6 +10,15 @@ using ACGNStudio;
 
 namespace ACGNStudio
 {
+    public enum EMaterialType
+    {
+        EMT_Origin = 1,     //原本的材质
+        EMT_Freeze = 2,     //冰冻
+        EMT_Disappear = 3,  //消失
+        EMT_Ghost = 4,      //灵魂形态（奢比死亡召唤物）
+        EMT_InShadow = 5,   //葱茏隐于影召唤物
+    }
+
     public class CResourceManager: CSLib.Utility.CSingleton<CResourceManager>
     {
         /// <summary>
@@ -235,17 +244,17 @@ namespace ACGNStudio
         //}
 
         //[LuaInterface.NoToLua]
-        //public void LoadMaterial(PTBuf.EMaterialType matType, string matName, System.Action<Material, PTBuf.EMaterialType> loadedCallback)
-        //{
-        //    LoadPrefabAsync(UDLib.Resource.ERESOURCE_TYPE.MATERIAL, matName, (obj, arg) =>
-        //    {
-        //        var mat = obj as Material;
-        //        if (mat != null && null != loadedCallback)
-        //        {
-        //            loadedCallback.Invoke(mat, matType);
-        //        }
-        //    }, needInstantiate: false, isAsynMode: false);
-        //}
+        public void LoadMaterial(EMaterialType matType, string matName, System.Action<Material, EMaterialType> loadedCallback)
+        {
+            LoadPrefabAsync(UDLib.Resource.ERESOURCE_TYPE.MATERIAL, matName, (obj, arg) =>
+            {
+                var mat = obj as Material;
+                if (mat != null && null != loadedCallback)
+                {
+                    loadedCallback.Invoke(mat, matType);
+                }
+            }, needInstantiate: false, isAsynMode: false);
+        }
 
         public void LoadScene(string sceneName,System.Action callback)
         {
@@ -292,6 +301,5 @@ namespace ACGNStudio
                 }
             });
         }
-
     }
 }

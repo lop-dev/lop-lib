@@ -6,6 +6,7 @@ namespace UDLib.Resource
   // 资源类型
   public enum ERESOURCE_TYPE
   {
+    MATERIAL,
     SCENE,
     SHADER,
     VIDEO,
@@ -19,6 +20,7 @@ namespace UDLib.Resource
       // CATEGORY_TYPE数组
       public static readonly EBUILD_TYPE[] buildTypes = new EBUILD_TYPE[]
       {
+          EBUILD_TYPE.SINGLE, // MATERIAL
           EBUILD_TYPE.SINGLE, // SCENE
           EBUILD_TYPE.PACK, // SHADER
           EBUILD_TYPE.SINGLE, // VIDEO
@@ -26,6 +28,7 @@ namespace UDLib.Resource
       // 用于添加至AB包名的后缀
       public static readonly string[] suffix = new string[]
       {
+          "", // MATERIAL
           "", // SCENE
           "", // SHADER
           "", // VIDEO
@@ -34,6 +37,10 @@ namespace UDLib.Resource
       // _ASSERT_BUNDLE_txt数组
       public static readonly string[][] rootPaths = new string[][]
       {
+          new string[] // MATERIAL
+          {
+              "assets/app/pro/gameres/material/",
+          },
           new string[] // SCENE
           {
               "assets/app/pro/gameres/scenes/",
@@ -50,6 +57,10 @@ namespace UDLib.Resource
       // Resources.Load()使用的路径数组
       public static readonly string[][] subPaths = new string[][]
       {
+          new string[] // MATERIAL
+          {
+              "assets/app/pro/gameres/material/",
+          },
           new string[] // SCENE
           {
               "assets/app/pro/gameres/scenes/",
@@ -66,6 +77,10 @@ namespace UDLib.Resource
       // 对象扩展名数组
       public static readonly string[][] exts = new string[][]
       {
+          new string[] // MATERIAL
+          {
+              ".mat",
+          },
           new string[] // SCENE
           {
               ".unity",
