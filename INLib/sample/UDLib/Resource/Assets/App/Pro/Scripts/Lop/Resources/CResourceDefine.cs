@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ACGNStudio
+namespace UDLib.Resource
 {
     public class CResourceDefine : UDLib.Utility.IResourceDefine
     {
