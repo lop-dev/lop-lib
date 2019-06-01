@@ -7,6 +7,7 @@ namespace UDLib.Resource
   public enum ERESOURCE_TYPE
   {
     SCENE,
+    SHADER,
     VIDEO,
 
     MAX
@@ -19,12 +20,14 @@ namespace UDLib.Resource
       public static readonly EBUILD_TYPE[] buildTypes = new EBUILD_TYPE[]
       {
           EBUILD_TYPE.SINGLE, // SCENE
+          EBUILD_TYPE.PACK, // SHADER
           EBUILD_TYPE.SINGLE, // VIDEO
       };
       // 用于添加至AB包名的后缀
       public static readonly string[] suffix = new string[]
       {
           "", // SCENE
+          "", // SHADER
           "", // VIDEO
       };
 
@@ -34,6 +37,10 @@ namespace UDLib.Resource
           new string[] // SCENE
           {
               "assets/app/pro/gameres/scenes/",
+          },
+          new string[] // SHADER
+          {
+              "assets/app/pro/gameres/shaders/",
           },
           new string[] // VIDEO
           {
@@ -47,6 +54,10 @@ namespace UDLib.Resource
           {
               "assets/app/pro/gameres/scenes/",
           },
+          new string[] // SHADER
+          {
+              "assets/app/pro/gameres/shaders/",
+          },
           new string[] // VIDEO
           {
               "assets/app/pro/gameres/video/",
@@ -58,6 +69,11 @@ namespace UDLib.Resource
           new string[] // SCENE
           {
               ".unity",
+          },
+          new string[] // SHADER
+          {
+              ".shader",
+              ".cginc",
           },
           new string[] // VIDEO
           {
