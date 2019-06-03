@@ -9,6 +9,7 @@ namespace UDLib.Resource
     MATERIAL,
     SCENE,
     SHADER,
+    UI_VFX,
     VIDEO,
 
     MAX
@@ -23,6 +24,7 @@ namespace UDLib.Resource
           EBUILD_TYPE.SINGLE, // MATERIAL
           EBUILD_TYPE.SINGLE, // SCENE
           EBUILD_TYPE.PACK, // SHADER
+          EBUILD_TYPE.SINGLE, // UI_VFX
           EBUILD_TYPE.SINGLE, // VIDEO
       };
       // 用于添加至AB包名的后缀
@@ -31,6 +33,7 @@ namespace UDLib.Resource
           "", // MATERIAL
           "", // SCENE
           "", // SHADER
+          "", // UI_VFX
           "", // VIDEO
       };
 
@@ -48,6 +51,10 @@ namespace UDLib.Resource
           new string[] // SHADER
           {
               "assets/app/pro/gameres/shaders/",
+          },
+          new string[] // UI_VFX
+          {
+              "assets/app/pro/gameres/effects/uifx/",
           },
           new string[] // VIDEO
           {
@@ -69,6 +76,10 @@ namespace UDLib.Resource
           {
               "assets/app/pro/gameres/shaders/",
           },
+          new string[] // UI_VFX
+          {
+              "assets/app/pro/gameres/effects/uifx/",
+          },
           new string[] // VIDEO
           {
               "assets/app/pro/gameres/video/",
@@ -89,6 +100,10 @@ namespace UDLib.Resource
           {
               ".shader",
               ".cginc",
+          },
+          new string[] // UI_VFX
+          {
+              ".prefab",
           },
           new string[] // VIDEO
           {
