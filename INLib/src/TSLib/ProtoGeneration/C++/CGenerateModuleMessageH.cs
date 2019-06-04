@@ -54,15 +54,15 @@ namespace TSLib.ProtoGeneration
             m_writer.WriteLine("// ------------------------------------------------------------------------------");
             m_writer.WriteLine("");
 
-            m_writer.WriteLine("#ifndef __SHLIB_MESSAGE_{0}MSG_H__", m_nameUnit.MoudleSysUpper);
-            m_writer.WriteLine("#define __SHLIB_MESSAGE_{0}MSG_H__", m_nameUnit.MoudleSysUpper);
+            m_writer.WriteLine("#ifndef __MSLIB_MESSAGE_{0}MSG_H__", m_nameUnit.MoudleSysUpper);
+            m_writer.WriteLine("#define __MSLIB_MESSAGE_{0}MSG_H__", m_nameUnit.MoudleSysUpper);
             m_writer.WriteLine("");
 
-            m_writer.WriteLine("#include <SHLib/message/message.h>");
+            m_writer.WriteLine("#include <MSLib/message/message.h>");
             m_writer.WriteLine("#include <BCLib/framework/msgExec.h>");
             m_writer.WriteLine("#include <BCLib/framework/msgExecMgr.h>");
             m_writer.WriteLine("#include <BCLib/framework/thdMsgLabel.h>");
-            m_writer.WriteLine("#include <SHLib/protobuf/{0}.pb.h>", m_nameUnit.MoudleSysName);   
+            m_writer.WriteLine("#include <PTLib/protobuf/{0}.pb.h>", m_nameUnit.MoudleSysName);   
         }
 
         private void WriteExtraIncludeFile(List<SMsgID> list)
@@ -82,7 +82,7 @@ namespace TSLib.ProtoGeneration
                 string headFile = CHelper.WriteHead(head);
                 if (!m_PTBufList.Contains(headFile) && File.Exists(path + headFile + ".proto"))
                 {
-                    m_writer.WriteLine("#include <SHLib/protobuf/{0}.pb.h>", headFile);
+                    m_writer.WriteLine("#include <PTLib/protobuf/{0}.pb.h>", headFile);
                     m_PTBufList.Add(headFile);          
                 }
 
@@ -95,7 +95,7 @@ namespace TSLib.ProtoGeneration
             m_writer.WriteLine("using namespace PTBuf;");
             m_writer.WriteLine("");
 
-            m_writer.WriteLine("namespace SHLib");
+            m_writer.WriteLine("namespace MSLib");
             m_writer.WriteLine("{");
             m_writer.WriteLine("std::string {0}(BCLib::int32 msgID);", m_nameUnit.MoudleSysName + "Msg2Str");
             m_writer.WriteLine("");
@@ -129,7 +129,7 @@ namespace TSLib.ProtoGeneration
                 serverDic[type].Add(msgEnumName);
 
                 string[] label = PTBuf.Split(',');
-                //label[0] = （SHLIB_BUFMSG_DEFINE/SHLIB_NETMSG_DEFINE
+                //label[0] = （MSLIB_BUFMSG_DEFINE/MSLIB_NETMSG_DEFINE
                 //label[1] = PTBuf::XX...
                 if (!PTBuf.Contains("PTBuf::"))
                 {
@@ -200,7 +200,7 @@ namespace TSLib.ProtoGeneration
                 m_writer.Write("    BCLIB_MSGEXEC_DEFINE_BEGIN(type)");
                 m_writer.WriteLine("    " + @"\");
 
-                m_writer.Write("        BCLIB_MSGEXEC_DEFINE_TYPE_BEGIN(SFLIB_MSG_TYPE(SHLib::{0}, PTBuf::{1}), id)", server, EFUNC);
+                m_writer.Write("        BCLIB_MSGEXEC_DEFINE_TYPE_BEGIN(SFLIB_MSG_TYPE(MSLib::{0}, PTBuf::{1}), id)", server, EFUNC);
                 m_writer.WriteLine("    " + @"\");
 
                 foreach (string item in serverDic[server])
@@ -256,7 +256,7 @@ namespace TSLib.ProtoGeneration
         private void WriteNamespaceEnd()
         {
             m_writer.WriteLine("} // Message");
-            m_writer.WriteLine("} // SHLib");
+            m_writer.WriteLine("} // MSLib");
             m_writer.WriteLine("#endif");
         }
     }

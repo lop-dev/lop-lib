@@ -49,13 +49,13 @@ namespace TSLib.ProtoGeneration
             m_sbServiceStr.WriteLine("// ------------------------------------------------------------------------------");
             m_sbServiceStr.WriteLine("");
 
-            m_sbServiceStr.WriteLine("#include <SHLib/message/{0}>", m_nameUnit.MoudleSysName + "Msg" + ".h");
+            m_sbServiceStr.WriteLine("#include <MSLib/message/{0}>", m_nameUnit.MoudleSysName + "Msg" + ".h");
             m_sbServiceStr.WriteLine("");
         }
 
         private void WriteNamespaceBegin()
         {
-            m_sbServiceStr.WriteLine("namespace SHLib");
+            m_sbServiceStr.WriteLine("namespace MSLib");
             m_sbServiceStr.WriteLine("{");
             m_sbServiceStr.WriteLine("");
         }
@@ -119,7 +119,7 @@ namespace TSLib.ProtoGeneration
                         , CHelper.ToHump(type), CHelper.ToCaptilize(m_nameUnit.MoudleSysName), CHelper.ChangeEnum(item, "_on"));
                     m_sbServiceStr.WriteLine("    {");
                     m_sbServiceStr.WriteLine(
-                        "        BCLIB_LOG_ERROR(SHLib::ELOGMODULE_SHLIB_{0}, \"Unhandled Message:dawDW {1}\");"
+                        "        //BCLIB_LOG_ERROR(MSLib::ELOGMODULE_MSLIB_{0}, \"Unhandled Message:dawDW {1}\");"
                         , m_nameUnit.MoudleSysName.ToUpper(), item);
                     m_sbServiceStr.WriteLine("    }");
                     m_sbServiceStr.WriteLine("");
@@ -161,7 +161,7 @@ namespace TSLib.ProtoGeneration
         private void WriteNamespaceEnd()
         {
             //这是全局最后一个 ‘}’ 如有后续修改需在注意
-            m_sbServiceStr.WriteLine("} // SHLib");
+            m_sbServiceStr.WriteLine("} // MSLib");
         }
 
         private void initServerDic(List<SMsgID> systemList)

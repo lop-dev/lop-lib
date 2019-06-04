@@ -48,6 +48,8 @@
     <Compile Include="C++\CGenerateCpp.cs" />
     <Compile Include="C++\CGenerateModuleMessageCC.cs" />
     <Compile Include="C++\CGenerateModuleMessageH.cs" />
+    <Compile Include="C++\CGenerateMsg2StrFuncCC.cs" />
+    <Compile Include="C++\CGenerateMsg2StrFuncH.cs" />
     <Compile Include="CHelper.cs" />
     <Compile Include="CNameUnit.cs" />
     <Compile Include="CProtoFile.cs" />

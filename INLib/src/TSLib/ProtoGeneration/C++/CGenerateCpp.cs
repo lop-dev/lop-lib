@@ -19,6 +19,7 @@ namespace TSLib.ProtoGeneration
             {
                 _ProcessFile(fileInfo.FullName, fileInfo.Name.Replace(".proto", string.Empty), writePathRoot);
             }
+            CGenerateMsg2StrFunc(writePathRoot, fileInfos);
         }
         
         private static void _ProcessFile(string filePath, string file_name, string writePathRoot)
@@ -29,6 +30,7 @@ namespace TSLib.ProtoGeneration
             {
                 CGenerateModuleMessageCC cpp = new CGenerateModuleMessageCC(load.NameUnit, writePathRoot);
                 CGenerateModuleMessageH h = new CGenerateModuleMessageH(load.NameUnit, writePathRoot);
+                
 
                 cpp.StartWrite(load.MsgIDList);
                 h.StartWriter(load.MsgIDList, load.EFUNC);
@@ -41,6 +43,15 @@ namespace TSLib.ProtoGeneration
             {
                 //Console.WriteLine(string.Format("LOG: >> file:{0}.proto is NOT a DefinedMsgProtoFile, passed it.", file_name));
             }
+        }
+
+        private static void CGenerateMsg2StrFunc(string writePathRoot,FileInfo[] fileInfos)
+        {
+            CGenerateMsg2StrFuncH msg2StrFunh = new CGenerateMsg2StrFuncH(writePathRoot);
+            CGenerateMsg2StrFuncCC msg2StrFuncc = new CGenerateMsg2StrFuncCC(writePathRoot,fileInfos);
+
+            msg2StrFunh.StartWriter();
+            msg2StrFuncc.StartWriter();
         }
     }
 }
