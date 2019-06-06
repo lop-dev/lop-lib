@@ -58,7 +58,7 @@ namespace TSLib.ProtoGeneration
             m_writer.WriteLine("#define __MSLIB_MESSAGE_{0}MSG_H__", m_nameUnit.MoudleSysUpper);
             m_writer.WriteLine("");
 
-            m_writer.WriteLine("#include <MSLib/message/message.h>");
+            m_writer.WriteLine("#include <MSLib/commonDefine/message.h>");
             m_writer.WriteLine("#include <BCLib/framework/msgExec.h>");
             m_writer.WriteLine("#include <BCLib/framework/msgExecMgr.h>");
             m_writer.WriteLine("#include <BCLib/framework/thdMsgLabel.h>");
