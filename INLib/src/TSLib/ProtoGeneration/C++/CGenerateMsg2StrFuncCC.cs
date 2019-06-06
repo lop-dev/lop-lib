@@ -97,7 +97,7 @@ std::string CFuncMsgIDNameHelper::getFuncMsgIDName(BCLib::uint16 funcID, BCLib::
 	}
 
 	std::string strName = g_msg2StrFuncs[funcID](msgID);
-	if (strName == "")
+	if (strName == """")
 	{
 		return SFLib::CFuncMsgIDNameHelper::getFuncMsgIDName(funcID, msgID);
 	}

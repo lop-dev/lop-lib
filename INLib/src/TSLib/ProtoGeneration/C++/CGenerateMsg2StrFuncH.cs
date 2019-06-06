@@ -35,7 +35,7 @@ namespace TSLib.ProtoGeneration
 #include <SFLib/commonDefine/baseDef.h>
 #include <google/protobuf/message.h>
 #include <BCLib/utility/logFile.h>
-#include <../PTLib/inc/PTLib/protobuf/message.pb.h>
+#include </PTLib/protobuf/message.pb.h>
 namespace MSLib
 {
 
