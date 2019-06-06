@@ -10,9 +10,8 @@ namespace RefreshPTPrj
     class CRefreshPrj
     {
         static string m_currentDirectory = Directory.GetCurrentDirectory();
-        static string m_incFilesRoot = m_currentDirectory + "/inc";
-        static string m_srcFilesRoot = m_currentDirectory + "/src";
-        static string m_protoFilesRoot = m_currentDirectory + "/inc";
+        static string m_incFilesRoot = m_currentDirectory + "/inc/";
+        static string m_srcFilesRoot = m_currentDirectory + "/src/";
         static string m_vcxprojPath = m_currentDirectory+ "/prj/MSLib/vs15/MSLib.vcxproj";
         static string m_vcxprojFilterPath = m_currentDirectory + "/prj/MSLib/vs15/MSLib.vcxproj.filters";
 
@@ -25,7 +24,8 @@ namespace RefreshPTPrj
         {
             m_incFiles.AddRange(Directory.GetFiles(m_incFilesRoot, "*.h",SearchOption.AllDirectories));
             m_srcFiles.AddRange(Directory.GetFiles(m_srcFilesRoot, "*.cc", SearchOption.AllDirectories));
-            
+            m_srcFiles.AddRange(Directory.GetFiles(m_srcFilesRoot, "*.cpp", SearchOption.AllDirectories));
+
             ReadVcxproj();
             ReadVcxprojFilters();
 
@@ -114,15 +114,13 @@ namespace RefreshPTPrj
                             int subIndex = file.LastIndexOf("\\inc\\");
                             string line = "    <ClInclude Include=\"..\\..\\.." + file.Substring(subIndex) + "\">";
                             sw.WriteLine(line);
-                            //if(file.EndsWith(".pb.h"))
-                            //{
-                            //    line = "      <Filter>inc\\protobuf</Filter>";
-                            //}
-                            //else
-                            //{
-                            //    line = "      <Filter>inc\\protoext</Filter>";
-                            //}
-                            line = "      <Filter>inc\\message</Filter>";
+                            if (file.Contains("\\message\\"))
+                            {
+                                line = "      <Filter>inc\\message</Filter>";
+                            }else if (file.Contains("\\commonDefine\\"))
+                            {
+                                line = "      <Filter>inc\\commonDefine</Filter>";
+                            }
                             sw.WriteLine(line);
                             sw.WriteLine("    </ClInclude>");
                         }
@@ -135,7 +133,14 @@ namespace RefreshPTPrj
                             int subIndex = file.LastIndexOf("\\src\\");
                             string line = "    <ClCompile Include=\"..\\..\\.." + file.Substring(subIndex) + "\">";
                             sw.WriteLine(line);
-                            line = "      <Filter>src\\message</Filter>";
+                            if (file.Contains("\\message\\"))
+                            {
+                                line = "      <Filter>src\\message</Filter>";
+                            }
+                            else if (file.Contains("\\commonDefine\\"))
+                            {
+                                line = "      <Filter>src\\commonDefine</Filter>";
+                            }
                             sw.WriteLine(line);
                             sw.WriteLine("    </ClCompile>");
                         }
