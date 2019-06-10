@@ -25,7 +25,7 @@ namespace TSLib.ProtoGeneration
         public void StartWriter(List<SMsgID> systemList,string EFUNC)
         {
             m_file = new FileStream(m_writePath_h, FileMode.OpenOrCreate);
-            m_writer = new StreamWriter(m_file);
+            m_writer = new StreamWriter(m_file, System.Text.Encoding.GetEncoding("GB2312"));
 
             WriteFixedHead();
             WriteExtraIncludeFile(systemList);

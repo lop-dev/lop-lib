@@ -23,7 +23,7 @@ namespace TSLib.ProtoGeneration
         public void StartWrite(List<SMsgID> systemList)
         {
             m_file = new FileStream(m_writePath_cpp, FileMode.OpenOrCreate);
-            m_sbServiceStr = new StreamWriter(m_file);
+            m_sbServiceStr = new StreamWriter(m_file, System.Text.Encoding.GetEncoding("GB2312"));
             initServerDic(systemList);
 
             WriteHead();
