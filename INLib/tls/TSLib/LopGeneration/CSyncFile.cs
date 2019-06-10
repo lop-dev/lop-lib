@@ -52,8 +52,8 @@ namespace Proto2Code
             string SERVER_PROFILEGEN_SRC = @".\TableOut\Temp\4_Protomsg\C++\";
             string SERVER_PROFILEGEN_DES_H = @".\TableOut\C++\gen\SHLib\message\";
             string SERVER_PROFILEGEN_DES_CPP = @".\TableOut\C++\gen\SHLib\message\";
-            CopyDirectory(SERVER_PROFILEGEN_SRC, SERVER_PROFILEGEN_DES_H, "*.h");
-            CopyDirectory(SERVER_PROFILEGEN_SRC, SERVER_PROFILEGEN_DES_CPP, "*.cc");
+            CopyDirectory(SERVER_PROFILEGEN_SRC, SERVER_PROFILEGEN_DES_H, "*Msg.h");
+            CopyDirectory(SERVER_PROFILEGEN_SRC, SERVER_PROFILEGEN_DES_CPP, "*Msg.cc");
 
             //拷贝到PTLib目录
             string SERVER_PTLIB_PROTO_SRC = @".\TableOut\Temp\1_Protoext\";
@@ -76,8 +76,13 @@ namespace Proto2Code
             string SERVER_MSLIB_PROFILEGEN_SRC = @".\TableOut\Temp\4_Protomsg\C++\";
             string SERVER_MSLIB_PROFILEGEN_DES_H = @".\TableOut\C++\MSLib\inc\MSLib\message\";
             string SERVER_MSLIB_PROFILEGEN_DES_CPP = @".\TableOut\C++\MSLib\src\MSLib\message\";
-            CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_H, "*.h");
-            CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_CPP, "*.cc");
+            CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_H, "*Msg.h");
+            CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_CPP, "*Msg.cc");
+            
+            string SERVER_MSLIB_MSGDEFINE_H = @".\TableOut\C++\MSLib\inc\MSLib\commonDefine\";
+            string SERVER_MSLIB_MSGDEFINE_CC = @".\TableOut\C++\MSLib\src\MSLib\commonDefine\";
+            CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_H, "message2StrFunc.h",false);
+            CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_CC, "message2StrFunc.cc",false);
 
             Console.WriteLine("拷贝文件之：Python");
             string CLIENT_PB_PY_SRC = @".\TableOut\Temp\2_Protobuf\Python\";
@@ -100,7 +105,7 @@ namespace Proto2Code
             CopyDirectory(PROTOBINDBG_SRC, PROTOBINDBG_DES, "*.dbg");
         }
 
-        public int CopyDirectory(string strSrc, string strDes, string searchOption)
+        public int CopyDirectory(string strSrc, string strDes, string searchOption,bool delOtherFiles = true)
         {
             if(!Directory.Exists(strSrc))
             {
@@ -128,19 +133,21 @@ namespace Proto2Code
                 srcFileList.Add(desFile);
                 srcFileList.Add(desFile+".meta");
             }
-
-            foreach(string file in Directory.GetFiles(dirDes.FullName, searchOption, SearchOption.TopDirectoryOnly))
+            if(delOtherFiles)
             {
-                if (!srcFileList.Contains(file.Replace('\\', '/')))
-                    File.Delete(file);
-            }
+                foreach (string file in Directory.GetFiles(dirDes.FullName, searchOption, SearchOption.TopDirectoryOnly))
+                {
+                    if (!srcFileList.Contains(file.Replace('\\', '/')))
+                        File.Delete(file);
+                }
 
-            foreach (string file in Directory.GetFiles(dirDes.FullName, searchOption +".meta", SearchOption.TopDirectoryOnly))
-            {
-                if (!srcFileList.Contains(file.Replace('\\', '/')))
-                    File.Delete(file);
+                foreach (string file in Directory.GetFiles(dirDes.FullName, searchOption + ".meta", SearchOption.TopDirectoryOnly))
+                {
+                    if (!srcFileList.Contains(file.Replace('\\', '/')))
+                        File.Delete(file);
+                }
             }
-
+            
             return 0;
         }
     }
