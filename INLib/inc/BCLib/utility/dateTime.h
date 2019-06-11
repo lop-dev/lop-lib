@@ -60,7 +60,7 @@ public:
     /// @brief 获取当前时间的秒数
     /// @return time_t
     /// @param bAdjust 是否算上全局的修正时间
-    time_t getTime(bool bAdjust = false) const;  // the seconds elapsed from 1970
+    time_t getTime() const;  // the seconds elapsed from 1970
     /// @brief 获取当前时间的秒数
     /// @return void
     /// @param year 返回值
@@ -70,7 +70,7 @@ public:
     /// @param minute 返回值
     /// @param second 返回值
     /// @param bAdjust 是否算上全局的修正时间
-    void getTime(int& year, int& month, int& day, int& hour, int& minute, int& second, bool bAdjust = false) const;
+    void getTime(int& year, int& month, int& day, int& hour, int& minute, int& second) const;
 
     uint32 getYear() const;
     uint32 getMonth() const;
@@ -167,7 +167,8 @@ public:
     /// @brief 设置全局的修正时间
     /// @return void
     /// @param second 修正的秒数，可以是负数
-    static void setAdjust(uint32 second);
+    static void setAdjust(int32 second);
+    static int32 getAdjust();
 
     static bool isExpired(CDateTime dtExpired);
     static bool isExpired(int year, int month = 1, int day = 1, int hour = 0, int minute = 0, int second = 0);
@@ -187,7 +188,7 @@ public:
 private:
     time_t m_iSeconds;
 
-    static BCLib::uint32 ms_adjustSecond;
+    static BCLib::int32 ms_adjustSecond;
 
     const static BCLib::uint32 ms_hour = 60;
     const static BCLib::uint32 ms_day = 24 * ms_hour;
