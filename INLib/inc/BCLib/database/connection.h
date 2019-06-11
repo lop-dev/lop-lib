@@ -60,7 +60,7 @@ public:
 
     bool connectDB(const char* pszDBServer, const char* pszDBInstance, const char* pszDBName, const char* pszUserName, const char* pszPassword);
     bool isConnected() const;
-    bool reconnectDB();
+    //bool reconnectDB();
 
     bool executeNonQuery(const char* pszCommand);
     CDataReader* executeReader(const char* pszCommand);

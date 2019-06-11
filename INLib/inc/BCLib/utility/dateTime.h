@@ -49,19 +49,28 @@ public:
     CDateTime(const CDateTime& t);
     CDateTime(int year, int month, int day, int hour, int minute, int second);
     CDateTime(std::string strDateTime); // 参数类似这样的格式：“2012-08-01 11:11:11”
-    ~CDateTime();
+    virtual ~CDateTime();
 
-    static CDateTime now();
-    bool setSystemTime();
-
+public:
     void setTime(time_t timSec);
     void setTime(BCLib::uint32 time);
     void setTime(int year, int month, int day, int hour, int minute, int second);
     void setTime(std::string strDateTime); // 参数类似这样的格式：“2012-08-01 11:11:11”
 
-    time_t getTime() const;  // the seconds elapsed from 1970
-    void getTime(int& year, int& month, int& day, int& hour, int& minute, int& second) const;
-    //BCLib::uint32 getNumber() const;
+    /// @brief 获取当前时间的秒数
+    /// @return time_t
+    /// @param bAdjust 是否算上全局的修正时间
+    time_t getTime(bool bAdjust = false) const;  // the seconds elapsed from 1970
+    /// @brief 获取当前时间的秒数
+    /// @return void
+    /// @param year 返回值
+    /// @param month 返回值
+    /// @param day 返回值
+    /// @param hour 返回值
+    /// @param minute 返回值
+    /// @param second 返回值
+    /// @param bAdjust 是否算上全局的修正时间
+    void getTime(int& year, int& month, int& day, int& hour, int& minute, int& second, bool bAdjust = false) const;
 
     uint32 getYear() const;
     uint32 getMonth() const;
@@ -75,6 +84,7 @@ public:
     std::string toString() const;
     std::string toString(const char* pszFormat) const;
 
+public:
     CDateTime& operator=(const CDateTime& t);
     bool operator ==(const CDateTime& rhs) const;
     bool operator !=(const CDateTime& rhs) const;
@@ -83,66 +93,84 @@ public:
     bool operator >(const CDateTime& rhs) const;
     bool operator >=(const CDateTime& rhs) const;
 
-    /// @brief 当前时间增加nYear年后的时间，nYear可以是负数
-    CDateTime addYear(BCLib::int16 nYear);
-    /// @brief 当前时间增加nMonth月后的时间，nMonth可以是负数
-    CDateTime addMonth(BCLib::int16 nMonth);
-    /// @brief 当前时间增加nDay天后的时间，nDay可以是负数
-    CDateTime addDay(BCLib::int16 nDay);
-    /// @brief 当前时间增加nHour时后的时间，nHour可以是负数
-    CDateTime addHour(BCLib::int16 nHour);
-    /// @brief 当前时间增加nSecond分后的时间，nSecond可以是负数
-    CDateTime addMinute(BCLib::int16 nMinute);
-    /// @brief 当前时间增加nSecond秒后的时间，nSecond可以是负数
-    CDateTime addSecond(BCLib::int16 nSecond);
-
-    /// @brief 计算两个时间相差的天、时、分、秒，time 可以比当前时间大，也可以比当前时间小，总是返回正数
-    void subTime(const CDateTime& time, BCLib::int32& day, BCLib::int32& hour, BCLib::int32& minute, BCLib::int32& second) const;
-    /// @brief 计算两个时间相差的秒，time 可以比当前时间大，也可以比当前时间小，总是返回正数
-    void subTime(const CDateTime& time, BCLib::int32& second) const;
+public:
+    /// @brief 当前时间增加year年后的时间
+    /// @return CDateTime 新的时间，不改变原本的时间
+    /// @param year 可以是负数
+    CDateTime addYear(BCLib::int16 year);
+    /// @brief 当前时间增加month月后的时间
+    /// @return CDateTime 新的时间，不改变原本的时间
+    /// @param month 可以是负数
+    CDateTime addMonth(BCLib::int16 month);
+    /// @brief 当前时间增加day天后的时间
+    /// @return CDateTime 新的时间，不改变原本的时间
+    /// @param day 可以是负数
+    CDateTime addDay(BCLib::int16 day);
+    /// @brief 当前时间增加hour时后的时间
+    /// @return CDateTime 新的时间，不改变原本的时间
+    /// @param hour 可以是负数
+    CDateTime addHour(BCLib::int16 hour);
+    /// @brief 当前时间增加minute分后的时间
+    /// @return CDateTime 新的时间，不改变原本的时间
+    /// @param minute 可以是负数
+    CDateTime addMinute(BCLib::int16 minute);
+    /// @brief 当前时间增加second秒后的时间
+    /// @return CDateTime 新的时间，不改变原本的时间
+    /// @param second 可以是负数
+    CDateTime addSecond(BCLib::int16 second);
+    /// @brief 当前时间增加相应值后的时间
+    /// @return CDateTime 新的时间，不改变原本的时间
+    /// @param year 可以是负数
+    /// @param month 可以是负数
+    /// @param day 可以是负数
+    /// @param hour 可以是负数
+    /// @param minute 可以是负数
+    /// @param second 可以是负数
+    CDateTime addTime(BCLib::int16 year, BCLib::int16 month, BCLib::int16 day, BCLib::int16 hour, BCLib::int16 minute, BCLib::int16 nSecond);
+    /// @brief 当前时间增加week秒后的时间
+    /// @return CDateTime 新的时间，不改变原本的时间
+    /// @param week 目前仅仅支持正数
+    CDateTime addWeek(BCLib::int16 week);
 
 public:
-    //static uint32 getMilliseconds(); // the milliseconds elapsed from compute started
+    /// @brief 计算time与当前时间的差值，time可以比当前时间大，也可以比当前时间小
+    /// @return void
+    /// @param second 返回相差的秒数，总是返回正数
+    BCLib::int32 difValue(const CDateTime& time) const;
+    /// @brief 计算time与当前时间的差值，time可以比当前时间大，也可以比当前时间小
+    /// @return void
+    /// @param day 返回相差的天数，总是返回正数
+    /// @param hour 返回相差的小时，总是返回正数
+    /// @param minute 返回相差的分数，总是返回正数
+    /// @param second 返回相差的秒数，总是返回正数
+    void difValue(const CDateTime& time, BCLib::int32& day, BCLib::int32& hour, BCLib::int32& minute, BCLib::int32& second) const;
 
-    static bool isExpired(int year, int month = 1, int day = 1, int hour = 0, int minute = 0, int second = 0);
+public:
+    /// @brief 保留到年，清空月、日、时、分、秒
+    /// @return CDateTime 新的时间，不改变原本的时间
+    CDateTime reserveYear();
+    /// @brief 保留到年、月，清空日、时、分、秒
+    /// @return CDateTime 新的时间，不改变原本的时间
+    CDateTime reserveMonth();
+    /// @brief 保留到年、月、日，清空时、分、秒
+    /// @return CDateTime 新的时间，不改变原本的时间
+    CDateTime reserveDay();
+    /// @brief 保留到年、月、日、时，清空分、秒
+    /// @return CDateTime 新的时间，不改变原本的时间
+    CDateTime reserveHour();
+    /// @brief 保留到年、月、日、时、分，清空秒
+    /// @return CDateTime 新的时间，不改变原本的时间
+    CDateTime reserveMinute();
+
+public:
+    static CDateTime now();
+    /// @brief 设置全局的修正时间
+    /// @return void
+    /// @param second 修正的秒数，可以是负数
+    static void setAdjust(uint32 second);
+
     static bool isExpired(CDateTime dtExpired);
-    static bool setSystemTime(int year, int month = 1, int day = 1, int hour = 0, int minute = 0, int second = 0);
-
-    /// @brief 计算start之后num分钟后的时间
-    /// @return uint32 时间戳
-    /// @param num
-    /// @param start
-    static uint32 sharpMinute(int num, uint32 start = now().getTime());
-
-    /// @brief 计算start之后num小时后的时间
-    /// @return uint32 时间戳
-    /// @param num
-    /// @param start
-    static uint32 sharpHour(int num, uint32 start = now().getTime());
-
-    /// @brief 计算start之后num天后的时间
-    /// @return uint32 时间戳
-    /// @param num
-    /// @param start
-    static uint32 sharpDay(int num = 0, uint32 start = now().getTime());
-
-    /// @brief 计算start之后num周后的时间
-    /// @return uint32 时间戳
-    /// @param num
-    /// @param start
-    static uint32 sharpWeek(int num = 0, uint32 start = now().getTime());
-
-    /// @brief 计算start之后num月后的时间
-    /// @return uint32 时间戳
-    /// @param num
-    /// @param start
-    static uint32 sharpMonth(int num = 0, uint32 start = now().getTime());
-
-    /// @brief 计算start之后num年后的时间
-    /// @return uint32 时间戳
-    /// @param num
-    /// @param start
-    static uint32 sharpYear(int num = 0, uint32 start = now().getTime());
+    static bool isExpired(int year, int month = 1, int day = 1, int hour = 0, int minute = 0, int second = 0);
 
     /// @brief 判断两个时间戳是否为同一天
     /// @return bool
@@ -150,8 +178,16 @@ public:
     /// @param time2
     static bool isSameDay(uint32 time1, uint32 time2);
 
+    /// @brief 将当前时间设置成电脑时间
+    /// @return bool 是否设置成功 
+    /// @param t
+    static bool setSystemTime(const CDateTime& t);
+    static bool setSystemTime(int year, int month = 1, int day = 1, int hour = 0, int minute = 0, int second = 0);
+
 private:
     time_t m_iSeconds;
+
+    static BCLib::uint32 ms_adjustSecond;
 
     const static BCLib::uint32 ms_hour = 60;
     const static BCLib::uint32 ms_day = 24 * ms_hour;
