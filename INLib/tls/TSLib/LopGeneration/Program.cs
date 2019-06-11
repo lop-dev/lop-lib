@@ -225,7 +225,26 @@ namespace Proto2Code
             string path = ".\\TableOut\\Lua\\Generate\\";
             TSLib.ProtoGeneration.CGenerateLuaConfigFiles luaConfig = new TSLib.ProtoGeneration.CGenerateLuaConfigFiles(path);
             luaConfig.TransConfig();
+
+            Console.WriteLine("刷新VS工程文件");
+            string vsRefresh1 = dirRoot.FullName + "/TableOut/C++/MSLib/RefMSLibPrj.exe";
+            System.Diagnostics.ProcessStartInfo ref1 = new System.Diagnostics.ProcessStartInfo();
+            ref1.FileName = vsRefresh1;
+            ref1.UseShellExecute = false;
+            ref1.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/MSLib/";
+            var proc1 = System.Diagnostics.Process.Start(ref1);
+            proc1.WaitForExit();
             
+            string vsRefresh2 = dirRoot.FullName + "/TableOut/C++/PTLib/RefPTLibPrj.exe";
+            System.Diagnostics.ProcessStartInfo ref2 = new System.Diagnostics.ProcessStartInfo();
+            ref2.FileName = vsRefresh2;
+            ref2.UseShellExecute = false;
+            ref2.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/PTLib/";
+            var proc2 = System.Diagnostics.Process.Start(ref2);
+            proc2.WaitForExit();
+
             Console.WriteLine("按任意键继续...");
             Console.ReadKey();
             return 0;

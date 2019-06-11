@@ -138,7 +138,6 @@ namespace Proto2Code
                 foreach(var f in fileterFiles)
                 {
                     string desFile = Path.Combine(dirDes.FullName, f).Replace('\\','/');
-                    Console.WriteLine(desFile);
                     srcFileList.Add(desFile);
                 }
             }
