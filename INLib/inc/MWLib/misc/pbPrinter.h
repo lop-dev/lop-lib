@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////
 //  created:    2016/06/05
-//  filename:   SHLib/utility/pb2jsonPrinter.h
+//  filename:   MWLib/misc/pbPrinter.h
 //  author:     League of Perfect
 /// @brief
 ///
@@ -72,6 +72,6 @@ namespace MWLib
             std::stringstream m_strm;
         };
     }//Utility
-}//SHLib
+}//MWLib
 
 #endif//__MWLIB_MISC_PBPRINTER_H__
