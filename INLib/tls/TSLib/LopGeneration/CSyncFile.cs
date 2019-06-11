@@ -33,27 +33,27 @@ namespace Proto2Code
             CopyDirectory(CLIENT_MSG_SERVICES_SRC, CLIENT_MSG_SERVICES_DES, "*.lua");
 
             Console.WriteLine("拷贝文件之：C++");
-            string SERVER_PROTO_SRC = @".\TableOut\Temp\1_Protoext\";
-            string SERVER_PROTO_DES = @".\TableOut\C++\gen\SHLib\protofile\";
-            CopyDirectory(SERVER_PROTO_SRC, SERVER_PROTO_DES, "*.proto");
+//             string SERVER_PROTO_SRC = @".\TableOut\Temp\1_Protoext\";
+//             string SERVER_PROTO_DES = @".\TableOut\C++\gen\SHLib\protofile\";
+//             CopyDirectory(SERVER_PROTO_SRC, SERVER_PROTO_DES, "*.proto");
 
-            string SERVER_PE_TABLE_SRC = @".\TableOut\Temp\1_Protoext\C++\";
-            string SERVER_PE_TABLE_DES_H = @".\TableOut\C++\gen\SHLib\protoext\";
-            string SERVER_PE_TABLE_DES_CC = @".\TableOut\C++\gen\SHLib\protoext\";
-            CopyDirectory(SERVER_PE_TABLE_SRC, SERVER_PE_TABLE_DES_H, "*.pe.h");
-            CopyDirectory(SERVER_PE_TABLE_SRC, SERVER_PE_TABLE_DES_CC, "*.pe.cc");
+//             string SERVER_PE_TABLE_SRC = @".\TableOut\Temp\1_Protoext\C++\";
+//             string SERVER_PE_TABLE_DES_H = @".\TableOut\C++\gen\SHLib\protoext\";
+//             string SERVER_PE_TABLE_DES_CC = @".\TableOut\C++\gen\SHLib\protoext\";
+//             CopyDirectory(SERVER_PE_TABLE_SRC, SERVER_PE_TABLE_DES_H, "*.pe.h");
+//             CopyDirectory(SERVER_PE_TABLE_SRC, SERVER_PE_TABLE_DES_CC, "*.pe.cc");
 
-            string SERVER_PB_TABLE_SRC = @".\TableOut\Temp\2_Protobuf\C++\";
-            string SERVER_PB_TABLE_DES_H = @".\TableOut\C++\gen\SHLib\protobuf\";
-            string SERVER_PB_TABLE_DES_CC = @".\TableOut\C++\gen\SHLib\protobuf\";
-            CopyDirectory(SERVER_PB_TABLE_SRC, SERVER_PB_TABLE_DES_H, "*.pb.h");
-            CopyDirectory(SERVER_PB_TABLE_SRC, SERVER_PB_TABLE_DES_CC, "*.pb.cc");
+//             string SERVER_PB_TABLE_SRC = @".\TableOut\Temp\2_Protobuf\C++\";
+//             string SERVER_PB_TABLE_DES_H = @".\TableOut\C++\gen\SHLib\protobuf\";
+//             string SERVER_PB_TABLE_DES_CC = @".\TableOut\C++\gen\SHLib\protobuf\";
+//             CopyDirectory(SERVER_PB_TABLE_SRC, SERVER_PB_TABLE_DES_H, "*.pb.h");
+//             CopyDirectory(SERVER_PB_TABLE_SRC, SERVER_PB_TABLE_DES_CC, "*.pb.cc");
 
-            string SERVER_PROFILEGEN_SRC = @".\TableOut\Temp\4_Protomsg\C++\";
-            string SERVER_PROFILEGEN_DES_H = @".\TableOut\C++\gen\SHLib\message\";
-            string SERVER_PROFILEGEN_DES_CPP = @".\TableOut\C++\gen\SHLib\message\";
-            CopyDirectory(SERVER_PROFILEGEN_SRC, SERVER_PROFILEGEN_DES_H, "*Msg.h");
-            CopyDirectory(SERVER_PROFILEGEN_SRC, SERVER_PROFILEGEN_DES_CPP, "*Msg.cc");
+//             string SERVER_PROFILEGEN_SRC = @".\TableOut\Temp\4_Protomsg\C++\";
+//             string SERVER_PROFILEGEN_DES_H = @".\TableOut\C++\gen\SHLib\message\";
+//             string SERVER_PROFILEGEN_DES_CPP = @".\TableOut\C++\gen\SHLib\message\";
+//             CopyDirectory(SERVER_PROFILEGEN_SRC, SERVER_PROFILEGEN_DES_H, "*Msg.h");
+//             CopyDirectory(SERVER_PROFILEGEN_SRC, SERVER_PROFILEGEN_DES_CPP, "*Msg.cc");
 
             //拷贝到PTLib目录
             string SERVER_PTLIB_PROTO_SRC = @".\TableOut\Temp\1_Protoext\";
@@ -73,11 +73,21 @@ namespace Proto2Code
             CopyDirectory(SERVER_PTLIB_PB_TABLE_SRC, SERVER_PTLIB_PB_TABLE_DES_CC, "*.pb.cc");
 
             //拷贝到MSLib目录
+            List<string> fileter = new List<string>();
+            fileter.Add("commandSystemMsg.h");
+            fileter.Add("commandSystemMsg.cc");
+            fileter.Add("commandSystemMsg.cpp");
+            fileter.Add("errorSystemMsg.h");
+            fileter.Add("errorSystemMsg.cc");
+            fileter.Add("errorSystemMsg.cpp");
+            fileter.Add("loginSystemMsg.h");
+            fileter.Add("loginSystemMsg.cc");
+            fileter.Add("loginSystemMsg.cpp");
             string SERVER_MSLIB_PROFILEGEN_SRC = @".\TableOut\Temp\4_Protomsg\C++\";
             string SERVER_MSLIB_PROFILEGEN_DES_H = @".\TableOut\C++\MSLib\inc\MSLib\message\";
             string SERVER_MSLIB_PROFILEGEN_DES_CPP = @".\TableOut\C++\MSLib\src\MSLib\message\";
-            CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_H, "*Msg.h");
-            CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_CPP, "*Msg.cc");
+            CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_H, "*Msg.h",true,fileter);
+            CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_CPP, "*Msg.cc",true, fileter);
             
             string SERVER_MSLIB_MSGDEFINE_H = @".\TableOut\C++\MSLib\inc\MSLib\commonDefine\";
             string SERVER_MSLIB_MSGDEFINE_CC = @".\TableOut\C++\MSLib\src\MSLib\commonDefine\";
@@ -105,7 +115,7 @@ namespace Proto2Code
             CopyDirectory(PROTOBINDBG_SRC, PROTOBINDBG_DES, "*.dbg");
         }
 
-        public int CopyDirectory(string strSrc, string strDes, string searchOption,bool delOtherFiles = true)
+        public int CopyDirectory(string strSrc, string strDes, string searchOption,bool delOtherFiles = true,List<string> fileterFiles  = null)
         {
             if(!Directory.Exists(strSrc))
             {
@@ -121,9 +131,18 @@ namespace Proto2Code
             Console.WriteLine(string.Format("Copy {0}{1} to {2}", strSrc, searchOption, strDes));
 
             //
-            List<string> srcFileList = new List<string>();
-
             DirectoryInfo dirDes = new DirectoryInfo(strDes);
+            List<string> srcFileList = new List<string>();
+            if(fileterFiles != null)
+            {
+                foreach(var f in fileterFiles)
+                {
+                    string desFile = Path.Combine(dirDes.FullName, f).Replace('\\','/');
+                    Console.WriteLine(desFile);
+                    srcFileList.Add(desFile);
+                }
+            }
+
             foreach (string file in Directory.GetFiles(strSrc, searchOption, SearchOption.TopDirectoryOnly))
             {
                 FileInfo info = new FileInfo(file);
