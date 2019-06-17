@@ -183,7 +183,7 @@ namespace TSLib.ProtoGeneration
                     serverType = "EEXTSERVER_BATTLE";
                     break;
                 case "GM":
-                    serverType = "EEXTSERVER_GM";
+                    serverType = "ELGCSERVER_GM";
                     break;
                 case "CHAT":
                     serverType = "EEXTSERVER_CHAT";
