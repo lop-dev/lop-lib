@@ -131,7 +131,10 @@ namespace TSLib.ProtoGeneration
                 string[] label = PTBuf.Split(',');
                 //label[0] = （MSLIB_BUFMSG_DEFINE/MSLIB_NETMSG_DEFINE
                 //label[1] = PTBuf::XX...
-                if (!PTBuf.Contains("PTBuf::"))
+                if(string.IsNullOrEmpty(label[0].Trim()))
+                {
+                    continue;
+                }else if (!PTBuf.Contains("PTBuf::"))
                 {
                     m_writer.Write("    {4}({0}, {1}, {2}, {3});", type, EFUNC,
                         msgEnumName, CHelper.ChangeEnum(msgEnumName, "CMsg"), label[0].Trim());
