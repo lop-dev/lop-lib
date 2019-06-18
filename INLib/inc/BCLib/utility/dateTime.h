@@ -45,7 +45,6 @@ public:
 
     CDateTime();
     CDateTime(time_t t);
-    CDateTime(BCLib::uint32 time);
     CDateTime(const CDateTime& t);
     CDateTime(int year, int month, int day, int hour, int minute, int second);
     CDateTime(std::string strDateTime); // 参数类似这样的格式：“2012-08-01 11:11:11”
@@ -53,7 +52,6 @@ public:
 
 public:
     void setTime(time_t timSec);
-    void setTime(BCLib::uint32 time);
     void setTime(int year, int month, int day, int hour, int minute, int second);
     void setTime(std::string strDateTime); // 参数类似这样的格式：“2012-08-01 11:11:11”
 
