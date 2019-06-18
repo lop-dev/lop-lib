@@ -116,6 +116,10 @@ namespace Proto2Code
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
+            argsStr = @"-GenType=Proto -DescPath=.\ProTable\AccountServer\ -OutputPath=.\TableOut\Temp\1_Protoext\";
+            Console.WriteLine(argsStr);
+            Execute(argsStr.Split(' '));
+
             argsStr = @"-GenType=Proto -DescPath=.\ProTable\GlobalServer\ -OutputPath=.\TableOut\Temp\1_Protoext\";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
