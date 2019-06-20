@@ -203,6 +203,8 @@ namespace Proto2Code
                     TSLib.TableGeneration.CGenerateProtobuf.Generate(m_strDescFile, m_strOutputFile);
                     TSLib.TableGeneration.CGenerateProtoext.Generate(m_strDescFile, m_strOutputFile, m_strLanguage);
                 }
+
+                TSLib.TableGeneration.CGenerateTraversalAll.Generate(m_strOutputPath, m_strOutputPath);
             }
             else if ((m_strDescFile != "") && (m_strOutputFile != "") && (CFileList.Instance.IsNewFile(m_strDescFile) || !File.Exists(m_strOutputFile)))
             {
