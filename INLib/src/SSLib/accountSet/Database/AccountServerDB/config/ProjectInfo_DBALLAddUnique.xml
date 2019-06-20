@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
-	<changeSet author="aaron" id="ProjectInfo-AU-01">
-		<addUniqueConstraint columnNames="ProjectName" constraintName="ProjectName" deferrable="false" disabled="false" initiallyDeferred="false" tableName="ProjectInfo001"/>
-		<addUniqueConstraint columnNames="ProjectName" constraintName="ProjectName" deferrable="false" disabled="false" initiallyDeferred="false" tableName="ProjectInfo002"/>
-	</changeSet>
-</databaseChangeLog>

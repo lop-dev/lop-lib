@@ -1,5 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<root TableAmount="2">
-  <DB001 DBName="AccountServer001" DBHost="127.0.0.1" DBPort="3306" DBUser="root" DBPassword="123456" DBType="mysql" />
-  <DB002 DBName="AccountServer002" DBHost="127.0.0.1" DBPort="3306" DBUser="root" DBPassword="123456" DBType="mysql" />
-</root>

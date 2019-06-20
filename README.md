@@ -14,7 +14,6 @@
         GELib：yz_person@163.com；
         MWLib：maosher@gmail.com、wangjin_16@126.com；
         SFLib：190240784@qq.com、caokouyilang@gmail.com；
-        SSLib：wangjin_16@126.com；
         UDLib：fanghuaiyi@gmail.com、a1051574139@163.com；
 
 注：目前参与的人，都在各个公司工作中，尽量做到次日反馈。
