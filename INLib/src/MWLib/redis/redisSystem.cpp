@@ -20,6 +20,8 @@ BCLIB_SINGLETON_DEFINE_WITH_LEVELID(CRedisSystem, 100) // 原来是 SHLib::E_SINGLE
 CRedisSystem::CRedisSystem()
 :m_redisContext(NULL)
 ,m_redisReply(NULL)
+, m_pRedLock(NULL)
+,m_eAccessRight(E_REDIS_READ_AND_WRITE)
 {
 		m_pRedLock = new CRedLock();
 		m_redisContextMap.clear();
@@ -42,6 +44,11 @@ CRedisSystem::~CRedisSystem()
 
 bool CRedisSystem::savePTBuf(std::string &key, BCLib::uint64 uniqueid, std::string & strPTbufName, const ::google::protobuf::MessageLite *pPtbuf, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "savePTBuf exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key.empty() == true || strPTbufName.empty() == true || pPtbuf == NULL)
 	{
 		return false;
@@ -89,7 +96,7 @@ void CRedisSystem::setInfo(std::string& host, int port, std::string& passwd, ERE
 	return;
 }
 
-bool CRedisSystem::init()
+bool CRedisSystem::init(EREDIS_ACCESS_RIGHT_TYPE type)
 {
 	struct timeval timeout = { 1, 500000 }; // 1.5 seconds
 	disconnectAll();
@@ -121,12 +128,17 @@ bool CRedisSystem::init()
 		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis 认证成功");
 		it++;
 	}
-	
+	m_eAccessRight = type;
 	return true;
 }
 
 bool  CRedisSystem::exec(const char* cmd, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (cmd == NULL)
 	{
 		return false;
@@ -238,7 +250,7 @@ void  CRedisSystem::disconnect(EREDIS_CONTEXT_TYPE type)
 }
 void  CRedisSystem::disconnectAll()
 {
-	for (BCLib::uint16 i = 0; i < E_REDIS_SERVERTYPE_END; i++)
+	for (BCLib::uint16 i = E_REDIS_SERVERTYPE_BEGIN; i < E_REDIS_SERVERTYPE_END; i++)
 	{
 		disconnect((EREDIS_CONTEXT_TYPE)i);
 	}
@@ -295,6 +307,11 @@ bool CRedisSystem::checkStatus(EREDIS_CONTEXT_TYPE type)
 
 bool CRedisSystem::setString(const char* key, const char* value, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "setString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -356,6 +373,11 @@ std::string CRedisSystem::getString(const char* key, EREDIS_CONTEXT_TYPE type)
 
 bool CRedisSystem::setString(const char* key, BCLib::uint64 uniqueid, const char* subkey, const char* value, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "setString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL || subkey == NULL)
 	{
 		return false;
@@ -417,6 +439,11 @@ std::string CRedisSystem::getString(const char* key, BCLib::uint64 uniqueid, con
 
 bool CRedisSystem::setUint64(const char* key, BCLib::uint64 value, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "setUint64 exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -480,6 +507,11 @@ BCLib::uint64 CRedisSystem::getUint64(const char* key, EREDIS_CONTEXT_TYPE type)
 
 bool CRedisSystem::setUint64(const char* key, BCLib::uint64 uniqueid, const char* subkey, BCLib::uint64 value, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "setUint64 exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL || subkey == NULL)
 	{
 		return false;
@@ -555,6 +587,11 @@ BCLib::uint64 CRedisSystem::getUint64(const char* key, BCLib::uint64 uniqueid, c
 */
 bool CRedisSystem::setBin(const char* key, const char* value, BCLib::int32 len, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "setBin exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -627,7 +664,7 @@ BCLib::uint32 CRedisSystem::getBin(const char* key, char* value, BCLib::uint32 l
 	if (m_redisReply->type == REDIS_REPLY_STRING)
 	{
 		
-		if (len > m_redisReply->len)
+		if (len > (BCLib::uint32)m_redisReply->len)
 		{
 			memcpy(value, m_redisReply->str, m_redisReply->len);
 		}
@@ -659,6 +696,11 @@ BCLib::uint32 CRedisSystem::getBin(const char* key, char* value, BCLib::uint32 l
 */
 bool CRedisSystem::setBin(const char* key, BCLib::uint64 uniqueid, const char* subkey, const char* value, BCLib::int32 len, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "setBin exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL || subkey == NULL)
 	{
 		return false;
@@ -734,7 +776,7 @@ BCLib::uint32 CRedisSystem::getBin(const char* key, BCLib::uint64 uniqueid, cons
 
 	if (m_redisReply->type == REDIS_REPLY_STRING)
 	{
-		if (len > m_redisReply->len)
+		if (len > (BCLib::uint32)m_redisReply->len)
 		{
 			memcpy(value, m_redisReply->str, m_redisReply->len);
 		}
@@ -753,6 +795,11 @@ BCLib::uint32 CRedisSystem::getBin(const char* key, BCLib::uint64 uniqueid, cons
 }
 bool CRedisSystem::delKey(const char* key, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "delKey exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -786,6 +833,11 @@ bool CRedisSystem::delKey(const char* key, EREDIS_CONTEXT_TYPE type)
 
 bool CRedisSystem::delKey(const char* key, BCLib::uint64 uniqueid, const char* subkey, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "delKey exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL || subkey == NULL)
 	{
 		return false;
@@ -862,7 +914,7 @@ bool CRedisSystem::keys(const char *key, std::vector<std::string> &values, EREDI
 }
 BCLib::uint64 CRedisSystem::scan(const char *matchKey, std::vector<std::string> &values, BCLib::uint64 start, BCLib::uint64 count, EREDIS_CONTEXT_TYPE type)
 {
-	BCLib::uint32 ret = 0;
+	BCLib::uint64 ret = 0;
 	std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 	if (it == m_redisContextMap.end())
 	{
@@ -924,6 +976,11 @@ BCLib::uint64 CRedisSystem::scan(const char *matchKey, std::vector<std::string> 
 
 bool CRedisSystem::expireSecond(const char* key, BCLib::int32 second, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "delKey exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -967,6 +1024,11 @@ bool CRedisSystem::expireSecond(const char* key, BCLib::uint64 uniqueid, const c
 }
 bool CRedisSystem::persist(const char* key, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "delKey exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -1012,6 +1074,11 @@ bool CRedisSystem::persist(const char* key, BCLib::uint64 uniqueid, const char* 
 
 bool CRedisSystem::hsetString(const char* key, const char* field, const char* value, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "hsetString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -1043,6 +1110,11 @@ bool CRedisSystem::hsetString(const char* key, const char* field, const char* va
 }
 bool CRedisSystem::hsetBin(const char* key, const char* field, const char* value, BCLib::uint32 len, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "hsetBin exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -1312,6 +1384,11 @@ const std::map<std::string, std::pair<char*, BCLib::uint32>*>* CRedisSystem::hge
 }
 void CRedisSystem::hmset(const char* key, EREDIS_CONTEXT_TYPE type, std::string format, ...)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "hmset exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return;
+	}
 	if (key == NULL)
 	{
 		return;
@@ -1381,6 +1458,11 @@ void CRedisSystem::hmset(const char* key, BCLib::uint64 uniqueid, const char* su
 
 bool CRedisSystem::herase(const char* key, const char* field, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "hsetString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -1430,7 +1512,7 @@ BCLib::uint64 CRedisSystem::hscan(const char *key, const char *matchKey, std::ma
 	{
 		return 0;
 	}
-	BCLib::uint32 ret = 0;
+	BCLib::uint64 ret = 0;
 	std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 	if (it == m_redisContextMap.end())
 	{
@@ -1585,6 +1667,11 @@ const std::map<std::string, std::pair<char*, BCLib::uint32>*>* CRedisSystem::hsc
 }
 bool CRedisSystem::lpushString(const char* key, const char* value, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "lpushString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -1617,6 +1704,11 @@ bool CRedisSystem::lpushString(const char* key, const char* value, EREDIS_CONTEX
 }
 bool CRedisSystem::lpushBin(const char* key, const char* value, const BCLib::int32 len, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "lpushBin exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -1795,6 +1887,11 @@ BCLib::uint32 CRedisSystem::lreadBin(const char* key, BCLib::uint64 uniqueid, co
 }
 bool CRedisSystem::rpushString(const char* key, const char* value, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "rpushString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -1827,6 +1924,11 @@ bool CRedisSystem::rpushString(const char* key, const char* value, EREDIS_CONTEX
 }
 bool CRedisSystem::rpushBin(const char* key, const char* value, const BCLib::int32 len, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "rpushBin exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -2060,6 +2162,11 @@ BCLib::int32 CRedisSystem::llen(const char* key, BCLib::uint64 uniqueid, const c
 
 std::string CRedisSystem::lpopString(const char* key, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "lpopString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return "";
+	}
 	if (key == NULL)
 	{
 		return "";
@@ -2102,6 +2209,11 @@ std::string CRedisSystem::lpopString(const char* key, EREDIS_CONTEXT_TYPE type)
 }
 BCLib::uint32 CRedisSystem::lpopBin(const char* key, char*value, const BCLib::int32 len, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "lpopBin exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return 0;
+	}
 	if (key == NULL)
 	{
 		return 0;
@@ -2176,6 +2288,11 @@ BCLib::uint32 CRedisSystem::lpopBin(const char* key, BCLib::uint64 uniqueid, con
 
 std::string CRedisSystem::rpopString(const char* key, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "rpopString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return "";
+	}
 	if (key == NULL)
 	{
 		return "";
@@ -2219,6 +2336,11 @@ std::string CRedisSystem::rpopString(const char* key, EREDIS_CONTEXT_TYPE type)
 }
 BCLib::uint32 CRedisSystem::rpopBin(const char* key, char*value, const BCLib::int32 len, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "rpopBin exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return 0;
@@ -2289,6 +2411,11 @@ BCLib::uint32 CRedisSystem::rpopBin(const char* key, BCLib::uint64 uniqueid, con
 }
 bool CRedisSystem::lsetString(const char* key, BCLib::int32 index, const char* value, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "lsetString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -2321,6 +2448,11 @@ bool CRedisSystem::lsetString(const char* key, BCLib::int32 index, const char* v
 }
 bool CRedisSystem::lsetBin(const char* key, BCLib::int32 index, char*value, BCLib::int32 len, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "lsetBin exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -2376,6 +2508,11 @@ bool CRedisSystem::lsetBin(const char* key, BCLib::uint64 uniqueid, const char* 
 
 bool CRedisSystem::rpoplpush(const char* keyTar, const char* keySrc, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "rpoplpush exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (keyTar == NULL || keySrc == NULL)
 	{
 		return false;
@@ -2535,6 +2672,11 @@ const std::list<std::pair<char*, BCLib::uint32>*> *  CRedisSystem::lgetAllElemen
 }
 bool CRedisSystem::lrem(const char* key, BCLib::int32 count, char *value, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "lrem exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -2576,6 +2718,11 @@ bool CRedisSystem::lrem(const char* key, BCLib::uint64 uniqueid, const char*subk
 }
 bool CRedisSystem::lrem(const char* key, BCLib::int32 count, char *value, BCLib::int32 len, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "lrem exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -2617,6 +2764,11 @@ bool CRedisSystem::lrem(const char* key, BCLib::uint64 uniqueid, const char*subk
 }
 bool CRedisSystem::sadd(const char* key, EREDIS_CONTEXT_TYPE type, std::string members, ...)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "sadd exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -2828,6 +2980,11 @@ bool CRedisSystem::sgetAllMembers(const char* key, BCLib::uint64 uniqueid, const
 }
 bool CRedisSystem::spop(const char* key, std::string &member, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "spop exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -2875,6 +3032,11 @@ bool CRedisSystem::spop(const char* key, BCLib::uint64 uniqueid, const char* sub
 }
 bool CRedisSystem::sremove(const char* key, const std::string members, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "sremove exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -2920,6 +3082,11 @@ bool CRedisSystem::sremove(const char* key, BCLib::uint64 uniqueid, const char* 
 
 bool CRedisSystem::smove(const char * disKey, const char * srcKey, const std::string member, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "smove exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (disKey == NULL || srcKey == NULL)
 	{
 		return false;
@@ -2975,6 +3142,11 @@ bool CRedisSystem::smove(const char* disKey, BCLib::uint64 disUniqueid, const ch
 }
 bool CRedisSystem::sinter(std::set<std::string> &set, EREDIS_CONTEXT_TYPE type, std::string keys, ...)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "sinter exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 	if (it == m_redisContextMap.end())
 	{
@@ -3015,6 +3187,11 @@ bool CRedisSystem::sinter(std::set<std::string> &set, EREDIS_CONTEXT_TYPE type, 
 
 bool CRedisSystem::sinter(std::set<std::string> &set, const std::vector<std::string> &keys, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "sinter exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 	if (it == m_redisContextMap.end())
 	{
@@ -3068,7 +3245,7 @@ BCLib::uint64 CRedisSystem::sscan(const char *key, const char *matchKey, std::se
 	{
 		return 0;
 	}
-	BCLib::uint32 ret = 0;
+	BCLib::uint64 ret = 0;
 	std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 	if (it == m_redisContextMap.end())
 	{
@@ -3139,6 +3316,11 @@ BCLib::uint64 CRedisSystem::sscan(const char *key, BCLib::uint64 uniqueid, const
 
 bool CRedisSystem::zadd(const char* key, const std::vector<double> &scores, const std::vector<std::string> &members, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "zadd exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -3362,6 +3544,11 @@ BCLib::int32 CRedisSystem::zrevRank(const char* key, BCLib::uint64 uniqueid, con
 //删除
 bool CRedisSystem::zrem(const char* key, std::vector<std::string> &members, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "zrem exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -3579,6 +3766,11 @@ double CRedisSystem::zscore(const char* key, BCLib::uint64 uniqueid, const char*
 }
 bool CRedisSystem::zremRangeByRank(const char* key, BCLib::int32 startIndex, BCLib::int32 stopIndex, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "zremRangeByRank exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -3623,6 +3815,11 @@ bool CRedisSystem::zremRangeByRank(const char* key, BCLib::uint64 uniqueid, cons
 
 bool CRedisSystem::zincrby(const char* key, const char* member, double increment, EREDIS_CONTEXT_TYPE type)
 {
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "zincrby exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
 	if (key == NULL)
 	{
 		return false;
@@ -3843,7 +4040,7 @@ BCLib::uint64 CRedisSystem::zscan(const char *key, const char *matchKey, std::ve
 	{
 		return 0;
 	}
-	BCLib::uint32 ret = 0;
+	BCLib::uint64 ret = 0;
 	std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 	if (it == m_redisContextMap.end())
 	{

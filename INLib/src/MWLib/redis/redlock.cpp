@@ -151,20 +151,20 @@ bool CRedLock::Lock(const char *resource, const int ttl, CLock &lock) {
         //Add 2 milliseconds to the drift to account for Redis expires
         //precision, which is 1 millisecond, plus 1 millisecond min drift
         //for small TTLs.
-        int drift = (ttl * m_clockDriftFactor) + 2;
+        int drift = (int)(ttl * m_clockDriftFactor) + 2;
 		BCLib::Utility::CSystemTime now1;
 		BCLib::uint64 nowTime = now1.getMilliseconds();
-        int validityTime = ttl - (nowTime - startTime) - drift;
+		BCLib::uint64 validityTime = ttl - (nowTime - startTime) - drift;
         //printf("The resource validty time is %d, n is %d, quo is %d\n",
         //       validityTime, n, m_quoRum);
         if (n >= m_quoRum && validityTime > 0) {
-            lock.m_validityTime = validityTime;
+            lock.m_validityTime = (int)validityTime;
             return true;
         } else {
             Unlock(lock);
         }
         // Wait a random delay before to retry
-        int delay = rand() % m_retryDelay + floor(m_retryDelay / 2);
+        int delay = rand() % m_retryDelay + (int)floor(m_retryDelay / 2);
 
 #if defined(_LINUX)
         usleep(delay * 1000);
@@ -207,7 +207,7 @@ bool CRedLock::ContinueLock(const char *resource, const int ttl, CLock &lock) {
         //Add 2 milliseconds to the drift to account for Redis expires
         //precision, which is 1 millisecond, plus 1 millisecond min drift
         //for small TTLs.
-        int drift = (ttl * m_clockDriftFactor) + 2;
+        int drift = (int)(ttl * m_clockDriftFactor) + 2;
         int validityTime = ttl - ((int)time(NULL) * 1000 - startTime) - drift;
         //printf("The resource validty time is %d, n is %d, quo is %d\n",
         //       validityTime, n, m_quoRum);
@@ -218,7 +218,7 @@ bool CRedLock::ContinueLock(const char *resource, const int ttl, CLock &lock) {
             Unlock(lock);
         }
         // Wait a random delay before to retry
-        int delay = rand() % m_retryDelay + floor(m_retryDelay / 2);
+        int delay = rand() % m_retryDelay + (int)floor(m_retryDelay / 2);
 #if defined(_LINUX)
 		usleep(delay * 1000);
 #else

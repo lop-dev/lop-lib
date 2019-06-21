@@ -95,6 +95,11 @@ namespace Redis
 		E_REDIS_SERVERTYPE_END,
 		
 	};
+	enum EREDIS_ACCESS_RIGHT_TYPE
+	{
+		E_REDIS_READ_AND_WRITE = 0,
+		E_REDIS_READ_ONLY,
+	};
 	typedef struct Redis_Node
 	{
 		redisContext *m_redisContext;
@@ -151,7 +156,7 @@ public:
 public:
 	void setInfo(std::string& host, int port, std::string& passwd, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
-	bool init();
+	bool init(EREDIS_ACCESS_RIGHT_TYPE type = E_REDIS_READ_AND_WRITE);
 
 	bool connect(std::string host, int port, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 	bool connectWithTimeout(std::string host, int port, const struct timeval tv, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
@@ -954,7 +959,7 @@ public:
 
 
 	/**
-	* 功能：移除一个成员或多个成员
+	* 功能：模糊匹配
 	* @param key 集合名
 	* @param matchKey 匹配字符串，匹配规则同scan
 	* @param mySet 返回集合
@@ -966,7 +971,7 @@ public:
 	BCLib::uint64 sscan(const char *key, const char *matchKey, std::set<std::string> &mySet, BCLib::uint64 start = 0, BCLib::uint64 count = 50, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 	
 	/**
-	* 功能：移除一个成员或多个成员
+	* 功能：模糊匹配
 	* @param key 集合名
 	* @param uniqueid key集合下的子集和编号
 	* @param subkey 子集和编号下的二级子集和名 与key uniqueid 共同组成唯一集合名 key:[uniqueid]:subkey  多维结构
@@ -1013,7 +1018,7 @@ public:
 	BCLib::uint32  zcard(const char *key, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 	/**
-	* 功能：返回结合内元素个数
+	* 功能：返回集合内元素个数
 	* @param key 集合名
 	* @param uniqueid key集合下的子集和编号
 	* @param subkey 子集和编号下的二级子集和名 与key uniqueid 共同组成唯一集合名 key:[uniqueid]:subkey  多维结构
@@ -1022,7 +1027,7 @@ public:
 	BCLib::uint32  zcard(const char *key, BCLib::uint64 uniqueid, const char *subkey, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 	
 
-	//返回结合内指定member的索引/排名 score 低->高 索引/排名从0开始
+	//返回集合内指定member的索引/排名 score 低->高 索引/排名从0开始
 	/**
 	* 功能：返回集合内指定成员的排名 score 低->高 排名从0开始
 	* @param key 集合名
@@ -1249,7 +1254,7 @@ public:
 	bool zrevRangeByScore(const char *key, BCLib::uint64 uniqueid, const char *subkey, std::vector<std::pair<std::string, double>> &members, const char *maxStr, const char *minStr, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 	
 	/**
-	* 功能：移除一个成员或多个成员
+	* 功能：模糊匹配
 	* @param key 集合名
 	* @param matchKey 匹配字符串，匹配规则同scan
 	* @param members 返回集合
@@ -1261,7 +1266,7 @@ public:
 	BCLib::uint64 zscan(const char *key, const char *matchKey, std::vector<std::pair<std::string, double>> &members, BCLib::uint64 start = 0, BCLib::uint64 count = 50, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 	
 	/**
-	* 功能：移除一个成员或多个成员
+	* 功能：模糊匹配
 	* @param key 集合名
 	* @param uniqueid key集合下的子集和编号
 	* @param subkey 子集和编号下的二级子集和名 与key uniqueid 共同组成唯一集合名 key:[uniqueid]:subkey  多维结构
@@ -1324,11 +1329,10 @@ protected:
 		return;
 	}
 private:
-	
-	CRedLock  *m_pRedLock;
-
 	redisContext *m_redisContext;
 	redisReply *m_redisReply;
+	CRedLock  *m_pRedLock;
+	EREDIS_ACCESS_RIGHT_TYPE m_eAccessRight;
 
 	std::unordered_map<BCLib::uint16, REDIS_NODE> m_redisContextMap;
 
