@@ -175,7 +175,7 @@ public:
     /// @return bool
     /// @param time1
     /// @param time2
-    static bool isSameDay(uint32 time1, uint32 time2);
+    static bool isSameDay(time_t time1, time_t time2);
 
     /// @brief 将当前时间设置成电脑时间
     /// @return bool 是否设置成功 

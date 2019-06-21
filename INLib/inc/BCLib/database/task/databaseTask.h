@@ -69,20 +69,20 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_Variable	\
-	std::ostringstream              sqlSentence;		\
-	BCLib::Utility::CStringA		strDBIndex = "";	\
-	BCLib::Utility::CStringA		strTBIndex = "";	\
-	std::string                     strDBName = "";		\
-	std::string                     strTBName = "";		\
-	BCLib::Database::CConnection *	pConnection = NULL;	\
-	BCLib::Database::CDataReader *	pDataReader = NULL;	\
-	double							dValue = 0;			\
-	BCLib::int32					i32Value = 0;		\
-	BCLib::int64					i64Value = 0;		\
-	BCLib::uint32					u32Value = 0;		\
-	BCLib::uint64					u64Value = 0;		\
-	std::string						strValue = "";
+#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_Variable						\
+	std::ostringstream              sqlSentence;(void)sqlSentence;			\
+	BCLib::Utility::CStringA		strDBIndex = "";(void)strDBIndex;		\
+	BCLib::Utility::CStringA		strTBIndex = "";(void)strTBIndex;		\
+	std::string                     strDBName = "";(void)strDBName;			\
+	std::string                     strTBName = "";(void)strTBName;			\
+	BCLib::Database::CConnection *	pConnection = NULL;(void)pConnection;	\
+	BCLib::Database::CDataReader *	pDataReader = NULL;(void)pDataReader;	\
+	double							dValue = 0;(void)dValue;				\
+	BCLib::int32					i32Value = 0;(void)i32Value;			\
+	BCLib::int64					i64Value = 0;(void)i64Value;			\
+	BCLib::uint32					u32Value = 0;(void)u32Value;			\
+	BCLib::uint64					u64Value = 0;(void)u64Value;			\
+	std::string						strValue = "";(void)strValue;
 
 #define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_UseDB																\
 	pConnection = GetConnection(mapConnections, strDBIndex, strDBName);												\
