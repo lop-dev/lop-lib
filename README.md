@@ -8,10 +8,10 @@
 
 主邮箱：lop_dev@hotmail.com
 
-开发者：BCLib：jeffqin007@163.com、lvgang1983@gmail.com、jinhong_zheng@163.com；
-        CLLib：yz_person@163.com；
+开发者：BCLib：jeffqin007@163.com、lvgang1983@gmail.com；
+        CLLib：jinhong_zheng@163.com；
         CSLib：evandai2018@163.com；
-        GELib：yz_person@163.com；
+        GELib：lvhong@@gmail.com、yz_person@163.com；
         MWLib：maosher@gmail.com、wangjin_16@126.com；
         SFLib：190240784@qq.com、caokouyilang@gmail.com；
         UDLib：fanghuaiyi@gmail.com、a1051574139@163.com；
