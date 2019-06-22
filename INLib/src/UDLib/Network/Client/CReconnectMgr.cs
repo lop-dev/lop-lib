@@ -6,7 +6,8 @@
  * */
 using System;
 
-namespace UDLib.Network {
+namespace UDLib.Network
+{
     public class CReconnectMgr : CSLib.Utility.CSingleton<CReconnectMgr>
     {
         // ACK系统的号，在逻辑层的proto定义，底层无法获取，这里用直接用数字了

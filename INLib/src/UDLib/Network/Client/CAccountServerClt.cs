@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace UDLib.Network
+﻿namespace UDLib.Network
 {
     public class CAccountServerClt : CSLib.Utility.CSingleton<CAccountServerClt>
     {
