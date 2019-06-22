@@ -1,12 +1,10 @@
 ﻿//#define REFRENCE_MODE
 
 using UnityEngine;
-using System.Collections;
 using System;
 using UnityEditor;
 using System.IO;
 using System.Collections.Generic;
-using UnityEngine.Assertions;
 using UDLib.Utility;
 using System.Text;
 
