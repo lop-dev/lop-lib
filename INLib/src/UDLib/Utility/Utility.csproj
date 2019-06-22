@@ -58,7 +58,6 @@
     <Compile Include="Event\CEvent.cs" />
     <Compile Include="Event\CEventMgr.cs" />
     <Compile Include="IResourceDefine.cs" />
-    <Compile Include="Pool.cs" />
     <Compile Include="Wrapper\CGameObject.cs" />
     <Compile Include="CLinkList.cs" />
     <Compile Include="Algorithm\CSort.cs" />

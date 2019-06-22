@@ -24,7 +24,7 @@ namespace UDLib.Network
         // 处理消息时的临时缓存
         private Dictionary<ushort, MessageData> tempMsgDict = new Dictionary<ushort, MessageData>();
         // 消息缓存的对象池
-        private Pool<MessageData> m_messagePool = new Pool<MessageData>();
+        private CSLib.Utility.CObjectPool<MessageData> m_messagePool = new CSLib.Utility.CObjectPool<MessageData>();
 
         private CTcpClient m_tcpClient;
 
