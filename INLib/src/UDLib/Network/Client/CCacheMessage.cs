@@ -21,7 +21,7 @@ namespace UDLib.Network
         // 发送消息时的缓存,收到消息移除，用于处理超时重连
         private Dictionary<ushort, MessageData> msgDict = new Dictionary<ushort, MessageData>();
         // 处理消息时的临时缓存
-        private Dictionary<ushort, MessageData> tempMsgDict = new Dictionary<ushort, MessageData>();
+        private List<ushort> tmpMsgList = new List<ushort>();
         // 消息缓存的对象池
         private CSLib.Utility.CObjectPool<MessageData> m_messagePool = new CSLib.Utility.CObjectPool<MessageData>();
 
@@ -99,23 +99,21 @@ namespace UDLib.Network
                 return;
 
             var keys = msgDict.Keys;
-            tempMsgDict.Clear();
+            tmpMsgList.Clear();
             MessageData messageObject;
             foreach (KeyValuePair<ushort, MessageData> kvp in msgDict)
             {
                 messageObject = kvp.Value;
                 if (Math.Abs(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - messageObject.timeStamp) > CReconnectMgr.Instance.TimeOutDuration)
                 {
-                    tempMsgDict.Add(kvp.Key, kvp.Value);
+                    tmpMsgList.Add(kvp.Key);
                 }
             }
 
-            foreach (KeyValuePair<ushort, MessageData> kvp in tempMsgDict)
+            for(int i = 0; i < tmpMsgList.Count; i++)
             {
-                if (!msgDict.ContainsKey(kvp.Key))
-                    continue;
-
-                messageObject = msgDict[kvp.Key];
+                var reqIndex = tmpMsgList[i];
+                messageObject = msgDict[reqIndex];
                 if (messageObject.sentCount > CReconnectMgr.Instance.TimeOutRetryCount)
                 {
                     ////TODO, 超时10次判定为断线逻辑，暂不启用
@@ -137,7 +135,7 @@ namespace UDLib.Network
                 SendMessage(msgStream);
                 if (CReconnectMgr.Instance.timeoutCallBack != null)
                 {
-                    CReconnectMgr.Instance.timeoutCallBack(kvp.Key, messageObject.netMessage.MsgType, messageObject.netMessage.Id);
+                    CReconnectMgr.Instance.timeoutCallBack(reqIndex, messageObject.netMessage.MsgType, messageObject.netMessage.Id);
                 }
             }
         }
