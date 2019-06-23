@@ -16,7 +16,7 @@
         SFLib：190240784@qq.com、caokouyilang@gmail.com；
         UDLib：fanghuaiyi@gmail.com、a1051574139@163.com；
 
-注：目前参与的人，都在各个公司工作中，尽量做到次日反馈。
+注：目前参与的人，分布在各个公司工作；为避免被打扰，影响正常工作，所以不接受即时通讯软件的沟通；我们收到邮件后，会尽量做到次日反馈。
 
 
 GIT 获取地址：https://github.com/lop-dev/lop-lib.git
