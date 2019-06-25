@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HttpServer", "HttpServer.vc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZookeeperClient", "ZookeeperClient.vcxproj", "{3A0194D3-64F3-46A7-ABDC-401DAE8CDCD2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Subversion", "Subversion.vcxproj", "{3043F0B1-5B20-427C-8EFB-F1750FE5158D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		dll_9md_d|x86 = dll_9md_d|x86
@@ -83,6 +85,18 @@ Global
 		{3A0194D3-64F3-46A7-ABDC-401DAE8CDCD2}.lib_9mt_d|x86.Build.0 = lib_9mt_d|Win32
 		{3A0194D3-64F3-46A7-ABDC-401DAE8CDCD2}.lib_9mt|x86.ActiveCfg = lib_9mt|Win32
 		{3A0194D3-64F3-46A7-ABDC-401DAE8CDCD2}.lib_9mt|x86.Build.0 = lib_9mt|Win32
+		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.dll_9md_d|x86.ActiveCfg = dll_9md_d|Win32
+		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.dll_9md_d|x86.Build.0 = dll_9md_d|Win32
+		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.dll_9md|x86.ActiveCfg = dll_9md|Win32
+		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.dll_9md|x86.Build.0 = dll_9md|Win32
+		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9md_d|x86.ActiveCfg = lib_9md_d|Win32
+		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9md_d|x86.Build.0 = lib_9md_d|Win32
+		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9md|x86.ActiveCfg = lib_9md|Win32
+		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9md|x86.Build.0 = lib_9md|Win32
+		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9mt_d|x86.ActiveCfg = lib_9mt_d|Win32
+		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9mt_d|x86.Build.0 = lib_9mt_d|Win32
+		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9mt|x86.ActiveCfg = lib_9mt|Win32
+		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9mt|x86.Build.0 = lib_9mt|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
