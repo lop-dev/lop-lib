@@ -33,6 +33,10 @@ namespace TSLib.ProtoGeneration
 
             Write_Head();
             m_write.WriteLine();
+            Write_Ctor();
+            m_write.WriteLine();
+            Write_OnRegister();
+            m_write.WriteLine();
             Write_RegisterNetMsgHandler(systemList);
             m_write.WriteLine();
             Write_AddMsgExecFunc();
@@ -46,6 +50,7 @@ namespace TSLib.ProtoGeneration
             Write_OnMessageCallbacks(systemList);
             m_write.WriteLine();
             Write_Finish();
+
             m_resMsgList.Clear();
             m_write.Close();
         }
@@ -63,17 +68,24 @@ namespace TSLib.ProtoGeneration
             m_write.WriteLine("-- ------------------------------------------------------------------------------");
             m_write.WriteLine("");
             m_write.WriteLine("local {0} = class(\"{0}\", require(\"LULib.Framework.Service.BaseService\"))", m_serviceBaseName);
+        }
+
+        private void Write_Ctor()
+        {
             m_write.WriteLine("function {0}:ctor()", m_serviceBaseName);
             m_write.WriteLine("    {0}.super.ctor(self)", m_serviceBaseName);
             m_write.WriteLine("end");
-            m_write.WriteLine("");
+        }
+
+        private void Write_OnRegister()
+        {
             m_write.WriteLine("function {0}:onRegister()", m_serviceBaseName);
             m_write.WriteLine("    self._systemName = \"{0}\"", m_serviceBaseName);
             m_write.WriteLine();
             m_write.WriteLine("    NetworkManager:getInstance():registerNetworkSystem(self._systemName, CGatewayServerClt.Instance.TcpClient, message_pb.EFUNC_{0})", m_nameUnit.MoudleSysUpper);
             m_write.WriteLine();
             m_write.WriteLine("    self:registerNetMsgFactory()");
-            m_write.WriteLine("    self:registerNetMsgHandler()"); 
+            m_write.WriteLine("    self:registerNetMsgHandler()");
             m_write.WriteLine("end");
         }
 
