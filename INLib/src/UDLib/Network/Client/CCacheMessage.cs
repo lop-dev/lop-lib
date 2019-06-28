@@ -61,7 +61,7 @@ namespace UDLib.Network
         // 收到response消息的时候从消息队列移除
         public bool RemoveCacheMessageByReqIndex(ushort reqIndex)
         {
-            if (msgListToDelete.Contains(reqIndex))
+            if (!msgListToDelete.Contains(reqIndex))
             {
                 msgListToDelete.Add(reqIndex);
                 return true;
