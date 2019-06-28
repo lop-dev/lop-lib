@@ -19,12 +19,13 @@ namespace UDLib.Network
         // 超时检测计时(update计数)
         private int timeOutCheckTime = 0;
         // 发送消息时的缓存,收到消息移除，用于处理超时重连
-        private Dictionary<ushort, MessageData> msgDict = new Dictionary<ushort, MessageData>();
+        private Dictionary<ushort, MessageData> msgDictCache = new Dictionary<ushort, MessageData>();
+        // 待删除列表
+        private List<ushort> msgListToDelete = new List<ushort>();
         // 处理消息时的临时缓存
         private List<ushort> tmpMsgList = new List<ushort>();
         // 消息缓存的对象池
         private CSLib.Utility.CObjectPool<MessageData> m_messagePool = new CSLib.Utility.CObjectPool<MessageData>();
-
         private CTcpClient m_tcpClient;
 
         public CCacheMessage(CTcpClient tcpClient)
@@ -42,16 +43,16 @@ namespace UDLib.Network
                 return false;
             }
 
-            if (msgDict.ContainsKey(reqIndex))
+            if (msgDictCache.ContainsKey(reqIndex))
             {
-                msgDict.Remove(reqIndex);
+                msgDictCache.Remove(reqIndex);
             }
 
             var obj = m_messagePool.Obtain();
             obj.timeStamp = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             obj.netMessage = message;
             obj.sentCount = 0;
-            msgDict.Add(reqIndex, obj);
+            msgDictCache.Add(reqIndex, obj);
 
             //msgDict.Add(message, DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond);
             return true;
@@ -60,12 +61,10 @@ namespace UDLib.Network
         // 收到response消息的时候从消息队列移除
         public bool RemoveCacheMessageByReqIndex(ushort reqIndex)
         {
-            if (msgDict.ContainsKey(reqIndex))
+            if (msgListToDelete.Contains(reqIndex))
             {
-                var obj = msgDict[reqIndex];
-                m_messagePool.Free(obj);
-                obj = null;
-                return msgDict.Remove(reqIndex);
+                msgListToDelete.Add(reqIndex);
+                return true;
             }
 
             return false;
@@ -74,9 +73,9 @@ namespace UDLib.Network
         // 断线重连时，清除消息缓存队列，避免断线重连的推送和超时重发相互干扰
         public void ClearCacheMessage()
         {
-            if (msgDict != null)
+            if (msgDictCache != null)
             {
-                msgDict.Clear();
+                msgDictCache.Clear();
             }
         }
 
@@ -95,13 +94,30 @@ namespace UDLib.Network
         // 超时重新发送消息
         private void CheckTimeout()
         {
-            if (msgDict == null || msgDict.Count == 0)
+            // 断线了就不要检测超时重发了
+            if(!m_tcpClient.IsValid())
+            {
+                return;
+            }
+
+            if (msgDictCache == null || msgDictCache.Count == 0)
                 return;
 
-            var keys = msgDict.Keys;
+            // 先清除待删除（已收到）的消息
+            foreach (ushort reqIndex in msgListToDelete)
+            {
+                if(msgDictCache.ContainsKey(reqIndex))
+                {
+                    msgDictCache.Remove(reqIndex);
+                }
+            }
+            msgListToDelete.Clear();
+
+            // 遍历出已经超时的消息
+            var keys = msgDictCache.Keys;
             tmpMsgList.Clear();
             MessageData messageObject;
-            foreach (KeyValuePair<ushort, MessageData> kvp in msgDict)
+            foreach (KeyValuePair<ushort, MessageData> kvp in msgDictCache)
             {
                 messageObject = kvp.Value;
                 if (Math.Abs(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - messageObject.timeStamp) > CReconnectMgr.Instance.TimeOutDuration)
@@ -110,10 +126,11 @@ namespace UDLib.Network
                 }
             }
 
-            for(int i = 0; i < tmpMsgList.Count; i++)
+            // 重发超时消息，并且更新超时的时间戳和重发次数
+            for (int i = 0; i < tmpMsgList.Count; i++)
             {
                 var reqIndex = tmpMsgList[i];
-                messageObject = msgDict[reqIndex];
+                messageObject = msgDictCache[reqIndex];
                 if (messageObject.sentCount > CReconnectMgr.Instance.TimeOutRetryCount)
                 {
                     ////TODO, 超时10次判定为断线逻辑，暂不启用
