@@ -246,6 +246,14 @@ public:
 	* 功能:将特定field - value(域-值)对设置到哈希表key中
 	* @param key 键值即对应hash表名
 	* @param field 哈希表key中的域
+	* @param value 对应value
+	*/
+	bool hsetString(const char*key, const char*field, const std::string &value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+
+	/**
+	* 功能:将特定field - value(域-值)对设置到哈希表key中
+	* @param key 键值即对应hash表名
+	* @param field 哈希表key中的域
 	* @param value 对应二进制流指针value
 	* @param len 二进制流长度
 	*/
@@ -260,6 +268,16 @@ public:
 	* @param value 对应value 字符串地址
 	*/
 	bool hsetString(const char*key, BCLib::uint64 uniqueid, const char*subkey, const char*field, const char*value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+
+	/**
+	* 功能:将特定field - value(域-值)对设置到哈希表key中
+	* @param key 键值即对应hash表名
+	* @param uniqueid 实体ID 没有实体ID的可以考虑统一使用1000000来代替
+	* @param subkey 二级表名
+	* @param field 哈希表key中的域 字符串类型
+	* @param value 对应value 字符串地址
+	*/
+	bool hsetString(const char*key, BCLib::uint64 uniqueid, const char*subkey, const char*field, const std::string &value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 	/**
 	* 功能:将特定field - value(域-值)对设置到哈希表key中
@@ -993,9 +1011,10 @@ public:
 	* @param key 集合名
 	* @param scores 一个或多个集合成员对应的分值
 	* @param members 一个或多个集合成员
+	* @param precision 小数点位数
 	* @return true or false
 	*/
-	bool zadd(const char *key, const std::vector<double> &scores, const std::vector<std::string> &members, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+	bool zadd(const char *key, const std::vector<double> &scores, const std::vector<std::string> &members, BCLib::uint32 precision = 6, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 	/**
 	* 功能：添加成员到有序集合
@@ -1004,9 +1023,10 @@ public:
 	* @param subkey 子集和编号下的二级子集和名 与key uniqueid 共同组成唯一集合名 key:[uniqueid]:subkey  多维结构
 	* @param scores 一个或多个集合成员对应的分值
 	* @param members 一个或多个集合成员
+	* @param precision 小数点位数
 	* @return true or false
 	*/
-	bool zadd(const char *key, BCLib::uint64 uniqueid, const char *subkey, const std::vector<double> &scores, const std::vector<std::string> &members, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+	bool zadd(const char *key, BCLib::uint64 uniqueid, const char *subkey, const std::vector<double> &scores, const std::vector<std::string> &members, BCLib::uint32 precision = 6, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 	//返回结合内元素个数
 
@@ -1328,6 +1348,10 @@ protected:
 		}
 		return;
 	}
+
+private:
+	std::string DoubleToString(const double value, BCLib::uint32 precisionAfterPoint = 6);
+
 private:
 	redisContext *m_redisContext;
 	redisReply *m_redisReply;

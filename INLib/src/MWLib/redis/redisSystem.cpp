@@ -9,6 +9,8 @@
 #include <BCLib/utility/string.h>
 #include <BCLib/utility/convert.h>
 #include <BCLib/utility/logFile.h>
+#include <iostream>
+#include <sstream>
 
 namespace MWLib
 {
@@ -1108,6 +1110,15 @@ bool CRedisSystem::hsetString(const char* key, const char* field, const char* va
 	}
 	PROCESS_REPLY_ERROR
 }
+bool CRedisSystem::hsetString(const char*key, const char*field, const std::string &value, EREDIS_CONTEXT_TYPE type)
+{
+	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+	{
+		BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "hsetString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+		return false;
+	}
+	return hsetBin(key, field, value.c_str(), value.size(), type);
+}
 bool CRedisSystem::hsetBin(const char* key, const char* field, const char* value, BCLib::uint32 len, EREDIS_CONTEXT_TYPE type)
 {
 	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
@@ -1155,7 +1166,17 @@ bool CRedisSystem::hsetString(const char* key, BCLib::uint64 uniqueid, const cha
 	snprintf(strKey, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
 	return hsetString(strKey, field, value, type);
 }
-
+bool CRedisSystem::hsetString(const char* key, BCLib::uint64 uniqueid, const char* subkey, const char* field, const std::string &value, EREDIS_CONTEXT_TYPE type)
+{
+	if (key == NULL || subkey == NULL)
+	{
+		return false;
+	}
+	//std::string strKey = key + ":[" + BCLib::Utility::CConvert::toStringA(uniqueid) + "]" + ":" + subkey;
+	char strKey[1024] = { 0 };
+	snprintf(strKey, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
+	return hsetString(strKey, field, value, type);
+}
 bool CRedisSystem::hsetBin(const char* key, BCLib::uint64 uniqueid, const char* subkey, const char* field, const char* value, BCLib::uint32 len, EREDIS_CONTEXT_TYPE type)
 {
 	if (key == NULL || subkey == NULL)
@@ -3314,7 +3335,7 @@ BCLib::uint64 CRedisSystem::sscan(const char *key, BCLib::uint64 uniqueid, const
 	return sscan(strKey, matchKey, mySet, start, count, type);
 }
 
-bool CRedisSystem::zadd(const char* key, const std::vector<double> &scores, const std::vector<std::string> &members, EREDIS_CONTEXT_TYPE type)
+bool CRedisSystem::zadd(const char* key, const std::vector<double> &scores, const std::vector<std::string> &members, BCLib::uint32 precision, EREDIS_CONTEXT_TYPE type)
 {
 	if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
 	{
@@ -3339,7 +3360,7 @@ bool CRedisSystem::zadd(const char* key, const std::vector<double> &scores, cons
 	std::string memTemp = "";
 	for (BCLib::uint32 i = 0; i < members.size(); i++)
 	{
-		memTemp = memTemp +" " + BCLib::Utility::CConvert::toStringA(scores[i])+" " + members[i];
+		memTemp = memTemp +" " + DoubleToString(scores[i], precision)+" " + members[i];
 	}
 	
 	std::string cmd = "ZADD " + std::string(key) + " " + memTemp;
@@ -3359,7 +3380,7 @@ bool CRedisSystem::zadd(const char* key, const std::vector<double> &scores, cons
 	}
 	PROCESS_REPLY_ERROR
 }
-bool CRedisSystem::zadd(const char* key, BCLib::uint64 uniqueid, const char* subkey, const std::vector<double> &scores, const std::vector<std::string> &members, EREDIS_CONTEXT_TYPE type)
+bool CRedisSystem::zadd(const char* key, BCLib::uint64 uniqueid, const char* subkey, const std::vector<double> &scores, const std::vector<std::string> &members, BCLib::uint32 precision, EREDIS_CONTEXT_TYPE type)
 {
 	if (key == NULL || subkey == NULL)
 	{
@@ -3367,7 +3388,7 @@ bool CRedisSystem::zadd(const char* key, BCLib::uint64 uniqueid, const char* sub
 	}
 	char strKey[1024] = { 0 };
 	snprintf(strKey, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
-	return zadd(strKey, scores, members, type);
+	return zadd(strKey, scores, members, precision, type);
 }
 BCLib::uint32  CRedisSystem::zcard(const char* key, EREDIS_CONTEXT_TYPE type)
 {
@@ -4112,6 +4133,25 @@ BCLib::uint64 CRedisSystem::zscan(const char *key, BCLib::uint64 uniqueid, const
 	char strKey[1024] = { 0 };
 	snprintf(strKey, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
 	return zscan(strKey, matchKey, members, start, count, type);
+}
+
+std::string CRedisSystem::DoubleToString(const double value, BCLib::uint32 precisionAfterPoint/* = 6*/)
+{
+	std::ostringstream out;
+	// 清除默认精度
+	out.precision(std::numeric_limits<double>::digits10);
+	out << value;
+
+	std::string res = std::move(out.str());
+	auto pos = res.find('.');
+	if (pos == std::string::npos)
+		return res;
+
+	auto splitLen = pos + 1 + precisionAfterPoint;
+	if (res.size() <= splitLen)
+		return res;
+
+	return res.substr(0, splitLen);
 }
 }//Redis
 }//MWLib
