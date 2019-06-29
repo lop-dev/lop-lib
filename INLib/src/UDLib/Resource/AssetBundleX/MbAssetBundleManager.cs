@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System;
-using UDLib.Utility;
+//using UDLib.Utility;
 using System.Text;
 
 namespace UDLib.Resource
@@ -22,7 +22,7 @@ namespace UDLib.Resource
     /// <summary>
     /// 加载管理器
     /// </summary>
-    public class MbAssetBundleManager : CMonoSingleton<MbAssetBundleManager>
+    public class MbAssetBundleManager : UDLib.Utility.CMonoSingleton<MbAssetBundleManager>
     {
         //同时最大加载数量
         private const int MAX_LOAD = 5;
@@ -47,7 +47,7 @@ namespace UDLib.Resource
         // 资源加载模块打Dll，把Direct_Mode的宏缓存变量
         private bool _isDirectMode = true;
         // 接口，用于获取CResourceDefine中的配置
-        private IResourceDefine _iResourceDefine;
+        private UDLib.Utility.IResourceDefine _iResourceDefine;
         private IExternalResources _iExternalResources;
         private bool _enableLog = false;
         // 已下载的资源清单
@@ -144,7 +144,7 @@ namespace UDLib.Resource
             }
         }
 
-        public IResourceDefine ResourceDefine
+        public UDLib.Utility.IResourceDefine ResourceDefine
         {
             get
             {
@@ -1533,9 +1533,9 @@ namespace UDLib.Resource
             {
                 switch (ResourceDefine.GetABBuildTypes()[(int)eResourceType])
                 {
-                    case EBUILD_TYPE.PACK:
-                    case EBUILD_TYPE.SINGLE:
-                    case EBUILD_TYPE.HASH256:
+                    case UDLib.Utility.EBUILD_TYPE.PACK:
+                    case UDLib.Utility.EBUILD_TYPE.SINGLE:
+                    case UDLib.Utility.EBUILD_TYPE.HASH256:
                         break;
                     default:
                         sub_path = new StringBuilder(packageName.ToLower()).Append("/");

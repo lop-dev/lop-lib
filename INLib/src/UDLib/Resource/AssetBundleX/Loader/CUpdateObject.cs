@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using UnityEditor;
-
-namespace UDLib.Resource
+﻿namespace UDLib.Resource
 {
     // 更新的文件常态
     public enum CFileState
