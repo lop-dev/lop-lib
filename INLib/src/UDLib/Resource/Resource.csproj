@@ -73,7 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetBundleX\CAssetBundleLog.cs" />
-    <Compile Include="AssetBundleX\CUnitySingleton.cs" />
     <Compile Include="AssetBundleX\IExternalResources.cs" />
     <Compile Include="AssetBundleX\Loader\CAbstractRefObject.cs" />
     <Compile Include="AssetBundleX\Loader\CAssetBundleObject.cs" />
