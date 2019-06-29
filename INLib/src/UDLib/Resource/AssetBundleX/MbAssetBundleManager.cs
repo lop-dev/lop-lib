@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System;
-//using UDLib.Utility;
 using System.Text;
 
 namespace UDLib.Resource
