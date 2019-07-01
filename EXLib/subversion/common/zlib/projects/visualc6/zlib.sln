@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib.vcxproj", "{602F9191-04ED-CB7F-402F-65A599B7FEAF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		DLL ASM Debug|Win32 = DLL ASM Debug|Win32
+		DLL ASM Release|Win32 = DLL ASM Release|Win32
+		DLL Debug|Win32 = DLL Debug|Win32
+		DLL Release|Win32 = DLL Release|Win32
+		LIB ASM Debug|Win32 = LIB ASM Debug|Win32
+		LIB ASM Release|Win32 = LIB ASM Release|Win32
+		LIB Debug|Win32 = LIB Debug|Win32
+		LIB Release|Win32 = LIB Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.DLL ASM Debug|Win32.ActiveCfg = DLL ASM Debug|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.DLL ASM Debug|Win32.Build.0 = DLL ASM Debug|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.DLL ASM Release|Win32.ActiveCfg = DLL ASM Release|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.DLL ASM Release|Win32.Build.0 = DLL ASM Release|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.DLL Debug|Win32.ActiveCfg = DLL Debug|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.DLL Debug|Win32.Build.0 = DLL Debug|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.DLL Release|Win32.ActiveCfg = DLL Release|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.DLL Release|Win32.Build.0 = DLL Release|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.LIB ASM Debug|Win32.ActiveCfg = LIB ASM Debug|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.LIB ASM Debug|Win32.Build.0 = LIB ASM Debug|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.LIB ASM Release|Win32.ActiveCfg = LIB ASM Release|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.LIB ASM Release|Win32.Build.0 = LIB ASM Release|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.LIB Debug|Win32.ActiveCfg = LIB Debug|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.LIB Debug|Win32.Build.0 = LIB Debug|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.LIB Release|Win32.ActiveCfg = LIB Release|Win32
+		{602F9191-04ED-CB7F-402F-65A599B7FEAF}.LIB Release|Win32.Build.0 = LIB Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
