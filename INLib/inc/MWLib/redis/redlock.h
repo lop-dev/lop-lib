@@ -33,60 +33,56 @@
 
 #include <iostream>
 #include <vector>
-//#if defined(_WIN32)
-//#include <hiredis/win/deps/hiredis/hiredis.h>
-//#include <hiredis/win/deps/hiredis/sds.h>
-//#elif defined(_LINUX)
 #include <hiredis.h>
 #include <sds.h>
-//#endif
 
-
-class CLock {
+class CLock
+{
 public:
-	CLock() 
-	{ 
-		m_validityTime = 0;
-		m_resource = NULL;
-		m_val = NULL;
-	}
-	~CLock() 
-	{
-		sdsfree(m_resource);
-		sdsfree(m_val);
-	}
+    CLock()
+    {
+        m_validityTime = 0;
+        m_resource = NULL;
+        m_val = NULL;
+    }
+    ~CLock()
+    {
+        sdsfree(m_resource);
+        sdsfree(m_val);
+    }
 public:
     int                     m_validityTime; // 当前锁可以存活的时间, 毫秒
     sds                     m_resource;     // 要锁住的资源名称
     sds                     m_val;          // 锁住资源的进程随机名字
 };
 
-class CRedLock {
+class CRedLock
+{
 public:
-                            CRedLock();
+    CRedLock();
     virtual                 ~CRedLock();
+
 public:
     bool                    Initialize();
     bool                    AddServerContext(redisContext * c);
-	bool					delServerContext(redisContext * c);
+    bool                    delServerContext(redisContext * c);
     void                    SetRetry(const int count, const int delay);
     bool                    Lock(const char *resource, const int ttl, CLock &lock);
-    bool                    ContinueLock(const char *resource, const int ttl,
-                                         CLock &lock);
+    bool                    ContinueLock(const char *resource, const int ttl, CLock &lock);
     bool                    Unlock(const CLock &lock);
+
 private:
-    bool                    LockInstance(redisContext *c, const char *resource,
-                                         const char *val, const int ttl);
-    bool                    ContinueLockInstance(redisContext *c, const char *resource,
-                                                 const char *val, const int ttl);
-    void                    UnlockInstance(redisContext *c, const char *resource,
-                                           const char *val);
+    bool                    LockInstance(redisContext *c, const char *resource, const char *val, const int ttl);
+    bool                    ContinueLockInstance(redisContext *c, const char *resource, const char *val, const int ttl);
+    void                    UnlockInstance(redisContext *c, const char *resource, const char *val);
     sds                     GetUniqueLockId();
     redisReply *            RedisCommandArgv(redisContext *c, int argc, char **inargv);
+
 private:
     int              m_defaultRetryCount;    // 默认尝试次数3
     int              m_defaultRetryDelay;    // 默认尝试延时200毫秒
     float            m_clockDriftFactor;     // 电脑时钟误差0.01
+
 private:
     sds                     m_unlockScript;         // 解锁脚本
     int                     m_retryCount;           // try count
@@ -94,7 +90,7 @@ private:
     int                     m_quoRum;               // majority nums
 
     std::vector<redisContext *>  m_redisServer;          // redis master servers
-	CLock   m_continueLock;         // 续锁
+    CLock   m_continueLock;         // 续锁
     sds                     m_continueLockScript;   // 续锁脚本
 };
 #endif // __MWLIB_REDIS_REDLOCK_H__

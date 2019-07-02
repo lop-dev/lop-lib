@@ -46,11 +46,11 @@
 #include <math.h>
 #include <MWLib/redis/redlock.h>
 
-/* Turn the plain C strings into Sds strings */
+ /* Turn the plain C strings into Sds strings */
 static char **convertToSds(int count, char** args) {
     int j;
     char **sds = (char**)malloc(sizeof(char*)*count);
-    for(j = 0; j < count; j++)
+    for (j = 0; j < count; j++)
         sds[j] = sdsnew(args[j]);
     return sds;
 }
@@ -60,7 +60,7 @@ static char **convertToSds(int count, char** args) {
 // ----------------
 CRedLock::CRedLock() {
     Initialize();
-	
+
 }
 
 // ----------------
@@ -76,15 +76,15 @@ CRedLock::~CRedLock() {
 // Initialize the server: scripts...
 // ----------------
 bool CRedLock::Initialize() {
-	m_defaultRetryCount = 3;
-	m_defaultRetryDelay = 200;
-	m_clockDriftFactor = 0.01f;
+    m_defaultRetryCount = 3;
+    m_defaultRetryDelay = 200;
+    m_clockDriftFactor = 0.01f;
 
     m_continueLockScript = sdsnew("if redis.call('get', KEYS[1]) == ARGV[1] then redis.call('del', KEYS[1]) end return redis.call('set', KEYS[1], ARGV[2], 'px', ARGV[3], 'nx')");
-    m_unlockScript       = sdsnew("if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end");
+    m_unlockScript = sdsnew("if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end");
     m_retryCount = m_defaultRetryCount;
     m_retryDelay = m_defaultRetryDelay;
-    m_quoRum     = 0;
+    m_quoRum = 0;
 
     return true;
 }
@@ -93,7 +93,7 @@ bool CRedLock::Initialize() {
 // add redis server
 // ----------------
 bool CRedLock::AddServerContext(redisContext * c) {
- 
+
     if (c != NULL) {
         m_redisServer.push_back(c);
     }
@@ -102,20 +102,20 @@ bool CRedLock::AddServerContext(redisContext * c) {
 }
 bool CRedLock::delServerContext(redisContext * c)
 {
-	if (c == NULL)
-	{
-		return true;
-	}
-	std::vector<redisContext *>::iterator it = m_redisServer.begin();
-	for (; it != m_redisServer.end();it++)
-	{
-		if (*it == c)
-		{
-			it = m_redisServer.erase(it);
-			break;
-		}
-	}
-	return true;
+    if (c == NULL)
+    {
+        return true;
+    }
+    std::vector<redisContext *>::iterator it = m_redisServer.begin();
+    for (; it != m_redisServer.end(); it++)
+    {
+        if (*it == c)
+        {
+            it = m_redisServer.erase(it);
+            break;
+        }
+    }
+    return true;
 }
 // ----------------
 // set retry
@@ -139,8 +139,8 @@ bool CRedLock::Lock(const char *resource, const int ttl, CLock &lock) {
     int retryCount = m_retryCount;
     do {
         int n = 0;
-		BCLib::Utility::CSystemTime now;
-		BCLib::uint64 startTime = now.getMilliseconds();
+        BCLib::Utility::CSystemTime now;
+        BCLib::uint64 startTime = now.getMilliseconds();
 
         int slen = (int)m_redisServer.size();
         for (int i = 0; i < slen; i++) {
@@ -152,15 +152,16 @@ bool CRedLock::Lock(const char *resource, const int ttl, CLock &lock) {
         //precision, which is 1 millisecond, plus 1 millisecond min drift
         //for small TTLs.
         int drift = (int)(ttl * m_clockDriftFactor) + 2;
-		BCLib::Utility::CSystemTime now1;
-		BCLib::uint64 nowTime = now1.getMilliseconds();
-		BCLib::uint64 validityTime = ttl - (nowTime - startTime) - drift;
+        BCLib::Utility::CSystemTime now1;
+        BCLib::uint64 nowTime = now1.getMilliseconds();
+        BCLib::uint64 validityTime = ttl - (nowTime - startTime) - drift;
         //printf("The resource validty time is %d, n is %d, quo is %d\n",
         //       validityTime, n, m_quoRum);
         if (n >= m_quoRum && validityTime > 0) {
             lock.m_validityTime = (int)validityTime;
             return true;
-        } else {
+        }
+        else {
             Unlock(lock);
         }
         // Wait a random delay before to retry
@@ -169,7 +170,7 @@ bool CRedLock::Lock(const char *resource, const int ttl, CLock &lock) {
 #if defined(_LINUX)
         usleep(delay * 1000);
 #else
-		Sleep(delay);
+        Sleep(delay);
 #endif
         retryCount--;
     } while (retryCount > 0);
@@ -214,15 +215,16 @@ bool CRedLock::ContinueLock(const char *resource, const int ttl, CLock &lock) {
         if (n >= m_quoRum && validityTime > 0) {
             lock.m_validityTime = validityTime;
             return true;
-        } else {
+        }
+        else {
             Unlock(lock);
         }
         // Wait a random delay before to retry
         int delay = rand() % m_retryDelay + (int)floor(m_retryDelay / 2);
 #if defined(_LINUX)
-		usleep(delay * 1000);
+        usleep(delay * 1000);
 #else
-		Sleep(delay);
+        Sleep(delay);
 #endif
         retryCount--;
     } while (retryCount > 0);
@@ -244,12 +246,12 @@ bool CRedLock::Unlock(const CLock &lock) {
 // lock the resource milliseconds
 // ----------------
 bool CRedLock::LockInstance(redisContext *c, const char *resource,
-                            const char *val, const int ttl) {
+    const char *val, const int ttl) {
     redisReply *reply;
     reply = (redisReply *)redisCommand(c, "set %s %s px %d nx",
-                                       resource, val, ttl);
+        resource, val, ttl);
     if (reply) {
-       // printf("Set return: %s [null == fail, OK == success]\n", reply->str);
+        // printf("Set return: %s [null == fail, OK == success]\n", reply->str);
     }
     if (reply && reply->str && strcmp(reply->str, "OK") == 0) {
         freeReplyObject(reply);
@@ -265,17 +267,17 @@ bool CRedLock::LockInstance(redisContext *c, const char *resource,
 // 对redismaster续锁, 私有函数
 // ----------------
 bool CRedLock::ContinueLockInstance(redisContext *c, const char *resource,
-                                    const char *val, const int ttl) {
+    const char *val, const int ttl) {
     int argc = 7;
     sds sdsTTL = sdsempty();
     sdsTTL = sdscatprintf(sdsTTL, "%d", ttl);
-    char *continueLockScriptArgv[] = {(char*)"EVAL",
+    char *continueLockScriptArgv[] = { (char*)"EVAL",
                                       m_continueLockScript,
                                       (char*)"1",
                                       (char*)resource,
                                       m_continueLock.m_val,
                                       (char*)val,
-                                      sdsTTL};
+                                      sdsTTL };
     redisReply *reply = RedisCommandArgv(c, argc, continueLockScriptArgv);
     sdsfree(sdsTTL);
     if (reply) {
@@ -295,14 +297,14 @@ bool CRedLock::ContinueLockInstance(redisContext *c, const char *resource,
 // 对redismaster解锁
 // ----------------
 void CRedLock::UnlockInstance(redisContext *c, const char *resource,
-                              const char *val) {
+    const char *val) {
     int argc = 5;
-	//printf("Redis unlock script = [%s]", m_unlockScript);
-    char *unlockScriptArgv[] = {(char*)"EVAL",
+    //printf("Redis unlock script = [%s]", m_unlockScript);
+    char *unlockScriptArgv[] = { (char*)"EVAL",
                                 m_unlockScript,
                                 (char*)"1",
                                 (char*)resource,
-                                (char*)val};
+                                (char*)val };
     redisReply *reply = RedisCommandArgv(c, argc, unlockScriptArgv);
     if (reply) {
         freeReplyObject(reply);
@@ -334,25 +336,25 @@ redisReply * CRedLock::RedisCommandArgv(redisContext *c, int argc, char **inargv
 // 获取唯一id
 // ----------------
 sds CRedLock::GetUniqueLockId() {
-	unsigned char buffer[20] = {0};
-	sds s;
-	s = sdsempty();
-	unsigned int pid = 0;
+    unsigned char buffer[20] = { 0 };
+    sds s;
+    s = sdsempty();
+    unsigned int pid = 0;
 #if defined(_LINUX)
-	pid = getpid();
+    pid = getpid();
 #else
-	pid = GetCurrentProcessId();
+    pid = GetCurrentProcessId();
 #endif
-	//printf("pid = %d", pid);
-	srand((unsigned int)time(NULL)+ pid);
-	for (int i = 0; i< 20; i++)
-	{	
-		buffer[i] = rand() % 26 + 'a';
-	}
- 
+    //printf("pid = %d", pid);
+    srand((unsigned int)time(NULL) + pid);
+    for (int i = 0; i < 20; i++)
+    {
+        buffer[i] = rand() % 26 + 'a';
+    }
+
     s = sdsempty();
     for (int i = 0; i < 20; i++) {
-           s = sdscatprintf(s, "%c", buffer[i]);
+        s = sdscatprintf(s, "%c", buffer[i]);
     }
     return s;
 }
