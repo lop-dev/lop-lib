@@ -8,12 +8,6 @@
 #ifndef __MWLIB_KAFKA_KAFKA_H__
 #define __MWLIB_KAFKA_KAFKA_H__
 
-#if defined(_WIN32)
-#include <windows.h>
-#include <DbgHelp.h>
-#elif defined(_LINUX)
-#endif
-
 #include <MWLib/utility/logFile.h>
 #include <BCLib/utility/io/xmlFile.h>
 
@@ -25,7 +19,6 @@
 #    define MWLIB_KAFKA_API
 #endif
 
-
 namespace MWLib
 {
 	namespace Kafka
@@ -33,6 +26,7 @@ namespace MWLib
 		typedef BCLib::Utility::HXmlNode XmlNode;
 		typedef BCLib::Utility::CXmlFile XmlFile;
 		typedef std::map <std::string, std::string > MapNameValue;
+
 		//解析所有子结点
 		void getXmlChildNodeNameValue(const XmlNode &node, MapNameValue& map);
 		void kafkaLogger(int level, const char*msg);

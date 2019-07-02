@@ -43,8 +43,8 @@ namespace MWLib
 			bool consume(ConsumeMsg& msg);
 			bool commit(const ConsumeMsg& msg);
 			bool destroy(const ConsumeMsg& msg);
-			//void rebalanceAssign();
 			void setRebalanceCallback(RebalanceCallback cb, void *arg);
+
 		private:
 			qbus::QbusConsumer* m_consumer;
 			qbus::QbusMsgContentInfo* m_msgContent;
@@ -52,4 +52,4 @@ namespace MWLib
 	}//Kafka
 }//MWLib
 
-#endif//__MWLIB_KAFKA_KAFKA_H__
+#endif//__MWLIB_KAFKA_CONSUMER_H__

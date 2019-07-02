@@ -1,14 +1,12 @@
 //////////////////////////////////////////////////////////////////////
 //  created:    2018/10/29
 //  filename:   MWLib/kafka/kafka.cpp
-//  author:     xums
+//  author:     League of Perfect (xums)
 /// @brief
 ///
 //////////////////////////////////////////////////////////////////////
 #include <MWLib/kafka/kafka.h>
-
 #include <qbus_logger.h>
-
 
 namespace MWLib
 {
@@ -57,7 +55,5 @@ namespace MWLib
 				childNode = BCLib::Utility::CXmlFile::getNextNode(childNode);
 			}
 		}
-
-
 	}//Kafka
 }//MWLib
