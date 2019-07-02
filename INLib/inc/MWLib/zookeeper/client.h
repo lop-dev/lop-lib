@@ -8,7 +8,6 @@
 #ifndef __MWLIB_ZOOKEEPER_CLIENT_H__
 #define __MWLIB_ZOOKEEPER_CLIENT_H__
 
-
 #include <mutex>
 #include <BCLib/utility/noncopyable.h>
 
