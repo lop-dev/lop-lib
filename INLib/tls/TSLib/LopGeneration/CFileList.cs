@@ -262,7 +262,7 @@ namespace Proto2Code
             FileInfo fileInfo = new FileInfo(file);
             if (!fileInfo.Exists)
             {
-                CSLib.Utility.CDebugOut.LogError(string.Format("文件不存在。\r{0}", file));
+                CSLib.Utility.CDebugOut.LogError("文件不存在。\r{0}", file);
                 Console.WriteLine("文件不存在。\r{0}", file);
                 return false;
             }

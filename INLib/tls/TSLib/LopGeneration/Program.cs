@@ -290,7 +290,7 @@ namespace Proto2Code
             if (args.Length < 3)
             {
                 Console.WriteLine("参数个数不对，请输入参数 -help 查看详细信息");
-                CSLib.Utility.CDebugOut.LogError(string.Format("参数个数不对，请输入参数 -help 查看详细信息"));
+                CSLib.Utility.CDebugOut.LogError("参数个数不对，请输入参数 -help 查看详细信息");
                 return 1; // 参数个数不对
             }
 

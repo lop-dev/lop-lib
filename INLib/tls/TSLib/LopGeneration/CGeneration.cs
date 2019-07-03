@@ -147,14 +147,14 @@ namespace Proto2Code
         {
             if ((m_strDataFile == "") || (m_strOutputFile == "") || (m_strEnumName == "") || (m_strEnumValue == "") || (m_strEnumDesc == ""))
             {
-                CSLib.Utility.CDebugOut.LogError(string.Format("有参数为空字符"));
+                CSLib.Utility.CDebugOut.LogError("有参数为空字符");
                 return 1; // 参数不对
             }
 
             FileInfo fileInfo = new FileInfo(m_strOutputFile);
             if (fileInfo.Extension != ".proto")
             {
-                CSLib.Utility.CDebugOut.LogError(string.Format("后缀名不是 proto"));
+                CSLib.Utility.CDebugOut.LogError("后缀名不是 proto");
                 return 4; // 文件后缀名不正确
             }
 
@@ -168,7 +168,7 @@ namespace Proto2Code
             TSLib.TableGeneration.CDesTable.Clear();
             if (!TSLib.TableGeneration.CDesTable.Instance.LoadTable(m_strDataFile, null))
             {
-                CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDataFile));
+                CSLib.Utility.CDebugOut.LogError("加载{0}失败", m_strDataFile);
                 return 3; // 文件加载失败
             }
 
@@ -196,7 +196,7 @@ namespace Proto2Code
                     TSLib.TableGeneration.CProTable.Clear();
                     if (!TSLib.TableGeneration.CProTable.Instance.LoadTable(m_strDescFile, null))
                     {
-                        CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDescFile));
+                        CSLib.Utility.CDebugOut.LogError("加载{0}失败", m_strDescFile);
                         continue;
                     }
 
@@ -210,7 +210,7 @@ namespace Proto2Code
             {
                 if (!TSLib.TableGeneration.CProTable.Instance.LoadTable(m_strDescFile, null))
                 {
-                    CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDescFile));
+                    CSLib.Utility.CDebugOut.LogError("加载{0}失败", m_strDescFile);
                     return 3; // 文件加载失败
                 }
                 CFileList.Instance.SetNewFile(m_strOutputFile);
@@ -257,7 +257,7 @@ namespace Proto2Code
 
                 if(null == fileInfo)
                 {
-                    CSLib.Utility.CDebugOut.LogError(string.Format("未识别的语言类型{0}",m_strLanguage));
+                    CSLib.Utility.CDebugOut.LogError("未识别的语言类型{0}",m_strLanguage);
                     return 1;
                 }
 
@@ -357,12 +357,12 @@ namespace Proto2Code
 
                     if(!File.Exists(m_strPBSrcFile))
                     {
-                        CSLib.Utility.CDebugOut.LogError(string.Format("pb文件不存在{0}", m_strPBSrcFile));
+                        CSLib.Utility.CDebugOut.LogError("pb文件不存在{0}", m_strPBSrcFile);
                         continue;
                     }
                     if (!TSLib.TableGeneration.CSerializationFile.Instance.DynamicCompileProtobufCsharpFile(m_strPBSrcFile))
                     {
-                        CSLib.Utility.CDebugOut.LogError(string.Format("动态编译{0}失败", m_strPBSrcFile));
+                        CSLib.Utility.CDebugOut.LogError("动态编译{0}失败", m_strPBSrcFile);
                         continue;
                     }
 
@@ -370,7 +370,7 @@ namespace Proto2Code
 
                     if (!TSLib.TableGeneration.CSerializationFile.Instance.LoadTable(m_strDataFile, null))
                     {
-                        CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDataFile));
+                        CSLib.Utility.CDebugOut.LogError("加载{0}失败", m_strDataFile);
                         continue;
                     }
                     TSLib.TableGeneration.CSerializationFile.Instance.GenerateSerializationFile(m_strOutputFile);
@@ -384,13 +384,13 @@ namespace Proto2Code
                     
                 if (!TSLib.TableGeneration.CProTable.Instance.LoadTable(m_strDescFile, null))
                 {
-                    CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDescFile));
+                    CSLib.Utility.CDebugOut.LogError("加载{0}失败", m_strDescFile);
                     return 3; // 文件加载失败
                 }
 
                 if (!TSLib.TableGeneration.CSerializationFile.Instance.DynamicCompileProtobufCsharpFile(m_strPBSrcFile))
                 {
-                    CSLib.Utility.CDebugOut.LogError(string.Format("动态编译{0}失败", m_strPBSrcFile));
+                    CSLib.Utility.CDebugOut.LogError("动态编译{0}失败", m_strPBSrcFile);
                     return 3; // 文件加载失败
                 }
 
@@ -398,7 +398,7 @@ namespace Proto2Code
 
                 if (!TSLib.TableGeneration.CSerializationFile.Instance.LoadTable(m_strDataFile, null))
                 {
-                    CSLib.Utility.CDebugOut.LogError(string.Format("加载{0}失败", m_strDataFile));
+                    CSLib.Utility.CDebugOut.LogError("加载{0}失败", m_strDataFile);
                     return 3; // 文件加载失败
                 }
 
