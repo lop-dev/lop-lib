@@ -15,6 +15,12 @@ namespace UDLib.Network
             set { m_msgExecute = value; }
         }
 
+        public CSLib.Utility.CDictionary<UInt32, Int64> DelayedMsg
+        {
+            get { return m_dicDelayedMsg; }
+            set { m_dicDelayedMsg = value; }
+        }
+
         protected override Boolean _CbParseMsg(Byte[] msgBuff, Int32 msgSize)
         {
             if (m_msgExecute == null)
@@ -26,8 +32,12 @@ namespace UDLib.Network
             bool ret = m_msgExecute.CreateMessage(ref msgLabel, msgBuff, msgSize);
 
             CSLib.Framework.CNetMessage theMsg = (CSLib.Framework.CNetMessage)(msgLabel.MsgObject);
+
+            // 删除发送时做的消息缓存
+            m_dicDelayedMsg.DelObject(theMsg.UniqueID);
+
             // ack 的 response不做解析和向服务器发送ack
-            if(theMsg != null && theMsg.Func == CReconnectMgr.EFUNC_MESSAGESYSTEM)
+            if (theMsg != null && theMsg.Func == CReconnectMgr.EFUNC_MESSAGESYSTEM)
             {
                 UDLib.Utility.CDebugOut.Log("收到ack消息， 从消息重发队列移除消息 > reqIndex : " + theMsg.GetReqIndex());
                 m_cacheMessage.RemoveCacheMessageByReqIndex(msgLabel.ReqIndex);
@@ -68,5 +78,7 @@ namespace UDLib.Network
         {
             m_cacheMessage.ClearCacheMessage();
         }
+
+        private CSLib.Utility.CDictionary<UInt32, Int64> m_dicDelayedMsg = new CSLib.Utility.CDictionary<UInt32, Int64>(); // 第二个参数转成毫秒
     }
 }

@@ -246,6 +246,70 @@ namespace UDLib.Network
             return _SendMessage(msgRequest);
         }
 
+        public bool SendMessage(CSLib.Framework.CNetMessage msgRequest, CSLib.Framework.CMessage msgResponse, Int32 delaySecond = 3)
+        {
+            if (CReconnectMgr.Instance.SimulateSocketClose)
+            {
+                UDLib.Utility.CDebugOut.Log("客户端模拟断网");
+                m_tcpClient.Close();
+                m_tcpClient.CbTerminate();
+                return false;
+            }
+
+            if (msgRequest == null)
+            {
+                UDLib.Utility.CDebugOut.LogError("SendMessage : msgRquest == null");
+                return false;
+            }
+
+            if (msgResponse == null)
+            {
+                UDLib.Utility.CDebugOut.LogError("SendMessage : msgResponse == null");
+                return false;
+            }
+
+            if (m_tcpClient == null)
+            {
+                UDLib.Utility.CDebugOut.LogError("SendMessage : m_tcpClient == null");
+                return false;
+            }
+
+            if (!m_tcpClient.IsValid())
+            {
+                return false;
+            }
+
+            Int64 curTicks = DateTime.Now.Ticks / 10000; // 转成毫秒
+            if (m_tcpClient.DelayedMsg.ContainsKey(msgResponse.UniqueID))
+            {
+                if (curTicks < m_tcpClient.DelayedMsg.GetObject(msgResponse.UniqueID))
+                {
+                    return false;
+                }
+                else
+                {
+                    m_tcpClient.DelayedMsg.DelObject(msgResponse.UniqueID);
+                }
+            }
+
+            //UnityEngine.Profiling.Profiler.BeginSample("CMoniBehaviour > SendMessage");
+            {
+                byte tmpServer = CSLib.Utility.CBitHelper.GetHighUInt8(msgRequest.MsgType);
+                byte tmpFunc = CSLib.Utility.CBitHelper.GetLowUInt8(msgRequest.MsgType);
+                if (!CSLib.Framework.CMsgExecute.IsIgnoreTrace(tmpServer, tmpFunc, msgRequest.Id))
+                {
+                    //发送消息前加入本地缓存,在这里做可以过滤掉心跳
+                    UDLib.Utility.CDebugOut.Log("SendMessage : uServer = " + tmpServer.ToString() + "; uFunc = " + tmpFunc.ToString() + "; uID = " + msgRequest.Id.ToString() + ", reqIndex" + msgRequest.GetReqIndex());
+                    // 超时重发机制, 非ack消息，缓存序列好，待收到ack返回从缓存移除
+                    m_tcpClient.CacheMessage(msgRequest);
+                    m_tcpClient.DelayedMsg.AddObject(msgResponse.UniqueID, curTicks + delaySecond * 1000); // 第二个参数转成毫秒
+                }
+            }
+            //UnityEngine.Profiling.Profiler.EndSample();
+
+            return _SendMessage(msgRequest);
+        }
+
         /// <summary>
         /// 处理消息
         /// 逻辑层需要在Update里调用这个接口，以处理接收消息
