@@ -51,17 +51,5 @@ namespace UDLib.Network
             }
             get { return resLatestIndex; }
         }
-
-        // 开启多线程做Reconnect,否则服务器不可用的时候会卡住主线程
-        public bool isConnected = false;
-        public void Reconnect(int timeout)
-        {
-            isConnected = false;
-            Thread td = new Thread(() => {
-
-                isConnected = TcpClient.Reconnect(timeout);
-            });
-            td.Start();
-        }
     }
 }
