@@ -42,6 +42,16 @@ namespace UDLib.Network
             get { return m_msgExecute; }
         }
 
+        public CSLib.Utility.CStatisticsNum<string> SendStatisticsNum
+        {
+            get { return m_sendStatisticsNum; }
+        }
+
+        public CSLib.Utility.CStatisticsNum<string> RecvStatisticsNum
+        {
+            get { return m_recvStatisticsNum; }
+        }
+
         /// <summary>
         /// 初始化TcpClient
         /// </summary>
@@ -240,6 +250,9 @@ namespace UDLib.Network
                     // 超时重发机制, 非ack消息，缓存序列好，待收到ack返回从缓存移除
                     m_tcpClient.CacheMessage(msgRequest);
                 }
+#if DEBUG
+                m_sendStatisticsNum.AddNum(tmpServer.ToString() + " -> " + tmpFunc.ToString());
+#endif
             }
             //UnityEngine.Profiling.Profiler.EndSample();
 
@@ -303,6 +316,9 @@ namespace UDLib.Network
                     // 超时重发机制, 非ack消息，缓存序列好，待收到ack返回从缓存移除
                     m_tcpClient.CacheMessage(msgRequest);
                     m_tcpClient.DelayedMsg.AddObject(msgResponse.UniqueID, curTicks + delaySecond * 1000); // 第二个参数转成毫秒
+#if DEBUG
+                    m_sendStatisticsNum.AddNum(tmpServer.ToString() + " -> " + tmpFunc.ToString());
+#endif
                 }
             }
             //UnityEngine.Profiling.Profiler.EndSample();
@@ -334,6 +350,12 @@ namespace UDLib.Network
                 {
                     UDLib.Utility.CDebugOut.LogError("ExecuteMessages : 消息执行错误");
                 }
+#if DEBUG
+                CSLib.Framework.CNetMessage msgResult = (CSLib.Framework.CNetMessage)msgLabel.MsgObject;
+                byte tmpServer = CSLib.Utility.CBitHelper.GetHighUInt8(msgResult.MsgType);
+                byte tmpFunc = CSLib.Utility.CBitHelper.GetLowUInt8(msgResult.MsgType);
+                m_recvStatisticsNum.AddNum(tmpServer.ToString() + " -> " + tmpFunc.ToString());
+#endif
             }
             //UnityEngine.Profiling.Profiler.EndSample();
         }
@@ -428,5 +450,8 @@ namespace UDLib.Network
 
         private CTcpClient m_tcpClient = null;
         private CSLib.Framework.CMsgExecute m_msgExecute = new CSLib.Framework.CMsgExecute();
+
+        private CSLib.Utility.CStatisticsNum<string> m_sendStatisticsNum = new CSLib.Utility.CStatisticsNum<string>();
+        private CSLib.Utility.CStatisticsNum<string> m_recvStatisticsNum = new CSLib.Utility.CStatisticsNum<string>();
     }
 }
