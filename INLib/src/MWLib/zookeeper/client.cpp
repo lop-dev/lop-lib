@@ -5,6 +5,11 @@
 /// @brief
 ///
 //////////////////////////////////////////////////////////////////////
+/** use the lib zookeeper as static lib */
+#ifndef USE_STATIC_LIB
+#define USE_STATIC_LIB
+#endif
+
 #include <zookeeper.h>
 #include <MWLib/zookeeper/client.h>
 #include <BCLib/utility/logFile.h>
