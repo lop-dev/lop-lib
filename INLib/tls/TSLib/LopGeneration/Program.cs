@@ -103,10 +103,12 @@ namespace Proto2Code
             string csPeDir = @".\TableOut\Temp\1_Protoext\C#";
             string ccPeDir = @".\TableOut\Temp\1_Protoext\C++";
             string goPeDir = @".\TableOut\Temp\1_Protoext\GO";
+            string luaPeDir = @".\TableOut\Temp\1_Protoext\Lua";
 
             if (!Directory.Exists(csPeDir)) Directory.CreateDirectory(csPeDir);
             if (!Directory.Exists(ccPeDir)) Directory.CreateDirectory(ccPeDir);
             if (!Directory.Exists(goPeDir)) Directory.CreateDirectory(goPeDir);
+            if (!Directory.Exists(luaPeDir)) Directory.CreateDirectory(luaPeDir);
 
             argsStr = @"-GenType=Enum -DataFile=.\DesTable\DataTable\GlobalTable.xlsx -OutputFile=.\TableOut\Temp\1_Protoext\globalEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Description";
             Console.WriteLine(argsStr);

@@ -24,6 +24,10 @@ namespace Proto2Code
             string CLIENT_PB_LUA_DES = @".\TableOut\Lua\Generate\Protobuf\";
             CopyDirectory(CLIENT_PB_LUA_SRC, CLIENT_PB_LUA_DES, "*.lua");
 
+            string CLIENT_PE_LUA_SRC = @".\TableOut\Temp\1_Protoext\Lua\";
+            string CLIENT_PE_LUA_DES = @".\TableOut\Lua\Generate\Protoext\";
+            CopyDirectory(CLIENT_PE_LUA_SRC, CLIENT_PE_LUA_DES, "*.lua");
+
             string CLIENT_MSG_DEFINE_SRC = @".\TableOut\Temp\4_Protomsg\Lua\Message\";
             string CLIENT_MSG_DEFINE_DES = @".\TableOut\Lua\Generate\Message\";
             CopyDirectory(CLIENT_MSG_DEFINE_SRC, CLIENT_MSG_DEFINE_DES, "*.lua");
@@ -33,28 +37,6 @@ namespace Proto2Code
             CopyDirectory(CLIENT_MSG_SERVICES_SRC, CLIENT_MSG_SERVICES_DES, "*.lua");
 
             Console.WriteLine("拷贝文件之：C++");
-//             string SERVER_PROTO_SRC = @".\TableOut\Temp\1_Protoext\";
-//             string SERVER_PROTO_DES = @".\TableOut\C++\gen\SHLib\protofile\";
-//             CopyDirectory(SERVER_PROTO_SRC, SERVER_PROTO_DES, "*.proto");
-
-//             string SERVER_PE_TABLE_SRC = @".\TableOut\Temp\1_Protoext\C++\";
-//             string SERVER_PE_TABLE_DES_H = @".\TableOut\C++\gen\SHLib\protoext\";
-//             string SERVER_PE_TABLE_DES_CC = @".\TableOut\C++\gen\SHLib\protoext\";
-//             CopyDirectory(SERVER_PE_TABLE_SRC, SERVER_PE_TABLE_DES_H, "*.pe.h");
-//             CopyDirectory(SERVER_PE_TABLE_SRC, SERVER_PE_TABLE_DES_CC, "*.pe.cc");
-
-//             string SERVER_PB_TABLE_SRC = @".\TableOut\Temp\2_Protobuf\C++\";
-//             string SERVER_PB_TABLE_DES_H = @".\TableOut\C++\gen\SHLib\protobuf\";
-//             string SERVER_PB_TABLE_DES_CC = @".\TableOut\C++\gen\SHLib\protobuf\";
-//             CopyDirectory(SERVER_PB_TABLE_SRC, SERVER_PB_TABLE_DES_H, "*.pb.h");
-//             CopyDirectory(SERVER_PB_TABLE_SRC, SERVER_PB_TABLE_DES_CC, "*.pb.cc");
-
-//             string SERVER_PROFILEGEN_SRC = @".\TableOut\Temp\4_Protomsg\C++\";
-//             string SERVER_PROFILEGEN_DES_H = @".\TableOut\C++\gen\SHLib\message\";
-//             string SERVER_PROFILEGEN_DES_CPP = @".\TableOut\C++\gen\SHLib\message\";
-//             CopyDirectory(SERVER_PROFILEGEN_SRC, SERVER_PROFILEGEN_DES_H, "*Msg.h");
-//             CopyDirectory(SERVER_PROFILEGEN_SRC, SERVER_PROFILEGEN_DES_CPP, "*Msg.cc");
-
             //拷贝到PTLib目录
             string SERVER_PTLIB_PROTO_SRC = @".\TableOut\Temp\1_Protoext\";
             string SERVER_PTLIB_PROTO_DES = @".\TableOut\C++\PTLib\inc\PTLib\protofile\";
