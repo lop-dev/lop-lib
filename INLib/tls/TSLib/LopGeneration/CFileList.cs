@@ -140,6 +140,7 @@ namespace Proto2Code
                     string ccpeh = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.pe.h", name);
                     string ccpecc = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.pe.cc", name);
                     string gope = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/GO/{0}.pe.go", name);
+                    string luape = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/Lua/{0}_pe.go", name);
 
                     string txt = m_strRootDirectory + string.Format("/TableOut/Temp/3_Protobin/{0}.txt", name);
                     string dbg = m_strRootDirectory + string.Format("/TableOut/Temp/3_Protobin/{0}.txt.dbg", name);
@@ -174,6 +175,11 @@ namespace Proto2Code
                     {
                         Console.WriteLine("删除" + gope);
                         File.Delete(gope);
+                    }
+                    if (File.Exists(luape))
+                    {
+                        Console.WriteLine("删除" + luape);
+                        File.Delete(luape);
                     }
                     if (File.Exists(txt))
                     {
