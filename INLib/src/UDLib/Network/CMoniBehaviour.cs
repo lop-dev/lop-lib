@@ -129,11 +129,13 @@ namespace UDLib.Network
         {
             if (netMessage == null)
             {
+                UDLib.Utility.CDebugOut.LogError("SendMessage : netMessage == null");
                 return false;
             }
 
             if (m_tcpClient == null)
             {
+                UDLib.Utility.CDebugOut.LogError("SendMessage : m_tcpClient == null");
                 return false;
             }
 
@@ -236,6 +238,7 @@ namespace UDLib.Network
 
             if (!m_tcpClient.IsValid())
             {
+                UDLib.Utility.CDebugOut.LogError("SendMessage : !m_tcpClient.IsValid()");
                 return false;
             }
 
@@ -337,7 +340,7 @@ namespace UDLib.Network
                 return;
             }
 
-            Update();
+            CheckTimeout();
 
             //UnityEngine.Profiling.Profiler.BeginSample("CMoniBehaviour > ExecuteMessages");
             CSLib.Framework.CMsgBuffInfoQueue msgBuffInfoQueue = m_tcpClient.GetMsgBuffInfoQueue(m_uEchoID);
@@ -404,12 +407,12 @@ namespace UDLib.Network
             }
         }
 
-        // Update 检测超时
-        public void Update()
+        // CheckTimeout 检测超时
+        public void CheckTimeout()
         {
             if (timeOutCheckTime >= CReconnectMgr.Instance.TimeOutCheckFrequency)
             {
-                CheckTimeout();
+                _CheckTimeout();
                 timeOutCheckTime = 0;
             }
 
@@ -417,7 +420,7 @@ namespace UDLib.Network
         }
 
         // 超时重新发送消息
-        private void CheckTimeout()
+        private void _CheckTimeout()
         {
             if (msgDict == null || msgDict.Count == 0)
                 return;
