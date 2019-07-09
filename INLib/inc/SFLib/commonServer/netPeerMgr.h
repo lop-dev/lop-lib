@@ -31,6 +31,11 @@ public:
     CNetPeerMgr();
     virtual ~CNetPeerMgr();
 
+    static CNetPeerMgr* getNetPeerMgr()
+    {
+        return m_netPeerMgr;
+    }
+
     bool addNetPeer(CNetPeerPtr& netPeer);
     void delNetPeer(PeerID peerID);
     bool getNetPeer(PeerID peerID, CNetPeerPtr& netPeer);
@@ -43,6 +48,8 @@ public:
     virtual bool serializeFrom(BCLib::Utility::CStream& stream);
 
 private:
+    static CNetPeerMgr* m_netPeerMgr;
+
     BCLib::Utility::CHashMap<PeerID, CNetPeerPtr> m_netPeerHasnMap;
     BCLib::Utility::CMutex m_mutex;
 };

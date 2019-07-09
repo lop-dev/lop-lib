@@ -1,0 +1,75 @@
+//////////////////////////////////////////////////////////////////////
+//  created:    2011/11/01
+//  filename:   SFLib/commonDefine/timingWheel.h
+//  author:     League of Perfect
+/// @brief
+///
+//////////////////////////////////////////////////////////////////////
+#ifndef __SFLIB_COMMONDEFINE_TIMINGWHEEL_H__
+#define __SFLIB_COMMONDEFINE_TIMINGWHEEL_H__
+
+#include <BCLib/utility/spointer.h>
+#include <BCLib/utility/algorithm/timingWheel.h>
+#include <SFLib/commonDefine/baseDef.h>
+#include <SFLib/message/message.h>
+
+namespace SFLib
+{
+    namespace CommonDefine
+    {
+        class IObject
+        {
+        public:
+            IObject() {};
+            virtual ~IObject() {};
+
+            virtual void* getBufPtr() = 0;
+            virtual void setSaveDB(bool bValue) = 0;
+            virtual void setSaveRD(bool bValue) = 0;
+        };
+
+        //
+        class IObjectOwner
+        {
+        public:
+            IObjectOwner() {};
+            virtual ~IObjectOwner() {};
+
+            virtual IObject* getObjectPtr(BCLib::uint64 entityID) = 0;
+            virtual bool saveObjectToRedis(BCLib::uint64 entityID) = 0;
+            virtual bool releaseObjectFactor(BCLib::uint64 entityID) = 0;
+        };
+
+        //
+        class CObjectRef : public BCLib::Utility::CRefCnt
+        {
+        public:
+            CObjectRef(SFLib::PeerID peerID, SFLib::Message::CNetMessage* pNetMessage, IObjectOwner* pObjectOwner);
+            virtual ~CObjectRef();
+
+        private:
+            SFLib::PeerID m_peerID;
+            SFLib::Message::CNetMessage* m_pNetMessage;
+            IObjectOwner* m_pObjectOwner;
+        };
+        typedef BCLib::Utility::CSPointer<CObjectRef> CObjectRefPtr;
+
+        //
+        class CObjectTimingWheel : public BCLib::Utility::CTimingWheel<CObjectRefPtr>
+        {
+        public:
+            CObjectTimingWheel(IObjectOwner* pObjectOwner);
+            virtual ~CObjectTimingWheel();
+
+            void  addObject(SFLib::PeerID netPeerID, SFLib::Message::CNetMessage* pNetMessage);
+            void  delObject(SFLib::PeerID netPeerID);
+
+            void setObjectOwner(IObjectOwner* pObjectOwner) { m_pObjectOwner = pObjectOwner; }
+
+        private:
+            IObjectOwner* m_pObjectOwner;
+        };
+    }//CommonDefine
+}//SFLib
+
+#endif//__SFLIB_COMMONDEFINE_TIMINGWHEEL_H__
