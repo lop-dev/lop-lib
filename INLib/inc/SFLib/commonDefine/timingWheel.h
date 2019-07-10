@@ -17,27 +17,13 @@ namespace SFLib
 {
     namespace CommonDefine
     {
-        class IObject
-        {
-        public:
-            IObject() {};
-            virtual ~IObject() {};
-
-            virtual void* getBufPtr() = 0;
-            virtual void setSaveDB(bool bValue) = 0;
-            virtual void setSaveRD(bool bValue) = 0;
-        };
-
-        //
         class IObjectOwner
         {
         public:
             IObjectOwner() {};
             virtual ~IObjectOwner() {};
 
-            virtual IObject* getObjectPtr(BCLib::uint64 entityID) = 0;
-            virtual bool saveObjectToRedis(BCLib::uint64 entityID) = 0;
-            virtual bool releaseObjectFactor(BCLib::uint64 entityID) = 0;
+            virtual void saveObject(SFLib::PeerID peerID, SFLib::Message::CNetMessage* pNetMessage) = 0;
         };
 
         //
@@ -63,8 +49,6 @@ namespace SFLib
 
             void  addObject(SFLib::PeerID netPeerID, SFLib::Message::CNetMessage* pNetMessage);
             void  delObject(SFLib::PeerID netPeerID);
-
-            void setObjectOwner(IObjectOwner* pObjectOwner) { m_pObjectOwner = pObjectOwner; }
 
         private:
             IObjectOwner* m_pObjectOwner;
