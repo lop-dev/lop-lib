@@ -28,7 +28,7 @@ public:
     /// @return bool
     /// @param notifyMaster 是否通过 Master 转发进行全服处理
     /// @param nReason : 1 代表清理玩家，2 代表登录踢人
-    virtual bool reqLeave(bool notifyMaster, BCLib::int32 nReason);
+    virtual bool reqLeave(bool notifyMaster, EPeerLeaveReason nReason);
 
     /// @brief 请求离开
     /// @return void
@@ -71,7 +71,7 @@ public:
     /// @return bool
     /// @param serverType 服务器类型
     /// @param notifyMaster 是否通过 Master 转发进行全服处理（如果为 true 时，只允许在网关上发起请求）
-    bool leaveServer(EServerType serverType, bool notifyMaster, BCLib::int32 nReason);
+    bool leaveServer(EServerType serverType, bool notifyMaster, EPeerLeaveReason nReason);
 
     virtual bool serializeTo(BCLib::Utility::CStream& stream) const;
     virtual bool serializeFrom(BCLib::Utility::CStream& stream);

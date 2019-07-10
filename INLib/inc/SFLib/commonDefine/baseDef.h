@@ -36,6 +36,17 @@ typedef BCLib::uint64 EntityID;
 const EntityID INVALID_ENTITY_ID = 0;
 
 const BCLib::uint8 SFLIB_IP_TEXT_MAX = 63;
+
+enum EPeerLeaveReason
+{
+    EPEERLEAVEREASON_UNKNOW,        // 未知原因
+    EPEERLEAVEREASON_CLEAR_PLAYERS, // 清理玩家
+    EPEERLEAVEREASON_TOP_OFF,       // 登录顶号
+    EPEERLEAVEREASON_LOG_OUT,       // 主动退出
+    EPEERLEAVEREASON_KICK_PLAYER,   // 管理踢人
+    EPEERLEAVEREASON_EXTEND,        // 上层扩展
+};
+
 }//SFLib
 
 #endif//__SFLIB_COMMONDEFINE_BASEDEF_H__
