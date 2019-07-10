@@ -179,7 +179,7 @@ public:
     /// @brief Peer离开本地Server，保证其它服务器已经还存在Peer
     /// @return void
     /// @param peerID 离开的PeerID
-    virtual void cbPeerLeave(CNetPeerPtr& netPeerPtr);
+    virtual void cbPeerLeave(CNetPeerPtr& netPeerPtr, BCLib::int32 nReason);
 
     /// @brief 删除Peer，不能保证其它服务器已经还存在Peer
     /// @return void

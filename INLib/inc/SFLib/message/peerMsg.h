@@ -220,11 +220,13 @@ struct SMsgXS2MSReqLeaveServer : public SNetMessage
 public:
     PeerID m_peerID;
     ServerID m_serverID;
+    BCLib::int32 m_nReason;
 
     SMsgXS2MSReqLeaveServer() : SNetMessage(ESERVER_MASTER, EFUNC_GAMEFRAME, EMID_XS2MS_REQ_LEAVE_SERVER)
     {
         m_peerID = INVALID_PEER_ID;
         m_serverID = INVALID_SERVER_ID;
+        m_nReason = 0;
     }
 };
 
@@ -286,10 +288,12 @@ struct SMsgXS2MSReqLeavePeerID : public SNetMessage
 {
 public:
     PeerID m_peerID;
+    BCLib::int32 m_nReason;
 
     SMsgXS2MSReqLeavePeerID() : SNetMessage(ESERVER_MASTER, EFUNC_GAMEFRAME, EMID_XS2MS_REQ_LEAVE_PEERID)
     {
         m_peerID = 0;
+        m_nReason = 0;
     }
 };
 
@@ -299,10 +303,12 @@ struct SMsgMS2XSReqLeavePeerID : public SNetMessage
 {
 public:
     PeerID m_peerID;
+    BCLib::int32 m_nReason;
 
     SMsgMS2XSReqLeavePeerID() : SNetMessage(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_MS2XS_REQ_LEAVE_PEERID)
     {
         m_peerID = 0;
+        m_nReason = 0;
     }
 };
 
@@ -397,11 +403,13 @@ struct SMsgXS2XSReqLeaveServer : public SNetMessage
 public:
     PeerID m_peerID;
     ServerID m_serverID;
+    BCLib::int32 m_nReason;
 
     SMsgXS2XSReqLeaveServer() : SNetMessage(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_XS2XS_REQ_LEAVE_SERVER)
     {
         m_peerID = INVALID_PEER_ID;
         m_serverID = INVALID_SERVER_ID;
+        m_nReason = 0;
     }
 };
 

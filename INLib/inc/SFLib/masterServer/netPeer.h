@@ -28,7 +28,10 @@ public:
     CNetPeer(PeerID peerID, ServerID gatewayServerID, BCLib::Network::TcpStubID gameClientStubID);
     virtual ~CNetPeer();
 
-    virtual bool reqLeave();
+    /// @brief 请求离开
+    /// @return bool
+    /// @param nReason : 1 代表清理玩家，2 代表登录踢人
+    virtual bool reqLeave(BCLib::int32 nReason);
     virtual void terminate();
 
     bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
