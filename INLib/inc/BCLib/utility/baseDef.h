@@ -16,6 +16,18 @@
 #pragma warning(disable:4127)
 #pragma warning(disable:4251)
 
+#pragma warning(disable:4244)
+#pragma warning(disable:4245)
+#pragma warning(disable:4189)
+#pragma warning(disable:4200)
+#pragma warning(disable:4102)
+#pragma warning(disable:4018)
+#pragma warning(disable:4389)
+#pragma warning(disable:4800)
+#pragma warning(disable:4702)
+#pragma warning(disable:4067)
+#pragma warning(disable:4091)
+
 #elif defined(_LINUX)
 
 #endif
