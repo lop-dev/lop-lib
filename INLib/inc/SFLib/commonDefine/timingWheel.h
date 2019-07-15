@@ -12,6 +12,7 @@
 #include <BCLib/utility/algorithm/timingWheel.h>
 #include <SFLib/commonDefine/baseDef.h>
 #include <SFLib/message/message.h>
+#include <BCLib/utility/thread/mutex.h>
 
 namespace SFLib
 {
@@ -52,6 +53,7 @@ namespace SFLib
 
         private:
             IObjectOwner* m_pObjectOwner;
+            BCLib::Utility::CMutex m_mutex;
         };
     }//CommonDefine
 }//SFLib
