@@ -236,12 +236,6 @@ namespace UDLib.Network
                 return false;
             }
 
-            if (!m_tcpClient.IsValid())
-            {
-                UDLib.Utility.CDebugOut.LogError("SendMessage : !m_tcpClient.IsValid()");
-                return false;
-            }
-
             //UnityEngine.Profiling.Profiler.BeginSample("CMoniBehaviour > SendMessage");
             {
                 byte tmpServer = CSLib.Utility.CBitHelper.GetHighUInt8(msgRequest.MsgType);
@@ -258,6 +252,14 @@ namespace UDLib.Network
 #endif
             }
             //UnityEngine.Profiling.Profiler.EndSample();
+
+
+            // 这个Cache后检测，保证断网后仍然可以缓存消息，在网络恢复后不会丢失消息（剧情过程中断网如不缓存会丢失消息导致黑屏）
+            if (!m_tcpClient.IsValid())
+            {
+                UDLib.Utility.CDebugOut.LogError("SendMessage : !m_tcpClient.IsValid()");
+                return false;
+            }
 
             return _SendMessage(msgRequest);
         }
