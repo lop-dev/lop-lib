@@ -33,8 +33,11 @@ namespace UDLib.Network
 
             CSLib.Framework.CNetMessage theMsg = (CSLib.Framework.CNetMessage)(msgLabel.MsgObject);
 
-            // 删除发送时做的消息缓存
-            m_dicDelayedMsg.DelObject(theMsg.UniqueID);
+            // 删除发送时做的消息缓存,判空应对一些不规范的返回（GM命令系统返回是空）
+            if (theMsg != null)
+            {
+                m_dicDelayedMsg.DelObject(theMsg.UniqueID);
+            }
 
             // ack 的 response不做解析和向服务器发送ack
             if (theMsg != null && theMsg.Func == CReconnectMgr.EFUNC_MESSAGESYSTEM)
