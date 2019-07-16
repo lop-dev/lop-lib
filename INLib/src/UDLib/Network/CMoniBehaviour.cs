@@ -160,55 +160,6 @@ namespace UDLib.Network
             return result;
         }
 
-        //protected bool _SendMessage(SDelayedMsg delayedMsg)
-        //{
-        //    if (delayedMsg.msgRequest == null)
-        //    {
-        //        return false;
-        //    }
-
-        //    bool bResult = _SendMessage(delayedMsg.msgRequest);
-
-        //    if (bResult && (delayedMsg.msgRespond == null))
-        //    {
-        //        CDelayedMsgMgr.Instance.DelHeadDelayedMsg();
-        //    }
-
-        //    return true;
-        //}
-
-        /// <summary>
-        /// 插入消息（目前只有重连消息才可以调用这个方法）
-        /// </summary>
-        /// <param name="msgRquest"></param>
-        /// <param name="msgResponse"></param>
-        /// <returns></returns>
-        //protected bool InsertMessage(CSLib.Framework.CNetMessage msgRequest)
-        //{
-        //    if (msgRequest == null)
-        //    {
-        //        return false;
-        //    }
-
-        //    if (m_tcpClient == null)
-        //    {
-        //        return false;
-        //    }
-
-        //    if (!m_tcpClient.IsValid())
-        //    {
-        //        return false;
-        //    }
-
-        //    if (!CDelayedMsgMgr.Instance.InsertDelayedMsg(msgRequest))
-        //    {
-        //        return false;
-        //    }
-
-        //    SDelayedMsg delayedMsg = CDelayedMsgMgr.Instance.GetHeadDelayedMsg();
-        //    return _SendMessage(delayedMsg);
-        //}
-
         /// <summary>
         /// 发送消息给Server
         /// </summary>
