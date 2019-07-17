@@ -7,12 +7,18 @@
     <ClCompile Include="..\..\..\src\MWLib\redis\redlock.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\MWLib\redis\redisClient.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\inc\MWLib\redis\redlock.h">
       <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\inc\MWLib\redis\redisSystem.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\inc\MWLib\redis\redisClient.h">
       <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>

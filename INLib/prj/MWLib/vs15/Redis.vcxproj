@@ -27,10 +27,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\inc\MWLib\redis\redisClient.h" />
     <ClInclude Include="..\..\..\inc\MWLib\redis\redisSystem.h" />
     <ClInclude Include="..\..\..\inc\MWLib\redis\redlock.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\MWLib\redis\redisClient.cpp" />
     <ClCompile Include="..\..\..\src\MWLib\redis\redisSystem.cpp" />
     <ClCompile Include="..\..\..\src\MWLib\redis\redlock.cpp" />
   </ItemGroup>
