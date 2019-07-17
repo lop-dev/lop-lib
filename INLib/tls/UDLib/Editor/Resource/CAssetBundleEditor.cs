@@ -5,15 +5,14 @@ using System;
 using UnityEditor;
 using System.IO;
 using System.Collections.Generic;
-using UDLib.Utility;
 using System.Text;
 
 namespace UDLib.Editor
 {
     public class CAssetBundleEditor
     {
-        private static IResourceDefine _iResourceDefine;
-        public static IResourceDefine ResourceDefine
+        private static UDLib.Utility.IResourceDefine _iResourceDefine;
+        public static UDLib.Utility.IResourceDefine ResourceDefine
         {
             get
             {
@@ -60,7 +59,7 @@ namespace UDLib.Editor
         public class AssetBundleInfo
         {
             public string categoryName;
-            public EBUILD_TYPE type;
+            public UDLib.Utility.EBUILD_TYPE type;
             public string exts;           // 文件扩展名
             public string suffix;         // ab名后以它结尾
             public string[] rootPaths;    // _ASSERT_BUNDLE_根目录
@@ -99,7 +98,7 @@ namespace UDLib.Editor
                 return;
 
             DateTime startTime = System.DateTime.Now;
-            CDebugOut.Log("开始 生成ResourceDefine");
+            UDLib.Utility.CDebugOut.Log("开始 生成ResourceDefine");
 
             using (StreamWriter sw = new StreamWriter(OUT_PATH, false, new System.Text.UTF8Encoding(false)))
             {
@@ -208,15 +207,15 @@ namespace UDLib.Editor
             AssetDatabase.Refresh();
 
             DateTime endTime = System.DateTime.Now;
-            CDebugOut.Log("结束 生成ResourceDefine");
-            CDebugOut.Log("耗时：" + (endTime - startTime).TotalSeconds + "秒");
+            UDLib.Utility.CDebugOut.Log("结束 生成ResourceDefine");
+            UDLib.Utility.CDebugOut.Log("耗时：" + (endTime - startTime).TotalSeconds + "秒");
         }
 
         // 收集abtxt信息
         private static List<AssetBundleInfo> GetAssetBundleInfoList()
         {
             DateTime startTime = System.DateTime.Now;
-            CDebugOut.Log("开始 收集abtxt信息");
+            UDLib.Utility.CDebugOut.Log("开始 收集abtxt信息");
 
             List<AssetBundleInfo> list = new List<AssetBundleInfo>();
 
@@ -231,7 +230,7 @@ namespace UDLib.Editor
                     // 第一行:种类名称
                     string category_name = sr.ReadLine();
                     // 第二行:类别
-                    EBUILD_TYPE category_type = (EBUILD_TYPE)System.Enum.Parse(typeof(EBUILD_TYPE), sr.ReadLine());
+                    UDLib.Utility.EBUILD_TYPE category_type = (UDLib.Utility.EBUILD_TYPE)System.Enum.Parse(typeof(UDLib.Utility.EBUILD_TYPE), sr.ReadLine());
                     // 第三行:搜索扩展名(包括点,小写字母,多个逗号分隔)
                     string exts = sr.ReadLine().ToLower();
                     // 第四行:填加后缀到AB包包名
@@ -243,7 +242,7 @@ namespace UDLib.Editor
                     string root_path = Path.GetDirectoryName(temp).ToLower().Replace("\\", "/");// Asset/到_ASSET_BUNDLE_所在目录
 
                     string[] sub_paths = null;
-                    if (category_type != EBUILD_TYPE.FOLDER)
+                    if (category_type != UDLib.Utility.EBUILD_TYPE.FOLDER)
                     {
                         sub_paths = Directory.GetDirectories(root_path, "*", SearchOption.AllDirectories);
                         if (sub_paths.Length > 0)
@@ -306,7 +305,7 @@ namespace UDLib.Editor
                         // 相通性检测
                         if (info.type != category_type || info.exts != exts || info.suffix != suffix)
                         {
-                            CDebugOut.LogError("具有相同类别的_ASSERT_BUNDLE_.txt，但类型，扩展名，后缀之一是不同的");
+                            UDLib.Utility.CDebugOut.LogError("具有相同类别的_ASSERT_BUNDLE_.txt，但类型，扩展名，后缀之一是不同的");
                             return null;
                         }
 
@@ -333,8 +332,8 @@ namespace UDLib.Editor
             );
 
             DateTime endTime = System.DateTime.Now;
-            CDebugOut.Log("结束 收集abtxt信息");
-            CDebugOut.Log("耗时：" + (endTime - startTime).TotalSeconds + "秒");
+            UDLib.Utility.CDebugOut.Log("结束 收集abtxt信息");
+            UDLib.Utility.CDebugOut.Log("耗时：" + (endTime - startTime).TotalSeconds + "秒");
 
             return list;
         }
@@ -345,7 +344,7 @@ namespace UDLib.Editor
         {
 
             DateTime startTime = System.DateTime.Now;
-            CDebugOut.Log("开始 设置ab资源名字");
+            UDLib.Utility.CDebugOut.Log("开始 设置ab资源名字");
 
             string title = "设置所有文件的AB名";
 
@@ -393,8 +392,8 @@ namespace UDLib.Editor
             AssetDatabase.Refresh();
 
             DateTime endTime = System.DateTime.Now;
-            CDebugOut.Log("结束 设置ab资源名字");
-            CDebugOut.Log("耗时：" + (endTime - startTime).TotalSeconds + "秒");
+            UDLib.Utility.CDebugOut.Log("结束 设置ab资源名字");
+            UDLib.Utility.CDebugOut.Log("耗时：" + (endTime - startTime).TotalSeconds + "秒");
         }
 #if REFRENCE_MODE
          //设置引用模式下的ab名字
@@ -521,15 +520,15 @@ namespace UDLib.Editor
                                         string ab_name = null;
                                         switch (ResourceDefine.GetABBuildTypes()[i])
                                         {
-                                            case EBUILD_TYPE.SINGLE:
+                                            case UDLib.Utility.EBUILD_TYPE.SINGLE:
                                                 ab_name = folder + "/" + name;
                                                 break;
 
-                                            case EBUILD_TYPE.HASH256:
+                                            case UDLib.Utility.EBUILD_TYPE.HASH256:
                                                 ab_name = folder + "/" + ResourceDefine.ResourceTypeToHash256String(i, name);
                                                 break;
 
-                                            case EBUILD_TYPE.FOLDER:
+                                            case UDLib.Utility.EBUILD_TYPE.FOLDER:
                                                 {
                                                     bool isSet = false;
                                                     string _path = path.ToLower();
@@ -550,7 +549,7 @@ namespace UDLib.Editor
 
                                                 break;
 
-                                            case EBUILD_TYPE.PACK:
+                                            case UDLib.Utility.EBUILD_TYPE.PACK:
                                                 ab_name = folder;
                                                 break;
                                         }
@@ -565,7 +564,7 @@ namespace UDLib.Editor
                                             importer.assetBundleName = ab_name;
                                             if (importer.assetBundleVariant.Length > 0)
                                                 importer.assetBundleVariant = string.Empty;
-                                            CDebugOut.Log("SetAssetBundleName\t" + importer.assetBundleName + "\t" + ab_name + "\t" + path);
+                                            UDLib.Utility.CDebugOut.Log("SetAssetBundleName\t" + importer.assetBundleName + "\t" + ab_name + "\t" + path);
                                         }
 #endif
                                         return importer;
@@ -594,7 +593,7 @@ namespace UDLib.Editor
             var attr = File.GetAttributes(metaPath);
             if ((attr & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
             {
-                CDebugOut.Log("+++++++++++++remove readOnly+++++++++++++++" + metaPath);
+                UDLib.Utility.CDebugOut.Log("+++++++++++++remove readOnly+++++++++++++++" + metaPath);
                 File.SetAttributes(metaPath, FileAttributes.Normal);
             }
         }
@@ -664,16 +663,16 @@ namespace UDLib.Editor
         {
             if (string.IsNullOrEmpty(versionCode))
             {
-                CDebugOut.LogError("没有传入版本号，打包错误！");
+                UDLib.Utility.CDebugOut.LogError("没有传入版本号，打包错误！");
                 return;
             }
             DateTime startTime = System.DateTime.Now;
-            CDebugOut.Log("开始 生成ab文件");
+            UDLib.Utility.CDebugOut.Log("开始 生成ab文件");
 
             string platformName = getTargetPlatformName(EditorUserBuildSettings.activeBuildTarget);
             if (platformName == null)
             {
-                CDebugOut.LogError("打包发生错误，未知平台！");
+                UDLib.Utility.CDebugOut.LogError("打包发生错误，未知平台！");
                 return;
             }
 
@@ -773,16 +772,16 @@ namespace UDLib.Editor
             AssetDatabase.Refresh();
 
             DateTime endTime = System.DateTime.Now;
-            CDebugOut.Log("结束 生成ab文件");
-            CDebugOut.Log("耗时：" + (endTime - startTime).TotalSeconds + "秒");
+            UDLib.Utility.CDebugOut.Log("结束 生成ab文件");
+            UDLib.Utility.CDebugOut.Log("耗时：" + (endTime - startTime).TotalSeconds + "秒");
             string assetsBundleRootDir = path + "/AssetBuild/";
 
-            CDebugOut.Log("AB包出包提示: 2.检测清单文件是否出存");
+            UDLib.Utility.CDebugOut.Log("AB包出包提示: 2.检测清单文件是否出存");
             var manifestPath = Path.Combine(assetBundleDirectory, "AssetBundle");    // ...../AssetBuild/platform/AssetBundle/platform
             var manifestPathPlatform = Path.Combine(assetBundleDirectory, "ResourceManifest");
             if (File.Exists(manifestPath))
             {
-                CDebugOut.Log("AB包出包提示: 3.版本文件更新");
+                UDLib.Utility.CDebugOut.Log("AB包出包提示: 3.版本文件更新");
                 var bytes = File.ReadAllBytes(manifestPath);
                 var versionManifestFilePath = manifestPath + "_v" + versionCode;          // ...../AssetBuild/platform/AssetBundle/platform_vx 这个文件就是manifest的复制品
                 if (File.Exists(versionManifestFilePath))
@@ -801,7 +800,7 @@ namespace UDLib.Editor
                 AssetDatabase.Refresh();
 
                 var versionHashFilePath = assetsBundleRootDir + "/" + platformName + "/AssetBundle/ResourceManifest_hash.txt";  //...../AssetBuild/platform/platform_hash_vx
-                CDebugOut.Log("AB包出包提示: 5.生成Hash检查文件");
+                UDLib.Utility.CDebugOut.Log("AB包出包提示: 5.生成Hash检查文件");
 
                 StringBuilder sbDefault = ReadManifestToSB(versionManifestFilePath, platformName, path, versionCode);
                 StringBuilder sbVideo = ReadManifestToSB(videoManifestPathNew, platformName, path, versionCode);
@@ -812,11 +811,11 @@ namespace UDLib.Editor
             }
             else
             {
-                CDebugOut.LogError("manifest清单文件没有找到");
+                UDLib.Utility.CDebugOut.LogError("manifest清单文件没有找到");
                 return;
             }
 
-            CDebugOut.Log("AB包出包提示: 6.生成本次变更列表文件");
+            UDLib.Utility.CDebugOut.Log("AB包出包提示: 6.生成本次变更列表文件");
             //生成本次AB修改列表文件
             //CreateAssetsbundleDiff(path);
 
@@ -864,7 +863,7 @@ namespace UDLib.Editor
             string platformName = getTargetPlatformName(EditorUserBuildSettings.activeBuildTarget);
             if (platformName == null)
             {
-                CDebugOut.LogError("打包发生错误，未知平台！");
+                UDLib.Utility.CDebugOut.LogError("打包发生错误，未知平台！");
                 return;
             }
 
@@ -881,14 +880,14 @@ namespace UDLib.Editor
                 lastV = CSLib.Utility.CStringHelper.Convert2Value<int>(srV.ReadLine());
                 if (lastV < 2)
                 {
-                    CDebugOut.Log("Ignored: 初始版本,没有检测到修改");
+                    UDLib.Utility.CDebugOut.Log("Ignored: 初始版本,没有检测到修改");
                     srV.Close();
                     return;
                 }
                 srV.Close();
 
                 DateTime startTime = System.DateTime.Now;
-                CDebugOut.Log("开始 生成本次AB修改列表文件");
+                UDLib.Utility.CDebugOut.Log("开始 生成本次AB修改列表文件");
 
                 // 取得HASH值记录文件
                 var versionHashFilePath = Path.Combine(assetsBundleRootDir + "/" + platformName, platformName) + "_hash_v" + lastV + ".txt";
@@ -961,8 +960,8 @@ namespace UDLib.Editor
                 sw.Close();
 
                 DateTime endTime = System.DateTime.Now;
-                CDebugOut.Log("结束 生成本次AB修改列表文件");
-                CDebugOut.Log("耗时：" + (endTime - startTime).TotalSeconds + "秒");
+                UDLib.Utility.CDebugOut.Log("结束 生成本次AB修改列表文件");
+                UDLib.Utility.CDebugOut.Log("耗时：" + (endTime - startTime).TotalSeconds + "秒");
             }
         }
 
@@ -1076,11 +1075,11 @@ namespace UDLib.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            CDebugOut.Log(string.Format("<color=green>创建清单完成，共计{0}个ab文件</color>", count));
+            UDLib.Utility.CDebugOut.Log(string.Format("<color=green>创建清单完成，共计{0}个ab文件</color>", count));
             if (isIncludeFont == false)
-                CDebugOut.LogError("发生错误：ui_font.dat文件不在清单内,请检查！");
+                UDLib.Utility.CDebugOut.LogError("发生错误：ui_font.dat文件不在清单内,请检查！");
             if (isIncludeShader == false)
-                CDebugOut.LogError("发生错误：shader.dat文件不在清单内,请检查！");
+                UDLib.Utility.CDebugOut.LogError("发生错误：shader.dat文件不在清单内,请检查！");
         }
 
         /// <summary>
