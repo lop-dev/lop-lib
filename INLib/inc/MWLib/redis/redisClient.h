@@ -1,94 +1,72 @@
-//////////////////////////////////////////////////////////////////////
-//  created:    2014/07/18
-//  filename:   MWLib/redis/redisSystem.h
-//  author:     League of Perfect
-/// @brief
-///
-//////////////////////////////////////////////////////////////////////
-#ifndef __MWLIB_REDIS_REDISSYSTEM_H__
-#define __MWLIB_REDIS_REDISSYSTEM_H__
+#ifndef __MWLIB_REDIS_REDISCLIENT_H__
+#define __MWLIB_REDIS_REDISCLIENT_H__
 
 #include <google/protobuf/message_lite.h>
 #include <SFLib/commonDefine/logFile.h>
 #include <BCLib/utility/singleton.h>
 #include <MWLib/redis/redlock.h>
-#include <MWLib/redis/redisClient.h>
 #include <unordered_map>
 #include <hiredis.h>
 #include <BCLib/utility/thread/thread.h>
 #include <thread>
 using namespace std;
 
-#define MWLIB_REDIS_LOCK(key, uniqueid, subkey)    \
-    CRedLock* __pRedLock_ = MWLib::Redis::CRedisSystem::singleton().getRedLock();    \
-    CLock __my_lock_;    \
-    if (__pRedLock_ != NULL)    \
-    {    \
-        while (1){    \
-            char key1[1024] = { 0 };    \
-            std::string fild = BCLib::Utility::CConvert::toStringA(uniqueid);    \
-            char subkey1[512] = { 0 };    \
-            snprintf(subkey1, 512, "%s:lock", subkey);    \
-            char key2[512] = { 0 };    \
-            snprintf(key2, 512, "%s:[%s]:", key, fild.c_str());    \
-            snprintf(key1, 1024, "%s%s",key2, subkey1);    \
-            bool _lock_flag_ = __pRedLock_->Lock(key1, 200, __my_lock_);    \
-            if(_lock_flag_)    \
-            {
 
-#define MWLIB_REDIS_UNLOCK    \
-                __pRedLock_->Unlock(__my_lock_);    \
-                break;    \
-            }    \
-            else    \
-            {    \
-                BCLib::Utility::CThread::msleep(rand() % 3);    \
-            }    \
-        }\
-    }
-
-#define MWLIB_REDIS_RETURN    \
-    if (__pRedLock_!=NULL)    \
-    {    \
-        __pRedLock_->Unlock(__my_lock_);    \
-    }    \
-    return;
+#define MWLIB_REDIS_DEFAULT_UNIQUEID 1000000
 
 namespace MWLib
 {
-    namespace Redis
-    {
-		typedef struct Redis_Connect_Info
+	namespace Redis
+	{
+		enum EREDIS_CONTEXT_TYPE
 		{
+			E_REDIS_SERVERTYPE_BEGIN = 0,
+			E_REDIS_SERVERTYPE_LOGIC,
+			E_REDIS_SERVERTYPE_CACHE,
+			E_REDIS_SERVERTYPE_FRIEND,
+			E_REDIS_SERVERTYPE_END,
+
+		};
+
+		enum EREDIS_ACCESS_RIGHT_TYPE
+		{
+			E_REDIS_READ_AND_WRITE = 0,
+			E_REDIS_READ_ONLY,
+		};
+
+		typedef struct Redis_Node
+		{
+			redisContext *m_redisContext;
+
 			std::string m_host;
 			int m_port;
 			std::string m_passwd;
-			Redis_Connect_Info()
+			Redis_Node()
 			{
+				m_redisContext = NULL;
 				m_host = "";
 				m_port = 0;
 				m_passwd = "";
-			}
-			~Redis_Connect_Info()
-			{
-				
-			}
-		}REDIS_CONNECT_INFO;
-		class CRedisSystem
-		{
-			BCLIB_SINGLETON_DECLARE(CRedisSystem);
-		private:
-			CRedisSystem();
-			virtual ~CRedisSystem();
-		public:
-			bool init(EREDIS_ACCESS_RIGHT_TYPE type = E_REDIS_READ_AND_WRITE);
 
-			void setInfo(std::string& host, int port, std::string& passwd, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
-			CRedisClient* getRedisClient();
-			
-			void removeRedisClient();
-		private:
-			CRedisClient* _createRedisClient(std::thread::id tid);
+			}
+			~Redis_Node()
+			{
+				if (m_redisContext != NULL)
+				{
+					redisFree(m_redisContext);
+					m_redisContext = NULL;
+				}
+			}
+		}REDIS_NODE;
+
+		class CRedisClient
+		{
+			//BCLIB_SINGLETON_DECLARE(CRedisSystem);
+
+		public:
+			CRedisClient();
+			virtual ~CRedisClient();
+
 		public:
 			/**
 			* 功能:以二进制的形式保存ptbuf
@@ -111,18 +89,23 @@ namespace MWLib
 			*/
 			BCLib::uint32 loadPTBuf(std::string &key, BCLib::uint64 uniqueid, std::string & strPTbufName, ::google::protobuf::MessageLite *pPtbuf, BCLib::uint32 ptCacheSize = REDIS_READER_MAX_BUF, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
-			//断开当前链接
-			void  disconnect(EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
-			//断开当前线程的所有链接
-			void  disconnectAll();
+		public:
+			void setInfo(std::string& host, int port, std::string& passwd, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
+			bool init(EREDIS_ACCESS_RIGHT_TYPE type = E_REDIS_READ_AND_WRITE);
+
+			bool connect(std::string host, int port, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+			bool connectWithTimeout(std::string host, int port, const struct timeval tv, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+
+			void  disconnect(EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+			void  disconnectAll();
 			bool  exec(const char *cmd, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			bool setCommandTimeout(const struct timeval tv, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 			bool checkStatus(EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			bool clear(EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
-			
+
 			//String
 			bool setString(const char *key, const char *value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 			bool setString(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
@@ -322,12 +305,30 @@ namespace MWLib
 			/**
 			* 功能:同时将多个field - value(域-值)对设置到哈希表key中
 			* @param key 键值即对应hash表名
+			* @param fields_value 多个field value(域 值)
+			* e.g.: hmset key_hash name "李三" age 18 birthday "20010101"
+			*/
+			void hmset(const char *key, EREDIS_CONTEXT_TYPE type, std::string format, va_list ap);
+
+			/**
+			* 功能:同时将多个field - value(域-值)对设置到哈希表key中
+			* @param key 键值即对应hash表名
 			* @param uniqueid 实体ID 没有实体ID的可以考虑统一使用1000000来代替
 			* @param subkey 二级表名
 			* @param fields_value 多个field value(域 值)
 			* e.g.: hmset key_hash name "李三" age 18 birthday "20010101"
 			*/
 			void hmset(const char *key, BCLib::uint64 uniqueid, const char *subkey, EREDIS_CONTEXT_TYPE type, std::string format, ...);
+
+			/**
+			* 功能:同时将多个field - value(域-值)对设置到哈希表key中
+			* @param key 键值即对应hash表名
+			* @param uniqueid 实体ID 没有实体ID的可以考虑统一使用1000000来代替
+			* @param subkey 二级表名
+			* @param fields_value 多个field value(域 值)
+			* e.g.: hmset key_hash name "李三" age 18 birthday "20010101"
+			*/
+			void hmset(const char* key, BCLib::uint64 uniqueid, const char* subkey, EREDIS_CONTEXT_TYPE type, std::string format, va_list ap);
 
 			//void hmsetBin(const char *key, const char * filed, const char * value, BCLib::uint32 len);
 			//void hmsetBin(const char*key, BCLib::uint64 uniqueid, const char*subkey, const char *filed, const char *value, BCLib::uint32 len);
@@ -351,7 +352,7 @@ namespace MWLib
 			bool herase(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *field, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			/**
-			* 功能：按matchKey遍历
+			* 功能：移除一个成员或多个成员
 			* @param key 集合名
 			* @param matchKey 匹配字符串，匹配规则同scan
 			* @param field_values 返回key-value map
@@ -363,7 +364,7 @@ namespace MWLib
 			BCLib::uint64 hscan(const char *key, const char *matchKey, std::map<std::string, std::string>& field_values, BCLib::uint64 start = 0, BCLib::uint64 count = 50, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			/**
-			* 功能：按matchKey遍历
+			* 功能：移除一个成员或多个成员
 			* @param key 集合名
 			* @param uniqueid 实体ID 没有实体ID的可以考虑统一使用1000000来代替
 			* @param subkey 二级表名
@@ -377,7 +378,7 @@ namespace MWLib
 			BCLib::uint64 hscan(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *matchKey, std::map<std::string, std::string>& field_values, BCLib::uint64 start = 0, BCLib::uint64 count = 50, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			/**
-			* 功能：按matchKey遍历
+			* 功能：移除一个成员或多个成员
 			* @param key 集合名
 			* @param matchKey 匹配字符串，匹配规则同scan
 			* @param end 返回本次遍历的结束时的游标 0表示完全遍历
@@ -389,7 +390,7 @@ namespace MWLib
 			const std::map<std::string, std::pair<char*, BCLib::uint32>*>* hscan(const char *key, const char *matchKey, BCLib::uint64 &end, BCLib::uint64 start = 0, BCLib::uint64 count = 50, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			/**
-			* 功能：按matchKey遍历
+			* 功能：移除一个成员或多个成员
 			* @param key 集合名
 			* @param uniqueid 实体ID 没有实体ID的可以考虑统一使用1000000来代替
 			* @param subkey 二级表名
@@ -796,6 +797,15 @@ namespace MWLib
 			*/
 			bool sadd(const char *key, EREDIS_CONTEXT_TYPE type, std::string members, ...);
 
+
+			/**
+			* 功能：添加一个或多个成员到无序集合
+			* @param key 集合名
+			* @param format 添加的成员们 format 多个成员 使用空格隔开 如 "member1 member2 member3"
+			* @return 成功或失败
+			*/
+			bool sadd(const char *key, EREDIS_CONTEXT_TYPE type, std::string members, va_list ap);
+
 			/**
 			*功能：添加一个或多个成员到无序集合
 			* @param key 集合名
@@ -804,7 +814,17 @@ namespace MWLib
 			* @param format 添加的成员们 format 多个成员 使用空格隔开 如 "format format format"
 			* @return 成功或失败
 			*/
-			bool sadd(const char *key, BCLib::uint64 uniqueid, const char *subkey, EREDIS_CONTEXT_TYPE type, std::string members, ...);
+			bool sadd(const char *key, BCLib::uint64 uniqueid, const char *subkey, EREDIS_CONTEXT_TYPE, std::string members, ...);
+
+			/**
+			*功能：添加一个或多个成员到无序集合
+			* @param key 集合名
+			* @param uniqueid key集合下的子集和编号
+			* @param subkey 子集和编号下的二级子集和名 与key uniqueid 共同组成唯一集合名 key:[uniqueid]:subkey  多维结构
+			* @param format 添加的成员们 format 多个成员 使用空格隔开 如 "format format format"
+			* @return 成功或失败
+			*/
+			bool sadd(const char *key, BCLib::uint64 uniqueid, const char *subkey, EREDIS_CONTEXT_TYPE, std::string members, va_list ap);
 
 			/**
 			* 功能：获取集合内成员数量
@@ -918,6 +938,13 @@ namespace MWLib
 			* @return 成功或失败
 			*/
 			bool sinter(std::set<std::string> &set, EREDIS_CONTEXT_TYPE type, std::string keys, ...);
+
+			/**
+			* 功能：获取给定所有给定集合的交集,不存在的集合 key 被视为空集
+			* @param keys 集合名 多个成员 使用空格隔开 如 "key1 key2 key3" / "key:[uniqueid]:subkey1 key:[uniqueid]:subkey2 key:[uniqueid]:subkey3"  多维结构
+			* @return 成功或失败
+			*/
+			bool sinter(std::set<std::string> &set, EREDIS_CONTEXT_TYPE type, std::string keys, va_list ap);
 
 			//同上  by bhu
 			bool sinter(std::set<std::string> &set, const std::vector<std::string> &keys, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
@@ -1244,14 +1271,71 @@ namespace MWLib
 			*/
 			BCLib::uint64 zscan(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *matchKey, std::vector<std::pair<std::string, double>> &members, BCLib::uint64 start = 0, BCLib::uint64 count = 50, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
-			CRedLock *getRedLock();
+			CRedLock *getRedLock() { return m_pRedLock; }
+
+		protected:
+			void destoryTempList()
+			{
+				for (std::list<std::pair<char*, BCLib::uint32>*>::iterator iter = m_list.begin(); iter != m_list.end(); iter++)
+				{
+					if ((*iter) == NULL)
+					{
+						continue;
+					}
+					delete ((*iter)->first);
+					(*iter)->first = NULL;
+					(*iter)->second = 0;
+
+					delete (*iter);
+					(*iter) = NULL;
+				}
+				m_list.clear();
+			}
+			void destoryTempMap()
+			{
+				for (std::map<std::string, std::pair<char*, BCLib::uint32>*>::iterator iter = m_map.begin(); iter != m_map.end(); iter++)
+				{
+					std::pair<char*, BCLib::uint32>*p = iter->second;
+					if (p == NULL)
+					{
+						continue;
+					}
+					//char *pChar = p->first;		
+					delete (p->first);
+					//pChar = NULL;
+					p->first = NULL;
+					p->second = 0;
+
+					delete p;
+					p = NULL;
+					iter->second = NULL;
+
+				}
+				m_map.clear();
+			}
+			void destoryRedLock()
+			{
+				if (m_pRedLock != NULL)
+				{
+					delete m_pRedLock;
+				}
+				return;
+			}
+
 		private:
-			BCLib::Utility::CMutex m_mutex;
-			std::unordered_map<std::thread::id, CRedisClient*> m_redisClientMap;//threadID, CRedisClient*
-			std::unordered_map<BCLib::uint16, REDIS_CONNECT_INFO> m_redisConnectInfoMap;
+			std::string DoubleToString(const double value, BCLib::uint32 precisionAfterPoint = 6);
+
+		private:
+			redisContext *m_redisContext;
+			redisReply *m_redisReply;
+			CRedLock  *m_pRedLock;
 			EREDIS_ACCESS_RIGHT_TYPE m_eAccessRight;
+
+			std::unordered_map<BCLib::uint16, REDIS_NODE> m_redisContextMap;
+			std::list<std::pair<char *, BCLib::uint32>*> m_list;
+			std::map<std::string, std::pair<char *, BCLib::uint32>*> m_map;
 		};
-    }//Redis
+	}//Redis
 }//MWLib
 
-#endif//__MWLIB_REDIS_REDISSYSTEM_H__
+#endif//__MWLIB_REDIS_REDISCLIENT_H__
