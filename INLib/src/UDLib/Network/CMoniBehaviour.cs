@@ -17,9 +17,11 @@ namespace UDLib.Network
             }
         }
 
-        /// <summary>
-        /// EchoID是客户端用来标识处理不同系统的消息, 统一在ELogicSysEchoID处定义
-        /// </summary>
+        public CMoniBehaviour(UT_ECHOID uEchoID)
+        {
+            m_uEchoID = uEchoID;
+        }
+
         public UT_ECHOID ECHO
         {
             get { return m_uEchoID; }
@@ -397,7 +399,7 @@ namespace UDLib.Network
 
         //
         private static UT_ECHOID m_sEchoIDCounter = 1;
-        private UT_ECHOID m_uEchoID = 0;
+        private UT_ECHOID m_uEchoID = 0; // 是客户端用来标识处理不同系统的消息
 
         private CTcpClient m_tcpClient = null;
         private CSLib.Framework.CMsgExecute m_msgExecute = new CSLib.Framework.CMsgExecute();
