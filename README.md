@@ -16,7 +16,7 @@
         CLLib£ºjinhong_zheng@163.com£»
         CSLib£ºjumberstudio@gmail.com£»
         GELib£ºlvhong@gmail.com¡¢yz_person@163.com£»
-        MWLib£ºmaosher@gmail.com¡¢wangjin_16@126.com£»
+        MWLib£ºmaosher@gmail.com¡¢wangjin_16@126.com¡¢aeix@foxmail.com£»
         SFLib£º190240784@qq.com¡¢caokouyilang@gmail.com£»
         UDLib£ºfanghuaiyi@gmail.com¡¢a1051574139@163.com£»
 
