@@ -9,12 +9,6 @@ namespace UDLib.Network
             m_cacheMessage = new CCacheMessage(this);
         }
 
-        public CSLib.Framework.CMsgExecute MsgExecute
-        {
-            get { return m_msgExecute; }
-            set { m_msgExecute = value; }
-        }
-
         public CSLib.Utility.CDictionary<UInt32, Int64> DelayedMsg
         {
             get { return m_dicDelayedMsg; }
@@ -23,13 +17,11 @@ namespace UDLib.Network
 
         protected override Boolean _CbParseMsg(Byte[] msgBuff, Int32 msgSize)
         {
-            if (m_msgExecute == null)
+            CSLib.Framework.CMessageLabel msgLabel = CSLib.Framework.CMsgFactory.Instance.CreateMsg(msgBuff, msgSize);
+            if (msgLabel == null)
             {
                 return true;
             }
-
-            CSLib.Framework.CMessageLabel msgLabel = new CSLib.Framework.CMessageLabel();
-            bool ret = m_msgExecute.CreateMessage(ref msgLabel, msgBuff, msgSize);
 
             CSLib.Framework.CNetMessage theMsg = (CSLib.Framework.CNetMessage)(msgLabel.MsgObject);
 
@@ -64,7 +56,6 @@ namespace UDLib.Network
             return true;
         }
 
-        private CSLib.Framework.CMsgExecute m_msgExecute = null;
         private CCacheMessage m_cacheMessage = null;
 
         public void Update()

@@ -15,7 +15,6 @@ namespace UDLib.Network
             {
                 m_sEchoIDCounter = 1;
             }
-            m_msgExecute.MsgFactory = new CSLib.Framework.CMsgFactory();
         }
 
         /// <summary>
@@ -33,7 +32,6 @@ namespace UDLib.Network
             set
             {
                 m_tcpClient = value;
-                m_tcpClient.MsgExecute = m_msgExecute;
             }
         }
 
@@ -97,7 +95,7 @@ namespace UDLib.Network
 
         public bool AddIgnoreTrace(byte server, byte func, UInt16 id)
         {
-            return CSLib.Framework.CMsgExecute.AddIgnoreTrace(server, func, id);
+            return CSLib.Framework.CMsgFactory.Instance.AddIgnoreTrace(server, func, id);
         }
 
         /// <summary>
@@ -191,7 +189,7 @@ namespace UDLib.Network
             {
                 byte tmpServer = CSLib.Utility.CBitHelper.GetHighUInt8(msgRequest.MsgType);
                 byte tmpFunc = CSLib.Utility.CBitHelper.GetLowUInt8(msgRequest.MsgType);
-                if (!CSLib.Framework.CMsgExecute.IsIgnoreTrace(tmpServer, tmpFunc, msgRequest.Id))
+                if (!CSLib.Framework.CMsgFactory.Instance.IsIgnoreTrace(tmpServer, tmpFunc, msgRequest.Id))
                 {
                     //发送消息前加入本地缓存,在这里做可以过滤掉心跳
                     UDLib.Utility.CDebugOut.Log("SendMessage : uServer = " + tmpServer.ToString() + "; uFunc = " + tmpFunc.ToString() + "; uID = " + msgRequest.Id.ToString() + ", reqIndex" + msgRequest.GetReqIndex());
@@ -265,7 +263,7 @@ namespace UDLib.Network
             {
                 byte tmpServer = CSLib.Utility.CBitHelper.GetHighUInt8(msgRequest.MsgType);
                 byte tmpFunc = CSLib.Utility.CBitHelper.GetLowUInt8(msgRequest.MsgType);
-                if (!CSLib.Framework.CMsgExecute.IsIgnoreTrace(tmpServer, tmpFunc, msgRequest.Id))
+                if (!CSLib.Framework.CMsgFactory.Instance.IsIgnoreTrace(tmpServer, tmpFunc, msgRequest.Id))
                 {
                     //发送消息前加入本地缓存,在这里做可以过滤掉心跳
                     UDLib.Utility.CDebugOut.Log("SendMessage : uServer = " + tmpServer.ToString() + "; uFunc = " + tmpFunc.ToString() + "; uID = " + msgRequest.Id.ToString() + ", reqIndex" + msgRequest.GetReqIndex());

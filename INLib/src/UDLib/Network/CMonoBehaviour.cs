@@ -15,7 +15,6 @@ namespace UDLib.Network
             {
                 m_sEchoIDCounter = 1;
             }
-            m_msgExecute.MsgFactory = new CSLib.Framework.CMsgFactory();
         }
 
         /// <summary>
@@ -33,7 +32,6 @@ namespace UDLib.Network
             set
             {
                 m_tcpClient = value;
-                m_tcpClient.MsgExecute = m_msgExecute;
             }
         }
 
@@ -83,18 +81,6 @@ namespace UDLib.Network
         }
 
         /// <summary>
-        /// 此接口慎用，目前是为了给 U3D 中 L# 脚本使用，而创建的接口
-        /// </summary>
-        /// <param name="msgLabel"></param>
-        /// <param name="msgBuff"></param>
-        /// <param name="msgSize"></param>
-        /// <returns></returns>
-        public bool CreateMessage(ref CSLib.Framework.CMessageLabel msgLabel, Byte[] msgBuff, Int32 msgSize)
-        {
-            return m_msgExecute.CreateMessage(ref msgLabel, msgBuff, msgSize);
-        }
-
-        /// <summary>
         /// 添加消息处理函数（逻辑层主要使用）
         /// </summary>
         /// <param name="server">消息的目标服务器类型，客户端是EServerType.ESERVER_GAMECLIENT</param>
@@ -109,7 +95,7 @@ namespace UDLib.Network
 
         public bool AddIgnoreTrace(byte server, byte func, UInt16 id)
         {
-            return CSLib.Framework.CMsgExecute.AddIgnoreTrace(server, func, id);
+            return CSLib.Framework.CMsgFactory.Instance.AddIgnoreTrace(server, func, id);
         }
 
         /// <summary>
@@ -203,7 +189,7 @@ namespace UDLib.Network
             {
                 byte tmpServer = CSLib.Utility.CBitHelper.GetHighUInt8(msgRequest.MsgType);
                 byte tmpFunc = CSLib.Utility.CBitHelper.GetLowUInt8(msgRequest.MsgType);
-                if (!CSLib.Framework.CMsgExecute.IsIgnoreTrace(tmpServer, tmpFunc, msgRequest.Id))
+                if (!CSLib.Framework.CMsgFactory.Instance.IsIgnoreTrace(tmpServer, tmpFunc, msgRequest.Id))
                 {
                     //发送消息前加入本地缓存,在这里做可以过滤掉心跳
                     UDLib.Utility.CDebugOut.Log("SendMessage : uServer = " + tmpServer.ToString() + "; uFunc = " + tmpFunc.ToString() + "; uID = " + msgRequest.Id.ToString() + ", reqIndex" + msgRequest.GetReqIndex());
@@ -277,7 +263,7 @@ namespace UDLib.Network
             {
                 byte tmpServer = CSLib.Utility.CBitHelper.GetHighUInt8(msgRequest.MsgType);
                 byte tmpFunc = CSLib.Utility.CBitHelper.GetLowUInt8(msgRequest.MsgType);
-                if (!CSLib.Framework.CMsgExecute.IsIgnoreTrace(tmpServer, tmpFunc, msgRequest.Id))
+                if (!CSLib.Framework.CMsgFactory.Instance.IsIgnoreTrace(tmpServer, tmpFunc, msgRequest.Id))
                 {
                     //发送消息前加入本地缓存,在这里做可以过滤掉心跳
                     UDLib.Utility.CDebugOut.Log("SendMessage : uServer = " + tmpServer.ToString() + "; uFunc = " + tmpFunc.ToString() + "; uID = " + msgRequest.Id.ToString() + ", reqIndex" + msgRequest.GetReqIndex());
