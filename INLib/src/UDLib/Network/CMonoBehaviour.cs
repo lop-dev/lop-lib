@@ -26,19 +26,16 @@ namespace UDLib.Network
             set { m_uEchoID = value; }
         }
 
-        public CTcpClient TcpClient
-        {
-            get { return m_tcpClient; }
-            set
-            {
-                m_tcpClient = value;
-            }
-        }
+        //public CTcpClient TcpClient
+        //{
+        //    get { return m_tcpClient; }
+        //    set { m_tcpClient = value; }
+        //}
 
-        public CSLib.Framework.CMsgExecute MsgExecute
-        {
-            get { return m_msgExecute; }
-        }
+        //public CSLib.Framework.CMsgExecute MsgExecute
+        //{
+        //    get { return m_msgExecute; }
+        //}
 
         public CSLib.Utility.CStatisticsNum<string> SendStatisticsNum
         {
@@ -62,8 +59,8 @@ namespace UDLib.Network
                 return false;
             }
 
-            TcpClient = tcpClient;
-            tcpClient.RegisterEchoID(m_uEchoID);
+            m_tcpClient = tcpClient;
+            m_tcpClient.RegisterEchoID(m_uEchoID);
 
             return true;
         }
