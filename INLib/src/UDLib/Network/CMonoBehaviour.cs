@@ -22,23 +22,6 @@ namespace UDLib.Network
             m_uEchoID = uEchoID;
         }
 
-        public UT_ECHOID ECHO
-        {
-            get { return m_uEchoID; }
-            set { m_uEchoID = value; }
-        }
-
-        //public CTcpClient TcpClient
-        //{
-        //    get { return m_tcpClient; }
-        //    set { m_tcpClient = value; }
-        //}
-
-        //public CSLib.Framework.CMsgExecute MsgExecute
-        //{
-        //    get { return m_msgExecute; }
-        //}
-
         public CSLib.Utility.CStatisticsNum<string> SendStatisticsNum
         {
             get { return m_sendStatisticsNum; }
