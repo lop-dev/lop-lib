@@ -15,13 +15,13 @@
     2、能获取的源码已经上传，后续应该会逐步上传更多的源码，暂时未上传的的源码，尽量不要索取，谢谢配合。
 
 # 开发人员
-## BCLib：jeffqin007@163.com、lvgang1983@gmail.com；
-## CLLib：jinhong_zheng@163.com；
-## CSLib：jumberstudio@gmail.com；
-## GELib：lvhong@gmail.com、yz_person@163.com；
-## MWLib：maosher@gmail.com、wangjin_16@126.com、aeix@foxmail.com；
-## SFLib：190240784@qq.com、caokouyilang@gmail.com；
-## UDLib：fanghuaiyi@gmail.com、a1051574139@163.com；
+#### BCLib：jeffqin007@163.com、lvgang1983@gmail.com；
+#### CLLib：jinhong_zheng@163.com；
+#### CSLib：jumberstudio@gmail.com；
+#### GELib：lvhong@gmail.com、yz_person@163.com；
+#### MWLib：maosher@gmail.com、wangjin_16@126.com、aeix@foxmail.com；
+#### SFLib：190240784@qq.com、caokouyilang@gmail.com；
+#### UDLib：fanghuaiyi@gmail.com、a1051574139@163.com；
 
 GIT 获取地址：https://github.com/lop-dev/lop-lib.git
 
