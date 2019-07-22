@@ -686,11 +686,9 @@ namespace UDLib.Editor
                 Directory.CreateDirectory(assetBundleDirectory);
             }
 
-
-            //video使用无压缩格式
+            
             string[] files = Directory.GetFiles("Assets", "*", SearchOption.AllDirectories);
             Dictionary<string, AssetBundleBuild> defaultBuildDic = new Dictionary<string, AssetBundleBuild>();
-            Dictionary<string, AssetBundleBuild> videoBuildDic = new Dictionary<string, AssetBundleBuild>();
             int index = 0;
             foreach (var f in files)
             {
@@ -712,14 +710,6 @@ namespace UDLib.Editor
                             tempBuild.assetNames = assetNames.ToArray();
                             defaultBuildDic[importer.assetBundleName] = tempBuild;
                         }
-                        else if (videoBuildDic.ContainsKey(importer.assetBundleName))
-                        {
-                            assetNames.AddRange(videoBuildDic[importer.assetBundleName].assetNames);
-                            assetNames.Add(importer.assetPath);
-                            AssetBundleBuild tempBuild = videoBuildDic[importer.assetBundleName];
-                            tempBuild.assetNames = assetNames.ToArray();
-                            videoBuildDic[importer.assetBundleName] = tempBuild;
-                        }
                         else
                         {
                             AssetBundleBuild build = new AssetBundleBuild();
@@ -728,14 +718,7 @@ namespace UDLib.Editor
                             string[] asset = new string[1];
                             asset[0] = importer.assetPath;
                             build.assetNames = asset;
-                            if (build.assetBundleName.ToLower().Replace('\\', '/').Contains("video/"))
-                            {
-                                videoBuildDic.Add(build.assetBundleName, build);
-                            }
-                            else
-                            {
-                                defaultBuildDic.Add(build.assetBundleName, build);
-                            }
+                            defaultBuildDic.Add(build.assetBundleName, build);
                         }
                     }
                 }
@@ -745,28 +728,14 @@ namespace UDLib.Editor
             {
                 defaultBuildList.Add(v.Value);
             }
-            List<AssetBundleBuild> videoBuildList = new List<AssetBundleBuild>();
-            foreach (var v in videoBuildDic)
-            {
-                videoBuildList.Add(v.Value);
-            }
             EditorUtility.ClearProgressBar();
-            //打包ab文件
-            BuildPipeline.BuildAssetBundles(assetBundleDirectory, videoBuildList.ToArray(), BuildAssetBundleOptions.UncompressedAssetBundle, EditorUserBuildSettings.activeBuildTarget);
-            var videoManifestPath = Path.Combine(assetBundleDirectory, "AssetBundle");
-            var videoManifestPathNew = Path.Combine(assetBundleDirectory, "VideoAssetBundle");
-            if (File.Exists(videoManifestPath))
-            {
-                var bytes = File.ReadAllBytes(videoManifestPath);
-                if (File.Exists(videoManifestPathNew))
-                {
-                    File.Delete(videoManifestPathNew);
-                }
-                File.WriteAllBytes(videoManifestPathNew, bytes);
-            }
 
-            BuildPipeline.BuildAssetBundles(assetBundleDirectory, defaultBuildList.ToArray(), BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.IgnoreTypeTreeChanges,
-                EditorUserBuildSettings.activeBuildTarget);
+            BuildPipeline.BuildAssetBundles(assetBundleDirectory, defaultBuildList.ToArray(), BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.IgnoreTypeTreeChanges,EditorUserBuildSettings.activeBuildTarget);
+
+            //拷贝视频到AB资源目录
+            string videoRoot = "Assets/App/Pro/GameRes/Video/";
+            CDebugOut.Log(string.Format("拷贝视频文件：从{0}到{1}", videoRoot, assetBundleDirectory));
+            CopyVideoToDir(videoRoot, assetBundleDirectory);
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -803,7 +772,7 @@ namespace UDLib.Editor
                 UDLib.Utility.CDebugOut.Log("AB包出包提示: 5.生成Hash检查文件");
 
                 StringBuilder sbDefault = ReadManifestToSB(versionManifestFilePath, platformName, path, versionCode);
-                StringBuilder sbVideo = ReadManifestToSB(videoManifestPathNew, platformName, path, versionCode);
+                StringBuilder sbVideo = ReadVideoManifestToSB(path,platformName,versionCode);
                 SaveSBToManifest(sbDefault.Append(sbVideo), versionHashFilePath);
 
                 //不再把整个清单拷贝到streamAsset下，根据设置拷贝进入底包的AB资源以控制包体大小
@@ -821,6 +790,31 @@ namespace UDLib.Editor
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+
+        /// <summary>
+        /// 将视频拷贝到AB文件夹
+        /// </summary>
+        private static void CopyVideoToDir(string src,string des)
+        {
+            string videoRoot = Path.Combine(des, "video");
+            if (!Directory.Exists(videoRoot))
+            {
+                Directory.Delete(videoRoot);
+            }
+            Directory.CreateDirectory(videoRoot);
+
+            DirectoryInfo srcDir = new DirectoryInfo(src);
+            if (!srcDir.Exists)
+            {
+                CDebugOut.LogError(string.Format("将视频拷贝到AB文件夹失败，源目录不存在{0}",src));
+                return;
+            }
+            FileInfo[] videoFileInfos = srcDir.GetFiles("*.mp4",SearchOption.AllDirectories);
+            foreach(var videoInfo in videoFileInfos)
+            {
+                File.Copy(videoInfo.FullName, Path.Combine(videoRoot,videoInfo.Name), true);
+            }
         }
 
         //生成ab压缩文件
@@ -992,6 +986,27 @@ namespace UDLib.Editor
 
             manifestBundle1.Unload(true);
 
+            return sb;
+        }
+
+        /// <summary>
+        /// 获取视频清单
+        /// </summary>
+        /// <returns></returns>
+        static StringBuilder ReadVideoManifestToSB(string rootPath,string platform,string version)
+        {
+            StringBuilder sb = new StringBuilder();
+            string videoRoot = string.Format("{0}/AssetBuild/{1}/AssetBundle/",rootPath,platform).Replace('\\','/');
+            string[] videoFiles = Directory.GetFiles(Path.Combine(videoRoot,"video"), "*.mp4", SearchOption.AllDirectories);
+            foreach(var videoFile in videoFiles)
+            {
+                string assetKey = videoFile.Replace('\\', '/').Replace(videoRoot, "");
+                FileInfo videoFileInfo = new FileInfo(videoFile);
+                if(videoFileInfo.Exists)
+                {
+                    sb.Append(assetKey).Append('\t').Append(version).Append('\t').Append(CSLib.Security.CMd5.EncodeFile(videoFileInfo.FullName)).Append('\t').Append(videoFileInfo.Length).Append("\n");
+                }
+            }
             return sb;
         }
 
