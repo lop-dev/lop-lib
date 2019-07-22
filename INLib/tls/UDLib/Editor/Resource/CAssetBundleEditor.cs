@@ -734,7 +734,7 @@ namespace UDLib.Editor
 
             //拷贝视频到AB资源目录
             string videoRoot = "Assets/App/Pro/GameRes/Video/";
-            CDebugOut.Log(string.Format("拷贝视频文件：从{0}到{1}", videoRoot, assetBundleDirectory));
+            UDLib.Utility.CDebugOut.Log(string.Format("拷贝视频文件：从{0}到{1}", videoRoot, assetBundleDirectory));
             CopyVideoToDir(videoRoot, assetBundleDirectory);
 
             AssetDatabase.SaveAssets();
@@ -807,7 +807,7 @@ namespace UDLib.Editor
             DirectoryInfo srcDir = new DirectoryInfo(src);
             if (!srcDir.Exists)
             {
-                CDebugOut.LogError(string.Format("将视频拷贝到AB文件夹失败，源目录不存在{0}",src));
+                UDLib.Utility.CDebugOut.LogError(string.Format("将视频拷贝到AB文件夹失败，源目录不存在{0}",src));
                 return;
             }
             FileInfo[] videoFileInfos = srcDir.GetFiles("*.mp4",SearchOption.AllDirectories);
