@@ -378,31 +378,22 @@ namespace UDLib.Resource
             {
                 request.Setup();
                 CAssetBundleLog.Log(string.Format("请求加载：{0}", request.packageName));
-                if (IsVideo(request.m_eResourceType))
-                {
-                    if (MTotalAssetDic.ContainsKey(request.packageName))
-                    {
-                        CUpdateObject cObj = MTotalAssetDic[request.packageName];
-                        request.hash = Hash128.Parse(cObj.HashOrMD5);
-                    }
-                }
-                else
-                {
-                    //处理依赖加载
-                    List<CLoadRequest> dependency_requests = null;
-                    request.hash = this.MainMenifest.GetAssetBundleHash(request.packageName);
-                    dependency_requests = GetManifestDependencyRequests(request);
-                    request.depencencyRequests = dependency_requests;
+                
+                //处理依赖加载
+                List<CLoadRequest> dependency_requests = null;
+                request.hash = this.MainMenifest.GetAssetBundleHash(request.packageName);
+                dependency_requests = GetManifestDependencyRequests(request);
+                request.depencencyRequests = dependency_requests;
 
-                    if (dependency_requests != null)
+                if (dependency_requests != null)
+                {
+                    for (int i = 0; i < dependency_requests.Count; i++)
                     {
-                        for (int i = 0; i < dependency_requests.Count; i++)
-                        {
-                            if (loadingRquestList.IndexOf(dependency_requests[i]) == -1)//依赖列表获取时，在加载中的被引用了，无需再次加载处理
-                                Load(dependency_requests[i]);
-                        }
+                        if (loadingRquestList.IndexOf(dependency_requests[i]) == -1)//依赖列表获取时，在加载中的被引用了，无需再次加载处理
+                            Load(dependency_requests[i]);
                     }
                 }
+                
 
 
                 //检测相同的加载
@@ -1438,11 +1429,6 @@ namespace UDLib.Resource
         {
             var path = Path.Combine(PackageDir, filename);
             return path;
-        }
-
-        bool IsVideo(int t)
-        {
-            return MbAssetBundleManager.Instance.ResourceDefine.IsVideo(t);
         }
 
         bool isUIAtlas(int t)
