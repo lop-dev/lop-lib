@@ -205,11 +205,6 @@ namespace UDLib.Utility
             m_dfError.LineCnt = nCount;
         }
 
-        //public void DisplayMsg(bool bPopUp, string strTitle, object strFormat)
-        //{
-        //    DisplayMsg(bPopUp, CDebugOut.LEVEL.INFORMATION, strTitle, strFormat);
-        //}
-
         public override void DisplayMsg(bool bPopUp, CSLib.Utility.CDebugOut.LEVEL iLevel, string strTitle, object strFormat)
         {
             CConsole.WriteLine(iLevel, strTitle + " : " + strFormat);
