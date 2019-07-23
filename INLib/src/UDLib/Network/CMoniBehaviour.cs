@@ -273,12 +273,11 @@ namespace UDLib.Network
                 return;
             }
 
-            CheckTimeout();
-
             //UnityEngine.Profiling.Profiler.BeginSample("CMoniBehaviour > ExecuteMessages");
             CSLib.Framework.CMsgBuffInfoQueue msgBuffInfoQueue = m_tcpClient.GetMsgBuffInfoQueue(m_uEchoID);
             while (msgBuffInfoQueue.Count > 0)
             {
+                UDLib.Utility.CDebugOut.Log("ExecuteMessages count : " + msgBuffInfoQueue.Count);
                 CSLib.Framework.CMessageLabel msgLabel = new CSLib.Framework.CMessageLabel();
                 CSLib.Framework.CMsgBuffInfo msgBuffInfo = msgBuffInfoQueue.Dequeue();
                 // 执行后 msgLabel.Id 才会被赋值
@@ -295,90 +294,6 @@ namespace UDLib.Network
             }
             //UnityEngine.Profiling.Profiler.EndSample();
         }
-
-        #region 超时重发缓存
-        // 超时检测计时(update计数)
-        private int timeOutCheckTime = 0;
-        // 发送消息时的缓存,收到消息移除，用于处理超时重连
-        private Dictionary<CSLib.Framework.CNetMessage, long> msgDict = new Dictionary<CSLib.Framework.CNetMessage, long>();
-        // 待清除字典
-        private Dictionary<CSLib.Framework.CNetMessage, long> tempMsgDict = new Dictionary<CSLib.Framework.CNetMessage, long>();
-
-        // 发送request消息的时候把消息加入队列
-        public bool InsertCacheMessage(CSLib.Framework.CNetMessage message)
-        {
-            if (msgDict.ContainsKey(message))
-            {
-                msgDict.Remove(message);
-            }
-
-            msgDict.Add(message, DateTime.Now.Ticks/TimeSpan.TicksPerMillisecond);
-            return true;
-        }
-
-        // 收到response消息的时候从消息队列移除
-        public bool RemoveCacheMessageByReqIndex(ushort reqIndex)
-        {
-            foreach (KeyValuePair<CSLib.Framework.CNetMessage, long> kvp in msgDict)
-            {
-                if (kvp.Key.GetReqIndex() == reqIndex)
-                {
-
-                    return msgDict.Remove(kvp.Key);
-                }
-            }
-
-            return false;
-        }
-
-        // 断线重连时，清除消息缓存队列，避免断线重连的推送和超时重发相互干扰
-        public void ClearCacheMessage()
-        {
-            if (msgDict != null)
-            {
-                msgDict.Clear();
-            }
-        }
-
-        // CheckTimeout 检测超时
-        public void CheckTimeout()
-        {
-            if (timeOutCheckTime >= CReconnectMgr.Instance.TimeOutCheckFrequency)
-            {
-                _CheckTimeout();
-                timeOutCheckTime = 0;
-            }
-
-            timeOutCheckTime++;
-        }
-
-        // 超时重新发送消息
-        private void _CheckTimeout()
-        {
-            if (msgDict == null || msgDict.Count == 0)
-                return;
-
-            tempMsgDict.Clear();
-            foreach (KeyValuePair<CSLib.Framework.CNetMessage, long> kvp in msgDict)
-            {
-                if (Math.Abs(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - kvp.Value) > CReconnectMgr.Instance.TimeOutDuration)
-                {
-                    var a = Math.Abs(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - kvp.Value);
-                    Debug.LogErrorFormat("time passed :{0} ms", a);
-                    tempMsgDict.Add(kvp.Key, kvp.Value);
-                }
-            }
-
-            foreach (KeyValuePair<CSLib.Framework.CNetMessage, long> kvp in tempMsgDict)
-            {
-                msgDict.Remove(kvp.Key);
-                SendMessage(kvp.Key);
-                if(CReconnectMgr.Instance.timeoutCallBack != null){
-                    CReconnectMgr.Instance.timeoutCallBack(kvp.Key.GetReqIndex(), kvp.Key.MsgType, kvp.Key.Id);
-                }
-            }
-        }
-        #endregion
 
         //
         private static UT_ECHOID m_sEchoIDCounter = 1;
