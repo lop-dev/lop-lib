@@ -205,7 +205,7 @@ namespace UDLib.Utility
             m_dfError.LineCnt = nCount;
         }
 
-        public override void DisplayMsg(bool bPopUp, CSLib.Utility.CDebugOut.LEVEL iLevel, string strTitle, object strFormat)
+        protected override void _DisplayMsg(bool bPopUp, CSLib.Utility.CDebugOut.LEVEL iLevel, string strTitle, object strFormat, params object[] aArgs)
         {
             CConsole.WriteLine(iLevel, strTitle + " : " + strFormat);
             _WriteDebugFile(iLevel, strTitle, strFormat.ToString());

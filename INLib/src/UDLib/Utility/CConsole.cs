@@ -61,10 +61,6 @@ namespace UDLib.Utility
             {
                 Debug.LogError(value);
             }
-            else if (eLevel == CSLib.Utility.CDebugOut.LEVEL.EXCEPTION)
-            {
-                Debug.LogError(value);
-            }
             else
             {
                 Debug.Log(value);
