@@ -798,7 +798,7 @@ namespace UDLib.Editor
         private static void CopyVideoToDir(string src,string des)
         {
             string videoRoot = Path.Combine(des, "video");
-            if (!Directory.Exists(videoRoot))
+            if (Directory.Exists(videoRoot))
             {
                 Directory.Delete(videoRoot);
             }
