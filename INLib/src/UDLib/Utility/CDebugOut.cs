@@ -166,6 +166,7 @@ namespace UDLib.Utility
         public CDebugOut()
         {
             WriteFile = false;
+            DisplayLog = _DisplayMsg;
             // 为解决 AOT 问题，需要切换注释下面1行
             //CurDirectory = "..\\Log\\";
             CurDirectory = System.IO.Path.Combine(Application.persistentDataPath, m_dirName);
@@ -176,6 +177,7 @@ namespace UDLib.Utility
         public CDebugOut(string strFileName) : base(strFileName)
         {
             WriteFile = false;
+            DisplayLog = _DisplayMsg;
             // 为解决 AOT 问题，需要切换注释下面1行
             //CurDirectory = "..\\Log\\";
             CurDirectory = System.IO.Path.Combine(Application.persistentDataPath, m_dirName);
