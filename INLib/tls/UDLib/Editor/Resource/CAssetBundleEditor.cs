@@ -800,7 +800,7 @@ namespace UDLib.Editor
             string videoRoot = Path.Combine(des, "video");
             if (Directory.Exists(videoRoot))
             {
-                Directory.Delete(videoRoot);
+                Directory.Delete(videoRoot,true);
             }
             Directory.CreateDirectory(videoRoot);
 
