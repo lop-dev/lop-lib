@@ -29,7 +29,7 @@ class BCLIB_UTILITY_API CMutex : public IMutex
 {
 public:
     CMutex();
-    ~CMutex();
+    virtual ~CMutex();
 
     virtual void lock();
     virtual void unlock();
@@ -50,7 +50,7 @@ class BCLIB_UTILITY_API CMutexProcess : public IMutex
 {
 public:
     CMutexProcess();
-    ~CMutexProcess();
+    virtual ~CMutexProcess();
 
     EMutexProcessError create(uint32 key);
     void close();

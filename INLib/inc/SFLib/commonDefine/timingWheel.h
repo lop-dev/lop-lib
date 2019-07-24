@@ -53,7 +53,6 @@ namespace SFLib
 
         private:
             IObjectOwner* m_pObjectOwner;
-            BCLib::Utility::CMutex m_mutex;
         };
     }//CommonDefine
 }//SFLib

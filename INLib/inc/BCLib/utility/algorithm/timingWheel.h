@@ -10,6 +10,7 @@
 
 #include <BCLib/utility/baseDef.h>
 #include <BCLib/utility/hashMap.h>
+#include <BCLib/utility/thread/mutex.h>
 
 namespace BCLib
 {
@@ -35,13 +36,18 @@ public:
 	}
 	virtual ~CTimingWheel(){}
 
-	BCLib::uint32 getInfoNum(){ return m_uInfoNum; }
+	BCLib::uint32 getInfoNum()
+    {
+        BCLib::Utility::CMutexFun fun(&m_mutex);
+        return m_uInfoNum;
+    }
 
 	void update(float t)
 	{
+        BCLib::Utility::CMutexFun fun(&m_mutex);
+
 		m_fDelay += t;
-		if (m_fDelay < m_fInterval)
-		{
+		if (m_fDelay < m_fInterval) {
 			return;
 		}
 		m_fDelay -= m_fInterval;
@@ -53,12 +59,9 @@ public:
 		if ((m_uIndex2 + 1) >= MAP_NUM) m_uIndex2 = 0;
 		else m_uIndex2++;
 
-		if (m_pInfoPtrHashMap2)
-		{
-			for(typename InfoPtrHashMap::iterator it = m_pInfoPtrHashMap2->begin(); it != m_pInfoPtrHashMap2->end(); ++it)
-			{
-				if (m_markInfoPtrHashMap.remove(it->first))
-				{
+		if (m_pInfoPtrHashMap2) {
+			for(typename InfoPtrHashMap::iterator it = m_pInfoPtrHashMap2->begin(); it != m_pInfoPtrHashMap2->end(); ++it) {
+				if (m_markInfoPtrHashMap.remove(it->first)) {
 					m_uInfoNum--;
 				}
 			}
@@ -73,8 +76,9 @@ public:
 
 	bool haveInfoPtr(BCLib::uint64 uInfoID)
 	{
-		if (m_markInfoPtrHashMap.find(uInfoID) != m_markInfoPtrHashMap.end())
-		{
+        BCLib::Utility::CMutexFun fun(&m_mutex);
+
+		if (m_markInfoPtrHashMap.find(uInfoID) != m_markInfoPtrHashMap.end()) {
 			return true;
 		}
 
@@ -83,16 +87,16 @@ public:
 	
 	CINFOPTR getInfoPtr(BCLib::uint64 uInfoID)
 	{
+        BCLib::Utility::CMutexFun fun(&m_mutex);
+
 		CINFOPTR value = NULL;
 		typename BCLib::Utility::CHashMap<BCLib::uint64, InfoPtrHashMap*>::iterator it1 = m_markInfoPtrHashMap.find(uInfoID);
-		if (it1 == m_markInfoPtrHashMap.end())
-		{
+		if (it1 == m_markInfoPtrHashMap.end()) {
 			return value;
 		}
 
 		InfoPtrHashMap* pMap = it1->second;
-		if (pMap != NULL)
-		{			
+		if (pMap != NULL) {
 			pMap->getValue(uInfoID, value);
 		}
 		return value;
@@ -100,13 +104,13 @@ public:
 	
 	void addInfoPtr(BCLib::uint64 uInfoID, CINFOPTR infoPtr)
 	{
-		if (m_markInfoPtrHashMap.find(uInfoID) != m_markInfoPtrHashMap.end())
-		{
+        BCLib::Utility::CMutexFun fun(&m_mutex);
+
+		if (m_markInfoPtrHashMap.find(uInfoID) != m_markInfoPtrHashMap.end()) {
 			return;
 		}
 
-		if (m_pInfoPtrHashMap1 == NULL)
-		{
+		if (m_pInfoPtrHashMap1 == NULL) {
 			return;
 		}
 
@@ -117,17 +121,16 @@ public:
 
 	void delInfoPtr(BCLib::uint64 uInfoID)
 	{
+        BCLib::Utility::CMutexFun fun(&m_mutex);
+
 		typename BCLib::Utility::CHashMap<BCLib::uint64, InfoPtrHashMap*>::iterator it1 = m_markInfoPtrHashMap.find(uInfoID);
-		if (it1 == m_markInfoPtrHashMap.end())
-		{
+		if (it1 == m_markInfoPtrHashMap.end()) {
 			return;
 		}
 
 		InfoPtrHashMap* pMap = it1->second;
-		if (pMap != NULL)
-		{
-			if (pMap->remove(uInfoID))
-			{
+		if (pMap != NULL) {
+			if (pMap->remove(uInfoID)) {
 				m_uInfoNum--;
 			}
 		}
@@ -137,6 +140,7 @@ public:
 
 private:
 	static const BCLib::uint8 MAP_NUM = 60;
+    BCLib::Utility::CMutex m_mutex;
 
 	typedef BCLib::Utility::CHashMap<BCLib::uint64, CINFOPTR> InfoPtrHashMap;
 	InfoPtrHashMap m_InfoPtrHashMap[MAP_NUM];
