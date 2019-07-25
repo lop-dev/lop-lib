@@ -66,7 +66,7 @@ namespace Proto2Code
                     }
                     catch (IOException ex)
                     {
-                        CSLib.Utility.CDebugOut.LogException(ex);
+                        CSLib.Utility.CDebugOut.LogError(ex);
                         return false; // 目录创建失败
                     }
                 }
@@ -84,7 +84,7 @@ namespace Proto2Code
                     }
                     catch (IOException ex)
                     {
-                        CSLib.Utility.CDebugOut.LogException(ex);
+                        CSLib.Utility.CDebugOut.LogError(ex);
                         return false; // 目录创建失败
                     }
                 }
@@ -205,6 +205,8 @@ namespace Proto2Code
                 }
 
                 TSLib.TableGeneration.CGenerateTraversalAll.Generate(m_strOutputPath+"/C++/", m_strOutputPath + "/C++/");
+                TSLib.TableGeneration.CGenerateProHeaderFiles.Generate(m_strOutputPath + "/C++/", m_strOutputPath + "/C++/");
+                TSLib.TableGeneration.CGenerateProHeaderFiles.Generate(m_strOutputPath + "/C++/", m_strOutputPath + "/C++/");
             }
             else if ((m_strDescFile != "") && (m_strOutputFile != "") && (CFileList.Instance.IsNewFile(m_strDescFile) || !File.Exists(m_strOutputFile)))
             {
