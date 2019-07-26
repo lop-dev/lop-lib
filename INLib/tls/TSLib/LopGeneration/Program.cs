@@ -75,6 +75,7 @@ namespace Proto2Code
                     File.Copy(fileInfo.FullName, newfile, true);
                 }
             }
+
             DirectoryInfo desTableDir = new DirectoryInfo("./DesTable/DataTable");
             DirectoryInfo proTableDir = new DirectoryInfo("./ProTable");
             foreach(var fileInfo in desTableDir.GetFiles("*.xlsx", SearchOption.AllDirectories))
@@ -200,32 +201,6 @@ namespace Proto2Code
 
             //拷贝到工程目录下
             CSyncFile.Instance.Copy2TableOut();
-
-            #region
-            //删掉后端C++相关文件（临时方案）
-            string targetDic = "./TableOut/C++/gen/SHLib/";
-            string[] protos = Directory.GetFiles("./TableGen/11_ProtobufClt/", "*.proto");
-            foreach (var v in protos)
-            {
-                FileInfo file = new FileInfo(v);
-                string name = file.Name.Split('.')[0];
-                string targetFileProto = targetDic + "protofile/" + name + ".proto";
-                string targetFileCPPH = targetDic + "protobuf/" + name + ".pb.h";
-                string targetFileCPPCC = targetDic + "protobuf/" + name + ".pb.cc";
-                if (File.Exists(targetFileProto))
-                {
-                    File.Delete(targetFileProto);
-                }
-                if (File.Exists(targetFileCPPH))
-                {
-                    File.Delete(targetFileCPPH);
-                }
-                if (File.Exists(targetFileCPPCC))
-                {
-                    File.Delete(targetFileCPPCC);
-                }
-            }
-            #endregion
 
             //自动生成lua.pb和config文件的require()到configFiles文件
             string path = ".\\TableOut\\Lua\\Generate\\";

@@ -186,6 +186,7 @@ namespace Proto2Code
                 foreach (FileInfo tmpFileInfo in descDirectoryInfo.GetFiles("*.xlsx"))
                 {
                     if (tmpFileInfo.Name.StartsWith("~$")) continue;
+
                     m_strDescFile = tmpFileInfo.FullName;
                     m_strOutputFile = m_strOutputPath + tmpFileInfo.Name;
                     m_strOutputFile = m_strOutputFile.Replace(".xlsx", ".proto");
