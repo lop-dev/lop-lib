@@ -277,7 +277,6 @@ namespace UDLib.Network
             CSLib.Framework.CMsgBuffInfoQueue msgBuffInfoQueue = m_tcpClient.GetMsgBuffInfoQueue(m_uEchoID);
             while (msgBuffInfoQueue.Count > 0)
             {
-                UDLib.Utility.CDebugOut.Log("ExecuteMessages count : " + msgBuffInfoQueue.Count);
                 CSLib.Framework.CMessageLabel msgLabel = new CSLib.Framework.CMessageLabel();
                 CSLib.Framework.CMsgBuffInfo msgBuffInfo = msgBuffInfoQueue.Dequeue();
                 // 执行后 msgLabel.Id 才会被赋值

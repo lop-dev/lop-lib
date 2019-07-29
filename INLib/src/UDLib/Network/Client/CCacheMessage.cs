@@ -94,11 +94,11 @@ namespace UDLib.Network
         // 超时重新发送消息
         private void CheckTimeout()
         {
-            // 断线了就不要检测超时重发了
-            if(!m_tcpClient.IsValid())
-            {
-                return;
-            }
+            //// 断线了就不要检测超时重发了
+            //if(!m_tcpClient.IsValid())
+            //{
+            //    return;
+            //}
 
             if (msgDictCache == null || msgDictCache.Count == 0)
                 return;
