@@ -6,6 +6,8 @@ namespace Proto2Code
 {
     class Program
     {
+        static public bool EXPORT_ALL = true;
+
         static int Main()
         {
             string strMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
@@ -17,21 +19,24 @@ namespace Proto2Code
             CFileList.Instance.RootDirectory = Environment.CurrentDirectory;
             CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
-            Console.WriteLine("********** 检查数据表 **********");
-            string dataTableCheckExe = dirRoot.FullName + "/DesTable/DataTableCheck/DataTableCheck.exe";
-            FileInfo fileinfo = new FileInfo(dataTableCheckExe);
-            System.Diagnostics.ProcessStartInfo Info = new System.Diagnostics.ProcessStartInfo();
-            Info.FileName = dataTableCheckExe;
-            Info.UseShellExecute = false;
-            Info.WorkingDirectory = fileinfo.Directory.FullName;
-            Info.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            var proc = System.Diagnostics.Process.Start(Info);
-            proc.WaitForExit();
-            if (proc.ExitCode != 0)
+            if (EXPORT_ALL)
             {
-                Console.WriteLine("配置表异常，请运行\"Shared/SrcGen/DesTable/数据表检查.bat\"进行检查。");
-                Console.ReadLine();
-                return 1;
+                Console.WriteLine("********** 检查数据表 **********");
+                string dataTableCheckExe = dirRoot.FullName + "/DesTable/DataTableCheck/DataTableCheck.exe";
+                FileInfo fileinfo = new FileInfo(dataTableCheckExe);
+                System.Diagnostics.ProcessStartInfo Info = new System.Diagnostics.ProcessStartInfo();
+                Info.FileName = dataTableCheckExe;
+                Info.UseShellExecute = false;
+                Info.WorkingDirectory = fileinfo.Directory.FullName;
+                Info.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                var proc = System.Diagnostics.Process.Start(Info);
+                proc.WaitForExit();
+                if (proc.ExitCode != 0)
+                {
+                    Console.WriteLine("配置表异常，请运行\"Shared/SrcGen/DesTable/数据表检查.bat\"进行检查。");
+                    Console.ReadLine();
+                    return 1;
+                }
             }
 
             Console.WriteLine("********** 拷贝 *.proto 文件 **********");
@@ -49,7 +54,7 @@ namespace Proto2Code
             {
                 desDir1.Create();
             }
-            
+
             List<string> protoList = new List<string>(); // 所有的proto文件
             if (srcDir1.Exists)
             {
@@ -63,7 +68,7 @@ namespace Proto2Code
                 }
             }
 
-            if(srcDir2.Exists)
+            if (srcDir2.Exists)
             {
                 Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir2.FullName, desDir1.FullName));
                 foreach (var fileInfo in srcDir2.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
@@ -77,18 +82,18 @@ namespace Proto2Code
 
             DirectoryInfo desTableDir = new DirectoryInfo("./DesTable/DataTable");
             DirectoryInfo proTableDir = new DirectoryInfo("./ProTable");
-            foreach(var fileInfo in desTableDir.GetFiles("*.xlsx", SearchOption.AllDirectories))
+            foreach (var fileInfo in desTableDir.GetFiles("*.xlsx", SearchOption.AllDirectories))
             {
-                protoList.Add(fileInfo.Name.Replace("xlsx","proto").ToLower());
+                protoList.Add(fileInfo.Name.Replace("xlsx", "proto").ToLower());
             }
-            foreach(var fileInfo in proTableDir.GetFiles("*.xlsx", SearchOption.AllDirectories))
+            foreach (var fileInfo in proTableDir.GetFiles("*.xlsx", SearchOption.AllDirectories))
             {
                 protoList.Add(fileInfo.Name.Replace("xlsx", "proto").ToLower());
             }
 
             protoList.Add("globalenum.proto");
             protoList.Add("mailidenum.proto");
-            foreach (var fileInfo in desDir1.GetFiles("*.proto",SearchOption.TopDirectoryOnly))
+            foreach (var fileInfo in desDir1.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
             {
                 if (!protoList.Contains(fileInfo.Name.ToLower()))
                 {
@@ -149,47 +154,54 @@ namespace Proto2Code
             Environment.CurrentDirectory = desDir1.FullName;
             CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
-            Console.WriteLine("生成PB文件");
             argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=C++";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
-            argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=C#";
-            Console.WriteLine(argsStr);
-            Execute(argsStr.Split(' '),true);
+            if (EXPORT_ALL)
+            {
+                argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=C#";
+                Console.WriteLine(argsStr);
+                Execute(argsStr.Split(' '), true);
+            }
 
             argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=Lua";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
-            argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=Python";
-            Console.WriteLine(argsStr);
-            Execute(argsStr.Split(' '));
+            if (EXPORT_ALL)
+            {
+                argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=Python";
+                Console.WriteLine(argsStr);
+                Execute(argsStr.Split(' '));
+            }
 
             Environment.CurrentDirectory = dirRoot.FullName;
             CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
-            //生成bin文件
-            Console.WriteLine("********** 生成 *.bin 文件 **********");
-            Environment.CurrentDirectory = exeDir1.FullName;
-            CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
+            if (EXPORT_ALL)
+            {
+                Console.WriteLine("********** 生成 *.bin 文件 **********");
+                Environment.CurrentDirectory = exeDir1.FullName;
+                CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
-            argsStr = @"-GenType=Binary -DataPath=..\..\DesTable\DataTable\ -DescPath=..\..\DesTable\DescTable\ -PBSrcPath=..\..\TableOut\Temp\2_Protobuf\C#\ -OutputPath=..\..\TableOut\Temp\3_Protobin\";
-            Console.WriteLine(argsStr);
-            Execute(argsStr.Split(' '));
+                argsStr = @"-GenType=Binary -DataPath=..\..\DesTable\DataTable\ -DescPath=..\..\DesTable\DescTable\ -PBSrcPath=..\..\TableOut\Temp\2_Protobuf\C#\ -OutputPath=..\..\TableOut\Temp\3_Protobin\";
+                Console.WriteLine(argsStr);
+                Execute(argsStr.Split(' '));
 
-            Environment.CurrentDirectory = dirRoot.FullName;
-            CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
+                Environment.CurrentDirectory = dirRoot.FullName;
+                CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
-            Console.WriteLine("********** 生成 Msg 文件 **********");
-            argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_lua_cs";
-            Console.WriteLine(argsStr);
-            Execute(argsStr.Split(' '));
+                Console.WriteLine("********** 生成 Msg 文件 **********");
+                argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_lua_cs";
+                Console.WriteLine(argsStr);
+                Execute(argsStr.Split(' '));
 
-            Console.WriteLine("********** 生成 LuaCfg 文件 **********");
-            argsStr = @"-GenType=LuaConfig -DataPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Lua\Generate\Parser\";
-            Console.WriteLine(argsStr);
-            Execute(argsStr.Split(' '));
+                Console.WriteLine("********** 生成 LuaCfg 文件 **********");
+                argsStr = @"-GenType=LuaConfig -DataPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Lua\Generate\Parser\";
+                Console.WriteLine(argsStr);
+                Execute(argsStr.Split(' '));
+            }
 
             //保存文件信息
             CFileList.Instance.SaveFileList();
@@ -212,7 +224,7 @@ namespace Proto2Code
             Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/MSLib/";
             var proc1 = System.Diagnostics.Process.Start(ref1);
             proc1.WaitForExit();
-            
+
             string vsRefresh2 = dirRoot.FullName + "/TableOut/C++/PTLib/RefPTLibPrj.exe";
             System.Diagnostics.ProcessStartInfo ref2 = new System.Diagnostics.ProcessStartInfo();
             ref2.FileName = vsRefresh2;

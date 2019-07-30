@@ -10,33 +10,8 @@ namespace Proto2Code
         //拷贝到工程目录下
         public void Copy2TableOut()
         {
-            Console.WriteLine("拷贝文件之：C#");
-            string CLIENT_PB_CS_SRC = @".\TableOut\Temp\2_Protobuf\C#\";
-            string CLIENT_PB_CS_DES = @".\TableOut\C#\Generate\Protobuf\";
-            CopyDirectory(CLIENT_PB_CS_SRC, CLIENT_PB_CS_DES, "*.cs");
-
-            string CLIENT_PE_CS_SRC = @".\TableOut\Temp\1_Protoext\C#\";
-            string CLIENT__PE_CS_DES = @".\TableOut\C#\Generate\Protoext\";
-            CopyDirectory(CLIENT_PE_CS_SRC, CLIENT__PE_CS_DES, "*.cs");
-
-            Console.WriteLine("拷贝文件之：Lua");
-            string CLIENT_PB_LUA_SRC = @".\TableOut\Temp\2_Protobuf\Lua\";
-            string CLIENT_PB_LUA_DES = @".\TableOut\Lua\Generate\Protobuf\";
-            CopyDirectory(CLIENT_PB_LUA_SRC, CLIENT_PB_LUA_DES, "*.lua");
-
-            string CLIENT_PE_LUA_SRC = @".\TableOut\Temp\1_Protoext\Lua\";
-            string CLIENT_PE_LUA_DES = @".\TableOut\Lua\Generate\Protoext\";
-            CopyDirectory(CLIENT_PE_LUA_SRC, CLIENT_PE_LUA_DES, "*.lua");
-
-            string CLIENT_MSG_DEFINE_SRC = @".\TableOut\Temp\4_Protomsg\Lua\Message\";
-            string CLIENT_MSG_DEFINE_DES = @".\TableOut\Lua\Generate\Message\";
-            CopyDirectory(CLIENT_MSG_DEFINE_SRC, CLIENT_MSG_DEFINE_DES, "*.lua");
-
-            string CLIENT_MSG_SERVICES_SRC = @".\TableOut\Temp\4_Protomsg\Lua\Services\";
-            string CLIENT_MSG_SERVICES_DES = @".\TableOut\Lua\Generate\Services\";
-            CopyDirectory(CLIENT_MSG_SERVICES_SRC, CLIENT_MSG_SERVICES_DES, "*.lua");
-
             Console.WriteLine("拷贝文件之：C++");
+
             //拷贝到PTLib目录
             string SERVER_PTLIB_PROTO_SRC = @".\TableOut\Temp\1_Protoext\";
             string SERVER_PTLIB_PROTO_DES = @".\TableOut\C++\PTLib\inc\PTLib\protofile\";
@@ -78,25 +53,57 @@ namespace Proto2Code
             CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_H, "sendMsgToDB.h", false);
             CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_CC, "sendMsgToDB.cc", false);
 
-            Console.WriteLine("拷贝文件之：Python");
-            string CLIENT_PB_PY_SRC = @".\TableOut\Temp\2_Protobuf\Python\";
-            string CLIENT_PB_PY_DES = @".\TableOut\Python\gen\protobuf\";
-            CopyDirectory(CLIENT_PB_PY_SRC, CLIENT_PB_PY_DES, "*.py");
+            if (Program.EXPORT_ALL)
+            {
+                Console.WriteLine("拷贝文件之：C#");
+                string CLIENT_PB_CS_SRC = @".\TableOut\Temp\2_Protobuf\C#\";
+                string CLIENT_PB_CS_DES = @".\TableOut\C#\Generate\Protobuf\";
+                CopyDirectory(CLIENT_PB_CS_SRC, CLIENT_PB_CS_DES, "*.cs");
 
-            Console.WriteLine("拷贝文件之：Proto");
-            string PROTO_SRC = @".\TableOut\Temp\1_Protoext\";
-            string PROTO_DES = @".\TableOut\Proto\";
-            CopyDirectory(PROTO_SRC, PROTO_DES, "*.proto");
+                string CLIENT_PE_CS_SRC = @".\TableOut\Temp\1_Protoext\C#\";
+                string CLIENT__PE_CS_DES = @".\TableOut\C#\Generate\Protoext\";
+                CopyDirectory(CLIENT_PE_CS_SRC, CLIENT__PE_CS_DES, "*.cs");
+            }
 
-            Console.WriteLine("拷贝文件之：Protobin");
-            string PROTOBIN_SRC = @".\TableOut\Temp\3_Protobin\";
-            string PROTOBIN_DES = @".\TableOut\Protobin\";
-            CopyDirectory(PROTOBIN_SRC, PROTOBIN_DES, "*.txt");
+            Console.WriteLine("拷贝文件之：Lua");
+            string CLIENT_PB_LUA_SRC = @".\TableOut\Temp\2_Protobuf\Lua\";
+            string CLIENT_PB_LUA_DES = @".\TableOut\Lua\Generate\Protobuf\";
+            CopyDirectory(CLIENT_PB_LUA_SRC, CLIENT_PB_LUA_DES, "*.lua");
 
-            Console.WriteLine("拷贝文件之：Protobindbg");
-            string PROTOBINDBG_SRC = @".\TableOut\Temp\3_Protobin\";
-            string PROTOBINDBG_DES = @".\TableOut\Protobindbg\";
-            CopyDirectory(PROTOBINDBG_SRC, PROTOBINDBG_DES, "*.dbg");
+            string CLIENT_PE_LUA_SRC = @".\TableOut\Temp\1_Protoext\Lua\";
+            string CLIENT_PE_LUA_DES = @".\TableOut\Lua\Generate\Protoext\";
+            CopyDirectory(CLIENT_PE_LUA_SRC, CLIENT_PE_LUA_DES, "*.lua");
+
+            string CLIENT_MSG_DEFINE_SRC = @".\TableOut\Temp\4_Protomsg\Lua\Message\";
+            string CLIENT_MSG_DEFINE_DES = @".\TableOut\Lua\Generate\Message\";
+            CopyDirectory(CLIENT_MSG_DEFINE_SRC, CLIENT_MSG_DEFINE_DES, "*.lua");
+
+            string CLIENT_MSG_SERVICES_SRC = @".\TableOut\Temp\4_Protomsg\Lua\Services\";
+            string CLIENT_MSG_SERVICES_DES = @".\TableOut\Lua\Generate\Services\";
+            CopyDirectory(CLIENT_MSG_SERVICES_SRC, CLIENT_MSG_SERVICES_DES, "*.lua");
+
+            if (Program.EXPORT_ALL)
+            {
+                Console.WriteLine("拷贝文件之：Python");
+                string CLIENT_PB_PY_SRC = @".\TableOut\Temp\2_Protobuf\Python\";
+                string CLIENT_PB_PY_DES = @".\TableOut\Python\gen\protobuf\";
+                CopyDirectory(CLIENT_PB_PY_SRC, CLIENT_PB_PY_DES, "*.py");
+
+                Console.WriteLine("拷贝文件之：Proto");
+                string PROTO_SRC = @".\TableOut\Temp\1_Protoext\";
+                string PROTO_DES = @".\TableOut\Proto\";
+                CopyDirectory(PROTO_SRC, PROTO_DES, "*.proto");
+
+                Console.WriteLine("拷贝文件之：Protobin");
+                string PROTOBIN_SRC = @".\TableOut\Temp\3_Protobin\";
+                string PROTOBIN_DES = @".\TableOut\Protobin\";
+                CopyDirectory(PROTOBIN_SRC, PROTOBIN_DES, "*.txt");
+
+                Console.WriteLine("拷贝文件之：Protobindbg");
+                string PROTOBINDBG_SRC = @".\TableOut\Temp\3_Protobin\";
+                string PROTOBINDBG_DES = @".\TableOut\Protobindbg\";
+                CopyDirectory(PROTOBINDBG_SRC, PROTOBINDBG_DES, "*.dbg");
+            }
         }
 
         public int CopyDirectory(string strSrc, string strDes, string searchOption,bool delOtherFiles = true,List<string> fileterFiles  = null)
