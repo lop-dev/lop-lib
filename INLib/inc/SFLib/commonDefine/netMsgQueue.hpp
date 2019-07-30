@@ -71,6 +71,11 @@ public:
         m_queueChar->pop();
     }
 
+    void empty()
+    {
+        BCLib::Utility::CMutexFun fun(&m_mutex);
+        m_queueChar->empty();
+    }
 
     //************************************
     // Method:    doParse

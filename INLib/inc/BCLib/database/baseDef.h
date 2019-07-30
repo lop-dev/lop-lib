@@ -18,4 +18,19 @@
 #    define BCLIB_DATABASE_API
 #endif
 
+namespace BCLib
+{
+    namespace Database
+    {
+        enum EDBActID
+        {
+            EDB_ACTID_UNKNOW,
+            EDB_ACTID_INSERT,
+            EDB_ACTID_SELECT,
+            EDB_ACTID_UPDATE,
+            EDB_ACTID_DELETE,
+        };
+    }
+}
+
 #endif//__BCLIB_DATABASE_BASEDEF_H__
