@@ -686,53 +686,9 @@ namespace UDLib.Editor
                 Directory.CreateDirectory(assetBundleDirectory);
             }
 
-            
-            string[] files = Directory.GetFiles("Assets", "*", SearchOption.AllDirectories);
-            Dictionary<string, AssetBundleBuild> defaultBuildDic = new Dictionary<string, AssetBundleBuild>();
-            int index = 0;
-            foreach (var f in files)
-            {
-                EditorUtility.DisplayProgressBar("资源分类", index + "/" + files.Length, index++ / (float)files.Length);
-                string file = f.ToLower();
-                if (file.Contains(".") == true && file.Contains("/streamingassets/") == false &&
-                    file.Contains("/editor/") == false /*&& path.StartsWith("assets/app/art") == false */&&
-                    file.IndexOf("_asset_bundle_.txt") == -1)
-                {
-                    AssetImporter importer = AssetImporter.GetAtPath(f);
-                    if (importer != null && !string.IsNullOrEmpty(importer.assetBundleName))
-                    {
-                        List<string> assetNames = new List<string>();
-                        if (defaultBuildDic.ContainsKey(importer.assetBundleName))
-                        {
-                            assetNames.AddRange(defaultBuildDic[importer.assetBundleName].assetNames);
-                            assetNames.Add(importer.assetPath);
-                            AssetBundleBuild tempBuild = defaultBuildDic[importer.assetBundleName];
-                            tempBuild.assetNames = assetNames.ToArray();
-                            defaultBuildDic[importer.assetBundleName] = tempBuild;
-                        }
-                        else
-                        {
-                            AssetBundleBuild build = new AssetBundleBuild();
-                            build.assetBundleName = importer.assetBundleName;
-                            build.assetBundleVariant = importer.assetBundleVariant;
-                            string[] asset = new string[1];
-                            asset[0] = importer.assetPath;
-                            build.assetNames = asset;
-                            defaultBuildDic.Add(build.assetBundleName, build);
-                        }
-                    }
-                }
-            }
-            List<AssetBundleBuild> defaultBuildList = new List<AssetBundleBuild>();
-            foreach (var v in defaultBuildDic)
-            {
-                defaultBuildList.Add(v.Value);
-            }
-            EditorUtility.ClearProgressBar();
+            BuildPipeline.BuildAssetBundles(assetBundleDirectory, BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.IgnoreTypeTreeChanges,EditorUserBuildSettings.activeBuildTarget);
 
-            BuildPipeline.BuildAssetBundles(assetBundleDirectory, defaultBuildList.ToArray(), BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.IgnoreTypeTreeChanges,EditorUserBuildSettings.activeBuildTarget);
-
-            //拷贝视频到AB资源目录
+            // 视频特殊处理，不打AB，直接拷贝到AB资源目录，但是需要写入清单以供热更新，加载也不走AB， 直接去读P目录视频资源
             string videoRoot = "Assets/App/Pro/GameRes/Video/";
             UDLib.Utility.CDebugOut.Log(string.Format("拷贝视频文件：从{0}到{1}", videoRoot, assetBundleDirectory));
             CopyVideoToDir(videoRoot, assetBundleDirectory);
@@ -815,38 +771,6 @@ namespace UDLib.Editor
             {
                 File.Copy(videoInfo.FullName, Path.Combine(videoRoot,videoInfo.Name), true);
             }
-        }
-
-        //生成ab压缩文件
-        private static void CreateZipAbFiles(string assetBundleDirectory, string platformName)
-        {
-            //DateTime startTime = System.DateTime.Now;
-            //CLog.LogWithTime("开始 压缩AB文件");
-
-            //string manifestPath = assetBundleDirectory + "/" + platformName;
-
-            //AssetBundle manifestBundle1 = AssetBundle.LoadFromFile(manifestPath);
-            //AssetBundleManifest manifest = (AssetBundleManifest)manifestBundle1.LoadAsset("AssetBundleManifest");
-            //string[] assetBundles = manifest.GetAllAssetBundles();
-
-            //foreach (var assetBundle in assetBundles)
-            //{
-            //    string abPath = assetBundleDirectory + "/" + assetBundle;
-            //    byte[] bytes = File.ReadAllBytes(abPath);
-            //    byte[] compressedBytes = Ionic.Zlib.GZipStream.CompressBuffer(bytes);
-            //    File.Delete(abPath);
-            //    File.WriteAllBytes(abPath, compressedBytes);
-            //}
-            //manifestBundle1.Unload(true);
-
-            ////manifest也压缩
-            //byte[] mBytes = File.ReadAllBytes(assetBundleDirectory + "/" + platformName);
-            //byte[] compressedmBytes = Ionic.Zlib.GZipStream.CompressBuffer(mBytes);
-            //File.WriteAllBytes(manifestPath, compressedmBytes);
-
-            //DateTime endTime = System.DateTime.Now;
-            //CLog.LogWithTime("结束 压缩AB文件");
-            //CDebugOut.Log(SysLogType.Other, "耗时：" + (endTime - startTime).TotalSeconds + "秒");
         }
 
         public static void CreateAssetsbundleDiff(string outPath)
