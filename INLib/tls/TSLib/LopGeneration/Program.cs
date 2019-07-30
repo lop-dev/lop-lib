@@ -17,7 +17,7 @@ namespace Proto2Code
             CFileList.Instance.RootDirectory = Environment.CurrentDirectory;
             CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
-            Console.WriteLine("检查数据表");
+            Console.WriteLine("********** 检查数据表 **********");
             string dataTableCheckExe = dirRoot.FullName + "/DesTable/DataTableCheck/DataTableCheck.exe";
             FileInfo fileinfo = new FileInfo(dataTableCheckExe);
             System.Diagnostics.ProcessStartInfo Info = new System.Diagnostics.ProcessStartInfo();
@@ -34,8 +34,7 @@ namespace Proto2Code
                 return 1;
             }
 
-            //拷贝proto文件
-            Console.WriteLine("拷贝Proto文件");
+            Console.WriteLine("********** 拷贝 *.proto 文件 **********");
             string exe1 = @".\TableGen\01_LopGeneration\";
             string src1 = @".\TableGen\10_ProtobufDef\";
             string src2 = @".\TableGen\11_ProtobufClt\";
@@ -51,7 +50,7 @@ namespace Proto2Code
                 desDir1.Create();
             }
             
-            List<string> protoList = new List<string>();        //所有的proto文件
+            List<string> protoList = new List<string>(); // 所有的proto文件
             if (srcDir1.Exists)
             {
                 Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir1.FullName, desDir1.FullName));
@@ -99,8 +98,7 @@ namespace Proto2Code
 
             CFileList.Instance.ReadFileList();
 
-            //生成Proto，PE文件
-            Console.WriteLine("生成Proto，PE文件");
+            Console.WriteLine("********** 生成 *.proto 和 *.pe 文件 **********");
             string csPeDir = @".\TableOut\Temp\1_Protoext\C#";
             string ccPeDir = @".\TableOut\Temp\1_Protoext\C++";
             string goPeDir = @".\TableOut\Temp\1_Protoext\GO";
@@ -147,7 +145,7 @@ namespace Proto2Code
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
-            //生成PB文件
+            Console.WriteLine("********** 生成 *.pb 文件 **********");
             Environment.CurrentDirectory = desDir1.FullName;
             CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
@@ -172,10 +170,10 @@ namespace Proto2Code
             CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
             //生成bin文件
+            Console.WriteLine("********** 生成 *.bin 文件 **********");
             Environment.CurrentDirectory = exeDir1.FullName;
             CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
-            Console.WriteLine("生成bin文件");
             argsStr = @"-GenType=Binary -DataPath=..\..\DesTable\DataTable\ -DescPath=..\..\DesTable\DescTable\ -PBSrcPath=..\..\TableOut\Temp\2_Protobuf\C#\ -OutputPath=..\..\TableOut\Temp\3_Protobin\";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
@@ -183,14 +181,12 @@ namespace Proto2Code
             Environment.CurrentDirectory = dirRoot.FullName;
             CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
-            //生成Msg文件
-            Console.WriteLine("生成Msg文件");
+            Console.WriteLine("********** 生成 Msg 文件 **********");
             argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_lua_cs";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
-            //生成LuaCfg文件
-            Console.WriteLine("生成LuaCfg文件");
+            Console.WriteLine("********** 生成 LuaCfg 文件 **********");
             argsStr = @"-GenType=LuaConfig -DataPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Lua\Generate\Parser\";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
