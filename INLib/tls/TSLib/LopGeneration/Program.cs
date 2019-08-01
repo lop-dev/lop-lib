@@ -188,20 +188,20 @@ namespace Proto2Code
                 argsStr = @"-GenType=Binary -DataPath=..\..\DesTable\DataTable\ -DescPath=..\..\DesTable\DescTable\ -PBSrcPath=..\..\TableOut\Temp\2_Protobuf\C#\ -OutputPath=..\..\TableOut\Temp\3_Protobin\";
                 Console.WriteLine(argsStr);
                 Execute(argsStr.Split(' '));
-
-                Environment.CurrentDirectory = dirRoot.FullName;
-                CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
-
-                Console.WriteLine("********** 生成 Msg 文件 **********");
-                argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_lua_cs";
-                Console.WriteLine(argsStr);
-                Execute(argsStr.Split(' '));
-
-                Console.WriteLine("********** 生成 LuaCfg 文件 **********");
-                argsStr = @"-GenType=LuaConfig -DataPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Lua\Generate\Parser\";
-                Console.WriteLine(argsStr);
-                Execute(argsStr.Split(' '));
             }
+
+            Environment.CurrentDirectory = dirRoot.FullName;
+            CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
+
+            Console.WriteLine("********** 生成 Msg 文件 **********");
+            argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_lua_cs";
+            Console.WriteLine(argsStr);
+            Execute(argsStr.Split(' '));
+
+            Console.WriteLine("********** 生成 LuaCfg 文件 **********");
+            argsStr = @"-GenType=LuaConfig -DataPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Lua\Generate\Parser\";
+            Console.WriteLine(argsStr);
+            Execute(argsStr.Split(' '));
 
             //保存文件信息
             CFileList.Instance.SaveFileList();
