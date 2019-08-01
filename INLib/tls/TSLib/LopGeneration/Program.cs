@@ -176,11 +176,11 @@ namespace Proto2Code
                 Execute(argsStr.Split(' '));
             }
 
-            Environment.CurrentDirectory = dirRoot.FullName;
-            CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
-
             if (EXPORT_ALL)
             {
+                Environment.CurrentDirectory = dirRoot.FullName;
+                CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
+
                 Console.WriteLine("********** 生成 *.bin 文件 **********");
                 Environment.CurrentDirectory = exeDir1.FullName;
                 CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
@@ -198,10 +198,13 @@ namespace Proto2Code
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
-            Console.WriteLine("********** 生成 LuaCfg 文件 **********");
-            argsStr = @"-GenType=LuaConfig -DataPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Lua\Generate\Parser\";
-            Console.WriteLine(argsStr);
-            Execute(argsStr.Split(' '));
+            if (EXPORT_ALL)
+            {
+                Console.WriteLine("********** 生成 LuaCfg 文件 **********");
+                argsStr = @"-GenType=LuaConfig -DataPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Lua\Generate\Parser\";
+                Console.WriteLine(argsStr);
+                Execute(argsStr.Split(' '));
+            }
 
             //保存文件信息
             CFileList.Instance.SaveFileList();
