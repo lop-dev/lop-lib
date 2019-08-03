@@ -1,15 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "..\..\..\src\UDLib\Utility\Utility.csproj", "{96898657-206A-4A0C-9E73-048DE639BC94}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Network", "..\..\..\src\UDLib\Network\Network.csproj", "{3BFEBE13-9385-48F4-88DB-44F29C430065}"
+	ProjectSection(ProjectDependencies) = postProject
+		{96898657-206A-4A0C-9E73-048DE639BC94} = {96898657-206A-4A0C-9E73-048DE639BC94}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resource", "..\..\..\src\UDLib\Resource\Resource.csproj", "{3BDF86B2-3172-4988-809D-D9044B35738D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{96898657-206A-4A0C-9E73-048DE639BC94} = {96898657-206A-4A0C-9E73-048DE639BC94}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "..\..\..\tls\UDLib\Editor\Editor.csproj", "{11C97173-B63F-47E8-8796-E4E4A75EFFF8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{96898657-206A-4A0C-9E73-048DE639BC94} = {96898657-206A-4A0C-9E73-048DE639BC94}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
