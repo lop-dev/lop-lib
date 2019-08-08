@@ -144,6 +144,7 @@
     <Compile Include="GUIWrap\CGUIEditorTools.cs" />
     <Compile Include="Optimized\CUGUIOptimized.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\ToolUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -162,7 +163,19 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>echo "dll代码混淆并拷贝到游戏目录开始"
+set dotPath="C:\Program Files (x86)\PreEmptive Solutions\Dotfuscator Professional Edition 4.9\dotfuscator.exe"
+set dotConfigPath="D:\Project\lop-lib\trunk\INLib\lib\UDLib\win-x86-32\release\UDLib.xml"
+set dllSrcPath="D:\Project\lop-lib\trunk\INLib\lib\UDLib\win-x86-32\release\\Dotfuscated"
+set dllDstPath="D:\Project\SHJH_TrunchNew\Client\Dev\Assets\Plugins\Shared\Lop\lib\UDLib\win-x86-32\release\"
+
+if $(ConfigurationName)==Release %25dotPath%25 /q %25dotConfigPath%25
+
+copy %25dllSrcPath%25\u3dNetwork.dll %25dllDstPath%25
+copy %25dllSrcPath%25\u3dResource.dll %25dllDstPath%25
+copy %25dllSrcPath%25\u3dUtility.dll %25dllDstPath%25
+copy %25dllSrcPath%25\u3dEditor.dll %25dllDstPath%25\Editor
+echo "dll代码混淆并拷贝到游戏目录结束"
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

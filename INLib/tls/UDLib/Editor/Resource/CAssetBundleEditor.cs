@@ -558,7 +558,7 @@ namespace UDLib.Editor
                                         ab_name = ab_name.Replace(" ", "");
 
                                         // set file attribute
-                                        RemoveMetaReadOnly(path + ".meta");
+                                        ToolUtils.RemoveMetaReadOnly(path + ".meta");
                                         if (importer.assetBundleName != ab_name || importer.assetBundleVariant.Length > 0)
                                         {
                                             importer.assetBundleName = ab_name;
@@ -579,23 +579,12 @@ namespace UDLib.Editor
                 if (importer.assetBundleName.Length > 0)
                 {
                     // 该资源无需ab名字了
-                    RemoveMetaReadOnly(path + ".meta");
+                    ToolUtils.RemoveMetaReadOnly(path + ".meta");
                     importer.assetBundleName = string.Empty;
                 }
             }
 
             return null;
-        }
-
-        // 移除meta文件的只读属性
-        private static void RemoveMetaReadOnly(string metaPath)
-        {
-            var attr = File.GetAttributes(metaPath);
-            if ((attr & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-            {
-                UDLib.Utility.CDebugOut.Log("+++++++++++++remove readOnly+++++++++++++++" + metaPath);
-                File.SetAttributes(metaPath, FileAttributes.Normal);
-            }
         }
 
         static string GetModuleName(string folder, string _path, string subStr)
