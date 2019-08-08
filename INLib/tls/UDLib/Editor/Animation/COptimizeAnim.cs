@@ -10,15 +10,11 @@ namespace UDLib.Editor
     {
         private const float AnimationPositionError = 0.2f;
         private const float AnimationRotationError = 0.1f;
-        private const ModelImporterAnimationCompression Compression =
-            ModelImporterAnimationCompression.Optimal;
+        private const ModelImporterAnimationCompression Compression = ModelImporterAnimationCompression.Optimal;
         private const int DecimalAccuracy = 10000;
-
-
         private static string _fbxPath;
 
-
-        [MenuItem("Assets/Optimize/Optimize FBX", false, 1000)]
+        [MenuItem("Assets/Optimize/优化选中动画", false, 1000)]
         private static void OptimizeFbx()
         {
             EditorSettings.serializationMode = SerializationMode.ForceText;
@@ -27,7 +23,7 @@ namespace UDLib.Editor
             var index = 0;
             foreach (var obj in objs)
             {
-                var isCancel = EditorUtility.DisplayCancelableProgressBar("优化FBX文件",
+                var isCancel = EditorUtility.DisplayCancelableProgressBar("优化动画文件",
                   string.Format("正在优化中...{0}/{1}", ++index, count), (float)index / count);
                 if (isCancel)
                 {
@@ -37,6 +33,30 @@ namespace UDLib.Editor
                 }
                 OptimizeObject(obj);
             }
+            AssetDatabase.Refresh();
+            EditorUtility.ClearProgressBar();
+        }
+
+        [MenuItem("Assets/Optimize/优化所有动画", false, 1000)]
+        private static void OptimiseAllAnimation()
+        {
+            List<string> brokenAnimations = new List<string>();
+            string checkPath = "Assets/App/Art/Character/Hero/Animation";
+            var files = Directory.GetFiles(checkPath, "*.anim", SearchOption.AllDirectories);
+            var count = files.Length;
+            var index = 0;
+            foreach (string file in files)
+            {
+                index++;
+                if (file.EndsWith(".meta"))
+                    continue;
+
+                string filepath = file.Replace("\\", "/");
+                var isCancel = EditorUtility.DisplayCancelableProgressBar("优化动画文件",
+                    string.Format("正在优化中...{0}/{1}", ++index, count), (float)index / count);
+                OptimizeAnimationClip(filepath);
+            }
+
             AssetDatabase.Refresh();
             EditorUtility.ClearProgressBar();
         }
@@ -72,31 +92,6 @@ namespace UDLib.Editor
             EditorUtility.ClearProgressBar();
         }
 
-        [MenuItem("Assets/Optimize/压缩所有动画", false, 1000)]
-        private static void OptimiseAllAnimation()
-        {
-            List<string> brokenAnimations = new List<string>();
-            string checkPath = "Assets/App/Art/Character/Hero/Animation";
-            var files = Directory.GetFiles(checkPath, "*.anim", SearchOption.AllDirectories);
-            var count = files.Length;
-            var index = 0;
-            foreach (string file in files)
-            {
-                index++;
-                if (file.EndsWith(".meta"))
-                    continue;
-
-                string filepath = file.Replace("\\", "/");
-                var isCancel = EditorUtility.DisplayCancelableProgressBar("检查动画文件关键帧",
-                    string.Format("正在检查动画文件关键帧...{0}/{1}", ++index, count), (float)index / count);
-                OptimizeAnimationClip(filepath);
-            }
-
-            AssetDatabase.Refresh();
-            EditorUtility.ClearProgressBar();
-        }
-
-
         [MenuItem("Assets/Optimize/检查所有动画的关键帧", false, 1000)]
         private static void CheckAllAnimtion()
         {
@@ -121,7 +116,6 @@ namespace UDLib.Editor
             AssetDatabase.Refresh();
             EditorUtility.ClearProgressBar();
         }
-
 
         public static void OptimizeObject(Object obj)
         {
@@ -194,7 +188,6 @@ namespace UDLib.Editor
             }
 
             AnimationClipCurveData[] curveDatas = AnimationUtility.GetAllCurves(clip, true);
-
             if (curveDatas == null || curveDatas.Length == 0)
             {
                 Debug.LogError("No AnimationClipCurveData error!" + "  " + _fbxPath + "  " +
@@ -211,7 +204,7 @@ namespace UDLib.Editor
                 {
                     if (i != 0 && keys[i].time - _curentTime < 0.016)
                     {
-                        string brokenReason = string.Format("动画可能有问题， 名称 ：{0}， 骨骼:{1}, 参数:{2}", fileName, dt.path, dt.propertyName);
+                        string brokenReason = string.Format("动画可能有问题 > 名称 ：{0}，参数:{1}， 骨骼:{2}", fileName, dt.propertyName, dt.path);
                         Debug.LogError(brokenReason);
                         brokenAnimations.Add(brokenReason);
                         return;
@@ -237,7 +230,6 @@ namespace UDLib.Editor
             }
 
             Debug.Log("优化:" + clip.name);
-
             AnimationClipCurveData[] curveDatas = AnimationUtility.GetAllCurves(clip, true);
 
             if (curveDatas == null || curveDatas.Length == 0)
@@ -295,7 +287,6 @@ namespace UDLib.Editor
             return newClip;
         }
 
-
         /// <summary>
         /// 过滤值一样的序列帧
         /// </summary>
@@ -314,7 +305,6 @@ namespace UDLib.Editor
             }
             return true;
         }
-
 
         /// <summary>
         /// 动画默认不导出Scale序列帧，除非该节点包含scale关键词(加scale关键词表示该节点需要进行scale变换)
