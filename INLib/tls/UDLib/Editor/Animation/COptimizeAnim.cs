@@ -154,13 +154,8 @@ public class COptimizeAnim
     public static void OptimizeAnimationClip(string animpath)
     {
         _fbxPath = animpath;
-        var objs = AssetDatabase.LoadAllAssetsAtPath(animpath);
-        var folderPath = string.Empty;
-        foreach (var o in objs)
-        {
-            if (o is AnimationClip)
-                OptimizeAnimationCurveData(o as AnimationClip, true);
-        }
+        AnimationClip anim = AssetDatabase.LoadAssetAtPath<AnimationClip>(animpath);
+        OptimizeAnimationCurveData(anim, true);
     }
 
     public static void CheckAnimationCurveData(string fileName, AnimationClip clip, ref List<string> brokenAnimations)
@@ -226,9 +221,6 @@ public class COptimizeAnim
         }
 
         AnimationClip newClip = new AnimationClip();
-        //var a = newClip.GetType();
-        //var b = clip.GetType();
-
         EditorUtility.CopySerialized(clip, newClip);
 
         newClip.name = clip.name;
