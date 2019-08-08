@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-
+using System.Collections.Generic;
 
 public class COptimizeAnim
 {
@@ -35,6 +35,63 @@ public class COptimizeAnim
             }
             OptimizeObject(obj);
         }
+        AssetDatabase.Refresh();
+        EditorUtility.ClearProgressBar();
+    }
+
+    [MenuItem("Assets/Optimize/检查选中动画的关键帧", false, 1000)]
+    private static void CheckSelectedAnim()
+    {
+        List<string> brokenAnimations = new List<string>();
+        EditorSettings.serializationMode = SerializationMode.ForceText;
+        var objs = Selection.GetFiltered(typeof(AnimationClip), SelectionMode.DeepAssets);
+        var count = objs.Length;
+        var index = 0;
+        foreach (var obj in objs)
+        {
+            var isCancel = EditorUtility.DisplayCancelableProgressBar("检查动画文件关键帧",
+              string.Format("正在检查动画文件关键帧...{0}/{1}", ++index, count), (float)index / count);
+            if (isCancel)
+            {
+                AssetDatabase.Refresh();
+                EditorUtility.ClearProgressBar();
+                return;
+            }
+            var path = AssetDatabase.GetAssetPath(obj);
+            if (path != null && Path.GetExtension(path).ToLower() == ".anim")
+            {
+                _fbxPath = path;
+                var anim = AssetDatabase.LoadAssetAtPath<AnimationClip>(path);
+                CheckAnimationCurveData(Path.GetFileNameWithoutExtension(path), anim as AnimationClip, ref brokenAnimations);
+            }
+        }
+
+        AssetDatabase.Refresh();
+        EditorUtility.ClearProgressBar();
+    }
+
+
+    [MenuItem("Assets/Optimize/检查所有动画的关键帧", false, 1000)]
+    private static void CheckAnim()
+    {
+        List<string> brokenAnimations = new List<string>();
+        string checkPath = "Assets/App/Art/Character/Hero/Animation";
+        var files = Directory.GetFiles(checkPath, "*.anim", SearchOption.AllDirectories);
+        var count = files.Length;
+        var index = 0;
+        foreach (string file in files)
+        {
+            index++;
+            if (file.EndsWith(".meta"))
+                continue;
+
+            string filepath = file.Replace("\\", "/");
+            var isCancel = EditorUtility.DisplayCancelableProgressBar("检查动画文件关键帧",
+                string.Format("正在检查动画文件关键帧...{0}/{1}", ++index, count), (float)index / count);
+            var anim = AssetDatabase.LoadAssetAtPath<AnimationClip>(filepath);
+            CheckAnimationCurveData(Path.GetFileNameWithoutExtension(filepath), anim as AnimationClip, ref brokenAnimations);
+        }
+
         AssetDatabase.Refresh();
         EditorUtility.ClearProgressBar();
     }
@@ -106,6 +163,42 @@ public class COptimizeAnim
         }
     }
 
+    public static void CheckAnimationCurveData(string fileName, AnimationClip clip, ref List<string> brokenAnimations)
+    {
+        if (clip == null)
+        {
+            Debug.LogError("No Clip error！" + "  " + _fbxPath);
+            return;
+        }
+
+        AnimationClipCurveData[] curveDatas = AnimationUtility.GetAllCurves(clip, true);
+
+        if (curveDatas == null || curveDatas.Length == 0)
+        {
+            Debug.LogError("No AnimationClipCurveData error!" + "  " + _fbxPath + "  " +
+                   clip.name);
+            return;
+        }
+
+        float _curentTime = 0;
+        for (int ci = 0; ci < curveDatas.Length; ci++)
+        {
+            var dt = curveDatas[ci];
+            var keys = dt.curve.keys;
+            for (var i = 0; i < keys.Length; i++)
+            {
+                if (i != 0 && keys[i].time - _curentTime < 0.016)
+                {
+                    string brokenReason = string.Format("动画可能有问题， 名称 ：{0}， 骨骼:{1}, 参数:{2}", fileName, dt.path, dt.propertyName);
+                    Debug.LogError(brokenReason);
+                    brokenAnimations.Add(brokenReason);
+                    return;
+                }
+                _curentTime = keys[i].time;
+            }
+        }
+    }
+
     /// <summary>
     /// 优化动画片段，删除不需要的序列帧，并降低帧信息的精度
     /// </summary>
@@ -133,15 +226,15 @@ public class COptimizeAnim
         }
 
         AnimationClip newClip = new AnimationClip();
-        var a = newClip.GetType();
-        var b = clip.GetType();
+        //var a = newClip.GetType();
+        //var b = clip.GetType();
 
         EditorUtility.CopySerialized(clip, newClip);
 
         newClip.name = clip.name;
         newClip.ClearCurves();
 
-        for(int ci = 0;ci < curveDatas.Length;ci++)
+        for (int ci = 0; ci < curveDatas.Length; ci++)
         {
             var dt = curveDatas[ci];
             var nodeName = dt.path.ToLower().Split('/').Last();
@@ -211,16 +304,15 @@ public class COptimizeAnim
     {
         bool isScale = dt.propertyName.ToLower().Contains("scale");
         var keys = dt.curve.keys;
-        if (keys.Length == 2 && Mathf.Approximately(keys[0].value, 1.0f) && Mathf.Approximately(keys[1].value, 1.0f))
-        {
-           // Debug.Log("ignore:"+ keys[0].value+","+ keys[1].value);
-            return true;
-        }
+        // 只有2个Key,且值都是1的也不过滤，之前启用有比较多的情况会动画异常
+        //if (keys.Length == 2 && Mathf.Approximately(keys[0].value, 1.0f) && Mathf.Approximately(keys[1].value, 1.0f))
+        //{
+        //    // Debug.Log("ignore:"+ keys[0].value+","+ keys[1].value);
+        //    return true;
+        //}
 
-       // if (dt.propertyName.ToLower().Contains("scale") && !nodeName.ToLower().Contains("scale"))
-       //     return true;
+        // if (dt.propertyName.ToLower().Contains("scale") && !nodeName.ToLower().Contains("scale"))
+        //     return true;
         return false;
     }
 }
-
-
