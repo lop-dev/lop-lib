@@ -8,12 +8,16 @@ namespace UDLib.Utility
 
     public abstract class CMonoSingleton<T> : MonoBehaviour where T : CMonoSingleton<T>
     {
-	    private static T m_Instance = null;
+        private static bool applicationIsQuitting = false;
+        private static T m_Instance = null;
         
 	    public static T Instance
         {
             get
             {
+                if (applicationIsQuitting)
+                    return null;
+
 			    if( m_Instance == null )
                 {
             	    m_Instance = GameObject.FindObjectOfType(typeof(T)) as T;
@@ -39,6 +43,7 @@ namespace UDLib.Utility
         protected void OnDestory()
         {
             m_Instance = null;
+            applicationIsQuitting = true;
         }
 
         public virtual void Init()
@@ -50,5 +55,4 @@ namespace UDLib.Utility
             m_Instance = null;
         }
     }
-
 }
