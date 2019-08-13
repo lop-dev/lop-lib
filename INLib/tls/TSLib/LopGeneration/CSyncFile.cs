@@ -13,21 +13,25 @@ namespace Proto2Code
             Console.WriteLine("拷贝文件之：C++");
 
             //拷贝到PTLib目录
-            string SERVER_PTLIB_PROTO_SRC = @".\TableOut\Temp\1_Protoext\";
-            string SERVER_PTLIB_PROTO_DES = @".\TableOut\C++\PTLib\inc\PTLib\protofile\";
-            CopyDirectory(SERVER_PTLIB_PROTO_SRC, SERVER_PTLIB_PROTO_DES, "*.proto");
+            string SERVER_PTLIB_PROTOFILE_SRC = @".\TableOut\Temp\1_Protoext\";
+            string SERVER_PTLIB_PROTOFILE_DES = @".\TableOut\C++\PTLib\inc\PTLib\protofile\";
+            CopyDirectory(SERVER_PTLIB_PROTOFILE_SRC, SERVER_PTLIB_PROTOFILE_DES, "*.proto");
 
-            string SERVER_PTLIB_PE_TABLE_SRC = @".\TableOut\Temp\1_Protoext\C++\";
-            string SERVER_PTLIB_PE_TABLE_DES_H = @".\TableOut\C++\PTLib\inc\PTLib\protoext\";
-            string SERVER_PTLIB_PE_TABLE_DES_CC = @".\TableOut\C++\PTLib\src\PTLib\protoext\";
-            CopyDirectory(SERVER_PTLIB_PE_TABLE_SRC, SERVER_PTLIB_PE_TABLE_DES_H, "*.pe.h");
-            CopyDirectory(SERVER_PTLIB_PE_TABLE_SRC, SERVER_PTLIB_PE_TABLE_DES_CC, "*.pe.cc");
+            string SERVER_PTLIB_PROTOBUF_SRC = @".\TableOut\Temp\2_Protobuf\C++\";
+            string SERVER_PTLIB_PROTOBUF_DES_H = @".\TableOut\C++\PTLib\inc\PTLib\protobuf\";
+            string SERVER_PTLIB_PROTOBUF_DES_CC = @".\TableOut\C++\PTLib\src\PTLib\protobuf\";
+            CopyDirectory(SERVER_PTLIB_PROTOBUF_SRC, SERVER_PTLIB_PROTOBUF_DES_H, "*.pb.h");
+            CopyDirectory(SERVER_PTLIB_PROTOBUF_SRC, SERVER_PTLIB_PROTOBUF_DES_CC, "*.pb.cc");
 
-            string SERVER_PTLIB_PB_TABLE_SRC = @".\TableOut\Temp\2_Protobuf\C++\";
-            string SERVER_PTLIB_PB_TABLE_DES_H = @".\TableOut\C++\PTLib\inc\PTLib\protobuf\";
-            string SERVER_PTLIB_PB_TABLE_DES_CC = @".\TableOut\C++\PTLib\src\PTLib\protobuf\";
-            CopyDirectory(SERVER_PTLIB_PB_TABLE_SRC, SERVER_PTLIB_PB_TABLE_DES_H, "*.pb.h");
-            CopyDirectory(SERVER_PTLIB_PB_TABLE_SRC, SERVER_PTLIB_PB_TABLE_DES_CC, "*.pb.cc");
+            string SERVER_PTLIB_PROTOEXT_SRC = @".\TableOut\Temp\1_Protoext\C++\";
+            string SERVER_PTLIB_PROTOEXT_DES_H = @".\TableOut\C++\PTLib\inc\PTLib\protoext\";
+            string SERVER_PTLIB_PROTOEXT_DES_CC = @".\TableOut\C++\PTLib\src\PTLib\protoext\";
+            CopyDirectory(SERVER_PTLIB_PROTOEXT_SRC, SERVER_PTLIB_PROTOEXT_DES_H, "*.pe.h");
+            CopyDirectory(SERVER_PTLIB_PROTOEXT_SRC, SERVER_PTLIB_PROTOEXT_DES_CC, "*.pe.cc");
+
+            string SERVER_PTLIB_PROTOLUA_SRC = @".\TableOut\Temp\2_Protobuf\C++\";
+            string SERVER_PTLIB_PROTOLUA_DES = @".\TableOut\C++\PTLib\lua\";
+            CopyDirectory(SERVER_PTLIB_PROTOLUA_SRC, SERVER_PTLIB_PROTOLUA_DES, "*.pe.lid");
 
             //拷贝到MSLib目录
             List<string> fileter = new List<string>();

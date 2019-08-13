@@ -132,10 +132,12 @@ namespace Proto2Code
             else if (m_strGenType == "Binary")
             {
                 return _Gen4Binary();
-            }else if(m_strGenType == "Msg")
+            }
+            else if(m_strGenType == "Msg")
             {
                 return _Gen4Msg();
-            }else if(m_strGenType == "LuaConfig")
+            }
+            else if(m_strGenType == "LuaConfig")
             {
                 return _Gen4LuaConfig();
             }
