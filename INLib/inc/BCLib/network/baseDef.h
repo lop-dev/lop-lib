@@ -11,7 +11,7 @@
 #include <BCLib/utility/baseDef.h>
 
 
-#define BCLIB_NETWORK_DEBUG     //! 开关网络调试的宏
+//#define BCLIB_NETWORK_DEBUG     //! 开关网络调试的宏
 //#define BCLIB_USE_MEMPOLL       //! 开关内存池的宏
 //#define BCLIB_USE_MEMMALLOC     //! 开关内存分配的宏
 

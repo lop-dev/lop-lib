@@ -64,8 +64,8 @@ private:
     CPeerEnterScene* m_peerEnterServer;
     CPeerLeaveScene* m_peerLeaveServer;
 
-    std::map<EServerType, ServerID> m_serverTypeMap;
-    BCLib::Utility::CMutex  m_mutexServerType;
+    std::map<EServerType, ServerID> m_logicServerTypeMap;
+    BCLib::Utility::CMutex  m_mutexLogicServerTypeMap;
 
 	//
     friend class CMasterServer;

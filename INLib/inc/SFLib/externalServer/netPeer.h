@@ -1,12 +1,12 @@
 //////////////////////////////////////////////////////////////////////
 //  created:    2011/11/01
-//  filename:   SFLib/logicServer/netPeer.h
+//  filename:   SFLib/externalServer/netPeer.h
 //  author:     League of Perfect
 /// @brief
 ///
 //////////////////////////////////////////////////////////////////////
-#ifndef __SFLIB_LOGICSERVER_NETPEER_H__
-#define __SFLIB_LOGICSERVER_NETPEER_H__
+#ifndef __SFLIB_EXTERNALSERVER_NETPEER_H__
+#define __SFLIB_EXTERNALSERVER_NETPEER_H__
 
 #include <SFLib/commonServer/netPeer.h>
 #include <SFLib/commonServer/tcpStub.h>
@@ -15,7 +15,7 @@
 
 namespace SFLib
 {
-namespace Logic
+namespace External
 {
 class CNetPeer : public SFLib::CommonServer::CNetPeer
 {
@@ -61,33 +61,6 @@ public:
 
 	BCLib::uint32 getPingValue();
 
-    /// @brief 申请进入某个逻辑服务器
-    /// @return bool
-    /// @param serverType 服务器类型
-    /// @param notifyMaster 是否通过 Master 转发进行全服处理（如果为 true 时，只允许在网关上发起请求）
-    bool enterLogicServer(ServerID serverID, bool notifyMaster);
-
-    /// @brief 申请离开某个逻辑服务器
-    /// @return bool
-    /// @param serverType 服务器类型
-    /// @param notifyMaster 是否通过 Master 转发进行全服处理（如果为 true 时，只允许在网关上发起请求）
-    bool leaveLogicServer(EServerType serverType, bool notifyMaster, EPeerLeaveReason nReason);
-
-	/// @brief 申请进入某个外部服务器
-	/// @return bool
-	/// @param serverType 服务器类型
-	bool enterExternalServer(ServerID serverID);
-
-	/// @brief 申请进入某个外部服务器
-	/// @return bool
-	/// @param serverType 服务器类型
-	bool enterExternalServer(EServerType serverType);
-
-	/// @brief 申请离开某个外部服务器
-	/// @return bool
-	/// @param serverType 服务器类型
-	bool leaveExternalServer(EServerType serverType, EPeerLeaveReason nReason);
-
     virtual bool serializeTo(BCLib::Utility::CStream& stream) const;
     virtual bool serializeFrom(BCLib::Utility::CStream& stream);
 
@@ -108,17 +81,11 @@ private:
     std::map<EServerType, ServerID> m_logicServerTypeMap;
     BCLib::Utility::CMutex  m_mutexLogicServerTypeMap;
 
-	std::map<EServerType, ServerID> m_externalServerTypeMap;
-	BCLib::Utility::CMutex  m_mutexExternalServerTypeMap;
-
 	//
-    friend class CMasterClient;
-    friend class CLogicStub;
-    friend class CLogicClient;
-    friend class CLogicServer;
+    friend class CExternalStub;
 };
 typedef BCLib::Utility::CSPointer<CNetPeer> CNetPeerPtr;
-}//Logic
+}//External
 }//SFLib
 
-#endif//__SFLIB_LOGICSERVER_NETPEER_H__
+#endif//__SFLIB_EXTERNALSERVER_NETPEER_H__

@@ -11,11 +11,9 @@
 #include <BCLib/utility/baseDef.h>
 #include <BCLib/utility/atomic.h>
 
-
 #if defined(_WIN32)
 #pragma warning(error:4584)
 #endif
-
 
 namespace BCLib
 {
@@ -373,6 +371,16 @@ OBJTYPE* CSPointer<OBJTYPE>::operator ->() const
 {
     return const_cast<OBJTYPE*>(CCPointer<OBJTYPE>::m_pObj);
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////
+template<typename T>
+struct SPointerGuard
+{
+    SPointerGuard(T* &p) :m_ptr(p) {}
+    ~SPointerGuard() { BCLIB_SAFE_DELETE(m_ptr); }
+private:
+    T* &m_ptr;
+};
 }//Utility
 }//BCLib
 

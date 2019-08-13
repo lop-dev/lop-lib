@@ -71,10 +71,10 @@ public:
         m_queueChar->pop();
     }
 
-    void empty()
+    bool empty()
     {
         BCLib::Utility::CMutexFun fun(&m_mutex);
-        m_queueChar->empty();
+        return m_queueChar->empty();
     }
 
     //************************************

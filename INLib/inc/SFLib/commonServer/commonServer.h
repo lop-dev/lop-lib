@@ -186,21 +186,21 @@ public:
     /// @param netPeerPtr
     virtual void cbPeerRemove(CNetPeerPtr& netPeerPtr);
 
-    /// @brief CNetPeer::enterServer的回调函数，通知该操作是否成功
+    /// @brief CNetPeer::enterXXXServer的回调函数，通知该操作是否成功
     /// @return void
     /// @param peerID 请求的Peer
     /// @param ServerID 请求进入的Server
     /// @param result 是否成功
     virtual void cbPeerEnterServer(PeerID peerID, ServerID serverID, bool result);
 
-    /// @brief CNetPeer::leaveServer的回调函数，通知该操作是否成功
+    /// @brief CNetPeer::leaveXXXServer的回调函数，通知该操作是否成功
     /// @return void
     /// @param peerID 请求的Peer
     /// @param ServerID 离开当前的Server
     /// @param result 是否成功
     virtual void cbPeerLeaveServer(PeerID peerID, ServerID serverID, bool result);
 
-    /// @brief 当其它Server申请CNetPeer::enterServer或CNetPeer::leaveServer操作，改变Peer的Server，本地Server触发该接口
+    /// @brief 当其它Server申请CNetPeer::enterXXXServer或CNetPeer::leaveXXXServer操作，改变Peer的Server，本地Server触发该接口
     /// @return void
     /// @param peerID 发生变化的Peer
     /// @param serverID 新进入的Server

@@ -116,6 +116,7 @@ public:
         }
         return nCount;
     }
+
     uint32 replace(const ValueType chOld, const ValueType chNew)
     {
         uint32 nCount = 0;
@@ -142,6 +143,7 @@ public:
         }
         return BaseStringType::substr(BaseStringType::size() - nCount, nCount);
     }
+
     /// @brief 返回一个从左边起始nCount个字符的子字符串，类似于std::substr(0，nCount)
     /// @return BaseStringType
     /// @param nCount 启始位置
@@ -170,7 +172,6 @@ public:
         }
         return BaseStringType::substr(iFirst, nCount);
     }
-
 
     /// @brief 按照strKeyword拆分字符串
     /// @return int
@@ -405,6 +406,7 @@ public:
     /// @param pszFormat
     /// @param
     void format(uint32 uParamCnt, const ValueType* pszFormat, ...);
+
     void format(const ValueType* pszFormat, ...);
 
 public:

@@ -10,6 +10,7 @@
 
 #include <SFLib/message/gameFrame.h>
 #include <BCLib/utility/thread/thread.h>
+#include <SFLib/gameClient/netMsgQueue.h>
 
 namespace SFLib
 {
@@ -23,7 +24,7 @@ class CTcpClient;
 class CNetClient
 {
 public:
-    CNetClient();
+    CNetClient(bool bUseSelfMsgQueue = false);
     virtual ~CNetClient();
 
     virtual std::string getGameVersion() = 0;
@@ -71,6 +72,9 @@ public:
     void setRTT(EServerType eServerType, bool bOpen);
     BCLib::uint32 getRTTInMS(EServerType eServerType) const;
 
+    bool useSelfMsgQueue() { return m_bUseSelfMsgQueue; }
+    CNetMsgQueueByPeerID& getNetMsgQueue() { return m_netMsgQueue; }
+
 protected:
     CClientMsgExecMgr* _getClientMsgExecMgr(){ return m_msgExecMgr; }
 
@@ -97,6 +101,9 @@ private:
 
     PeerID m_selfPeerID;
     CClientMsgExecMgr* m_msgExecMgr;
+
+    bool m_bUseSelfMsgQueue;
+    CNetMsgQueueByPeerID m_netMsgQueue;
 
     BCLib::uint64 m_usrKey;
     BCLib::uint32 m_uRandKey;

@@ -25,6 +25,7 @@ namespace SFLib
             virtual ~IObjectOwner() {};
 
             virtual void saveObject(SFLib::PeerID peerID, SFLib::Message::CNetMessage* pNetMessage) = 0;
+            virtual void saveObject(SFLib::ServerID serverID, SFLib::Message::CNetMessage* pNetMessage) = 0;
         };
 
         //
