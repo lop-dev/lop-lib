@@ -290,6 +290,7 @@ namespace Proto2Code
 
             return CGeneration.Instance.Generation(bSync);
         }
+
         private static string argsStr = "";
     }
 }

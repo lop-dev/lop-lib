@@ -144,6 +144,7 @@ namespace Proto2Code
                 srcFileList.Add(desFile);
                 srcFileList.Add(desFile+".meta");
             }
+
             if(delOtherFiles)
             {
                 foreach (string file in Directory.GetFiles(dirDes.FullName, searchOption, SearchOption.TopDirectoryOnly))
