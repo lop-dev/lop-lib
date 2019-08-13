@@ -29,7 +29,7 @@ namespace Proto2Code
             CopyDirectory(SERVER_PTLIB_PROTOEXT_SRC, SERVER_PTLIB_PROTOEXT_DES_H, "*.pe.h");
             CopyDirectory(SERVER_PTLIB_PROTOEXT_SRC, SERVER_PTLIB_PROTOEXT_DES_CC, "*.pe.cc");
 
-            string SERVER_PTLIB_PROTOLUA_SRC = @".\TableOut\Temp\2_Protobuf\C++\";
+            string SERVER_PTLIB_PROTOLUA_SRC = @".\TableOut\Temp\1_Protoext\C++\";
             string SERVER_PTLIB_PROTOLUA_DES = @".\TableOut\C++\PTLib\lua\";
             CopyDirectory(SERVER_PTLIB_PROTOLUA_SRC, SERVER_PTLIB_PROTOLUA_DES, "*.pe.lid");
 
