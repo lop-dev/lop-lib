@@ -91,12 +91,17 @@ public:
     virtual bool serializeTo(BCLib::Utility::CStream& stream) const;
     virtual bool serializeFrom(BCLib::Utility::CStream& stream);
 
+protected:
+    virtual void _setLogicServerInfo(EServerType serverType, ServerID serverID);
+    virtual void _delLogicServerInfo(EServerType serverType, ServerID serverID);
+    BCLib::uint8 _getLogicServerInfo(SFLib::Message::SPeerServerInfo* serverList);
+
+    virtual void _setExternalServerInfo(EServerType serverType, ServerID serverID);
+    virtual void _delExternalServerInfo(EServerType serverType, ServerID serverID);
+    BCLib::uint8 _getExternalServerInfo(SFLib::Message::SPeerServerInfo* serverList);
+
 private:
     bool _sendMsgToGW(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
-
-    void _setServerInfo(EServerType serverType, ServerID serverID);
-    void _delServerInfo(EServerType serverType, ServerID serverID);
-    BCLib::uint8 _getServerInfo(SFLib::Message::SPeerServerInfo* serverList);
 
 private:
     ServerID m_gatewayServerID;

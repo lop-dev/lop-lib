@@ -64,10 +64,19 @@ public:
     virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
     virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
+protected:
+    virtual void _setLogicServerInfo(EServerType serverType, ServerID serverID);
+    virtual void _delLogicServerInfo(EServerType serverType, ServerID serverID);
+
+    virtual void _setExternalServerInfo(EServerType serverType, ServerID serverID);
+    virtual void _delExternalServerInfo(EServerType serverType, ServerID serverID);
+
 private:
     PeerID m_netPeerID;
     EPeerState m_peerState;
 	EntityID m_entityID;
+
+    friend class CExternalClient;
 };
 
 typedef BCLib::Utility::CSPointer<CNetPeer> CNetPeerPtr;
