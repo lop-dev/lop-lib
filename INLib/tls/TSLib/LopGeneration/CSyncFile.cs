@@ -33,6 +33,17 @@ namespace Proto2Code
             string SERVER_PTLIB_PROTOLUA_DES = @".\TableOut\C++\PTLib\lua\";
             CopyDirectory(SERVER_PTLIB_PROTOLUA_SRC, SERVER_PTLIB_PROTOLUA_DES, "*.pe.lid");
 
+            //拷贝到LTLib目录
+            string SERVER_LTLIB_PROTOFILE_SRC = @".\TableOut\Temp\1_Protoext\";
+            string SERVER_LTLIB_PROTOFILE_DES = @".\TableOut\C++\LTLib\inc\LTLib\protofile\";
+            CopyDirectory(SERVER_LTLIB_PROTOFILE_SRC, SERVER_LTLIB_PROTOFILE_DES, "*.lid");
+
+            string SERVER_LTLIB_PROTOEXT_SRC = @".\TableOut\Temp\1_Protoext\C++\";
+            string SERVER_LTLIB_PROTOEXT_DES_H = @".\TableOut\C++\LTLib\inc\LTLib\protoext\";
+            string SERVER_LTLIB_PROTOEXT_DES_CC = @".\TableOut\C++\LTLib\src\LTLib\protoext\";
+            CopyDirectory(SERVER_LTLIB_PROTOEXT_SRC, SERVER_LTLIB_PROTOEXT_DES_H, "*.lt.h");
+            CopyDirectory(SERVER_LTLIB_PROTOEXT_SRC, SERVER_LTLIB_PROTOEXT_DES_CC, "*.lt.cc");
+
             //拷贝到MSLib目录
             List<string> fileter = new List<string>();
             fileter.Add("commandSystemMsg.h");
