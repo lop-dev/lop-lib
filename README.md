@@ -12,7 +12,7 @@
 #### CLLib：托管 C++ 程序库，主要用于工具开发；
 #### CSLib：基础 CSharp 程序库，基于 Mono 跨平台；
 #### GELib：自研图形引擎程序库，基于 DirectX 开发；
-#### LTLib：根据 PTLib 中的代码，导出的 luatinkere 代码；
+#### LTLib：使用Lop工具导出的 luatinkere 代码库；
 #### LULib：基础 Lua 程序库，可以统一前后端逻辑开发；
 #### MWLib：常用中间件程序库，支持跨平台，多线程安全；
 #### MSLib：使用Lop工具导出的消息库，支持前后端消息；
