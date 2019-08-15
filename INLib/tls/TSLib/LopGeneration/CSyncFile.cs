@@ -29,14 +29,14 @@ namespace Proto2Code
             CopyDirectory(SERVER_PTLIB_PROTOEXT_SRC, SERVER_PTLIB_PROTOEXT_DES_H, "*.pe.h");
             CopyDirectory(SERVER_PTLIB_PROTOEXT_SRC, SERVER_PTLIB_PROTOEXT_DES_CC, "*.pe.cc");
 
-            string SERVER_PTLIB_PROTOLUA_SRC = @".\TableOut\Temp\1_Protoext\C++\";
-            string SERVER_PTLIB_PROTOLUA_DES = @".\TableOut\C++\PTLib\lua\";
-            CopyDirectory(SERVER_PTLIB_PROTOLUA_SRC, SERVER_PTLIB_PROTOLUA_DES, "*.pe.lid");
+            //string SERVER_PTLIB_PROTOLUA_SRC = @".\TableOut\Temp\1_Protoext\C++\";
+            //string SERVER_PTLIB_PROTOLUA_DES = @".\TableOut\C++\PTLib\lua\";
+            //CopyDirectory(SERVER_PTLIB_PROTOLUA_SRC, SERVER_PTLIB_PROTOLUA_DES, "*.pe.lid");
 
             //拷贝到LTLib目录
-            string SERVER_LTLIB_PROTOFILE_SRC = @".\TableOut\Temp\1_Protoext\";
-            string SERVER_LTLIB_PROTOFILE_DES = @".\TableOut\C++\LTLib\inc\LTLib\protofile\";
-            CopyDirectory(SERVER_LTLIB_PROTOFILE_SRC, SERVER_LTLIB_PROTOFILE_DES, "*.lid");
+            //string SERVER_LTLIB_PROTOFILE_SRC = @".\TableOut\Temp\1_Protoext\";
+            //string SERVER_LTLIB_PROTOFILE_DES = @".\TableOut\C++\LTLib\inc\LTLib\protofile\";
+            //CopyDirectory(SERVER_LTLIB_PROTOFILE_SRC, SERVER_LTLIB_PROTOFILE_DES, "*.lid");
 
             string SERVER_LTLIB_PROTOEXT_SRC = @".\TableOut\Temp\1_Protoext\C++\";
             string SERVER_LTLIB_PROTOEXT_DES_H = @".\TableOut\C++\LTLib\inc\LTLib\protoext\";
