@@ -24,17 +24,6 @@ public:
     CNetPeer(PeerID peerID, ServerID gatewayServerID, BCLib::Network::TcpStubID gameClientStubID);
     virtual ~CNetPeer();
 
-    /// @brief 请求离开
-    /// @return bool
-    /// @param notifyMaster 是否通过 Master 转发进行全服处理
-    /// @param nReason : 1 代表清理玩家，2 代表登录踢人
-    virtual bool reqLeave(bool notifyMaster, EPeerLeaveReason nReason);
-
-    /// @brief 请求离开
-    /// @return void
-    /// @param notifyMaster 是否通过 Master 转发进行全服处理
-    virtual void ackLeave(bool notifyMaster);
-
     virtual void terminate();
 
     bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);

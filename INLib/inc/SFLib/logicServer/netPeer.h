@@ -26,14 +26,12 @@ public:
 
     /// @brief 请求离开
     /// @return bool
-    /// @param notifyMaster 是否通过 Master 转发进行全服处理
     /// @param nReason : 1 代表清理玩家，2 代表登录踢人
-    virtual bool reqLeave(bool notifyMaster, EPeerLeaveReason nReason);
+    virtual bool reqLeave(EPeerLeaveReason nReason);
 
     /// @brief 请求离开
     /// @return void
-    /// @param notifyMaster 是否通过 Master 转发进行全服处理
-    virtual void ackLeave(bool notifyMaster);
+    virtual void ackLeave();
 
     virtual void terminate();
 
@@ -63,27 +61,30 @@ public:
 
     /// @brief 申请进入某个逻辑服务器
     /// @return bool
-    /// @param serverType 服务器类型
-    /// @param notifyMaster 是否通过 Master 转发进行全服处理（如果为 true 时，只允许在网关上发起请求）
-    bool enterLogicServer(ServerID serverID, bool notifyMaster);
+    /// @param serverID 服务器ID
+    bool enterLogicServer(ServerID serverID);
 
     /// @brief 申请离开某个逻辑服务器
     /// @return bool
-    /// @param serverType 服务器类型
-    /// @param notifyMaster 是否通过 Master 转发进行全服处理（如果为 true 时，只允许在网关上发起请求）
-    bool leaveLogicServer(EServerType serverType, bool notifyMaster, EPeerLeaveReason nReason);
+	/// @param serverID 服务器ID
+    bool leaveLogicServer(ServerID serverID, EPeerLeaveReason nReason);
 
 	/// @brief 申请进入某个外部服务器
 	/// @return bool
-	/// @param serverType 服务器类型
+	/// @param serverID 服务器ID
 	bool enterExternalServer(ServerID serverID);
 
 	/// @brief 申请进入某个外部服务器
 	/// @return bool
+	/// @param serverID 服务器ID
+	bool leaveExternalServer(ServerID serverID, EPeerLeaveReason nReason);
+
+	/// @brief 申请进入某类外部服务器
+	/// @return bool
 	/// @param serverType 服务器类型
 	bool enterExternalServer(EServerType serverType);
 
-	/// @brief 申请离开某个外部服务器
+	/// @brief 申请离开某类外部服务器
 	/// @return bool
 	/// @param serverType 服务器类型
 	bool leaveExternalServer(EServerType serverType, EPeerLeaveReason nReason);

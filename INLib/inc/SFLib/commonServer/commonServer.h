@@ -44,11 +44,23 @@ public:
         return m_commonServer;
     }
 
+    bool isNotifyMaster()
+    {
+        return m_notifyMaster;
+    }
+
+    //
     virtual GroupID getGroupID()
     {
         return INVALID_GROUP_ID;
     }
 
+    virtual std::string getGroupName()
+    {
+        return "";
+    }
+
+    //
     void setServerID(ServerID serverID)
     {
         m_serverID = serverID;
@@ -300,6 +312,9 @@ private:
 protected:
     BCLib::Utility::CMutex m_mutex;
     BCLib::Utility::CHashMap<ServerID, SFLib::CommonServer::CCommonClientPtr> m_ExternalClientHashMap;
+
+	// 是否通过 Master 转发进行全服处理（如果为 true 时，部分操作只允许在网关上发起请求）
+    bool m_notifyMaster;
 
 private:
     static CCommonServer* m_commonServer;

@@ -29,8 +29,7 @@ public:
     /// @param peerID 申请指定的PeerID，如果为0，则随机分配
     /// @param gatewayServerID 该玩家所在网关的ServerID
     /// @param gameClientStubID 该玩家所在网关上，对应的客户端StubID
-    /// @param notifyMaster 是否通过 Master 转发进行全服处理（如果为 true 时，只允许在网关上发起请求）
-    bool requestPeerID(PeerID peerID, ServerID gatewayServerID, BCLib::Network::TcpStubID gameClientStubID, bool notifyMaster);
+    bool requestPeerID(PeerID peerID, ServerID gatewayServerID, BCLib::Network::TcpStubID gameClientStubID);
 
     /// @brief requestPeerID请求的回调函数
     /// @return void
