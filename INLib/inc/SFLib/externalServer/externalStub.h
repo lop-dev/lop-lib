@@ -38,7 +38,7 @@ protected:
 
 protected:
 };
-typedef BCLib::Utility::CSPointer<CExternalStub> CLogicStubPtr;
+typedef BCLib::Utility::CSPointer<CExternalStub> CExternalStubPtr;
 }//External
 }//SFLib
 

@@ -119,16 +119,12 @@ public:
     CExternalClientPtr getExternalClient(ServerID serverID);
     bool getExternalClientList(EServerType serverType, std::vector<SFLib::CommonServer::CCommonClientPtr>& externalClientList);
 
-    // 专用于 Logic -> Logic 的消息发送
-    bool bstMsgToXSByType(EServerType serverType, const SFLib::Message::CNetMessage* msg);
-    bool bstMsgToXSByType(EServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
-
-    bool sendMsgToXSByID(ServerID serverID, const SFLib::Message::CNetMessage* msg);
-    bool sendMsgToXSByID(ServerID serverID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
-
-    // 专用于 Logic -> External 的消息发送
+    // 向外部服务器发送消息
     bool bstMsgToExternalServer(EServerType serverType, const SFLib::Message::CNetMessage* msg);
     bool bstMsgToExternalServer(EServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+
+	bool bstMsgToExternalServer(PeerID peerID, EServerType serverType, const SFLib::Message::CNetMessage* msg);
+	bool bstMsgToExternalServer(PeerID peerID, EServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
     bool sendMsgToExternalServer(ServerID serverID, const SFLib::Message::CNetMessage* msg);
     bool sendMsgToExternalServer(ServerID serverID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
@@ -136,9 +132,12 @@ public:
     bool sendMsgToExternalServer(PeerID peerID, ServerID serverID, const SFLib::Message::CNetMessage* msg);
     bool sendMsgToExternalServer(PeerID peerID, ServerID serverID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
-    // 专用于 External -> Logic 的消息发送
+    // 向逻辑服务器发送消息
     bool bstMsgToLogicServer(EServerType serverType, const SFLib::Message::CNetMessage* msg);
     bool bstMsgToLogicServer(EServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+
+	bool bstMsgToLogicServer(PeerID peerID, EServerType serverType, const SFLib::Message::CNetMessage* msg);
+	bool bstMsgToLogicServer(PeerID peerID, EServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
     bool sendMsgToLogicServer(ServerID serverID, const SFLib::Message::CNetMessage* msg);
     bool sendMsgToLogicServer(ServerID serverID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);

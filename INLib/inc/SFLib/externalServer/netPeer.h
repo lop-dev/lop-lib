@@ -27,26 +27,23 @@ public:
     virtual void terminate();
 
     bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
-    bool sendMsgToMS(const SFLib::Message::CNetMessage* msg);
-    virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
+	bool sendMsgToCT(const SFLib::Message::CNetMessage* msg);
 
     bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
-    bool sendMsgToMS(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
-    virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+	bool sendMsgToCT(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
 	//
     void setGatewayServerID(ServerID gatewayServerID) { m_gatewayServerID = gatewayServerID; }
     ServerID getGatewayServerID() { return m_gatewayServerID; }
 
-    void setGameClientStubID(BCLib::Network::TcpStubID gameClientStubID);
-    BCLib::Network::TcpStubID getGameClientStubID() { return m_gameClientStubID; }
+	void setGameClientStubID(BCLib::Network::TcpStubID gameClientStubID);
+	BCLib::Network::TcpStubID getGameClientStubID() { return m_gameClientStubID; }
 
-	SFLib::CommonServer::CTcpStubPtr getGameClientStub() { return m_gameClientStub;	}
+	void setExternalStub(SFLib::CommonServer::CTcpStubPtr externalStub) { m_externalStub = externalStub; }
+	SFLib::CommonServer::CTcpStubPtr getExternalStub() { return m_externalStub; }
 
     void setOfflineTime(BCLib::Utility::CDateTime dtOffline) { m_dtOffline = dtOffline; }
     BCLib::Utility::CDateTime getOfflineTime() { return m_dtOffline; }
-
-    ServerID getServerIDByType(EServerType serverType);
 
 	BCLib::uint32 getPingValue();
 
@@ -54,8 +51,6 @@ public:
     virtual bool serializeFrom(BCLib::Utility::CStream& stream);
 
 private:
-    bool _sendMsgToGW(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
-
     void _setServerInfo(EServerType serverType, ServerID serverID);
     void _delServerInfo(EServerType serverType, ServerID serverID);
     BCLib::uint8 _getServerInfo(SFLib::Message::SPeerServerInfo* serverList);
@@ -64,6 +59,7 @@ private:
     ServerID m_gatewayServerID;
     BCLib::Network::TcpStubID m_gameClientStubID;
     SFLib::CommonServer::CTcpStubPtr m_gameClientStub;
+	SFLib::CommonServer::CTcpStubPtr m_externalStub;
 
     BCLib::Utility::CDateTime m_dtOffline;
 
