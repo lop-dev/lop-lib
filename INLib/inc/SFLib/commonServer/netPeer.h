@@ -12,6 +12,7 @@
 #include <SFLib/commonDefine/baseDef.h>
 #include <SFLib/message/message.h>
 #include <BCLib/utility/spointer.h>
+#include <BCLib/utility/dateTime.h>
 
 namespace SFLib
 {
@@ -60,6 +61,9 @@ public:
     virtual bool serializeTo(BCLib::Utility::CStream& stream) const;
     virtual bool serializeFrom(BCLib::Utility::CStream& stream);
 
+	void setOfflineTime(BCLib::Utility::CDateTime dtOffline) { m_dtOffline = dtOffline; }
+	BCLib::Utility::CDateTime getOfflineTime() { return m_dtOffline; }
+
 public:
     virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
     virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
@@ -75,6 +79,8 @@ private:
     PeerID m_netPeerID;
     EPeerState m_peerState;
 	EntityID m_entityID;
+
+	BCLib::Utility::CDateTime m_dtOffline;
 
     friend class CExternalClient;
 };

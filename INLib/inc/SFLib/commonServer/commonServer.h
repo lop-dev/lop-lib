@@ -116,7 +116,8 @@ public:
     virtual void _cbSendError(PeerID peerID, const SFLib::Message::SNetMessage* msg, BCLib::uint32 msgSize);
 
 public:
-    CExternalClientPtr getExternalClient(ServerID serverID);
+	CExternalClientPtr getExternalClient(ServerID serverID);
+	CExternalClientPtr randomExternalClient(ServerType serverType);
     bool getExternalClientList(EServerType serverType, std::vector<SFLib::CommonServer::CCommonClientPtr>& externalClientList);
 
     // 向外部服务器发送消息

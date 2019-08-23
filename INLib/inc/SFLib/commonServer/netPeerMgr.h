@@ -50,6 +50,7 @@ public:
 private:
     static CNetPeerMgr* m_netPeerMgr;
 
+protected:
     BCLib::Utility::CHashMap<PeerID, CNetPeerPtr> m_netPeerHasnMap;
     BCLib::Utility::CMutex m_mutex;
 };

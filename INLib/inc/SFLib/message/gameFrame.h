@@ -31,6 +31,7 @@ enum EErrorType
     EERROR_RUNNING,             //已经在进行中
     EERROR_SERVER_ID,           //服务器编号错误
     EERROR_SERVER_TYPE,         //服务器类型错误
+	EERROR_NO_AUTHORITY,        //操作权限不足
 };
 
 enum EMsgIDGameFrame

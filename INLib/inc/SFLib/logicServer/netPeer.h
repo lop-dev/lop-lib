@@ -35,30 +35,36 @@ public:
 
     virtual void terminate();
 
+	virtual bool serializeTo(BCLib::Utility::CStream& stream) const;
+	virtual bool serializeFrom(BCLib::Utility::CStream& stream);
+
+	/// @brief 发送消息到其他服务器
+	/// @return bool
+	/// @param serverType 服务器类型
+	///        如果使用 enterLogicServer(ServerID serverID) 函数进入的话，则直接发送消息到这个服务器
+	///        如果使用 enterLogicServer(EServerType serverType) 函数进入的话，则随机一个服务器进行发送
+	virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
+	virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+
     bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
+	bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+
     bool sendMsgToMS(const SFLib::Message::CNetMessage* msg);
-    virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
+	bool sendMsgToMS(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
-    bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
-    bool sendMsgToMS(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
-    virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
-
-	//
+public:
+	ServerID getGatewayServerID() { return m_gatewayServerID; }
     void setGatewayServerID(ServerID gatewayServerID) { m_gatewayServerID = gatewayServerID; }
-    ServerID getGatewayServerID() { return m_gatewayServerID; }
 
+	BCLib::Network::TcpStubID getGameClientStubID() { return m_gameClientStubID; }
     void setGameClientStubID(BCLib::Network::TcpStubID gameClientStubID);
-    BCLib::Network::TcpStubID getGameClientStubID() { return m_gameClientStubID; }
 
 	SFLib::CommonServer::CTcpStubPtr getGameClientStub() { return m_gameClientStub;	}
 
-    void setOfflineTime(BCLib::Utility::CDateTime dtOffline) { m_dtOffline = dtOffline; }
-    BCLib::Utility::CDateTime getOfflineTime() { return m_dtOffline; }
-
     ServerID getServerIDByType(EServerType serverType);
-
 	BCLib::uint32 getPingValue();
 
+public:
     /// @brief 申请进入某个逻辑服务器
     /// @return bool
     /// @param serverID 服务器ID
@@ -89,9 +95,6 @@ public:
 	/// @param serverType 服务器类型
 	bool leaveExternalServer(EServerType serverType, EPeerLeaveReason nReason);
 
-    virtual bool serializeTo(BCLib::Utility::CStream& stream) const;
-    virtual bool serializeFrom(BCLib::Utility::CStream& stream);
-
 protected:
     virtual void _setLogicServerInfo(EServerType serverType, ServerID serverID);
     virtual void _delLogicServerInfo(EServerType serverType, ServerID serverID);
@@ -108,8 +111,6 @@ private:
     ServerID m_gatewayServerID;
     BCLib::Network::TcpStubID m_gameClientStubID;
     SFLib::CommonServer::CTcpStubPtr m_gameClientStub;
-
-    BCLib::Utility::CDateTime m_dtOffline;
 
     std::map<EServerType, ServerID> m_logicServerTypeMap;
     BCLib::Utility::CMutex  m_mutexLogicServerTypeMap;

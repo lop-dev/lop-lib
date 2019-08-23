@@ -26,31 +26,30 @@ public:
 
     virtual void terminate();
 
-    bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
-	bool sendMsgToCT(const SFLib::Message::CNetMessage* msg);
+	virtual bool serializeTo(BCLib::Utility::CStream& stream) const;
+	virtual bool serializeFrom(BCLib::Utility::CStream& stream);
 
-    bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
-	bool sendMsgToCT(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+	/// @brief 发送消息到其他服务器
+	/// @return bool
+	/// @param serverType 服务器类型，只会发送给内部服务器
+	virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
+	virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
-	//
-    void setGatewayServerID(ServerID gatewayServerID) { m_gatewayServerID = gatewayServerID; }
-    ServerID getGatewayServerID() { return m_gatewayServerID; }
+	bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
+	bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
-	void setGameClientStubID(BCLib::Network::TcpStubID gameClientStubID);
-	BCLib::Network::TcpStubID getGameClientStubID() { return m_gameClientStubID; }
+public:
+	ServerID getGatewayServerID() { return m_gatewayServerID; }
+	void setGatewayServerID(ServerID gatewayServerID) { m_gatewayServerID = gatewayServerID; }
 
-	void setExternalStub(SFLib::CommonServer::CTcpStubPtr externalStub) { m_externalStub = externalStub; }
-	SFLib::CommonServer::CTcpStubPtr getExternalStub() { return m_externalStub; }
+	ServerID getGameClientStubID() { return m_gameClientStubID; }
+	void setGameClientStubID(BCLib::Network::TcpStubID gameClientStubID) { m_gameClientStubID = gameClientStubID; }
 
-    void setOfflineTime(BCLib::Utility::CDateTime dtOffline) { m_dtOffline = dtOffline; }
-    BCLib::Utility::CDateTime getOfflineTime() { return m_dtOffline; }
-
-	BCLib::uint32 getPingValue();
-
-    virtual bool serializeTo(BCLib::Utility::CStream& stream) const;
-    virtual bool serializeFrom(BCLib::Utility::CStream& stream);
+	ServerID getServerIDByType(EServerType serverType);
 
 private:
+	bool _sendMsgToDefault(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+
     void _setServerInfo(EServerType serverType, ServerID serverID);
     void _delServerInfo(EServerType serverType, ServerID serverID);
     BCLib::uint8 _getServerInfo(SFLib::Message::SPeerServerInfo* serverList);
@@ -58,16 +57,14 @@ private:
 private:
     ServerID m_gatewayServerID;
     BCLib::Network::TcpStubID m_gameClientStubID;
-    SFLib::CommonServer::CTcpStubPtr m_gameClientStub;
-	SFLib::CommonServer::CTcpStubPtr m_externalStub;
-
-    BCLib::Utility::CDateTime m_dtOffline;
+	SFLib::CommonServer::CTcpStubPtr m_defaultStub;
 
     std::map<EServerType, ServerID> m_logicServerTypeMap;
     BCLib::Utility::CMutex  m_mutexLogicServerTypeMap;
 
 	//
     friend class CExternalStub;
+	friend class CNetPeerMgr;
 };
 typedef BCLib::Utility::CSPointer<CNetPeer> CNetPeerPtr;
 }//External

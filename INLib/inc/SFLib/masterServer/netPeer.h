@@ -34,20 +34,22 @@ public:
     virtual bool reqLeave(EPeerLeaveReason nReason);
     virtual void terminate();
 
-    bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
-    virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
-
-    bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+	virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
     virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
-	//
-    ServerID getGatewayServerID() { return m_gatewayServerID; }
-    ServerID getGameClientStubID() { return m_gameClientStubID; }
+	bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
+	bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
-    BCLib::uint8 getActiveServerID(std::vector<SFLib::ServerID>& serverList);
+public:
+	ServerID getGatewayServerID() { return m_gatewayServerID; }
+	void setGatewayServerID(ServerID gatewayServerID) { m_gatewayServerID = gatewayServerID; }
+
+	ServerID getGameClientStubID() { return m_gameClientStubID; }
+	void setGameClientStubID(BCLib::Network::TcpStubID gameClientStubID) { m_gameClientStubID = gameClientStubID; }
 
 	ServerID getServerIDByType(EServerType serverType);
-    bool isInServer(ServerID serverID);
+	bool isInServer(ServerID serverID);
+    BCLib::uint8 getActiveServerID(std::vector<SFLib::ServerID>& serverList);
 
 private:
 	bool _sendMsgToGW(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
@@ -59,13 +61,13 @@ private:
 private:
     ServerID m_gatewayServerID;
     BCLib::Network::TcpStubID m_gameClientStubID;
-    CPeerCreate* m_peerCreate;
-
-    CPeerEnterScene* m_peerEnterServer;
-    CPeerLeaveScene* m_peerLeaveServer;
 
     std::map<EServerType, ServerID> m_logicServerTypeMap;
     BCLib::Utility::CMutex  m_mutexLogicServerTypeMap;
+
+	CPeerCreate* m_peerCreate;
+	CPeerEnterScene* m_peerEnterServer;
+	CPeerLeaveScene* m_peerLeaveServer;
 
 	//
     friend class CMasterServer;
