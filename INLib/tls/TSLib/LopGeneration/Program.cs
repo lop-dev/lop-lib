@@ -246,6 +246,24 @@ namespace Proto2Code
             var proc3 = System.Diagnostics.Process.Start(ref3);
             proc3.WaitForExit();
 
+            string vsRefresh4 = dirRoot.FullName + "/TableOut/C++/PBLib/RefPBLibPrj.exe";
+            System.Diagnostics.ProcessStartInfo ref4 = new System.Diagnostics.ProcessStartInfo();
+            ref4.FileName = vsRefresh4;
+            ref4.UseShellExecute = false;
+            ref4.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/PBLib/";
+            var proc4 = System.Diagnostics.Process.Start(ref4);
+            proc4.WaitForExit();
+
+            string vsRefresh5 = dirRoot.FullName + "/TableOut/C++/PELib/RefPELibPrj.exe";
+            System.Diagnostics.ProcessStartInfo ref5 = new System.Diagnostics.ProcessStartInfo();
+            ref5.FileName = vsRefresh5;
+            ref5.UseShellExecute = false;
+            ref5.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/PELib/";
+            var proc5 = System.Diagnostics.Process.Start(ref5);
+            proc5.WaitForExit();
+
             Console.WriteLine("按任意键继续...");
             Console.ReadKey();
             return 0;
