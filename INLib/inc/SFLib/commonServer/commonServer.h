@@ -116,10 +116,6 @@ public:
     virtual void _cbSendError(PeerID peerID, const SFLib::Message::SNetMessage* msg, BCLib::uint32 msgSize);
 
 public:
-	CExternalClientPtr getExternalClient(ServerID serverID);
-	CExternalClientPtr randomExternalClient(ServerType serverType);
-    bool getExternalClientList(EServerType serverType, std::vector<SFLib::CommonServer::CCommonClientPtr>& externalClientList);
-
     // 向外部服务器发送消息
     bool bstMsgToExternalServer(EServerType serverType, const SFLib::Message::CNetMessage* msg);
     bool bstMsgToExternalServer(EServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
@@ -310,9 +306,6 @@ private:
     }
 
 protected:
-    BCLib::Utility::CMutex m_mutex;
-    BCLib::Utility::CHashMap<ServerID, SFLib::CommonServer::CCommonClientPtr> m_ExternalClientHashMap;
-
 	// 是否通过 Master 转发进行全服处理（如果为 true 时，部分操作只允许在网关上发起请求）
     bool m_notifyMaster;
 

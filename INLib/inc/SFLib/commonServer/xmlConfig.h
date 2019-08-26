@@ -21,6 +21,38 @@ namespace SFLib
 namespace CommonServer
 {
 
+struct SServerInfo
+{
+	SServerInfo()
+	: m_serverID(INVALID_SERVER_ID)
+	, m_serverType(ESERVER_UNKNOW)
+	, m_acceptNetType(BCLib::Network::NETT_NULL)
+	, m_acceptIP("")
+	, m_acceptPort(0)
+	, m_outerIP("")
+	, m_outerPort(0)
+	, m_innerIP("")
+	, m_necessary(false)
+	{
+	}
+
+	std::string getDebugPrompt() const;
+	void setServerInfo(SFLib::Message::SServerInfo serverInfo);
+	void getServerInfo(SFLib::Message::SServerInfo& serverInfo);
+
+	ServerID m_serverID;
+	EServerType m_serverType;
+	BCLib::Network::ENetType m_acceptNetType;
+	std::string m_acceptIP;
+	BCLib::uint16 m_acceptPort;
+	std::string m_outerIP;
+	BCLib::uint16 m_outerPort;
+	std::string m_innerIP;
+	bool m_necessary;
+};
+
+//////////////////////////////////////////////////////////////////////////
+
 struct SLogicServerConnectionItem
 {
     std::vector<EServerType> m_vecConnectionServerType;
@@ -29,16 +61,7 @@ struct SLogicServerConnectionItem
 struct SLogicServerListItem
 {
     SLogicServerListItem()
-    :m_serverID(INVALID_SERVER_ID)
-    ,m_serverType(ESERVER_UNKNOW)
-    ,m_acceptNetType(BCLib::Network::NETT_NULL)
-    ,m_acceptIP("")
-    ,m_acceptPort(0)
-    ,m_outerIP("")
-    ,m_outerPort(0)
-    ,m_innerIP("")
-    ,m_necessary(false)
-    ,m_isFetched(false)
+    :m_isFetched(false)
     ,m_isActive(false)
     ,m_isInited(false)
     ,m_bClearPeers(false)
@@ -58,15 +81,7 @@ struct SLogicServerListItem
     void addNotifyInited(ServerID serverID);
     void delNotifyInited(ServerID serverID);
 
-    ServerID m_serverID;
-    EServerType m_serverType;
-    BCLib::Network::ENetType m_acceptNetType;
-    std::string m_acceptIP;
-    BCLib::int16 m_acceptPort;
-    std::string m_outerIP;
-    BCLib::int16 m_outerPort;
-    std::string m_innerIP;
-    bool m_necessary;
+	SServerInfo m_serverInfo;
 
     bool m_isFetched;
     bool m_isActive;
@@ -84,25 +99,11 @@ typedef std::vector<SLogicServerListItem> SLogicServerListItemVec;
 struct SExternalServerListItem
 {
 	SExternalServerListItem()
-		:m_serverID(INVALID_SERVER_ID)
-		,m_serverType(ESERVER_UNKNOW)
-		,m_outerIP("")
-		,m_outerPort(0)
-		,m_isFetched(false)
+	:m_isFetched(false)
 	{
 	}
 
-    std::string getDebugPrompt() const
-    {
-        BCLib::Utility::CStringA strPrompt = "";
-        strPrompt.format("ServerType[%s] ServerID[%d] OuterIP[%s] OuterPort[%d]", getServerTypeName(m_serverType).c_str(), m_serverID, m_outerIP.c_str(), m_outerPort);
-        return strPrompt;
-    }
-
-    ServerID m_serverID;
-    EServerType m_serverType;
-    std::string m_outerIP;
-    BCLib::uint16 m_outerPort;
+	SServerInfo m_serverInfo;
 	bool m_isFetched;
 };
 typedef std::vector<SExternalServerListItem> SExternalServerListItemVec;
@@ -111,7 +112,9 @@ struct SActiveServerList
 {
     std::vector<ServerID> m_serverIDList;
 };
-typedef std::map<EServerType, SActiveServerList> CActiveServerMap;
+typedef std::map<EServerType, SActiveServerList> SActiveServerListMap;
+
+//////////////////////////////////////////////////////////////////////////
 
 class CXmlConfig
 {
@@ -137,20 +140,28 @@ public:
 
     void notifyCloseServer();
 
-protected:
-    bool loadConfig(const std::string& strFile);
-    void setServerMgrServerList();
+	bool loadConfig(const std::string& strFile = "");
+	bool reloadConfig();
 
-    void setFetched(ServerID serverID, bool isFetched);
-    void setActive(ServerID serverID, bool isActive);
-    void setShakeHands(ServerID srcServerID, ServerID dstServerID);
-    void setInited(ServerID serverID, bool isInited);
+// 以下函数开放出来主要是给 CMasterServer 和 CMasterStub 用的
+public:
+	/// @brief 模拟收到网络消息 SMsgMS2XSNtfLogicServerList 后，直接对 CServerMgr 进行设置
+	/// @return void
+	void setServerMgrLogicServerList();
+	/// @brief 模拟收到网络消息 SMsgMS2XSNtfExternalServerList 后，直接对 CServerMgr 进行设置
+	/// @return void
+	void setServerMgrExternalServerList();
 
-    ServerID fetchServerID(SFLib::EServerType serverType, BCLib::Network::ENetType netType, const char* peerIP);
-    EServerType fetchServerType(ServerID serverID, BCLib::Network::ENetType netType, const char* peerIP);
+    void setLogicServerFetched(ServerID serverID, bool isFetched);
+    void setLogicServerActive(ServerID serverID, bool isActive);
+	void setLogicServerInited(ServerID serverID, bool isInited);
+    void setLogicServerShakeHands(ServerID srcServerID, ServerID dstServerID);
+
+    ServerID fetchLogicServerID(SFLib::EServerType serverType, BCLib::Network::ENetType netType, const char* peerIP);
+    EServerType fetchLogicServerType(ServerID serverID, BCLib::Network::ENetType netType, const char* peerIP);
 
 	ServerID fetchExternalServerID(SFLib::EServerType serverType);
-    bool getAcceptInfo(ServerID serverID, SFLib::Message::SServerAcceptInfo& acceptInfo);
+    bool getLogicServerAcceptInfo(ServerID serverID, SFLib::Message::SServerAcceptInfo& acceptInfo);
 
     void sendLogicServerListToStub(CTcpStub* masterStub);
     void sendExternalServerListToStub(CTcpStub* masterStub);
@@ -165,13 +176,13 @@ protected:
     void setCloseServer(ServerID serverID, bool bClose);
     bool isAllServerCloseServer();
 
-    int getActiveServerMap(CActiveServerMap& serverMap);
+    int getLogicActiveServerListMap(SActiveServerListMap& serverMap);
 
     SExternalServerListItemVec& getExternalServerList();
 
 private:
-	bool _isNecessaryServer(ServerID serverID);
-	bool _isNecessaryServerActives();
+	bool _isNecessaryLogicServer(ServerID serverID);
+	bool _isNecessaryLogicServerActives();
 
 	bool _loadLogicServerType(BCLib::Utility::CXmlFile& xmlFile, BCLib::Utility::HXmlNode logicServerTypeNode);
     bool _loadLogicServerConnection(BCLib::Utility::CXmlFile& xmlFile, BCLib::Utility::HXmlNode connectionNode);
@@ -183,28 +194,24 @@ private:
     bool _addLogicServerListItem(SLogicServerListItem& item);
     bool _addExternalServerListItem(SExternalServerListItem& item);
 
-    void _setServerMgrLogicServerList();
-    void _setServerMgrExternalServerList();
-
     EServerType _getLogicServerTypeByString(const std::string& str);
     EServerType _getExternalServerTypeByString(const std::string& str);
 
     bool _shouldConnectTo(EServerType startServer, EServerType endServer);
 
 private:
-    BCLib::Utility::CMutex m_mutex;
-    BCLib::Utility::CMutex m_mutexEx;
-
     std::string m_strFile;
 
     std::map<std::string, EServerType> m_logicServerType;
     std::map<EServerType, SLogicServerConnectionItem> m_logicServerConnection;
     SLogicServerListItemVec m_logicServerList;
+	BCLib::Utility::CMutex m_mutexLogicServerList;
 
     std::map<std::string, EServerType> m_externalServerType;
     SExternalServerListItemVec m_externalServerList;
+	BCLib::Utility::CMutex m_mutexExternalServerList;
 };
-}//Master
+}//CommonServer
 }//SFLib
 
 #endif//__SFLIB_COMMONSERVER_XMLCONFIG_H__

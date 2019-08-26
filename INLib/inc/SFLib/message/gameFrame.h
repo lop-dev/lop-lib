@@ -328,8 +328,6 @@ public:
 
     BCLib::uint32 getSize() { return sizeof(SMsgXX2XXNtfTransformMsg) - sizeof(char) + m_bufSize * sizeof(char); }
 };
-SMsgXX2XXNtfTransformMsg* makeSMsgXX2XXNtfTransformMsg(const SFLib::Message::CNetMessage* msg, PeerID peerID);
-SMsgXX2XXNtfTransformMsg* makeSMsgXX2XXNtfTransformMsg(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize, PeerID peerID);
 
 SFLIB_MSGDEBUG(ESERVER_ANYXX, EFUNC_GAMEFRAME, EMID_XX2XX_NTF_SINGLETON_DBG);
 struct SMsgXX2XXNtfSingletonDbg : public SNetMessage
@@ -384,8 +382,6 @@ public:
     BCLib::uint32 getSize() const { return sizeof(SMsgXX2XXNtfSingletonDbg) - sizeof(char) + m_bufSize * sizeof(char); }
     SSFCallback* getSFCallback() const { return (SSFCallback*)m_buf; }
 };
-SMsgXX2XXNtfSingletonDbg* getSMsgXX2XXNtfSingletonDbg(const SFLib::Message::CNetMessage* msg);
-SMsgXX2XXNtfSingletonDbg* getSMsgXX2XXNtfSingletonDbg(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
 //
 SFLIB_MSGDEBUG(ESERVER_GAMECLIENT, EFUNC_GAMEFRAME, EMID_XS2GC_NTF_RANDKEY);

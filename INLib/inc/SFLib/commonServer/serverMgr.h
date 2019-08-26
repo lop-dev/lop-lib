@@ -15,6 +15,8 @@
 #include <SFLib/message/message.h>
 #include <SFLib/commonServer/msgLabel.h>
 #include <BCLib/network/tcp/tcpSend.h>
+#include <SFLib/commonServer/xmlConfig.h>
+#include <SFLib/commonServer/netClient/externalClient.h>
 
 namespace SFLib
 {
@@ -41,6 +43,11 @@ public:
     ServerID getActiveServerID(EServerType serverType);
 
 public:
+	bool connectExternalServer(SFLib::ServerID serverID);
+	bool connectExternalServers(SFLib::ServerType serverType = INVALID_SERVER_TYPE);
+	CExternalClientPtr randomExternalClient(ServerType serverType);
+
+public:
     virtual bool bstMsgToXSByType(EServerType serverType, const SFLib::Message::CNetMessage* msg);
     virtual bool bstMsgToXSByType(EServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
@@ -51,38 +58,22 @@ private:
     void _clear();
 
 private:
-    struct SServerInfo
+    struct SServerInfoExt
     {
-        SServerInfo()
+		SServerInfoExt()
         {
-            m_createTime = BCLib::Utility::CDateTime::now().getTime();
         }
 
         int send(const SFLib::Message::CNetMessage* msg);
         int send(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
-        ServerID m_serverID;
-        EServerType m_serverType;
-        BCLib::Network::ENetType m_acceptNetType;
-        std::string m_acceptIP;
-        BCLib::uint16 m_acceptPort;
-        std::string m_outerIP;
-        BCLib::uint16 m_outerPort;
-        std::string m_innerIP;
+		SFLib::CommonServer::SServerInfo m_serverInfo;
         BCLib::Network::CTcpSendSPtr m_netSend;
-        time_t m_createTime;
-
-        std::string getDebugPrompt() const
-        {
-            BCLib::Utility::CStringA strPrompt = "";
-            strPrompt.format("ServerType[%s], ServerID[%d]", getServerTypeName(m_serverType).c_str(), m_serverID);
-            return strPrompt;
-        }
     };
 
 private:
-    BCLib::Utility::CHashMap<BCLib::uint32, SServerInfo*> m_serverListByID;
-    std::vector<SServerInfo*> m_serverListByType[ESERVER_MAX - ESERVER_GAMECLIENT];
+    BCLib::Utility::CHashMap<BCLib::uint32, SServerInfoExt*> m_serverListByID;
+    std::vector<SServerInfoExt*> m_serverListByType[ESERVER_MAX - ESERVER_GAMECLIENT];
 };
 }//CommonServer
 }//SFLib
