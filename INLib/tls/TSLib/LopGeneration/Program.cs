@@ -219,15 +219,6 @@ namespace Proto2Code
             luaConfig.TransConfig();
 
             Console.WriteLine("刷新VS工程文件");
-            //string vsRefresh1 = dirRoot.FullName + "/TableOut/C++/PTLib/RefPTLibPrj.exe";
-            //System.Diagnostics.ProcessStartInfo ref1 = new System.Diagnostics.ProcessStartInfo();
-            //ref1.FileName = vsRefresh1;
-            //ref1.UseShellExecute = false;
-            //ref1.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            //Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/PTLib/";
-            //var proc1 = System.Diagnostics.Process.Start(ref1);
-            //proc1.WaitForExit();
-
             string vsRefresh2 = dirRoot.FullName + "/TableOut/C++/LTLib/RefLTLibPrj.exe";
             System.Diagnostics.ProcessStartInfo ref2 = new System.Diagnostics.ProcessStartInfo();
             ref2.FileName = vsRefresh2;
