@@ -68,6 +68,9 @@ public:
     virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
     virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
+	virtual bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
+	virtual bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+
 protected:
     virtual void _setLogicServerInfo(EServerType serverType, ServerID serverID);
     virtual void _delLogicServerInfo(EServerType serverType, ServerID serverID);

@@ -46,8 +46,8 @@ public:
 	virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
 	virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
-    bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
-	bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+	virtual bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
+	virtual bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
     bool sendMsgToMS(const SFLib::Message::CNetMessage* msg);
 	bool sendMsgToMS(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
