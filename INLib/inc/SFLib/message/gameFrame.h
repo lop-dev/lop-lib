@@ -177,6 +177,18 @@ struct SServerInfo
     char m_outerIP[SFLIB_IP_TEXT_MAX+1];
     BCLib::uint16 m_outerPort;
     char m_innerIP[SFLIB_IP_TEXT_MAX+1];
+
+	SServerInfo()
+	{
+		m_serverID = INVALID_SERVER_ID;
+		m_serverType = INVALID_SERVER_TYPE;
+		m_acceptNetType = BCLib::Network::ENetType::NETT_NULL;
+		memset(m_acceptIP, 0, sizeof(m_acceptIP));
+		m_acceptPort = 0;
+		memset(m_outerIP, 0, sizeof(m_outerIP));
+		m_outerPort = 0;
+		memset(m_innerIP, 0, sizeof(m_outerPort));
+	}
 };
 
 SFLIB_MSGDEBUG(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_MS2XS_NTF_LOGIC_SERVER_LIST);
@@ -213,8 +225,16 @@ struct SServerAcceptInfo
 {
     ServerID m_serverID;
     BCLib::Network::ENetType m_acceptNetType;
-    char m_acceptIP[SFLIB_IP_TEXT_MAX+1];
+	char m_acceptIP[SFLIB_IP_TEXT_MAX + 1];
     BCLib::uint16 m_acceptPort;
+
+	SServerAcceptInfo()
+	{
+		m_serverID = INVALID_SERVER_ID;
+		m_acceptNetType = BCLib::Network::ENetType::NETT_NULL;
+		memset(m_acceptIP, 0, sizeof(m_acceptIP));
+		m_acceptPort = 0;
+	}
 };
 
 SFLIB_MSGDEBUG(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_MS2XS_NTF_VERIFY_SUCCESS);
@@ -236,7 +256,7 @@ public:
     SServerAcceptInfo m_acceptInfo;
     SMsgMS2XSReqAccept() : SNetMessage(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_MS2XS_REQ_ACCEPT)
     {
-        memset(&m_acceptInfo, 0, sizeof(m_acceptInfo));
+        ;
     }
 };
 

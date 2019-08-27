@@ -39,13 +39,12 @@ public:
     bool isSetNetSend(ServerID serverID);
 
     bool getServerInfo(ServerID serverID, SFLib::Message::SServerInfo& serverInfo);
-    int getActiveServerID(EServerType serverType, std::vector<ServerID>& serverIDList);
-    ServerID getActiveServerID(EServerType serverType);
+	int getServerIDs(EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive = false);
+	SFLib::ServerID randomServerID(ServerType serverType);
 
 public:
 	bool connectExternalServer(SFLib::ServerID serverID);
 	bool connectExternalServers(SFLib::ServerType serverType = INVALID_SERVER_TYPE);
-	CExternalClientPtr randomExternalClient(ServerType serverType);
 
 public:
     virtual bool bstMsgToXSByType(EServerType serverType, const SFLib::Message::CNetMessage* msg);
