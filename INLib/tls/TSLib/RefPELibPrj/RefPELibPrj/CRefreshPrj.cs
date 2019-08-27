@@ -113,7 +113,14 @@ namespace RefreshPTPrj
                             int subIndex = file.LastIndexOf("\\inc\\");
                             string line = "    <ClInclude Include=\"..\\..\\.." + file.Substring(subIndex) + "\">";
                             sw.WriteLine(line);
-                            line = "      <Filter>inc\\protoext</Filter>";
+                            if (file.Contains("\\protoext\\"))
+                            {
+                                line = "      <Filter>inc\\protoext</Filter>";
+                            }
+                            else if (file.Contains("\\commonDefine\\"))
+                            {
+                                line = "      <Filter>inc\\commonDefine</Filter>";
+                            }
                             sw.WriteLine(line);
                             sw.WriteLine("    </ClInclude>");
                         }
@@ -126,7 +133,14 @@ namespace RefreshPTPrj
                             int subIndex = file.LastIndexOf("\\src\\");
                             string line = "    <ClCompile Include=\"..\\..\\.." + file.Substring(subIndex) + "\">";
                             sw.WriteLine(line);
-                            line = "      <Filter>src\\protoext</Filter>";
+                            if (file.Contains("\\protoext\\"))
+                            {
+                                line = "      <Filter>src\\protoext</Filter>";
+                            }
+                            else if (file.Contains("\\commonDefine\\"))
+                            {
+                                line = "      <Filter>src\\commonDefine</Filter>";
+                            }
                             sw.WriteLine(line);
                             sw.WriteLine("    </ClCompile>");
                         }
