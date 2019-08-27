@@ -40,11 +40,11 @@ namespace UDLib.Utility
             }
         }
 
-        protected void OnDestory()
+        protected void OnDestroy()
         {
             m_Instance = null;
-            applicationIsQuitting = true;
         }
+
 
         public virtual void Init()
         {
@@ -52,6 +52,7 @@ namespace UDLib.Utility
      
         private void OnApplicationQuit()
         {
+            applicationIsQuitting = true;
             m_Instance = null;
         }
     }
