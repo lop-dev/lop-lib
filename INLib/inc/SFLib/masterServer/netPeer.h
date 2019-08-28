@@ -34,6 +34,9 @@ public:
     virtual bool reqLeave(EPeerLeaveReason nReason);
     virtual void terminate();
 
+public:
+	virtual ServerID getServerID(EServerType serverType);
+
 	virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
     virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
@@ -47,7 +50,6 @@ public:
 	ServerID getGameClientStubID() { return m_gameClientStubID; }
 	void setGameClientStubID(BCLib::Network::TcpStubID gameClientStubID) { m_gameClientStubID = gameClientStubID; }
 
-	ServerID getServerIDByType(EServerType serverType);
 	bool isInServer(ServerID serverID);
     BCLib::uint8 getActiveServerID(std::vector<SFLib::ServerID>& serverList);
 

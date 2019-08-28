@@ -38,6 +38,9 @@ public:
 	virtual bool serializeTo(BCLib::Utility::CStream& stream) const;
 	virtual bool serializeFrom(BCLib::Utility::CStream& stream);
 
+public:
+	virtual ServerID getServerID(EServerType serverType);
+
 	/// @brief 发送消息到其他服务器
 	/// @return bool
 	/// @param serverType 服务器类型
@@ -61,7 +64,6 @@ public:
 
 	SFLib::CommonServer::CTcpStubPtr getGameClientStub() { return m_gameClientStub;	}
 
-    ServerID getServerIDByType(EServerType serverType);
 	BCLib::uint32 getPingValue();
 
 public:
