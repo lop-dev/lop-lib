@@ -159,15 +159,19 @@ public:
     /// @param serverType 对方Server类型
     virtual void cbServerInit(ServerID serverID, EServerType serverType);
 
-    /// @brief 其他Server与本地Server连接断开
+    /// @brief 其他Server与本地Server连接断开，可能是异常断开
     /// @return void
     /// @param serverID 对方ServerID
     /// @param serverType 对方Server类型
     virtual void cbServerLeave(ServerID serverID, EServerType serverType);
 
-    /// @brief 本地Server即将关闭
-    /// @return void
-    virtual void cbCloseServer();
+	/// @brief 本地Server需要保存，是MS发出的通知
+	/// @return void
+	virtual void cbServerSave(GroupID groupID);
+
+	/// @brief 本地Server即将关闭，是MS发出的通知
+	/// @return void
+	virtual void cbServerClose(GroupID groupID);
 
     /// @brief 创建Peer，不能保证其它服务器已经创建成功
     /// @return void

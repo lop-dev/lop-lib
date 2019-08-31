@@ -44,6 +44,9 @@ public:
     BCLib::uint32	hash(BCLib::uint32 u32Hash) { return u32Hash % (m_uGroupCount + 1); }
     KeyHashMap&     getKeyHmap() {return m_keyHashMap;}
 
+	BCLib::int32    getReqQueueSize();
+	BCLib::int32    getResQueueSize();
+
 protected:
     virtual void    _processTask(CDatabaseTask * pTaskReply) = 0;
 

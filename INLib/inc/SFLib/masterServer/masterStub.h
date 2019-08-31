@@ -40,7 +40,7 @@ protected:
     virtual void _onXS2MSReqLeaveServer(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
 
     virtual void _onXS2MSReqValidRandKey(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
-    virtual void _onXS2MSAckCloseServer(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
+    virtual void _onXS2MSAckServerSave(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
 
 	virtual ServerID _getServerIDByType(EServerType serverType);
 };

@@ -138,7 +138,7 @@ public:
 	void sendMsgToAllStubExceptType(const SFLib::Message::CNetMessage* msg, BCLib::int32 serverType);
 	void sendMsgToAllStubAssignType(const SFLib::Message::CNetMessage* msg, BCLib::int32 serverType);
 
-    void notifyCloseServer();
+    void notifyCloseServer(GroupID groupID);
 
 	bool loadConfig(const std::string& strFile = "");
 	bool reloadConfig();

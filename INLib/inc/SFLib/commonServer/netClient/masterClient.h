@@ -20,7 +20,7 @@ public:
     CMasterClient();
     virtual ~CMasterClient();
 
-    bool ackCloseServer();
+    bool ackServerSave(GroupID groupID);
 
 protected:
     virtual bool _enterPoll();
@@ -32,7 +32,8 @@ protected:
     virtual void _onMS2XSNtfExternalServerList(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
     virtual void _onMS2XSNtfVerifySuccess(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
     virtual void _onMS2XSNtfRemoveServer(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
-    virtual void _onMS2XSReqCloseServer(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
+    virtual void _onMS2XSReqServerSave(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
+	virtual void _onMS2XSNtfServerClose(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
 };
 typedef BCLib::Utility::CSPointer<CMasterClient> CMasterClientPtr;
 }//CommonServer
