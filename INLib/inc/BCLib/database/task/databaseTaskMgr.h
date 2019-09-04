@@ -31,7 +31,7 @@ public:
     CDatabaseTaskMgr();
     virtual ~CDatabaseTaskMgr();
 
-    bool            init(std::vector<BCLib::Database::CDBInfo*> & vecDBInfo, BCLib::uint32 uGroupCount = 5);
+    bool            init(std::vector<BCLib::Database::CDBInfo*> & vecDBInfo, BCLib::uint32 uGroupCount = 8);
     void            release();
 
     bool            addTask(BCLib::uint32 u32HashID, CDatabaseTask * pTask);
@@ -39,9 +39,9 @@ public:
 
     BCLib::int32    processTaskResults();
 
-    BCLib::uint32   getGroupCount() {return m_uGroupCount;}
+    BCLib::uint32   getGroupCount() {return m_vecGroup.size();}
 
-    BCLib::uint32	hash(BCLib::uint32 u32Hash) { return u32Hash % (m_uGroupCount + 1); }
+    BCLib::uint32	hash(BCLib::uint32 u32Hash) { return u32Hash % m_vecGroup.size(); }
     KeyHashMap&     getKeyHmap() {return m_keyHashMap;}
 
 	BCLib::int32    getReqQueueSize();
@@ -51,8 +51,7 @@ protected:
     virtual void    _processTask(CDatabaseTask * pTaskReply) = 0;
 
 private:
-    BCLib::uint32  m_uGroupCount; // static const BCLib::uint32  m_uGroupCount = 5;
-    CDatabaseTaskGroup* m_taskGroup[5+1]; // CDatabaseTaskGroup* m_taskGroup[m_uGroupCount+1];
+	std::vector<CDatabaseTaskGroup*> m_vecGroup;
     KeyHashMap          m_keyHashMap;
 };
 

@@ -26,6 +26,8 @@ public:
     virtual ~CNetPeerMgr();
 
     CNetPeerPtr getNetPeer(PeerID peerID);
+	CNetPeerPtr getNetPeerByEntityID(EntityID entityID);
+
     BCLib::Utility::CUniqueID32* getAllocPeerID()
     {
         return &m_allocPeerID;

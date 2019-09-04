@@ -27,6 +27,7 @@ public:
         }
         virtual bool execute(CNetPeerPtr& stub) = 0;
     };
+
 public:
     CNetPeerMgr();
     virtual ~CNetPeerMgr();
@@ -42,10 +43,16 @@ public:
     void clear();
     void traversal(CNetPeerMgrCallback& cb);
 
+	bool getNetPeerByEntityID(EntityID entityID, CNetPeerPtr& netPeer);
+
 	BCLib::uint32 getNetPeerNum() { return m_netPeerHasnMap.size(); }
 
-    virtual bool serializeTo(BCLib::Utility::CStream& stream) const;
-    virtual bool serializeFrom(BCLib::Utility::CStream& stream);
+    bool serializeTo(BCLib::Utility::CStream& stream) const;
+    bool serializeFrom(BCLib::Utility::CStream& stream);
+
+protected:
+	virtual bool _serializeTo(BCLib::Utility::CStream& stream) const;
+	virtual bool _serializeFrom(BCLib::Utility::CStream& stream);
 
 private:
     static CNetPeerMgr* m_netPeerMgr;

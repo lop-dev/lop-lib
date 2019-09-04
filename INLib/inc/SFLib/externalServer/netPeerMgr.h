@@ -25,14 +25,16 @@ public:
     virtual ~CNetPeerMgr();
 
     CNetPeerPtr getNetPeer(PeerID peerID);
-
-    virtual bool serializeTo(BCLib::Utility::CStream& stream) const;
-    virtual bool serializeFrom(BCLib::Utility::CStream& stream);
+	CNetPeerPtr getNetPeerByEntityID(EntityID entityID);
 
 	/// @brief 当一个服务器断线了，清理跟它关联的所有玩家
 	/// @return void
 	/// @param serverType 服务器类型，只会发送给内部服务器
 	void clear(BCLib::Network::TcpStubID stubID);
+
+protected:
+	virtual bool _serializeTo(BCLib::Utility::CStream& stream) const;
+	virtual bool _serializeFrom(BCLib::Utility::CStream& stream);
 };
 }//External
 }//SFLib

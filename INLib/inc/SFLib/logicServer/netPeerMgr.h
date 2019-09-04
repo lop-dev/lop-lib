@@ -25,9 +25,11 @@ public:
     virtual ~CNetPeerMgr();
 
     CNetPeerPtr getNetPeer(PeerID peerID);
+	CNetPeerPtr getNetPeerByEntityID(EntityID entityID);
 
-    virtual bool serializeTo(BCLib::Utility::CStream& stream) const;
-    virtual bool serializeFrom(BCLib::Utility::CStream& stream);
+protected:
+	virtual bool _serializeTo(BCLib::Utility::CStream& stream) const;
+	virtual bool _serializeFrom(BCLib::Utility::CStream& stream);
 };
 }//Logic
 }//SFLib

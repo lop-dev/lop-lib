@@ -34,24 +34,11 @@ public:
     virtual ~CNetPeer();
 
     GroupID getGroupID() const;
+    PeerID getPeerID() const { return m_netPeerID; }
+    EPeerState getState() { return m_peerState; }
 
-    PeerID getPeerID() const
-    {
-        return m_netPeerID;
-    }
-    EPeerState getState()
-    {
-        return m_peerState;
-    }
-
-	void setEntityID(EntityID entityID)
-	{
-		m_entityID = entityID;
-	}
-	EntityID getEntityID() const
-	{
-		return m_entityID;
-	}
+	void setEntityID(EntityID entityID)	{ m_entityID = entityID; }
+	EntityID getEntityID() const { return m_entityID; }
 
     virtual void init();
     virtual bool reqLeave();
