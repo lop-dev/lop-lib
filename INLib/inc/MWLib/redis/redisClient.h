@@ -5,35 +5,17 @@
 #include <SFLib/commonDefine/logFile.h>
 #include <BCLib/utility/singleton.h>
 #include <MWLib/redis/redlock.h>
+#include <MWLib/redis/redisBaseDef.h>
 #include <unordered_map>
 #include <hiredis.h>
 #include <BCLib/utility/thread/thread.h>
 #include <thread>
 using namespace std;
 
-
-#define MWLIB_REDIS_DEFAULT_UNIQUEID 1000000
-
 namespace MWLib
 {
 	namespace Redis
 	{
-		enum EREDIS_CONTEXT_TYPE
-		{
-			E_REDIS_SERVERTYPE_BEGIN = 0,
-			E_REDIS_SERVERTYPE_LOGIC,
-			E_REDIS_SERVERTYPE_CACHE,
-			E_REDIS_SERVERTYPE_FRIEND,
-			E_REDIS_SERVERTYPE_END,
-
-		};
-
-		enum EREDIS_ACCESS_RIGHT_TYPE
-		{
-			E_REDIS_READ_AND_WRITE = 0,
-			E_REDIS_READ_ONLY,
-		};
-
 		typedef struct Redis_Node
 		{
 			redisContext *m_redisContext;
@@ -58,7 +40,6 @@ namespace MWLib
 				}
 			}
 		}REDIS_NODE;
-
 		class CRedisClient
 		{
 			//BCLIB_SINGLETON_DECLARE(CRedisSystem);
@@ -68,6 +49,7 @@ namespace MWLib
 			virtual ~CRedisClient();
 
 		public:
+			bool isValid(EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 			/**
 			* 功能:以二进制的形式保存ptbuf
 			* @param key 键值即对应hash表 名这里使用服务系统名
@@ -110,8 +92,14 @@ namespace MWLib
 			bool setString(const char *key, const char *value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 			bool setString(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
+			bool setString(const char *key, std::string &value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+			bool setString(const char *key, BCLib::uint64 uniqueid, const char *subkey, std::string &value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+
 			std::string getString(const char *key, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 			std::string getString(const char *key, BCLib::uint64 uniqueid, const char *subkey, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+
+			bool getString(const char *key, std::string &str, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+			bool getString(const char *key, BCLib::uint64 uniqueid, const char *subkey, std::string &str, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			//Uint64
 			bool setUint64(const char *key, BCLib::uint64 value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
@@ -352,7 +340,7 @@ namespace MWLib
 			bool herase(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *field, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			/**
-			* 功能：移除一个成员或多个成员
+			* 功能：模糊查找
 			* @param key 集合名
 			* @param matchKey 匹配字符串，匹配规则同scan
 			* @param field_values 返回key-value map
@@ -364,7 +352,7 @@ namespace MWLib
 			BCLib::uint64 hscan(const char *key, const char *matchKey, std::map<std::string, std::string>& field_values, BCLib::uint64 start = 0, BCLib::uint64 count = 50, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			/**
-			* 功能：移除一个成员或多个成员
+			* 功能：模糊查找
 			* @param key 集合名
 			* @param uniqueid 实体ID 没有实体ID的可以考虑统一使用1000000来代替
 			* @param subkey 二级表名
@@ -378,7 +366,7 @@ namespace MWLib
 			BCLib::uint64 hscan(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *matchKey, std::map<std::string, std::string>& field_values, BCLib::uint64 start = 0, BCLib::uint64 count = 50, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			/**
-			* 功能：移除一个成员或多个成员
+			* 功能：模糊查找
 			* @param key 集合名
 			* @param matchKey 匹配字符串，匹配规则同scan
 			* @param end 返回本次遍历的结束时的游标 0表示完全遍历
@@ -390,7 +378,7 @@ namespace MWLib
 			const std::map<std::string, std::pair<char*, BCLib::uint32>*>* hscan(const char *key, const char *matchKey, BCLib::uint64 &end, BCLib::uint64 start = 0, BCLib::uint64 count = 50, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			/**
-			* 功能：移除一个成员或多个成员
+			* 功能：模糊查找
 			* @param key 集合名
 			* @param uniqueid 实体ID 没有实体ID的可以考虑统一使用1000000来代替
 			* @param subkey 二级表名
@@ -402,6 +390,24 @@ namespace MWLib
 			* @return 返回key-value map
 			*/
 			const std::map<std::string, std::pair<char*, BCLib::uint32>*>* hscan(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *matchKey, BCLib::uint64 &end, BCLib::uint64 start = 0, BCLib::uint64 count = 50, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+
+			/**
+			* 功能:获取hmap中字段数量
+			* @param key 键值即对应hash表名
+			* @param field 哈希表key中的域
+			* @return  字段数量
+			*/
+			BCLib::uint32 hlen(const char *key, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+
+			/**
+			* 功能:获取hmap中字段数量
+			* @param key 键值即对应hash表名
+			* @param uniqueid 实体ID 没有实体ID的可以考虑统一使用1000000来代替
+			* @param subkey 二级表名
+			* @param field 哈希表key中的域
+			* @return  字段数量
+			*/
+			BCLib::uint32 hlen(const char *key, BCLib::uint64 uniqueid, const char *subkey, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			/*
 			*list 封装↓↓↓↓↓
@@ -1110,16 +1116,16 @@ namespace MWLib
 			*/
 			bool zrevRange(const char *key, std::vector<std::pair<std::string, double>> &members, BCLib::int32 startIndex = 0, BCLib::int32 stopIndex = -1, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);// ZREVRANGE salary 0 - 1 WITHSCORES
 
-																																																				 /**
-																																																				 * 功能：取出集合内指定索引范围内的所有成员(按分数由高->低) 默认全部取出
-																																																				 * @param key 集合名
-																																																				 * @param uniqueid key集合下的子集和编号
-																																																				 * @param subkey 子集和编号下的二级子集和名 与key uniqueid 共同组成唯一集合名 key:[uniqueid]:subkey  多维结构
-																																																				 * @param members 读取到的<成员-分数>的vector
-																																																				 * @param startIndex 指定的开始读取索引
-																																																				 * @param stopIndex 指定的结束读取索引 -1表示倒数第一个，-2表示倒数第二个,...
-																																																				 * @return 成功或失败
-																																																				 */
+			/**
+			* 功能：取出集合内指定索引范围内的所有成员(按分数由高->低) 默认全部取出
+			* @param key 集合名
+			* @param uniqueid key集合下的子集和编号
+			* @param subkey 子集和编号下的二级子集和名 与key uniqueid 共同组成唯一集合名 key:[uniqueid]:subkey  多维结构
+			* @param members 读取到的<成员-分数>的vector
+			* @param startIndex 指定的开始读取索引
+			* @param stopIndex 指定的结束读取索引 -1表示倒数第一个，-2表示倒数第二个,...
+			* @return 成功或失败
+			*/
 			bool zrevRange(const char *key, BCLib::uint64 uniqueid, const char *subkey, std::vector<std::pair<std::string, double>> &members, BCLib::int32 startIndex = 0, BCLib::int32 stopIndex = -1, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			//返回指定成员的分数值
@@ -1282,7 +1288,7 @@ namespace MWLib
 					{
 						continue;
 					}
-					delete ((*iter)->first);
+					delete[] ((*iter)->first);
 					(*iter)->first = NULL;
 					(*iter)->second = 0;
 
@@ -1301,7 +1307,7 @@ namespace MWLib
 						continue;
 					}
 					//char *pChar = p->first;		
-					delete (p->first);
+					delete[] (p->first);
 					//pChar = NULL;
 					p->first = NULL;
 					p->second = 0;
@@ -1318,6 +1324,7 @@ namespace MWLib
 				if (m_pRedLock != NULL)
 				{
 					delete m_pRedLock;
+					m_pRedLock = NULL;
 				}
 				return;
 			}

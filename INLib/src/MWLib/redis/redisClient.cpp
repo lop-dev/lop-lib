@@ -73,6 +73,27 @@ namespace MWLib
 			destoryRedLock();
 			m_redisContextMap.clear();
 		}
+		bool CRedisClient::isValid(EREDIS_CONTEXT_TYPE type)
+		{
+			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "isValid exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+				return false;
+			}
+			
+			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
+			if (it == m_redisContextMap.end())
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "CRedisClient::isValid type= %d", type);
+				return false;
+			}
+			if (it->second.m_redisContext == NULL)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "CRedisClient::isValid m_redisContext=NULL type= %d", type);
+				return false;
+			}
+			return true;
+		}
 
 		bool CRedisClient::savePTBuf(std::string &key, BCLib::uint64 uniqueid, std::string & strPTbufName, const ::google::protobuf::MessageLite *pPtbuf, EREDIS_CONTEXT_TYPE type)
 		{
@@ -86,11 +107,11 @@ namespace MWLib
 				return false;
 			}
 
-			char writebuf[REDIS_READER_MAX_BUF] = { 0 };
+			//char writebuf[REDIS_READER_MAX_BUF] = { 0 };
+			std::string str;
+			pPtbuf->SerializeToString(&str);
 
-			pPtbuf->SerializeToArray(writebuf, REDIS_READER_MAX_BUF);
-
-			bool ret = setBin(key.c_str(), uniqueid, strPTbufName.c_str(), writebuf, pPtbuf->GetCachedSize(), type);
+			bool ret = setString(key.c_str(), uniqueid, strPTbufName.c_str(), str,  type);
 			return ret;
 		}
 		BCLib::uint32 CRedisClient::loadPTBuf(std::string &key, BCLib::uint64 uniqueid, std::string & strPTbufName, ::google::protobuf::MessageLite *pPtbuf, BCLib::uint32 readBufSize, EREDIS_CONTEXT_TYPE type)
@@ -100,20 +121,18 @@ namespace MWLib
 				return 0;
 			}
 
-			char readbuf[REDIS_READER_MAX_BUF] = { 0 };
-
+			//char readbuf[REDIS_READER_MAX_BUF] = { 0 };
+			//char *readbuf = new char[readBufSize];
 			//pPtbuf->SerializeToArray(readbuf, REDIS_READER_MAX_BUF);
-
-			BCLib::uint32 ret = getBin(key.c_str(), uniqueid, strPTbufName.c_str(), readbuf, readBufSize, type);
-			if (readBufSize >= ret)
+			std::string str = "";
+			bool bRet = getString(key.c_str(), uniqueid, strPTbufName.c_str(), str, type);
+			if (!bRet)
 			{
-				pPtbuf->ParseFromArray(readbuf, ret);
+				return 0;
 			}
-			else
-			{
-				pPtbuf->ParseFromArray(readbuf, readBufSize);
-			}
-
+			BCLib::uint32 ret = str.length();
+			pPtbuf->ParseFromString(str);
+			//BCLIB_SAFE_DELETE_ARRAY(readbuf);
 			return ret;
 		}
 		void CRedisClient::setInfo(std::string& host, int port, std::string& passwd, EREDIS_CONTEXT_TYPE type)
@@ -137,13 +156,14 @@ namespace MWLib
 			{
 				if (it->second.m_host == "")
 				{
-					it++;
+					++it;
+					BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis init 结束 m_redisContextMap.m_host = [空]!!!");
 					continue;
 				}
 				bool  connectflag = connectWithTimeout(it->second.m_host, it->second.m_port, timeout, (EREDIS_CONTEXT_TYPE)it->first);
 				if (!connectflag)
 				{
-					it++;
+					++it;
 					continue;//return false;
 				}
 
@@ -153,13 +173,14 @@ namespace MWLib
 				bool cmdflag = exec(auth_cmd.c_str(), (EREDIS_CONTEXT_TYPE)it->first);
 				if (!cmdflag)
 				{
-					it++;
+					++it;
 					continue;//return false;
 				}
 
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis 认证成功!!!");
 				it++;
 			}
+			BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis init 结束 m_redisContextMap.m_host = [xxx]!!!");
 			m_eAccessRight = type;
 			return true;
 		}
@@ -220,7 +241,7 @@ namespace MWLib
 			{
 				return true;
 			}
-			m_pRedLock->AddServerContext(m_redisContext);
+			m_pRedLock->AddServerContext(m_redisContext, (BCLib::uint16)type );
 			it->second.m_redisContext = m_redisContext;
 			m_redisContext = NULL;
 			return true;
@@ -242,7 +263,7 @@ namespace MWLib
 			{
 				return true;
 			}
-			m_pRedLock->AddServerContext(m_redisContext);
+			m_pRedLock->AddServerContext(m_redisContext, (BCLib::uint16)type);
 			it->second.m_redisContext = m_redisContext;
 			m_redisContext = NULL;
 			//setCommandTimeout(tv, type);
@@ -266,7 +287,7 @@ namespace MWLib
 
 			if (m_pRedLock != NULL)
 			{
-				m_pRedLock->delServerContext(m_redisContext);
+				m_pRedLock->delServerContext(m_redisContext, (BCLib::uint16) type);
 			}
 
 			if (m_redisReply)
@@ -468,7 +489,74 @@ namespace MWLib
 			m_redisReply = NULL;
 			return retStr;
 		}
+		bool CRedisClient::getString(const char *key, std::string &str, EREDIS_CONTEXT_TYPE type)
+		{
+			if (key == NULL)
+			{
+				return false;
+			}
+			std::string retStr = "";
+			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
+			if (it == m_redisContextMap.end())
+			{
+				return false;
+			}
+			m_redisContext = it->second.m_redisContext;
 
+			m_redisReply = NULL;
+			if (m_redisContext == NULL)
+			{
+				return false;
+			}
+
+			m_redisReply = (redisReply*)redisCommand(m_redisContext, "GET %s", key);
+			if (m_redisReply == NULL)
+			{
+				this->disconnect();
+				return false;
+			}
+
+			if (m_redisReply->type == REDIS_REPLY_STRING)
+			{
+				//retStr = m_redisReply->str;
+				str.append(m_redisReply->str, m_redisReply->len);
+			}
+
+			freeReplyObject(m_redisReply);
+			m_redisReply = NULL;
+			return true;
+		}
+		bool CRedisClient::getString(const char *key, BCLib::uint64 uniqueid, const char *subkey, std::string &str, EREDIS_CONTEXT_TYPE type)
+		{
+			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "hsetString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+				return false;
+			}
+			char strKey[1024] = { 0 };
+			snprintf(strKey, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
+			return getString(strKey, str, type);
+		}
+		bool CRedisClient::setString(const char *key, std::string &value, EREDIS_CONTEXT_TYPE type)
+		{
+			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "hsetString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+				return false;
+			}
+			return setBin(key, value.c_str(), value.size(), type);
+		}
+		bool CRedisClient::setString(const char *key, BCLib::uint64 uniqueid, const char *subkey, std::string &value, EREDIS_CONTEXT_TYPE type)
+		{
+			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "hsetString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+				return false;
+			}
+			char strKey[1024] = { 0 };
+			snprintf(strKey, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
+			return setString(strKey, value, type);
+		}
 		bool CRedisClient::setUint64(const char* key, BCLib::uint64 value, EREDIS_CONTEXT_TYPE type)
 		{
 			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
@@ -811,13 +899,15 @@ namespace MWLib
 				if (len > (BCLib::uint32)m_redisReply->len)
 				{
 					memcpy(value, m_redisReply->str, m_redisReply->len);
+					retLen = m_redisReply->len;
 				}
 				else
 				{
 					memcpy(value, m_redisReply->str, len);
+					retLen = len;
 				}
 
-				retLen = m_redisReply->len;
+				
 			}
 
 			freeReplyObject(m_redisReply);
@@ -1760,6 +1850,7 @@ namespace MWLib
 			m_redisReply = NULL;
 			return &m_map;
 		}
+
 		const std::map<std::string, std::pair<char*, BCLib::uint32>*>* CRedisClient::hscan(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *matchKey, BCLib::uint64 &end, BCLib::uint64 start, BCLib::uint64 count, EREDIS_CONTEXT_TYPE type)
 		{
 			if (key == NULL || subkey == NULL)
@@ -1771,6 +1862,70 @@ namespace MWLib
 			snprintf(strKey, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
 			return hscan(strKey, matchKey, end, start, count, type);
 		}
+
+		BCLib::uint32 CRedisClient::hlen(const char *key, EREDIS_CONTEXT_TYPE type)
+		{
+			BCLib::uint32 ret = 0;
+			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "lpushString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+				return ret;
+			}
+			if (key == NULL)
+			{
+				return ret;
+			}
+			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
+			if (it == m_redisContextMap.end())
+			{
+				return ret;
+			}
+			m_redisContext = it->second.m_redisContext;
+			m_redisReply = NULL;
+			if (m_redisContext == NULL)
+			{
+				return ret;
+			}
+			m_redisReply = (redisReply*)redisCommand(m_redisContext, "HLEN %s ", key);
+			if (m_redisReply == NULL)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate hlen error m_redisReply = null HLEN %s ", key);
+				this->disconnect();
+				return ret;
+			}
+			else
+			{
+				if (m_redisReply->type == REDIS_REPLY_ERROR)
+				{
+					BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate hlen error HLEN %s", key);
+				}
+				if (m_redisReply->type == REDIS_REPLY_STRING)
+				{
+					BCLib::Utility::CStringA str = (std::string)m_redisReply->str;
+					ret = BCLib::Utility::CConvert::toUint32(str);
+				}
+				if (m_redisReply->type == REDIS_REPLY_INTEGER)
+				{
+					ret = (BCLib::uint32)m_redisReply->integer;
+				}		
+			}
+
+			freeReplyObject(m_redisReply);
+			m_redisReply = NULL;
+			return ret;
+		}
+
+		BCLib::uint32 CRedisClient::hlen(const char *key, BCLib::uint64 uniqueid, const char *subkey, EREDIS_CONTEXT_TYPE type)
+		{
+			if (key == NULL || subkey == NULL)
+			{
+				return 0;
+			}
+			char strKey[1024] = { 0 };
+			snprintf(strKey, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
+			return hlen(strKey, type);
+		}
+
 		bool CRedisClient::lpushString(const char* key, const char* value, EREDIS_CONTEXT_TYPE type)
 		{
 			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)

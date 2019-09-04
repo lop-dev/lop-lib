@@ -92,29 +92,32 @@ bool CRedLock::Initialize() {
 // ----------------
 // add redis server
 // ----------------
-bool CRedLock::AddServerContext(redisContext * c) {
+bool CRedLock::AddServerContext(redisContext * c, BCLib::uint16 type) {
 
     if (c != NULL) {
-        m_redisServer.push_back(c);
+		m_redisServerMap[type] = c;
+        //m_redisServer.push_back(c);
     }
-    m_quoRum = (int)m_redisServer.size() / 2 + 1;
+    m_quoRum = 1;
+	//m_quoRum = (int)m_redisServer.size() / 2 + 1;
     return true;
 }
-bool CRedLock::delServerContext(redisContext * c)
+bool CRedLock::delServerContext(redisContext * c, BCLib::uint16 type)
 {
     if (c == NULL)
     {
         return true;
     }
-    std::vector<redisContext *>::iterator it = m_redisServer.begin();
-    for (; it != m_redisServer.end(); it++)
+    //std::vector<redisContext *>::iterator it = m_redisServer.begin();
+	m_redisServerMap.erase(type);
+    /*for (; it != m_redisServer.end(); it++)
     {
         if (*it == c)
         {
             it = m_redisServer.erase(it);
             break;
         }
-    }
+    }*/
     return true;
 }
 // ----------------
@@ -128,7 +131,8 @@ void CRedLock::SetRetry(const int count, const int delay) {
 // ----------------
 // lock the resource
 // ----------------
-bool CRedLock::Lock(const char *resource, const int ttl, CLock &lock) {
+bool CRedLock::Lock(const char *resource, const int ttl, CLock &lock, BCLib::uint16 type)
+{
     sds val = GetUniqueLockId();
     if (!val) {
         return false;
@@ -142,12 +146,24 @@ bool CRedLock::Lock(const char *resource, const int ttl, CLock &lock) {
         BCLib::Utility::CSystemTime now;
         BCLib::uint64 startTime = now.getMilliseconds();
 
-        int slen = (int)m_redisServer.size();
+        /*int slen = (int)m_redisServer.size();
         for (int i = 0; i < slen; i++) {
             if (LockInstance(m_redisServer[i], resource, val, ttl)) {
                 n++;
             }
-        }
+        }*/
+		std::unordered_map<BCLib::uint16, redisContext *>::iterator it = m_redisServerMap.find(type);
+		if (it != m_redisServerMap.end())
+		{
+			if (it->second != NULL && LockInstance(it->second, resource, val, ttl)) {
+				n++;
+			}
+		}
+		if (n <= 0)
+		{
+			printf("Lock error can not find redis context by type = %d !", type);
+			return false;
+		}
         //Add 2 milliseconds to the drift to account for Redis expires
         //precision, which is 1 millisecond, plus 1 millisecond min drift
         //for small TTLs.
@@ -162,15 +178,17 @@ bool CRedLock::Lock(const char *resource, const int ttl, CLock &lock) {
             return true;
         }
         else {
-            Unlock(lock);
+            Unlock(lock, type);
         }
         // Wait a random delay before to retry
-        int delay = rand() % m_retryDelay + (int)floor(m_retryDelay / 2);
+        //int delay = rand() % m_retryDelay/10 + (int)floor(m_retryDelay / 20);
 
 #if defined(_LINUX)
-        usleep(delay * 1000);
+        //usleep(delay * 1000);
+		usleep(100);
 #else
-        Sleep(delay);
+        //Sleep(delay);
+		Sleep(1);
 #endif
         retryCount--;
     } while (retryCount > 0);
@@ -180,7 +198,7 @@ bool CRedLock::Lock(const char *resource, const int ttl, CLock &lock) {
 // ----------------
 // release resource
 // ----------------
-bool CRedLock::ContinueLock(const char *resource, const int ttl, CLock &lock) {
+bool CRedLock::ContinueLock(const char *resource, const int ttl, CLock &lock, BCLib::uint16 type) {
     sds val = GetUniqueLockId();
     if (!val) {
         return false;
@@ -196,12 +214,25 @@ bool CRedLock::ContinueLock(const char *resource, const int ttl, CLock &lock) {
     do {
         int n = 0;
         int startTime = (int)time(NULL) * 1000;
-        int slen = (int)m_redisServer.size();
-        for (int i = 0; i < slen; i++) {
-            if (ContinueLockInstance(m_redisServer[i], resource, val, ttl)) {
-                n++;
-            }
-        }
+        //int slen = (int)m_redisServer.size();
+        //for (int i = 0; i < slen; i++) {
+        //    if (ContinueLockInstance(m_redisServer[i], resource, val, ttl)) {
+        //        n++;
+        //    }
+        //}
+		std::unordered_map<BCLib::uint16, redisContext *>::iterator it = m_redisServerMap.find(type);
+		if (it != m_redisServerMap.end() && it->second != NULL)
+		{
+			if (ContinueLockInstance(it->second, resource, val, ttl))
+			{
+				n++;
+			}
+		}
+		if (n <= 0)
+		{
+			printf("ContinueLock error can not find redis context by type = %d !", type);
+			return false;
+		}
         // update old val
         sdsfree(m_continueLock.m_val);
         m_continueLock.m_val = sdsnew(val);
@@ -217,14 +248,16 @@ bool CRedLock::ContinueLock(const char *resource, const int ttl, CLock &lock) {
             return true;
         }
         else {
-            Unlock(lock);
+            Unlock(lock, type);
         }
         // Wait a random delay before to retry
-        int delay = rand() % m_retryDelay + (int)floor(m_retryDelay / 2);
+        //int delay = rand() % m_retryDelay + (int)floor(m_retryDelay / 2);
 #if defined(_LINUX)
-        usleep(delay * 1000);
+        //usleep(delay * 1000);
+		usleep(100);
 #else
-        Sleep(delay);
+        //Sleep(delay);
+		Sleep(1);
 #endif
         retryCount--;
     } while (retryCount > 0);
@@ -234,19 +267,25 @@ bool CRedLock::ContinueLock(const char *resource, const int ttl, CLock &lock) {
 // ----------------
 // lock the resource
 // ----------------
-bool CRedLock::Unlock(const CLock &lock) {
-    int slen = (int)m_redisServer.size();
-    for (int i = 0; i < slen; i++) {
-        UnlockInstance(m_redisServer[i], lock.m_resource, lock.m_val);
-    }
+bool CRedLock::Unlock(const CLock &lock, BCLib::uint16 type)
+{
+    //int slen = (int)m_redisServer.size();
+    //for (int i = 0; i < slen; i++) {
+    //    UnlockInstance(m_redisServer[i], lock.m_resource, lock.m_val);
+    //}
+	std::unordered_map<BCLib::uint16, redisContext *>::iterator it = m_redisServerMap.find(type);
+	if (it != m_redisServerMap.end() && it->second != NULL)
+	{
+		UnlockInstance(it->second, lock.m_resource, lock.m_val);
+	}
     return true;
 }
 
 // ----------------
 // lock the resource milliseconds
 // ----------------
-bool CRedLock::LockInstance(redisContext *c, const char *resource,
-    const char *val, const int ttl) {
+bool CRedLock::LockInstance(redisContext *c, const char *resource, const char *val, const int ttl) 
+{
     redisReply *reply;
     reply = (redisReply *)redisCommand(c, "set %s %s px %d nx",
         resource, val, ttl);

@@ -27,6 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\inc\MWLib\redis\redisBaseDef.h" />
     <ClInclude Include="..\..\..\inc\MWLib\redis\redisClient.h" />
     <ClInclude Include="..\..\..\inc\MWLib\redis\redisSystem.h" />
     <ClInclude Include="..\..\..\inc\MWLib\redis\redlock.h" />

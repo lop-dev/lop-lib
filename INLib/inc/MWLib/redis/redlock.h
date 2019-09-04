@@ -33,6 +33,7 @@
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 #include <hiredis.h>
 #include <sds.h>
 
@@ -64,12 +65,12 @@ public:
 
 public:
     bool                    Initialize();
-    bool                    AddServerContext(redisContext * c);
-    bool                    delServerContext(redisContext * c);
+    bool                    AddServerContext(redisContext * c, BCLib::uint16 type);
+    bool                    delServerContext(redisContext * c, BCLib::uint16 type);
     void                    SetRetry(const int count, const int delay);
-    bool                    Lock(const char *resource, const int ttl, CLock &lock);
-    bool                    ContinueLock(const char *resource, const int ttl, CLock &lock);
-    bool                    Unlock(const CLock &lock);
+    bool                    Lock(const char *resource, const int ttl, CLock &lock, BCLib::uint16 type);
+    bool                    ContinueLock(const char *resource, const int ttl, CLock &lock, BCLib::uint16 type);
+    bool                    Unlock(const CLock &lock, BCLib::uint16 type);
 
 private:
     bool                    LockInstance(redisContext *c, const char *resource, const char *val, const int ttl);
@@ -89,7 +90,8 @@ private:
     int                     m_retryDelay;           // try delay
     int                     m_quoRum;               // majority nums
 
-    std::vector<redisContext *>  m_redisServer;          // redis master servers
+	std::unordered_map<BCLib::uint16, redisContext *> m_redisServerMap;
+    //std::vector<redisContext *>  m_redisServer;          // redis master servers
     CLock   m_continueLock;         // ÐøËø
     sds                     m_continueLockScript;   // ÐøËø½Å±¾
 };

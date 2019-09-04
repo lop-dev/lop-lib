@@ -19,61 +19,55 @@
 #include <thread>
 using namespace std;
 
-#define MWLIB_REDIS_LOCK(key, uniqueid, subkey)    \
+#define MWLIB_REDIS_LOCK(key, uniqueid, subkey, type)    \
     CRedLock* __pRedLock_ = MWLib::Redis::CRedisSystem::singleton().getRedLock();    \
     CLock __my_lock_;    \
     if (__pRedLock_ != NULL)    \
     {    \
-        while (1){    \
-            char key1[1024] = { 0 };    \
-            std::string fild = BCLib::Utility::CConvert::toStringA(uniqueid);    \
-            char subkey1[512] = { 0 };    \
-            snprintf(subkey1, 512, "%s:lock", subkey);    \
-            char key2[512] = { 0 };    \
-            snprintf(key2, 512, "%s:[%s]:", key, fild.c_str());    \
-            snprintf(key1, 1024, "%s%s",key2, subkey1);    \
-            bool _lock_flag_ = __pRedLock_->Lock(key1, 200, __my_lock_);    \
+		BCLib::int32 __try_count__ = 200;\
+        while (__try_count__ > 0){    \
+            char __key1__[1024] = { 0 };    \
+            std::string __fild__ = BCLib::Utility::CConvert::toStringA(uniqueid);    \
+            char __subkey1__[512] = { 0 };    \
+            snprintf(__subkey1__, 512, "%s:lock", subkey);    \
+            char __key2__[512] = { 0 };    \
+            snprintf(__key2__, 512, "%s:[%s]:", key, __fild__.c_str());    \
+            snprintf(__key1__, 1024, "%s%s",__key2__, __subkey1__);    \
+            bool _lock_flag_ = __pRedLock_->Lock(__key1__, 200, __my_lock_,(BCLib::uint16)type);    \
             if(_lock_flag_)    \
             {
 
-#define MWLIB_REDIS_UNLOCK    \
-                __pRedLock_->Unlock(__my_lock_);    \
+#define MWLIB_REDIS_UNLOCK(type)    \
+                __pRedLock_->Unlock(__my_lock_, (BCLib::uint16)type);    \
                 break;    \
             }    \
             else    \
-            {    \
+            {    __try_count__--;\
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "MWLIB_REDIS_LOCK __key1__ = %s try count = %d type = %d", __key1__, __try_count__, type);\
                 BCLib::Utility::CThread::msleep(rand() % 3);    \
             }    \
         }\
     }
 
-#define MWLIB_REDIS_RETURN    \
+#define MWLIB_REDIS_RETURN(type)    \
     if (__pRedLock_!=NULL)    \
     {    \
-        __pRedLock_->Unlock(__my_lock_);    \
+        __pRedLock_->Unlock(__my_lock_, (BCLib::uint16)type);    \
     }    \
     return;
+
+#define MWLIB_REDIS_RETURN_VAL(val, type) \
+    if (__pRedLock_!=NULL) \
+    { \
+        __pRedLock_->Unlock(__my_lock_, (BCLib::uint16)type); \
+    } \
+    return val;
 
 namespace MWLib
 {
     namespace Redis
     {
-		typedef struct Redis_Connect_Info
-		{
-			std::string m_host;
-			int m_port;
-			std::string m_passwd;
-			Redis_Connect_Info()
-			{
-				m_host = "";
-				m_port = 0;
-				m_passwd = "";
-			}
-			~Redis_Connect_Info()
-			{
-				
-			}
-		}REDIS_CONNECT_INFO;
+		
 		class CRedisSystem
 		{
 			BCLIB_SINGLETON_DECLARE(CRedisSystem);
@@ -82,7 +76,7 @@ namespace MWLib
 			virtual ~CRedisSystem();
 		public:
 			bool init(EREDIS_ACCESS_RIGHT_TYPE type = E_REDIS_READ_AND_WRITE);
-
+			bool isValid(EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 			void setInfo(std::string& host, int port, std::string& passwd, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 			CRedisClient* getRedisClient();
 			
@@ -401,6 +395,25 @@ namespace MWLib
 			* @return 返回key-value map
 			*/
 			const std::map<std::string, std::pair<char*, BCLib::uint32>*>* hscan(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *matchKey, BCLib::uint64 &end, BCLib::uint64 start = 0, BCLib::uint64 count = 50, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+
+			/**
+			* 功能:获取hmap中字段数量
+			* @param key 键值即对应hash表名
+			* @param field 哈希表key中的域
+			* @return  字段数量
+			*/
+			BCLib::uint32 hlen(const char *key, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+
+			/**
+			* 功能:获取hmap中字段数量
+			* @param key 键值即对应hash表名
+			* @param uniqueid 实体ID 没有实体ID的可以考虑统一使用1000000来代替
+			* @param subkey 二级表名
+			* @param field 哈希表key中的域
+			* @return  字段数量
+			*/
+			BCLib::uint32 hlen(const char *key, BCLib::uint64 uniqueid, const char *subkey, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+
 
 			/*
 			*list 封装↓↓↓↓↓

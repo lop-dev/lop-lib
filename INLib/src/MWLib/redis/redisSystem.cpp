@@ -38,7 +38,16 @@ namespace MWLib
 			m_eAccessRight = type;
 			return true;
 		}
-
+		bool CRedisSystem::isValid(EREDIS_CONTEXT_TYPE type)
+		{
+			CRedisClient* pRedisClient = getRedisClient();
+			if (pRedisClient != NULL)
+			{
+				return pRedisClient->isValid( type );
+			}
+			BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "初始化RedisClient CRedisSystem::isValid = false");
+			return false;
+		}
 		void CRedisSystem::setInfo(std::string& host, int port, std::string& passwd, EREDIS_CONTEXT_TYPE type)
 		{
 			std::unordered_map<BCLib::uint16, REDIS_CONNECT_INFO>::iterator it = m_redisConnectInfoMap.find(type);
@@ -75,14 +84,16 @@ namespace MWLib
 			{
 				return NULL;
 			}
+			BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "初始化RedisClient m_redisConnectInfoMap = [%llu].size = [%d]... this = [%llu]", (BCLib::uint64)&m_redisConnectInfoMap, m_redisConnectInfoMap.size(), (BCLib::uint64)this);
 			for (auto iter = m_redisConnectInfoMap.begin(); iter != m_redisConnectInfoMap.end(); ++iter)
 			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "初始化RedisClient host = [%s]... port = [%d]... type[%d]", iter->second.m_host.c_str(), iter->second.m_port, iter->first);
 				pRedisClient->setInfo(iter->second.m_host, iter->second.m_port, iter->second.m_passwd, (EREDIS_CONTEXT_TYPE)iter->first);
-				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "初始化RedisClient threadID = [%d]...", tid);
-				pRedisClient->init(m_eAccessRight);
 			}
 			
+			pRedisClient->init(m_eAccessRight);
 			m_redisClientMap[tid] = pRedisClient;
+			BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "初始化RedisClient threadID = [%d]... m_redisClientMap.size() = %d", tid, m_redisClientMap.size());
 			return pRedisClient;
 		}
 		void CRedisSystem::removeRedisClient()
@@ -614,6 +625,27 @@ namespace MWLib
 			}
 			return NULL;
 		}
+
+		BCLib::uint32 CRedisSystem::hlen(const char *key, EREDIS_CONTEXT_TYPE type)
+		{
+			CRedisClient* pRedisClient = getRedisClient();
+			if (pRedisClient != NULL)
+			{
+				return pRedisClient->hlen(key, type);
+			}
+			return 0;
+		}
+
+		BCLib::uint32 CRedisSystem::hlen(const char *key, BCLib::uint64 uniqueid, const char *subkey, EREDIS_CONTEXT_TYPE type)
+		{
+			CRedisClient* pRedisClient = getRedisClient();
+			if (pRedisClient != NULL)
+			{
+				return pRedisClient->hlen(key, uniqueid, subkey, type);
+			}
+			return 0;
+		}
+
 		bool CRedisSystem::lpushString(const char *key, const char *value, EREDIS_CONTEXT_TYPE type)
 		{
 			CRedisClient* pRedisClient = getRedisClient();

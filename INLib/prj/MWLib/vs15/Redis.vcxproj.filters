@@ -21,6 +21,9 @@
     <ClInclude Include="..\..\..\inc\MWLib\redis\redisClient.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\inc\MWLib\redis\redisBaseDef.h">
+      <Filter>inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="inc">
