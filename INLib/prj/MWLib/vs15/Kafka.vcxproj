@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1B27F014-2C87-4CB0-9864-4584098CEB6F}</ProjectGuid>
+    <ProjectGuid>{7DF29CF1-CA08-40D4-81EB-185F20F5BBD2}</ProjectGuid>
     <RootNamespace>Kafka</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
