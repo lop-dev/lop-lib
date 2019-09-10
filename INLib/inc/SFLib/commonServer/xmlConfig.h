@@ -65,7 +65,7 @@ struct SLogicServerListItem
     ,m_isActive(false)
     ,m_isInited(false)
     ,m_bClearPeers(false)
-    ,m_bCloseServer(false)
+    ,m_bServerSave(false)
     {
     }
 
@@ -92,7 +92,7 @@ struct SLogicServerListItem
     std::vector<ServerID> m_vecAlreadyNotifyInited;
 
     bool m_bClearPeers;
-    bool m_bCloseServer;
+    bool m_bServerSave;
 };
 typedef std::vector<SLogicServerListItem> SLogicServerListItemVec;
 
@@ -173,8 +173,8 @@ public:
 
     void setClearPeers(ServerID serverID, bool bClear);
     bool isAllServerClearPeers();
-    void setCloseServer(ServerID serverID, bool bClose);
-    bool isAllServerCloseServer();
+    void setServerSave(ServerID serverID, bool bSave);
+    bool isAllServerServerSave();
 
     int getLogicActiveServerListMap(SActiveServerListMap& serverMap);
 

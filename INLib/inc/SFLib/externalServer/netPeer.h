@@ -38,6 +38,9 @@ public:
 	virtual bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
 	virtual bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
+	virtual bool sendMsgToGW(const SFLib::Message::CNetMessage* msg);
+	virtual bool sendMsgToGW(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+
 public:
 	ServerID getGatewayServerID() { return m_gatewayServerID; }
 	void setGatewayServerID(ServerID gatewayServerID) { m_gatewayServerID = gatewayServerID; }
@@ -48,7 +51,7 @@ public:
 	ServerID getServerIDByType(EServerType serverType);
 
 private:
-	bool _sendMsgToDefault(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+	bool _sendMsgToStub(SFLib::CommonServer::CTcpStubPtr pStub, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
     void _setServerInfo(EServerType serverType, ServerID serverID);
     void _delServerInfo(EServerType serverType, ServerID serverID);
