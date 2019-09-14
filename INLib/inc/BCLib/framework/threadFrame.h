@@ -41,26 +41,14 @@ public:
     CThreadFrame();
     virtual ~CThreadFrame();
 
-    const std::string& getName()
-    {
-        return m_name;
-    }
-    void setName(const std::string& name)
-    {
-        m_name = name;
-    }
+    const std::string& getName() { return m_name; }
+    void setName(const std::string& name) { m_name = name; }
 
-    bool isTerminate()
-    {
-        return m_isTerminate;
-    }
-    bool isValid()
-    {
-        return m_isValid;
-    }
+    bool isValid() { return m_isValid; }
+	void setValid(bool valid) { m_isValid = valid; }
 
+	bool isTerminate() { return m_isTerminate; }
     void terminate();
-    void setValid(bool valid);
 
     bool sendMsgToSelf(const CMessage* msg, uint32 sessionID = 0);
     bool sendMsgToSelf(const SMessage* msg, uint32 msgSize, uint32 sessionID = 0);
@@ -69,16 +57,13 @@ public:
     bool sendMsgToSelf(const SMessage* msg, uint32 msgSize, SThdMsgLabel* msgLabel);
 
     CCtrlID getCtrlID();
-    SThreadInfo* getThreadInfor()
-    {
-        return m_threadInfo;
-    }
+    SThreadInfo* getThreadInfor() { return m_threadInfo; }
 
 public:
-    virtual bool isMainThread()
-    {
-        return false;
-    }
+    virtual bool isMainThread() { return false; }
+
+	// 上层如果返回 true 的话，要自己负责调用 setValid(false) 和 terminate() 函数
+	virtual void onCtrlC() { setValid(false); terminate(); };
 
 public:
     static SThreadInfo* getSelfThreadInfo();
@@ -95,10 +80,7 @@ protected:
     bool _delService(const CServiceID& serviceID);
     void _removeAllServices();
 
-    void _setMsgBuffSize(uint32 msgBuffSize)
-    {
-        m_msgBuffSize = msgBuffSize;
-    }
+    void _setMsgBuffSize(uint32 msgBuffSize) { m_msgBuffSize = msgBuffSize; }
 
 protected:
     bool _sendMsgToSelf(const CMessage* msg, uint32 sessionID = 0);

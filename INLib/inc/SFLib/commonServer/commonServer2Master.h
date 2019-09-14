@@ -42,7 +42,6 @@ protected:
     virtual int _final();
 
     virtual CTcpClientPtr _createMasterClient();
-    virtual CCommonClientPtr _createCommonClient(SFLib::Message::SServerInfo& serverInfo);
 
     virtual bool _createMsgExecPtr(BCLib::uint16 type, BCLib::uint16 id, BCLib::Framework::CMsgExecPtr& msgExecPtr);
     virtual void _onMS2XSNtfServerActive(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
@@ -83,7 +82,6 @@ protected:
     virtual int _final();
 
     virtual CTcpClientPtr _createMasterClient();
-    virtual CCommonClientPtr _createCommonClient(SFLib::Message::SServerInfo& serverInfo);
 
     virtual bool _createMsgExecPtr(BCLib::uint16 type, BCLib::uint16 id, BCLib::Framework::CMsgExecPtr& msgExecPtr);
     virtual void _onMS2XSNtfServerActive(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);

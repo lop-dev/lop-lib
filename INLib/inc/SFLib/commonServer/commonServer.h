@@ -143,6 +143,9 @@ public:
     bool sendMsgToLogicServer(PeerID peerID, ServerID serverID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
 protected:
+	virtual CCommonClientPtr _createLogicClient(SFLib::Message::SServerInfo& serverInfo);
+	virtual CCommonClientPtr _createExternalClient();
+
     bool _connectExternalServer(SFLib::ServerID serverID);
     bool _connectExternalServers(SFLib::ServerType serverType = INVALID_SERVER_TYPE);
 
@@ -328,6 +331,7 @@ private:
 
     CNetPeerMgr* m_netPeerMgr;
     friend class CNetPeerMgr;
+	friend class CServerMgr;
 };
 
 }//CommonServer
