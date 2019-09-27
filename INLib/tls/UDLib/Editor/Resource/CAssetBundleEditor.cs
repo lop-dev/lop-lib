@@ -305,7 +305,7 @@ namespace UDLib.Editor
                         // 相通性检测
                         if (info.type != category_type || info.exts != exts || info.suffix != suffix)
                         {
-                            UDLib.Utility.CDebugOut.LogError("具有相同类别的_ASSERT_BUNDLE_.txt，但类型，扩展名，后缀之一是不同的");
+                            UDLib.Utility.CDebugOut.LogError(string.Format("具有相同类别的_ASSERT_BUNDLE_.txt，名称为：{0}, 但类型{0}，扩展名{1}，后缀{2}之一是不同的", category_name, category_type, exts, suffix));
                             return null;
                         }
 
@@ -669,10 +669,16 @@ namespace UDLib.Editor
                 path = Application.dataPath;
 
             string assetBundleDirectory = path + "/AssetBuild/" + platformName + "/AssetBundle";
-
+            var manifestPath = Path.Combine(assetBundleDirectory, "AssetBundle");    // ...../AssetBuild/platform/AssetBundle/platform
             if (!Directory.Exists(assetBundleDirectory))
             {
                 Directory.CreateDirectory(assetBundleDirectory);
+            }
+
+            // 刪除原有的AssetBundle清单，避免打包失败沿用以前的清单，导致一致没打出AB资源，却又发现不了，认为是没有资源改变
+            if(File.Exists(manifestPath))
+            {
+                File.Delete(manifestPath);
             }
 
             BuildPipeline.BuildAssetBundles(assetBundleDirectory, BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.IgnoreTypeTreeChanges,EditorUserBuildSettings.activeBuildTarget);
@@ -691,7 +697,6 @@ namespace UDLib.Editor
             string assetsBundleRootDir = path + "/AssetBuild/";
 
             UDLib.Utility.CDebugOut.Log("AB包出包提示: 2.检测清单文件是否出存");
-            var manifestPath = Path.Combine(assetBundleDirectory, "AssetBundle");    // ...../AssetBuild/platform/AssetBundle/platform
             var manifestPathPlatform = Path.Combine(assetBundleDirectory, "ResourceManifest");
             if (File.Exists(manifestPath))
             {
