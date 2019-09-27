@@ -642,16 +642,24 @@ namespace UDLib.Resource
                             StartRecord(request);
 
                             CAssetBundleLog.Log("从本地硬盘P目录加载ab:" + pathPersist);
-                            AssetBundleCreateRequest req = null;
-                            req = AssetBundle.LoadFromFileAsync(pathPersist);
-                            while (!req.isDone)
+                            if(!request.isAsyncMode)
                             {
-                                //加载ab只算6成加载进度
-                                request.Progress = 0.3f + req.progress * 0.6f;
-                                yield return null;
+                                asset_bundle = AssetBundle.LoadFromFile(pathPersist);
+                                SaveToABCache(request.packageName, asset_bundle);
+                            }
+                            else
+                            {
+                                AssetBundleCreateRequest req = null;
+                                req = AssetBundle.LoadFromFileAsync(pathPersist);
+                                while (!req.isDone)
+                                {
+                                    //加载ab只算6成加载进度
+                                    request.Progress = 0.3f + req.progress * 0.6f;
+                                    yield return null;
+                                }
+                                asset_bundle = GetAssetBundleFromRequest(req, request);
                             }
 
-                            asset_bundle = GetAssetBundleFromRequest(req, request);
                             if (asset_bundle == null)
                             {
                                 File.Delete(pathPersist);
@@ -667,17 +675,25 @@ namespace UDLib.Resource
                                 // 开始记录加载，硬盘读取
                                 StartRecord(request);
 
-                                CAssetBundleLog.Log("P目录没有找到对应资源，从底包加载ab:" + pathPackage);
-                                AssetBundleCreateRequest req = null;
-                                req = AssetBundle.LoadFromFileAsync(pathPackage);
-                                while (!req.isDone)
+                                if(!request.isAsyncMode)
                                 {
-                                    //加载ab只算6成加载进度
-                                    request.Progress = 0.3f + req.progress * 0.6f;
-                                    yield return null;
+                                    asset_bundle = AssetBundle.LoadFromFile(pathPackage);
+                                    SaveToABCache(request.packageName, asset_bundle);
                                 }
+                                else
+                                {
+                                    CAssetBundleLog.Log("P目录没有找到对应资源，从底包加载ab:" + pathPackage);
+                                    AssetBundleCreateRequest req = null;
+                                    req = AssetBundle.LoadFromFileAsync(pathPackage);
+                                    while (!req.isDone)
+                                    {
+                                        //加载ab只算6成加载进度
+                                        request.Progress = 0.3f + req.progress * 0.6f;
+                                        yield return null;
+                                    }
 
-                                asset_bundle = GetAssetBundleFromRequest(req, request);
+                                    asset_bundle = GetAssetBundleFromRequest(req, request);
+                                }
                             }
                             else
                             {
@@ -955,50 +971,21 @@ namespace UDLib.Resource
                 CAssetBundleLog.LogError(e.Message);
             }
             //保存asset_bundle到缓存;
-            if (asset_bundle != null)
-            {
-                if (!loadedAssetBundleDic.ContainsKey(request.packageName))
-                {
-                    loadedAssetBundleDic.Add(request.packageName, CAssetBundleObject.Get(request.packageName, asset_bundle));
-                }
-            }
+            SaveToABCache(request.packageName, asset_bundle);
 
             return asset_bundle;
         }
 
-        private void ReadAssetFromLocal(CLoadRequest request, string _path, ref AssetBundle asset_bundle)
+        private void SaveToABCache(string packageName, AssetBundle asset_bundle)
         {
-            // 开始记录加载，硬盘读取
-            StartRecord(request);
-
-            AssetBundleCreateRequest req = null;
-            CAssetBundleLog.Log("从本地硬盘加载ab:" + _path);
-            req = AssetBundle.LoadFromFileAsync(_path);
-            while (!req.isDone)
-            {
-                //加载ab只算6成加载进度
-                request.Progress = 0.3f + req.progress * 0.6f;
-                //yield return null;
-            }
-
-            try
-            {
-                asset_bundle = req.assetBundle;
-            }
-            catch (Exception e)
-            {
-                CAssetBundleLog.LogError(e.Message);
-            }
             //保存asset_bundle到缓存;
             if (asset_bundle != null)
             {
-                if (!loadedAssetBundleDic.ContainsKey(request.packageName))
+                if (!loadedAssetBundleDic.ContainsKey(packageName))
                 {
-                    loadedAssetBundleDic.Add(request.packageName, CAssetBundleObject.Get(request.packageName, asset_bundle));
+                    loadedAssetBundleDic.Add(packageName, CAssetBundleObject.Get(packageName, asset_bundle));
                 }
             }
-            else
-                File.Delete(_path);
         }
 
         private void GetObjectFromCache(CLoadRequest request, string sub_path)
