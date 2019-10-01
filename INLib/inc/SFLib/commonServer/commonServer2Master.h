@@ -37,6 +37,9 @@ public:
 
     void ntfInitSuccess();
 
+	bool sendMsgToMS(PeerID peerID, const SFLib::Message::CNetMessage* msg);
+	bool sendMsgToMS(PeerID peerID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+
 protected:
     virtual bool _init();
     virtual int _final();

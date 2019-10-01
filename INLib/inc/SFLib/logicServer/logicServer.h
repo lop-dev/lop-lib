@@ -21,9 +21,6 @@ public:
     CLogicServer(const std::string& name);
     virtual ~CLogicServer();
 
-	bool sendMsgToMS(PeerID peerID, const SFLib::Message::CNetMessage* msg);
-	bool sendMsgToMS(PeerID peerID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
-
     /// @brief 申请PeerID
     /// @return bool
     /// @param peerID 申请指定的PeerID，如果为0，则随机分配
@@ -48,9 +45,6 @@ protected:
     /// @return bool
     bool _initUdpServer();
     virtual BCLib::Network::CUdpProxy* _createUdpProxy();
-
-protected:
-    virtual bool _createMsgExecPtr(BCLib::uint16 type, BCLib::uint16 id, BCLib::Framework::CMsgExecPtr& msgExecPtr);
 
 private:
     BCLib::Network::CUdpServer m_udpSrv;

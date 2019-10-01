@@ -160,8 +160,13 @@ public:
     ServerID fetchLogicServerID(SFLib::EServerType serverType, BCLib::Network::ENetType netType, const char* peerIP);
     EServerType fetchLogicServerType(ServerID serverID, BCLib::Network::ENetType netType, const char* peerIP);
 
+	ServerID fetchExternalServerID(SFLib::EServerType serverType, BCLib::Network::ENetType netType, const char* peerIP);
+	EServerType fetchExternalServerType(ServerID serverID, BCLib::Network::ENetType netType, const char* peerIP);
+
 	ServerID fetchExternalServerID(SFLib::EServerType serverType);
+
     bool getLogicServerAcceptInfo(ServerID serverID, SFLib::Message::SServerAcceptInfo& acceptInfo);
+	bool getExternalServerAcceptInfo(ServerID serverID, SFLib::Message::SServerAcceptInfo& acceptInfo);
 
     void sendLogicServerListToStub(CTcpStub* masterStub);
     void sendExternalServerListToStub(CTcpStub* masterStub);

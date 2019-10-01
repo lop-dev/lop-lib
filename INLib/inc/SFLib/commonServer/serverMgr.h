@@ -61,6 +61,8 @@ private:
     {
 		SServerInfoExt()
         {
+			m_netSend = NULL;
+			m_bStub = false;
         }
 
         int send(const SFLib::Message::CNetMessage* msg);
@@ -68,6 +70,7 @@ private:
 
 		SFLib::CommonServer::SServerInfo m_serverInfo;
         BCLib::Network::CTcpSendSPtr m_netSend;
+		bool m_bStub;
     };
 
 private:
