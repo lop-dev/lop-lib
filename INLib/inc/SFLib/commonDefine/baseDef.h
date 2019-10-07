@@ -37,6 +37,13 @@ const EntityID INVALID_ENTITY_ID = 0;
 
 const BCLib::uint8 SFLIB_IP_TEXT_MAX = 63;
 
+enum EPeerEnterReason
+{
+    EPEERENTERREASON_UNKNOW,        // 未知原因
+    EPEERENTERREASON_LOGIN,         // 登录进入
+    EPEERENTERREASON_RECONNECT,     // 重连进入
+};
+
 enum EPeerLeaveReason
 {
     EPEERLEAVEREASON_UNKNOW,        // 未知原因

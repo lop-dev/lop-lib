@@ -150,11 +150,13 @@ struct SMsgXS2MSReqEnterServer : public SNetMessage
 public:
     PeerID m_peerID;
     ServerID m_serverID;
+    EPeerEnterReason m_nReason;
 
     SMsgXS2MSReqEnterServer() : SNetMessage(ESERVER_MASTER, EFUNC_GAMEFRAME, EMID_XS2MS_REQ_ENTER_SERVER)
     {
         m_peerID = INVALID_PEER_ID;
         m_serverID = INVALID_SERVER_ID;
+        m_nReason = EPEERENTERREASON_UNKNOW;
     }
 };
 
@@ -350,6 +352,7 @@ public:
     PeerID m_peerID;
 	EntityID m_entityID;
     ServerID m_serverID;
+    EPeerEnterReason m_nReason;
     ServerID m_gatewayServerID;
     BCLib::Network::TcpStubID m_gameClientStubID;
 
@@ -358,6 +361,7 @@ public:
         m_peerID = INVALID_PEER_ID;
 		m_entityID = INVALID_ENTITY_ID;
         m_serverID = INVALID_SERVER_ID;
+        m_nReason = EPEERENTERREASON_UNKNOW;
         m_gatewayServerID = INVALID_SERVER_ID;
         m_gameClientStubID = BCLib::Network::INVALID_TCPSTUBID;
     }

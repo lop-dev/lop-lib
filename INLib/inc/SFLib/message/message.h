@@ -16,15 +16,16 @@ namespace SFLib
 {
 enum EServerType
 {
-    // 特殊类型
+    // 特殊服务器类型
     ESERVER_UNKNOW      = 0,    // 无效
     ESERVER_LOCAL,              // "LC" 本地的进程
     ESERVER_ANYXX,              // "XX" 任一服务器或客户端
     ESERVER_ANYXS,              // "XS" 任一服务器
 
-    //// 组内服务器类型
     ESERVER_GAMECLIENT  = 8,    // "GC"
 	ESERVER_MASTER,             // "MS"
+
+    // 组内服务器类型
 	ESERVER_LOGIC_START,		// "LS"...
 	ESERVER_LOGIC_END = ESERVER_LOGIC_START + 10,  // "LS"...
 

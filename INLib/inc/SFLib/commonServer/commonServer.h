@@ -184,12 +184,7 @@ public:
     /// @brief Peer进入本地Server，保证其它服务器已经创建成功
     /// @return void
     /// @param peerID 进入的PeerID
-    virtual void cbPeerEnter(CNetPeerPtr& netPeerPtr);
-
-    /// @brief Peer断线重连Server，目前在 GW 和 SC 上使用
-    /// @return void
-    /// @param peerID 进入的PeerID
-    virtual void cbPeerReEnter(CNetPeerPtr& netPeerPtr);
+    virtual void cbPeerEnter(CNetPeerPtr& netPeerPtr, EPeerEnterReason nReason);
 
     /// @brief Peer离开本地Server，保证其它服务器已经还存在Peer
     /// @return void

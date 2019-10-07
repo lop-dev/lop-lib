@@ -288,17 +288,24 @@ public:
     }
 };
 
+enum EShakeHands
+{
+    SHAKEHANDS_UNKNOW,
+    SHAKEHANDS_ERROR,
+    SHAKEHANDS_SUCCESS,
+};
+
 SFLIB_MSGDEBUG(ESERVER_MASTER, EFUNC_GAMEFRAME, EMID_XS2MS_NTF_SHAKE_HANDS);
 struct SMsgXS2MSNtfShakeHands : public SNetMessage
 {
 public:
-    int m_nFlag;
+    EShakeHands m_nFlag;
     ServerID m_srcServerID;
     ServerID m_dstServerID;
 
     SMsgXS2MSNtfShakeHands() : SNetMessage(ESERVER_MASTER, EFUNC_GAMEFRAME, EMID_XS2MS_NTF_SHAKE_HANDS)
     {
-        m_nFlag = 0;
+        m_nFlag = SHAKEHANDS_UNKNOW;
         m_srcServerID = INVALID_SERVER_ID;
         m_dstServerID = INVALID_SERVER_ID;
     }

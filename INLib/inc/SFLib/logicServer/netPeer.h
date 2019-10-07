@@ -70,7 +70,7 @@ public:
     /// @brief 申请进入某个逻辑服务器
     /// @return bool
     /// @param serverID 服务器ID
-    bool enterLogicServer(ServerID serverID);
+    bool enterLogicServer(ServerID serverID, EPeerEnterReason nReason);
 
     /// @brief 申请离开某个逻辑服务器
     /// @return bool
