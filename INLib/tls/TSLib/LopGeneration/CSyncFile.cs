@@ -70,6 +70,7 @@ namespace Proto2Code
                 Console.WriteLine("拷贝文件之：C#");
                 string CLIENT_PB_CS_SRC = @".\TableOut\Temp\2_Protobuf\C#\";
                 string CLIENT_PB_CS_DES = @".\TableOut\C#\Generate\Protobuf\";
+
                 //fileterFiles.Clear();
                 //fileterFiles.Add("aITable.pb.cs");
                 //fileterFiles.Add("petTable.pb.cs");
@@ -100,6 +101,15 @@ namespace Proto2Code
                 //fileterFiles.Add("dialogTable.pb.cs");
                 //fileterFiles.Add("mythicalAnimalTable.pb.cs");
                 //fileterFiles.Add("chapterTaskTable.pb.cs");
+                //foreach (string file in Directory.GetFiles(CLIENT_PB_CS_SRC, "*.cs", SearchOption.TopDirectoryOnly))
+                //{
+                //    FileInfo info = new FileInfo(file);
+                //    if(!info.Name.Contains("Table.pb.cs"))
+                //    {
+                //        fileterFiles.Add(info.Name);
+                //    }
+                //}
+
                 if (fileterFiles.Count > 0)
                 {
                     CopyDirectory(CLIENT_PB_CS_SRC, CLIENT_PB_CS_DES, "*.cs", true, fileterFiles);
@@ -109,8 +119,10 @@ namespace Proto2Code
                     CopyDirectory(CLIENT_PB_CS_SRC, CLIENT_PB_CS_DES, "*.cs");
                 }
 
+                //
                 string CLIENT_PE_CS_SRC = @".\TableOut\Temp\1_Protoext\C#\";
-                string CLIENT__PE_CS_DES = @".\TableOut\C#\Generate\Protoext\";
+                string CLIENT_PE_CS_DES = @".\TableOut\C#\Generate\Protoext\";
+
                 //fileterFiles.Clear();
                 //fileterFiles.Add("aITable.pe.cs");
                 //fileterFiles.Add("petTable.pe.cs");
@@ -141,13 +153,22 @@ namespace Proto2Code
                 //fileterFiles.Add("dialogTable.pe.cs");
                 //fileterFiles.Add("mythicalAnimalTable.pe.cs");
                 //fileterFiles.Add("chapterTaskTable.pe.cs");
-                if(fileterFiles.Count > 0)
+                //foreach (string file in Directory.GetFiles(CLIENT_PE_CS_SRC, "*.cs", SearchOption.TopDirectoryOnly))
+                //{
+                //    FileInfo info = new FileInfo(file);
+                //    if (!info.Name.Contains("Table.pe.cs"))
+                //    {
+                //        fileterFiles.Add(info.Name);
+                //    }
+                //}
+
+                if (fileterFiles.Count > 0)
                 {
-                    CopyDirectory(CLIENT_PE_CS_SRC, CLIENT__PE_CS_DES, "*.cs", true, fileterFiles);
+                    CopyDirectory(CLIENT_PE_CS_SRC, CLIENT_PE_CS_DES, "*.cs", true, fileterFiles);
                 }
                 else
                 {
-                    CopyDirectory(CLIENT_PE_CS_SRC, CLIENT__PE_CS_DES, "*.cs");
+                    CopyDirectory(CLIENT_PE_CS_SRC, CLIENT_PE_CS_DES, "*.cs");
                 }
             }
 
@@ -219,6 +240,13 @@ namespace Proto2Code
                     srcFileList.Add(desFile);
                     srcFileList.Add(desFile + ".meta");
                 }
+
+                foreach (string file in Directory.GetFiles(strSrc, searchOption, SearchOption.TopDirectoryOnly))
+                {
+                    FileInfo info = new FileInfo(file);
+                    string desFile = Path.Combine(dirDes.FullName, info.Name).Replace('\\', '/');
+                    File.Copy(file, desFile, true);
+                }
             }
             else
             {
@@ -226,14 +254,14 @@ namespace Proto2Code
                 {
                     FileInfo info = new FileInfo(file);
                     string desFile = Path.Combine(dirDes.FullName, info.Name).Replace('\\', '/');
-                    File.Copy(file, desFile, true);
-
                     srcFileList.Add(desFile);
                     srcFileList.Add(desFile + ".meta");
+
+                    File.Copy(file, desFile, true);
                 }
             }
 
-            if(delOtherFiles)
+            if (delOtherFiles)
             {
                 foreach (string file in Directory.GetFiles(dirDes.FullName, searchOption, SearchOption.TopDirectoryOnly))
                 {
