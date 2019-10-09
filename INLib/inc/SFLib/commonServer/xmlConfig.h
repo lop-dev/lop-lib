@@ -100,11 +100,22 @@ struct SExternalServerListItem
 {
 	SExternalServerListItem()
 	:m_isFetched(false)
+    ,m_isActive(false)
+    ,m_isInited(false)
 	{
 	}
 
+    bool isNotifyActive(ServerID serverID);
+    void addNotifyActive(ServerID serverID);
+    void delNotifyActive(ServerID serverID);
+
 	SServerInfo m_serverInfo;
+
 	bool m_isFetched;
+    bool m_isActive;
+    bool m_isInited;
+
+    std::vector<ServerID> m_vecAlreadyNotifyActive;
 };
 typedef std::vector<SExternalServerListItem> SExternalServerListItemVec;
 
@@ -157,13 +168,15 @@ public:
 	void setLogicServerInited(ServerID serverID, bool isInited);
     void setLogicServerShakeHands(ServerID srcServerID, ServerID dstServerID);
 
+    void setExternalServerFetched(ServerID serverID, bool isFetched);
+    void setExternalServerActive(ServerID serverID, bool isActive);
+    void setExternalServerInited(ServerID serverID, bool isInited);
+
     ServerID fetchLogicServerID(SFLib::EServerType serverType, BCLib::Network::ENetType netType, const char* peerIP);
     EServerType fetchLogicServerType(ServerID serverID, BCLib::Network::ENetType netType, const char* peerIP);
 
 	ServerID fetchExternalServerID(SFLib::EServerType serverType, BCLib::Network::ENetType netType, const char* peerIP);
 	EServerType fetchExternalServerType(ServerID serverID, BCLib::Network::ENetType netType, const char* peerIP);
-
-	ServerID fetchExternalServerID(SFLib::EServerType serverType);
 
     bool getLogicServerAcceptInfo(ServerID serverID, SFLib::Message::SServerAcceptInfo& acceptInfo);
 	bool getExternalServerAcceptInfo(ServerID serverID, SFLib::Message::SServerAcceptInfo& acceptInfo);
@@ -189,11 +202,15 @@ private:
 	bool _isNecessaryLogicServer(ServerID serverID);
 	bool _isNecessaryLogicServerActives();
 
-	bool _loadLogicServerType(BCLib::Utility::CXmlFile& xmlFile, BCLib::Utility::HXmlNode logicServerTypeNode);
-    bool _loadLogicServerConnection(BCLib::Utility::CXmlFile& xmlFile, BCLib::Utility::HXmlNode connectionNode);
-    bool _loadLogicServerList(BCLib::Utility::CXmlFile& xmlFile, BCLib::Utility::HXmlNode serverListNode);
+    bool _isNecessaryExternalServer(ServerID serverID);
+    bool _isNecessaryExternalServerActives();
 
+	bool _loadLogicServerType(BCLib::Utility::CXmlFile& xmlFile, BCLib::Utility::HXmlNode logicServerTypeNode);
     bool _loadExternalServerType(BCLib::Utility::CXmlFile& xmlFile, BCLib::Utility::HXmlNode externalServerTypeNode);
+
+    bool _loadLogicServerConnection(BCLib::Utility::CXmlFile& xmlFile, BCLib::Utility::HXmlNode connectionNode);
+
+    bool _loadLogicServerList(BCLib::Utility::CXmlFile& xmlFile, BCLib::Utility::HXmlNode serverListNode);
     bool _loadExternalServerList(BCLib::Utility::CXmlFile& xmlFile, BCLib::Utility::HXmlNode serverListNode);
 
     bool _addLogicServerListItem(SLogicServerListItem& item);
