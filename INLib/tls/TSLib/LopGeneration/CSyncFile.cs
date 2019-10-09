@@ -65,14 +65,90 @@ namespace Proto2Code
 
             if (Program.EXPORT_ALL)
             {
+                List<string> fileterFiles = new List<string>();
+
                 Console.WriteLine("拷贝文件之：C#");
                 string CLIENT_PB_CS_SRC = @".\TableOut\Temp\2_Protobuf\C#\";
                 string CLIENT_PB_CS_DES = @".\TableOut\C#\Generate\Protobuf\";
-                CopyDirectory(CLIENT_PB_CS_SRC, CLIENT_PB_CS_DES, "*.cs");
+                //fileterFiles.Clear();
+                //fileterFiles.Add("aITable.pb.cs");
+                //fileterFiles.Add("petTable.pb.cs");
+                //fileterFiles.Add("roleTable.pb.cs");
+                //fileterFiles.Add("petSkinTable.pb.cs");
+                //fileterFiles.Add("sceneTable.pb.cs");
+                //fileterFiles.Add("storyChapterTable.pb.cs");
+                //fileterFiles.Add("skillTable.pb.cs");
+                //fileterFiles.Add("skillBuffTable.pb.cs");
+                //fileterFiles.Add("skillStateTable.pb.cs");
+                //fileterFiles.Add("skillSummonTable.pb.cs");
+                //fileterFiles.Add("sensitivewordTable.pb.cs");
+                //fileterFiles.Add("globalTable.pb.cs");
+                //fileterFiles.Add("monsterGroupTable.pb.cs");
+                //fileterFiles.Add("monsterGroupBattleTable.pb.cs");
+                //fileterFiles.Add("npcTable.pb.cs");
+                //fileterFiles.Add("stringTable.pb.cs");
+                //fileterFiles.Add("petAttacherTable.pb.cs");
+                //fileterFiles.Add("particleTable.pb.cs");
+                //fileterFiles.Add("petPropertyTable.pb.cs");
+                //fileterFiles.Add("chapterLevelTable.pb.cs");
+                //fileterFiles.Add("battleFormationTable.pb.cs");
+                //fileterFiles.Add("houseEventTable.pb.cs");
+                //fileterFiles.Add("petAwakeUpTable.pb.cs");
+                //fileterFiles.Add("chapterTable.pb.cs");
+                //fileterFiles.Add("inappPaymentTable.pb.cs");
+                //fileterFiles.Add("objectTable.pb.cs");
+                //fileterFiles.Add("dialogTable.pb.cs");
+                //fileterFiles.Add("mythicalAnimalTable.pb.cs");
+                //fileterFiles.Add("chapterTaskTable.pb.cs");
+                if (fileterFiles.Count > 0)
+                {
+                    CopyDirectory(CLIENT_PB_CS_SRC, CLIENT_PB_CS_DES, "*.cs", true, fileterFiles);
+                }
+                else
+                {
+                    CopyDirectory(CLIENT_PB_CS_SRC, CLIENT_PB_CS_DES, "*.cs");
+                }
 
                 string CLIENT_PE_CS_SRC = @".\TableOut\Temp\1_Protoext\C#\";
                 string CLIENT__PE_CS_DES = @".\TableOut\C#\Generate\Protoext\";
-                CopyDirectory(CLIENT_PE_CS_SRC, CLIENT__PE_CS_DES, "*.cs");
+                //fileterFiles.Clear();
+                //fileterFiles.Add("aITable.pe.cs");
+                //fileterFiles.Add("petTable.pe.cs");
+                //fileterFiles.Add("roleTable.pe.cs");
+                //fileterFiles.Add("petSkinTable.pe.cs");
+                //fileterFiles.Add("sceneTable.pe.cs");
+                //fileterFiles.Add("storyChapterTable.pe.cs");
+                //fileterFiles.Add("skillTable.pe.cs");
+                //fileterFiles.Add("skillBuffTable.pe.cs");
+                //fileterFiles.Add("skillStateTable.pe.cs");
+                //fileterFiles.Add("skillSummonTable.pe.cs");
+                //fileterFiles.Add("sensitivewordTable.pe.cs");
+                //fileterFiles.Add("globalTable.pe.cs");
+                //fileterFiles.Add("monsterGroupTable.pe.cs");
+                //fileterFiles.Add("monsterGroupBattleTable.pe.cs");
+                //fileterFiles.Add("npcTable.pe.cs");
+                //fileterFiles.Add("stringTable.pe.cs");
+                //fileterFiles.Add("petAttacherTable.pe.cs");
+                //fileterFiles.Add("particleTable.pe.cs");
+                //fileterFiles.Add("petPropertyTable.pe.cs");
+                //fileterFiles.Add("chapterLevelTable.pe.cs");
+                //fileterFiles.Add("battleFormationTable.pe.cs");
+                //fileterFiles.Add("houseEventTable.pe.cs");
+                //fileterFiles.Add("petAwakeUpTable.pe.cs");
+                //fileterFiles.Add("chapterTable.pe.cs");
+                //fileterFiles.Add("inappPaymentTable.pe.cs");
+                //fileterFiles.Add("objectTable.pe.cs");
+                //fileterFiles.Add("dialogTable.pe.cs");
+                //fileterFiles.Add("mythicalAnimalTable.pe.cs");
+                //fileterFiles.Add("chapterTaskTable.pe.cs");
+                if(fileterFiles.Count > 0)
+                {
+                    CopyDirectory(CLIENT_PE_CS_SRC, CLIENT__PE_CS_DES, "*.cs", true, fileterFiles);
+                }
+                else
+                {
+                    CopyDirectory(CLIENT_PE_CS_SRC, CLIENT__PE_CS_DES, "*.cs");
+                }
             }
 
             Console.WriteLine("拷贝文件之：Lua");
@@ -134,37 +210,39 @@ namespace Proto2Code
             //
             DirectoryInfo dirDes = new DirectoryInfo(strDes);
             List<string> srcFileList = new List<string>();
+
             if(fileterFiles != null)
             {
                 foreach(var f in fileterFiles)
                 {
                     string desFile = Path.Combine(dirDes.FullName, f).Replace('\\','/');
                     srcFileList.Add(desFile);
+                    srcFileList.Add(desFile + ".meta");
                 }
             }
-
-            foreach (string file in Directory.GetFiles(strSrc, searchOption, SearchOption.TopDirectoryOnly))
+            else
             {
-                FileInfo info = new FileInfo(file);
-                string desFile = Path.Combine(dirDes.FullName, info.Name).Replace('\\','/');
-                File.Copy(file, desFile, true);
+                foreach (string file in Directory.GetFiles(strSrc, searchOption, SearchOption.TopDirectoryOnly))
+                {
+                    FileInfo info = new FileInfo(file);
+                    string desFile = Path.Combine(dirDes.FullName, info.Name).Replace('\\', '/');
+                    File.Copy(file, desFile, true);
 
-                srcFileList.Add(desFile);
-                srcFileList.Add(desFile+".meta");
+                    srcFileList.Add(desFile);
+                    srcFileList.Add(desFile + ".meta");
+                }
             }
 
             if(delOtherFiles)
             {
                 foreach (string file in Directory.GetFiles(dirDes.FullName, searchOption, SearchOption.TopDirectoryOnly))
                 {
-                    if (!srcFileList.Contains(file.Replace('\\', '/')))
-                        File.Delete(file);
+                    if (!srcFileList.Contains(file.Replace('\\', '/'))) File.Delete(file);
                 }
 
                 foreach (string file in Directory.GetFiles(dirDes.FullName, searchOption + ".meta", SearchOption.TopDirectoryOnly))
                 {
-                    if (!srcFileList.Contains(file.Replace('\\', '/')))
-                        File.Delete(file);
+                    if (!srcFileList.Contains(file.Replace('\\', '/'))) File.Delete(file);
                 }
             }
             
