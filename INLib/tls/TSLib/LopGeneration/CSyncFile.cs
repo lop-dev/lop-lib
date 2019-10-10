@@ -101,10 +101,11 @@ namespace Proto2Code
                 //fileterFiles.Add("dialogTable.pb.cs");
                 //fileterFiles.Add("mythicalAnimalTable.pb.cs");
                 //fileterFiles.Add("chapterTaskTable.pb.cs");
+                //fileterFiles.Add("guideTable.pb.cs");
                 //foreach (string file in Directory.GetFiles(CLIENT_PB_CS_SRC, "*.cs", SearchOption.TopDirectoryOnly))
                 //{
                 //    FileInfo info = new FileInfo(file);
-                //    if(!info.Name.Contains("Table.pb.cs"))
+                //    if (!info.Name.Contains("Table.pb.cs"))
                 //    {
                 //        fileterFiles.Add(info.Name);
                 //    }
@@ -153,6 +154,7 @@ namespace Proto2Code
                 //fileterFiles.Add("dialogTable.pe.cs");
                 //fileterFiles.Add("mythicalAnimalTable.pe.cs");
                 //fileterFiles.Add("chapterTaskTable.pe.cs");
+                //fileterFiles.Add("guideTable.pe.cs");
                 //foreach (string file in Directory.GetFiles(CLIENT_PE_CS_SRC, "*.cs", SearchOption.TopDirectoryOnly))
                 //{
                 //    FileInfo info = new FileInfo(file);
