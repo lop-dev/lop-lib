@@ -187,8 +187,6 @@ public:
     void notifyAlreadyActiveStubsAll();
     void notifyAlreadyInitedStubsAll();
 
-    bool getMasterServerInfo(SLogicServerListItem& itemInfo);
-
     void setClearPeers(ServerID serverID, bool bClear);
     bool isAllServerClearPeers();
     void setServerSave(ServerID serverID, bool bSave);
