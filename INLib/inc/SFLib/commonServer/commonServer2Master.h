@@ -40,6 +40,8 @@ public:
 	bool sendMsgToMS(PeerID peerID, const SFLib::Message::CNetMessage* msg);
 	bool sendMsgToMS(PeerID peerID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
+    bool checkMasterServer();
+
 protected:
     virtual bool _init();
     virtual int _final();
@@ -51,7 +53,7 @@ protected:
     virtual void _onMS2XSNtfServerInited(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
 
 private:
-    bool _connectMasterServer();
+    bool _connectMasterServer(BCLib::uint16 uCount = BCLIB_UINT16_MAX);
     bool _verifyMasterClient();
 
 protected:

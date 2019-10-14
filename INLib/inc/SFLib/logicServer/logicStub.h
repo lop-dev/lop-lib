@@ -10,7 +10,7 @@
 
 #include <SFLib/commonServer/tcpStub.h>
 #include <SFLib/logicServer/netPeer.h>
-#include <SFLib/commonServer/netClient/netClient.h>
+#include <SFLib/commonServer/netClient/tcpClient.h>
 
 namespace SFLib
 {

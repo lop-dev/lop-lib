@@ -1,20 +1,16 @@
 //////////////////////////////////////////////////////////////////////
 //  created:    2011/11/01
-//  filename:   SFLib/commonServer/netClient/netClient.h
+//  filename:   SFLib/commonServer/netClient/tcpClient.h
 //  author:     League of Perfect
 /// @brief
 ///
 //////////////////////////////////////////////////////////////////////
-#ifndef __SFLIB_COMMONSERVER_NETCLIENT_NETCLIENT_H__
-#define __SFLIB_COMMONSERVER_NETCLIENT_NETCLIENT_H__
+#ifndef __SFLIB_COMMONSERVER_NETCLIENT_TCPCLIENT_H__
+#define __SFLIB_COMMONSERVER_NETCLIENT_TCPCLIENT_H__
 
-#include <BCLib/utility/pointer.h>
-#include <BCLib/utility/thread/thread.h>
-#include <BCLib/utility/dateTime.h>
 #include <BCLib/network/tcp/tcpClient.h>
 #include <BCLib/framework/msgExecMgr.h>
 #include <SFLib/message/gameFrame.h>
-#include <SFLib/commonServer/netPeer.h>
 #include <SFLib/commonServer/msgLabel.h>
 
 namespace SFLib
@@ -81,64 +77,7 @@ private:
     bool m_verified;
 };
 typedef BCLib::Utility::CSPointer<CTcpClient> CTcpClientPtr;
-
-//////////////////////////////////////////////////////////////////////////
-
-class CCommonClient : public CTcpClient
-{
-public:
-    CCommonClient();
-    virtual ~CCommonClient();
-
-    virtual bool start();
-    virtual void terminate();
-    virtual bool isRunning();
-
-	//! need reconnect when connection failed
-    bool getNeedReconnect()
-    {
-        return m_needReconnect;
-    }
-    void setNeedReconnect(bool needReconnect)
-    {
-        m_needReconnect = needReconnect;
-    }
-
-    void setServerIP(const std::string& outerip, const std::string& innerip)
-    {
-        m_serverOuterIP = outerip; m_serverInnerIP = innerip;
-    }
-    std::string& getServerIP()
-    {
-        return m_serverIP;
-    }
-
-    void setServerPort(const BCLib::uint16 port)
-    {
-        m_serverPort = port;
-    }
-    BCLib::uint16 getServerPort()
-    {
-        return m_serverPort;
-    }
-
-protected:
-    bool _connectToSrv();
-
-    virtual bool _enterPoll();
-    virtual void _leavePoll();
-    virtual void _cbTerminate(const BCLib::Network::CTcpConnectionSPtr& connPtr);
-
-private:
-    bool m_needReconnect;
-    std::string m_serverOuterIP;
-    std::string m_serverInnerIP;
-    std::string m_serverIP;
-    BCLib::uint16 m_serverPort;
-    bool m_bReConnect;
-};
-typedef BCLib::Utility::CSPointer<CCommonClient> CCommonClientPtr;
 }//CommonServer
 }//SFLib
 
-#endif//__SFLIB_COMMONSERVER_NETCLIENT_NETCLIENT_H__
+#endif//__SFLIB_COMMONSERVER_NETCLIENT_TCPCLIENT_H__

@@ -8,7 +8,7 @@
 #ifndef __SFLIB_COMMONSERVER_NETCLIENT_MASTERCLIENT_H__
 #define __SFLIB_COMMONSERVER_NETCLIENT_MASTERCLIENT_H__
 
-#include <SFLib/commonServer/netClient/netClient.h>
+#include <SFLib/commonServer/netClient/tcpClient.h>
 
 namespace SFLib
 {

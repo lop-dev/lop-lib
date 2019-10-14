@@ -8,7 +8,7 @@
 #ifndef __SFLIB_COMMONSERVER_NETCLIENT_EXTERNALCLIENT_H__
 #define __SFLIB_COMMONSERVER_NETCLIENT_EXTERNALCLIENT_H__
 
-#include <SFLib/commonServer/netClient/netClient.h>
+#include <SFLib/commonServer/netClient/commonClient.h>
 
 namespace SFLib
 {

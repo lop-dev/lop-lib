@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////
 //  created:    2011/11/01
-//  filename:   SFLib/commonServer/netClient/netClientMgr.h
+//  filename:   SFLib/commonServer/netClient/tcpClientMgr.h
 //  author:     League of Perfect
 /// @brief
 ///
 //////////////////////////////////////////////////////////////////////
-#ifndef __SFLIB_COMMONSERVER_NETCLIENT_NETCLIENTMGR_H__
-#define __SFLIB_COMMONSERVER_NETCLIENT_NETCLIENTMGR_H__
+#ifndef __SFLIB_COMMONSERVER_NETCLIENT_TCPCLIENTMGR_H__
+#define __SFLIB_COMMONSERVER_NETCLIENT_TCPCLIENTMGR_H__
 
 #include <BCLib/utility/singleton.h>
 #include <BCLib/utility/hashMap.h>
 #include <BCLib/utility/thread/mutex.h>
-#include <SFLib/commonServer/netClient/netClient.h>
+#include <SFLib/commonServer/netClient/tcpClient.h>
 
 namespace SFLib
 {
@@ -40,4 +40,4 @@ private:
 }//CommonServer
 }//SFLib
 
-#endif//__SFLIB_COMMONSERVER_NETCLIENT_NETCLIENTMGR_H__
+#endif//__SFLIB_COMMONSERVER_NETCLIENT_TCPCLIENTMGR_H__

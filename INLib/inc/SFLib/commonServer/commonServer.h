@@ -11,9 +11,10 @@
 #include <BCLib/framework/mainThread.h>
 #include <BCLib/network/tcp/tcpServer.h>
 #include <SFLib/message/gameFrame.h>
-#include <SFLib/commonServer/netClient/netClientMgr.h>
-#include <SFLib/commonServer/netPeerMgr.h>
+#include <SFLib/commonServer/netClient/commonClient.h>
 #include <SFLib/commonServer/netClient/externalClient.h>
+#include <SFLib/commonServer/netClient/tcpClientMgr.h>
+#include <SFLib/commonServer/netPeerMgr.h>
 
 //#define USE_PIPESERVER_TEST_LOGIC
 
@@ -145,9 +146,6 @@ public:
 protected:
 	virtual CCommonClientPtr _createLogicClient(SFLib::Message::SServerInfo& serverInfo);
 	virtual CCommonClientPtr _createExternalClient();
-
-    bool _connectExternalServer(SFLib::ServerID serverID);
-    bool _connectExternalServers(SFLib::ServerType serverType = INVALID_SERVER_TYPE);
 
 public:
     /// @brief 其他Server与本地Server成功建立连接

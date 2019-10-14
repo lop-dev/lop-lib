@@ -38,7 +38,7 @@ public:
 
     CTcpStubMgr* getStubMgr() const;
     bool addAcceptor(const char* acceptorIP, BCLib::uint16 acceptPort, CEncrypt* encrypt = NULL, CCompress* compress = NULL);
-    void stopAllAcceptor();
+    //void stopAllAcceptor();
 
 protected:
     bool _setStubPool(BCLib::uint32 maxStub, BCLib::uint32 minThread, BCLib::uint32 maxStubPerThd);

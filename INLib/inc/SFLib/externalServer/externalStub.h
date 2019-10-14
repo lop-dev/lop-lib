@@ -9,7 +9,7 @@
 #define __SFLIB_EXTERNALSERVER_EXTERNALSTUB_H__
 
 #include <SFLib/commonServer/tcpStub.h>
-#include <SFLib/commonServer/netClient/netClient.h>
+#include <SFLib/commonServer/netClient/tcpClient.h>
 
 namespace SFLib
 {

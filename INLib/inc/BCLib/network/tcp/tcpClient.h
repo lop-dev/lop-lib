@@ -28,10 +28,10 @@ public:
     CTcpClient(CEncrypt* encrypt = NULL, CCompress* compress = NULL);
     virtual ~CTcpClient();
 
-    bool start();
-    void terminate();
-    void join();
-    bool isRunning();
+	virtual bool start();
+	virtual void terminate();
+	virtual void join();
+	virtual bool isRunning();
 
     /// @brief 判断是否已有网络连接
     /// @return bool
