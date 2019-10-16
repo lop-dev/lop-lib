@@ -112,61 +112,7 @@ namespace Proto2Code
                 string CLIENT_PB_CS_DES = @".\TableOut\C#\Generate\Protobuf\";
 
                 fileterFiles.Clear();
-                //fileterFiles.Add("aITable.pb.cs");
-                //fileterFiles.Add("activityOperate.pb.cs");
-                //fileterFiles.Add("attackOrder.pb.cs");
-                //fileterFiles.Add("attributeChangeEffect.pb.cs");
-                //fileterFiles.Add("attributeInfo.pb.cs");
-                //fileterFiles.Add("battleFormationTable.pb.cs");
-                //fileterFiles.Add("battleMonsterPower.pb.cs");
-                //fileterFiles.Add("battlePower.pb.cs");
-                //fileterFiles.Add("battleReportNew.pb.cs");
-                //fileterFiles.Add("battleUnit.pb.cs");
-                //fileterFiles.Add("battleWaveInfo.pb.cs");
-                //fileterFiles.Add("buffEffect.pb.cs");
-                //fileterFiles.Add("buffInfo.pb.cs");
-                //fileterFiles.Add("buffRoundEffect.pb.cs");
-                //fileterFiles.Add("chapterLevelTable.pb.cs");
-                //fileterFiles.Add("chapterTable.pb.cs");
-                //fileterFiles.Add("chapterTaskTable.pb.cs");
-                //fileterFiles.Add("dialogTable.pb.cs");
-                //fileterFiles.Add("globalTable.pb.cs");
-                //fileterFiles.Add("houseEventTable.pb.cs");
-                //fileterFiles.Add("inappPaymentTable.pb.cs");
-                //fileterFiles.Add("monsterGroupBattleTable.pb.cs");
-                //fileterFiles.Add("monsterGroupTable.pb.cs");
-                //fileterFiles.Add("objectTable.pb.cs");
-                //fileterFiles.Add("particleTable.pb.cs");
-                //fileterFiles.Add("petAttacherTable.pb.cs");
-                //fileterFiles.Add("petAwakeUpTable.pb.cs");
-                //fileterFiles.Add("petInfo.pb.cs");
-                //fileterFiles.Add("petProperty.pb.cs");
-                //fileterFiles.Add("petPropertyTable.pb.cs");
-                //fileterFiles.Add("petSkin.pb.cs");
-                //fileterFiles.Add("petSkinTable.pb.cs");
-                //fileterFiles.Add("petTable.pb.cs");
-                //fileterFiles.Add("sceneTable.pb.cs");
-                //fileterFiles.Add("sensitivewordTable.pb.cs");
-                //fileterFiles.Add("skillBuffTable.pb.cs");
-                //fileterFiles.Add("skillInfo.pb.cs");
-                //fileterFiles.Add("skillStateTable.pb.cs");
-                //fileterFiles.Add("skillTable.pb.cs");
-                //fileterFiles.Add("spritPet.pb.cs");
-                //fileterFiles.Add("spritPetInfo.pb.cs");
-                //fileterFiles.Add("storyChapterTable.pb.cs");
-                //fileterFiles.Add("stringTable.pb.cs");
-                //fileterFiles.Add("summonEffect.pb.cs");
-                //fileterFiles.Add("supportSkillInfo.pb.cs");
-                //fileterFiles.Add("teamMemberInfo.pb.cs");
-                //foreach (string file in Directory.GetFiles(CLIENT_PB_CS_SRC, "*.cs", SearchOption.TopDirectoryOnly))
-                //{
-                //    FileInfo info = new FileInfo(file);
-                //    if (!info.Name.Contains("Table.pb.cs"))
-                //    {
-                //        fileterFiles.Add(info.Name);
-                //    }
-                //}
-
+                _GetPBFileterFiles(ref fileterFiles);
                 if (fileterFiles.Count > 0)
                 {
                     CopyDirectory(CLIENT_PB_CS_SRC, CLIENT_PB_CS_DES, "*.cs", true, fileterFiles);
@@ -179,63 +125,8 @@ namespace Proto2Code
                 //
                 string CLIENT_PE_CS_SRC = @".\TableOut\Temp\1_Protoext\C#\";
                 string CLIENT_PE_CS_DES = @".\TableOut\C#\Generate\Protoext\";
-
                 fileterFiles.Clear();
-                //fileterFiles.Add("aITable.pe.cs");
-                //fileterFiles.Add("activityOperate.pe.cs");
-                //fileterFiles.Add("attackOrder.pe.cs");
-                //fileterFiles.Add("attributeChangeEffect.pe.cs");
-                //fileterFiles.Add("attributeInfo.pe.cs");
-                //fileterFiles.Add("battleFormationTable.pe.cs");
-                //fileterFiles.Add("battleMonsterPower.pe.cs");
-                //fileterFiles.Add("battlePower.pe.cs");
-                //fileterFiles.Add("battleReportNew.pe.cs");
-                //fileterFiles.Add("battleUnit.pe.cs");
-                //fileterFiles.Add("battleWaveInfo.pe.cs");
-                //fileterFiles.Add("buffEffect.pe.cs");
-                //fileterFiles.Add("buffInfo.pe.cs");
-                //fileterFiles.Add("buffRoundEffect.pe.cs");
-                //fileterFiles.Add("chapterLevelTable.pe.cs");
-                //fileterFiles.Add("chapterTable.pe.cs");
-                //fileterFiles.Add("chapterTaskTable.pe.cs");
-                //fileterFiles.Add("dialogTable.pe.cs");
-                //fileterFiles.Add("globalTable.pe.cs");
-                //fileterFiles.Add("houseEventTable.pe.cs");
-                //fileterFiles.Add("inappPaymentTable.pe.cs");
-                //fileterFiles.Add("monsterGroupBattleTable.pe.cs");
-                //fileterFiles.Add("monsterGroupTable.pe.cs");
-                //fileterFiles.Add("objectTable.pe.cs");
-                //fileterFiles.Add("particleTable.pe.cs");
-                //fileterFiles.Add("petAttacherTable.pe.cs");
-                //fileterFiles.Add("petAwakeUpTable.pe.cs");
-                //fileterFiles.Add("petInfo.pe.cs");
-                //fileterFiles.Add("petProperty.pe.cs");
-                //fileterFiles.Add("petPropertyTable.pe.cs");
-                //fileterFiles.Add("petSkin.pe.cs");
-                //fileterFiles.Add("petSkinTable.pe.cs");
-                //fileterFiles.Add("petTable.pe.cs");
-                //fileterFiles.Add("sceneTable.pe.cs");
-                //fileterFiles.Add("sensitivewordTable.pe.cs");
-                //fileterFiles.Add("skillBuffTable.pe.cs");
-                //fileterFiles.Add("skillInfo.pe.cs");
-                //fileterFiles.Add("skillStateTable.pe.cs");
-                //fileterFiles.Add("skillTable.pe.cs");
-                //fileterFiles.Add("spritPet.pe.cs");
-                //fileterFiles.Add("spritPetInfo.pe.cs");
-                //fileterFiles.Add("storyChapterTable.pe.cs");
-                //fileterFiles.Add("stringTable.pe.cs");
-                //fileterFiles.Add("summonEffect.pe.cs");
-                //fileterFiles.Add("supportSkillInfo.pe.cs");
-                //fileterFiles.Add("teamMemberInfo.pe.cs");
-                //foreach (string file in Directory.GetFiles(CLIENT_PE_CS_SRC, "*.cs", SearchOption.TopDirectoryOnly))
-                //{
-                //    FileInfo info = new FileInfo(file);
-                //    if (!info.Name.Contains("Table.pe.cs"))
-                //    {
-                //        fileterFiles.Add(info.Name);
-                //    }
-                //}
-
+                _GetPEFileterFiles(ref fileterFiles);
                 if (fileterFiles.Count > 0)
                 {
                     CopyDirectory(CLIENT_PE_CS_SRC, CLIENT_PE_CS_DES, "*.cs", true, fileterFiles);
@@ -349,6 +240,40 @@ namespace Proto2Code
             }
             
             return 0;
+        }
+
+        void _GetPBFileterFiles(ref List<string> fileterFiles)
+        {
+            string strMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+            FileInfo fiMainModule = new FileInfo(strMainModule);
+            string strFileName = fiMainModule.Directory.FullName + "\\fileterFiles.pb.cs";
+
+            FileStream fs = new FileStream(strFileName, FileMode.Open, FileAccess.Read);
+            StreamReader sr = new StreamReader(fs);
+
+            string strLine = sr.ReadLine();
+            while (strLine != null)
+            {
+                fileterFiles.Add(strLine);
+                strLine = sr.ReadLine();
+            }
+        }
+
+        void _GetPEFileterFiles(ref List<string> fileterFiles)
+        {
+            string strMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+            FileInfo fiMainModule = new FileInfo(strMainModule);
+            string strFileName = fiMainModule.Directory.FullName + "\\fileterFiles.pe.cs";
+
+            FileStream fs = new FileStream(strFileName, FileMode.Open, FileAccess.Read);
+            StreamReader sr = new StreamReader(fs);
+
+            string strLine = sr.ReadLine();
+            while (strLine != null)
+            {
+                fileterFiles.Add(strLine);
+                strLine = sr.ReadLine();
+            }
         }
     }
 }
