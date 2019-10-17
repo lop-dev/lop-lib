@@ -56,6 +56,8 @@ private:
     bool _connectMasterServer(BCLib::uint16 uCount = BCLIB_UINT16_MAX);
     bool _verifyMasterClient();
 
+    BCLib::ResThread _connectMasterServer(void* param);
+
 protected:
     CTcpClientPtr m_masterClient;
 };
