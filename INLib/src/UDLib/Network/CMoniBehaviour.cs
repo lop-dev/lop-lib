@@ -249,7 +249,7 @@ namespace UDLib.Network
                 {
                     //发送消息前加入本地缓存,在这里做可以过滤掉心跳
                     UDLib.Utility.CDebugOut.Log("SendMessage : uServer = " + tmpServer.ToString() + "; uFunc = " + tmpFunc.ToString() + "; uID = " + msgRequest.Id.ToString() + ", reqIndex" + msgRequest.GetReqIndex());
-                    // 超时重发机制, 非ack消息，缓存序列好，待收到ack返回从缓存移除
+                    // 超时重发机制, 非ack消息，缓存序列号，待收到ack返回从缓存移除
                     m_tcpClient.CacheMessage(msgRequest);
                     m_tcpClient.DelayedMsg.AddObject(msgResponse.UniqueID, curTicks + delaySecond * 1000); // 第二个参数转成毫秒
 #if DEBUG
