@@ -41,7 +41,9 @@ namespace UDLib.Resource
         public override void AddRef()
         {
             base.AddRef();
+#if DEBUG
             CAssetBundleLog.Log(string.Format("addref,abName={0},refCount={1}", assetBundle.name, refCount));
+#endif
         }
 
         /// <summary>
@@ -50,10 +52,14 @@ namespace UDLib.Resource
         public void Release()
         {
             refCount--;
+#if DEBUG
             CAssetBundleLog.Log(string.Format("release,abName={0},refCount={1}", assetBundle.name, refCount));
+#endif
             if (refCount <= 0 && !MbAssetBundleManager.Instance.systemAssetBundleObject.ContainsKey(this.name))
             {
+#if DEBUG
                 UnityEngine.Assertions.Assert.AreEqual(0, refCount, string.Format("refCount should equals 0,refCount={0},name={1}", refCount,this.name));
+#endif
                 //即将被销毁
                 MbAssetBundleManager.Instance.ReleaseAssetBundleObject(this.name);
                 unUsedAssetBundleObjects[this] = Time.time;

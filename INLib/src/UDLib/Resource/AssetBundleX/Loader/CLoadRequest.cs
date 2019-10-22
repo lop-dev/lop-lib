@@ -165,7 +165,9 @@ namespace UDLib.Resource
                     load_objectsThisRequest[i] = CAssetObject.Get(m_eResourceType,
                         sub_path + resourceNames[i], asset);//refCount++
                     loaded_num++;
+#if DEBUG
                     CAssetBundleLog.Log("读取资源：" + resourceNames[i]);
+#endif
                     //保存读出来的资源到缓存
                     if (!MbAssetBundleManager.Instance.loadedAssetObjectDic.ContainsKey(m_eResourceType))
                     {
@@ -190,7 +192,9 @@ namespace UDLib.Resource
                     r.LoadObjectFromAssetBundle(asset_bundle, sub_path,isAsyncMode);
                     //  while (r.isLoadingFromAssetBundle)
                     //     yield return null;
+#if DEBUG
                     CAssetBundleLog.Log(string.Format("sameMasterRequest loaded.{0}", r.packageName));
+#endif
                 }
             }
 

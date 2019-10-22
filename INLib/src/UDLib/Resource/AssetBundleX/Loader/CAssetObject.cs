@@ -68,7 +68,9 @@ namespace UDLib.Resource
             refCount--;
             if (refCount <= 0)
             {
+#if DEBUG
                 UnityEngine.Assertions.Assert.AreEqual(0, refCount, string.Format("refCount should equals 0,refCount={0}", refCount));
+#endif
                 //即将被销毁
                 unUsedAssetObjects[this] = Time.time;
                 MbAssetBundleManager.Instance.ReleaseAssetObject(eResourceType, name);
