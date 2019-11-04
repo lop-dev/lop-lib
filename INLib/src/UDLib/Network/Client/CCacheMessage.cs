@@ -25,6 +25,8 @@ namespace UDLib.Network
         // 消息缓存的对象池
         private CSLib.Utility.CObjectPool<MessageData> m_messagePool = new CSLib.Utility.CObjectPool<MessageData>();
         private CTcpClient m_tcpClient;
+        // 临时保存msgDictCache的keys
+        private List<ushort> m_keys = new List<ushort>();
         // 线程锁
         private static readonly object msgLock = new object();
 
@@ -109,9 +111,10 @@ namespace UDLib.Network
             lock (msgLock)
             {
                 // 重发超时消息，并且更新超时的时间戳和重发次数
-                foreach (KeyValuePair<ushort, MessageData> kvp in msgDictCache)
+                m_keys.Clear();
+                m_keys.AddRange(msgDictCache.Keys);
+                foreach(ushort reqIndex in m_keys)
                 {
-                    var reqIndex = kvp.Key;
                     var messageObject = msgDictCache[reqIndex];
                     if (messageObject.sentCount > CReconnectMgr.Instance.TimeOutRetryCount)
                     {
