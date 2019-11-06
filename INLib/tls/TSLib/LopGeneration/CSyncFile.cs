@@ -112,7 +112,7 @@ namespace Proto2Code
                 string CLIENT_PB_CS_DES = @".\TableOut\C#\Generate\Protobuf\";
 
                 fileterFiles.Clear();
-                _GetPBFileterFiles(ref fileterFiles);
+                _GetFileterFilesPBcs(ref fileterFiles);
                 if (fileterFiles.Count > 0)
                 {
                     CopyDirectory(CLIENT_PB_CS_SRC, CLIENT_PB_CS_DES, "*.cs", true, fileterFiles);
@@ -126,7 +126,7 @@ namespace Proto2Code
                 string CLIENT_PE_CS_SRC = @".\TableOut\Temp\1_Protoext\C#\";
                 string CLIENT_PE_CS_DES = @".\TableOut\C#\Generate\Protoext\";
                 fileterFiles.Clear();
-                _GetPEFileterFiles(ref fileterFiles);
+                _GetFileterFilesPEcs(ref fileterFiles);
                 if (fileterFiles.Count > 0)
                 {
                     CopyDirectory(CLIENT_PE_CS_SRC, CLIENT_PE_CS_DES, "*.cs", true, fileterFiles);
@@ -144,7 +144,16 @@ namespace Proto2Code
 
             string CLIENT_PE_LUA_SRC = @".\TableOut\Temp\1_Protoext\Lua\";
             string CLIENT_PE_LUA_DES = @".\TableOut\Lua\Generate\Protoext\";
-            CopyDirectory(CLIENT_PE_LUA_SRC, CLIENT_PE_LUA_DES, "*.lua");
+            fileterFiles.Clear();
+            _GetFileterFilesPElua(ref fileterFiles);
+            if (fileterFiles.Count > 0)
+            {
+                CopyDirectory(CLIENT_PE_LUA_SRC, CLIENT_PE_LUA_DES, "*.lua", true, fileterFiles);
+            }
+            else
+            {
+                CopyDirectory(CLIENT_PE_LUA_SRC, CLIENT_PE_LUA_DES, "*.lua");
+            }
 
             string CLIENT_MSG_DEFINE_SRC = @".\TableOut\Temp\4_Protomsg\Lua\Message\";
             string CLIENT_MSG_DEFINE_DES = @".\TableOut\Lua\Generate\Message\";
@@ -242,7 +251,7 @@ namespace Proto2Code
             return 0;
         }
 
-        void _GetPBFileterFiles(ref List<string> fileterFiles)
+        void _GetFileterFilesPBcs(ref List<string> fileterFiles)
         {
             string strMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
             FileInfo fiMainModule = new FileInfo(strMainModule);
@@ -259,11 +268,28 @@ namespace Proto2Code
             }
         }
 
-        void _GetPEFileterFiles(ref List<string> fileterFiles)
+        void _GetFileterFilesPEcs(ref List<string> fileterFiles)
         {
             string strMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
             FileInfo fiMainModule = new FileInfo(strMainModule);
             string strFileName = fiMainModule.Directory.FullName + "\\fileterFiles.pe.cs";
+
+            FileStream fs = new FileStream(strFileName, FileMode.Open, FileAccess.Read);
+            StreamReader sr = new StreamReader(fs);
+
+            string strLine = sr.ReadLine();
+            while (strLine != null)
+            {
+                fileterFiles.Add(strLine);
+                strLine = sr.ReadLine();
+            }
+        }
+
+        void _GetFileterFilesPElua(ref List<string> fileterFiles)
+        {
+            string strMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+            FileInfo fiMainModule = new FileInfo(strMainModule);
+            string strFileName = fiMainModule.Directory.FullName + "\\fileterFiles.pe.lua";
 
             FileStream fs = new FileStream(strFileName, FileMode.Open, FileAccess.Read);
             StreamReader sr = new StreamReader(fs);
