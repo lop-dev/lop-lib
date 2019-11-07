@@ -169,6 +169,7 @@ public:
 
 struct SServerInfo
 {
+    BCLib::uint64 m_groupID;
     ServerID m_serverID;
     ServerType m_serverType;
     BCLib::Network::ENetType m_acceptNetType;
@@ -180,6 +181,7 @@ struct SServerInfo
 
 	SServerInfo()
 	{
+        m_groupID = 0;
 		m_serverID = INVALID_SERVER_ID;
 		m_serverType = INVALID_SERVER_TYPE;
 		m_acceptNetType = BCLib::Network::ENetType::NETT_NULL;

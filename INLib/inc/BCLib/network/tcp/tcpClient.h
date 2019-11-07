@@ -59,7 +59,12 @@ public:
     float getSendRateInKBPerSec() const;
     float getRecvRateInKBPerSec() const;
 
-    bool connect(const char* serverIP, BCLib::uint16 serverPort);
+	/// @brief 连接对端的服务器
+	/// @return bool true = 连接成功
+	/// @param serverIP
+	/// @param serverPort
+	/// @param addToMgr 如果连接成功后，需要使用阻塞方式收发消息，就传false值，否则传true值
+    bool connect(const char* serverIP, BCLib::uint16 serverPort, bool addToMgr);
     void close();
 
     BCLib::int32 sendBlock(BCLib::Utility::CStream& stream);

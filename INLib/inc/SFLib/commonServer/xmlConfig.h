@@ -24,7 +24,8 @@ namespace CommonServer
 struct SServerInfo
 {
 	SServerInfo()
-	: m_serverID(INVALID_SERVER_ID)
+	: m_groupID(0)
+    , m_serverID(INVALID_SERVER_ID)
 	, m_serverType(ESERVER_UNKNOW)
 	, m_acceptNetType(BCLib::Network::NETT_NULL)
 	, m_acceptIP("")
@@ -40,6 +41,7 @@ struct SServerInfo
 	void setServerInfo(SFLib::Message::SServerInfo serverInfo);
 	void getServerInfo(SFLib::Message::SServerInfo& serverInfo);
 
+    BCLib::uint64 m_groupID;
 	ServerID m_serverID;
 	EServerType m_serverType;
 	BCLib::Network::ENetType m_acceptNetType;
@@ -209,6 +211,7 @@ private:
     bool _loadLogicServerConnection(BCLib::Utility::CXmlFile& xmlFile, BCLib::Utility::HXmlNode connectionNode);
 
     bool _loadLogicServerList(BCLib::Utility::CXmlFile& xmlFile, BCLib::Utility::HXmlNode serverListNode);
+    bool _loadGatewayServerList(BCLib::Utility::CXmlFile& xmlFile, BCLib::Utility::HXmlNode serverListNode);
     bool _loadExternalServerList(BCLib::Utility::CXmlFile& xmlFile, BCLib::Utility::HXmlNode serverListNode);
 
     bool _addLogicServerListItem(SLogicServerListItem& item);
