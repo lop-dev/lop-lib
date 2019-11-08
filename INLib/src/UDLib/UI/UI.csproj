@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{96898657-206A-4A0C-9E73-048DE639BC94}</ProjectGuid>
+    <ProjectGuid>{0E5488E6-F888-4606-B45C-8F1DDFF05A7B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UDLib.UI</RootNamespace>
@@ -47,11 +47,24 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\EXLib\csharp\Unity\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\EXLib\csharp\Unity\UnityEngine.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CFormationLoopScrollRect.cs" />
+    <Compile Include="CHorizontalLoopScrollRect.cs" />
+    <Compile Include="CLoopScrollRect.cs" />
+    <Compile Include="CPageVerticalLoopScrollRect.cs" />
+    <Compile Include="CVerticalLoopScrollRect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{96898657-206a-4a0c-9e73-048de639bc94}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
