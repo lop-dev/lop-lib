@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.421
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "..\..\..\src\UDLib\Utility\Utility.csproj", "{96898657-206A-4A0C-9E73-048DE639BC94}"
 EndProject
@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "..\..\..\tls\UDLi
 	ProjectSection(ProjectDependencies) = postProject
 		{96898657-206A-4A0C-9E73-048DE639BC94} = {96898657-206A-4A0C-9E73-048DE639BC94}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "..\..\..\src\UDLib\UI\UI.csproj", "{0E5488E6-F888-4606-B45C-8F1DDFF05A7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,10 @@ Global
 		{11C97173-B63F-47E8-8796-E4E4A75EFFF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11C97173-B63F-47E8-8796-E4E4A75EFFF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11C97173-B63F-47E8-8796-E4E4A75EFFF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E5488E6-F888-4606-B45C-8F1DDFF05A7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E5488E6-F888-4606-B45C-8F1DDFF05A7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E5488E6-F888-4606-B45C-8F1DDFF05A7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E5488E6-F888-4606-B45C-8F1DDFF05A7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
