@@ -66,6 +66,7 @@ public:
     {
         m_serverID = serverID;
     }
+
     ServerID getServerID()
     {
         return m_serverID;

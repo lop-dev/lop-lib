@@ -38,8 +38,12 @@ struct SServerInfo
 	}
 
 	std::string getDebugPrompt() const;
+
 	void setServerInfo(SFLib::Message::SServerInfo serverInfo);
 	void getServerInfo(SFLib::Message::SServerInfo& serverInfo);
+
+    void setServerInfo(SFLib::CommonServer::SServerInfo serverInfo);
+    void getServerInfo(SFLib::CommonServer::SServerInfo& serverInfo);
 
     BCLib::uint64 m_groupID;
 	ServerID m_serverID;
