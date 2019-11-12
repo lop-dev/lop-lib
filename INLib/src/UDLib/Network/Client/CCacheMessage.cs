@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace UDLib.Network
 {
-    public class MessageData
+    public class MessageData: CSLib.Utility.CObjectPool<MessageData>.IPoolable
     {
         // 消息
         public CSLib.Framework.CNetMessage netMessage;
@@ -11,6 +11,13 @@ namespace UDLib.Network
         public long timeStamp;
         // 已重发次数
         public int sentCount;
+
+        public void Reset()
+        {
+            netMessage = null;
+            timeStamp = 0;
+            sentCount = 0;
+        }
     }
 
     public class CCacheMessage
@@ -54,13 +61,14 @@ namespace UDLib.Network
                     msgDictCache.Remove(reqIndex);
                 }
 
+                
+
                 var obj = m_messagePool.Obtain();
                 obj.timeStamp = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
                 obj.netMessage = message;
                 obj.sentCount = 0;
                 msgDictCache.Add(reqIndex, obj);
 
-                //msgDict.Add(message, DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond);
                 return true;
             }
         }
@@ -72,6 +80,7 @@ namespace UDLib.Network
             {
                 if (msgDictCache.ContainsKey(reqIndex))
                 {
+                    m_messagePool.Free(msgDictCache[reqIndex]);
                     msgDictCache.Remove(reqIndex);
                     return true;
                 }
@@ -89,6 +98,7 @@ namespace UDLib.Network
                 {
                     msgDictCache.Clear();
                 }
+                m_messagePool.Clear();
             }
         }
 
@@ -128,20 +138,22 @@ namespace UDLib.Network
                         //break;
                     }
 
-                    var a = Math.Abs(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - messageObject.timeStamp);
+                    var timePassed = Math.Abs(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - messageObject.timeStamp);
 #if DEBUG
-                    CSLib.Utility.CDebugOut.Log(string.Format("time passed :{0} ms", a));
+                    CSLib.Utility.CDebugOut.Log(string.Format("time passed :{0} ms", timePassed));
 #endif
-
-                    CSLib.Utility.CStream msgStream = new CSLib.Utility.CStream();
-
-                    messageObject.sentCount++;
-                    messageObject.timeStamp = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-                    messageObject.netMessage.Serialize(msgStream);
-                    SendMessage(msgStream);
-                    if (CReconnectMgr.Instance.timeoutCallBack != null)
+                    if (timePassed > CReconnectMgr.Instance.TimeOutDuration)
                     {
-                        CReconnectMgr.Instance.timeoutCallBack(reqIndex, messageObject.netMessage.MsgType, messageObject.netMessage.Id);
+                        CSLib.Utility.CStream msgStream = new CSLib.Utility.CStream();
+
+                        messageObject.sentCount++;
+                        messageObject.timeStamp = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                        messageObject.netMessage.Serialize(msgStream);
+                        SendMessage(msgStream);
+                        if (CReconnectMgr.Instance.timeoutCallBack != null)
+                        {
+                            CReconnectMgr.Instance.timeoutCallBack(reqIndex, messageObject.netMessage.MsgType, messageObject.netMessage.Id);
+                        }
                     }
                 }
             }

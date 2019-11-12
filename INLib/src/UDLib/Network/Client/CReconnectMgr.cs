@@ -19,7 +19,7 @@ namespace UDLib.Network
         // 超时重发最大次数，超过这个次数，判定为断线
         private float m_timeOutRetryCount = 10;
         // 超时检测频率（几帧检查一次）
-        private int m_timeOutCheckFrequency = 5;
+        private int m_timeOutCheckFrequency = 10;
         public delegate void DTimeoutCallback(UInt16 index, ushort msgType, ushort msgId);
         public DTimeoutCallback timeoutCallBack;
         //
