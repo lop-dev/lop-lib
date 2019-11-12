@@ -40,7 +40,9 @@ namespace UDLib.Network
         {
             lock (msgLock)
             {
+#if DEBUG
                 UDLib.Utility.CDebugOut.Log("发送消息时本地缓存消息以便超时重发 > reqIndex : " + message.GetReqIndex());
+#endif
                 ushort reqIndex = message.GetReqIndex();
                 if (reqIndex == 0)
                 {
@@ -68,7 +70,7 @@ namespace UDLib.Network
         {
             lock (msgLock)
             {
-                if (!msgDictCache.ContainsKey(reqIndex))
+                if (msgDictCache.ContainsKey(reqIndex))
                 {
                     msgDictCache.Remove(reqIndex);
                     return true;
@@ -127,7 +129,9 @@ namespace UDLib.Network
                     }
 
                     var a = Math.Abs(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - messageObject.timeStamp);
+#if DEBUG
                     CSLib.Utility.CDebugOut.Log(string.Format("time passed :{0} ms", a));
+#endif
 
                     CSLib.Utility.CStream msgStream = new CSLib.Utility.CStream();
 
@@ -147,6 +151,6 @@ namespace UDLib.Network
         {
             m_tcpClient.SendAsync(msgStream);
         }
-        #endregion
+#endregion
     }
 }
