@@ -1671,7 +1671,6 @@ namespace UDLib.Resource
                     path = "jar:file://" + Application.dataPath + "!/assets/";
                     break;
                 case RuntimePlatform.IPhonePlayer:
-                    //path = "file://" + Application.dataPath + "/Raw/";
                     path = Application.dataPath + "/Raw/";
                     break;
                 default:
