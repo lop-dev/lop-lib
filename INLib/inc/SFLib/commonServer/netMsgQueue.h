@@ -58,7 +58,7 @@ public:
 
 struct SGroupKey
 {
-    GroupID m_groupID;
+    BCLib::Network::TcpStubID m_stubID;
     PeerID m_peerID;
 };
 

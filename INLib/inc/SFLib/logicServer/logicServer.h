@@ -21,8 +21,6 @@ public:
     CLogicServer(const std::string& name);
     virtual ~CLogicServer();
 
-    bool isGatewayServer();
-
     /// @brief 申请PeerID
     /// @return bool
     /// @param peerID 申请指定的PeerID，如果为0，则随机分配

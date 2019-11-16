@@ -45,7 +45,7 @@ struct SServerInfo
     void setServerInfo(SFLib::CommonServer::SServerInfo serverInfo);
     void getServerInfo(SFLib::CommonServer::SServerInfo& serverInfo);
 
-    BCLib::uint64 m_groupID;
+    GroupID m_groupID;
 	ServerID m_serverID;
 	EServerType m_serverType;
 	BCLib::Network::ENetType m_acceptNetType;
@@ -180,14 +180,16 @@ public:
 
     ServerID fetchLogicServerID(SFLib::EServerType serverType, BCLib::Network::ENetType netType, const char* peerIP);
     EServerType fetchLogicServerType(ServerID serverID, BCLib::Network::ENetType netType, const char* peerIP);
+    SServerInfo* getLogicServerInfo(ServerID serverID);
 
 	ServerID fetchExternalServerID(SFLib::EServerType serverType, BCLib::Network::ENetType netType, const char* peerIP);
 	EServerType fetchExternalServerType(ServerID serverID, BCLib::Network::ENetType netType, const char* peerIP);
+    SServerInfo* getExternalServerInfo(ServerID serverID);
 
     bool getLogicServerAcceptInfo(ServerID serverID, SFLib::Message::SServerAcceptInfo& acceptInfo);
 	bool getExternalServerAcceptInfo(ServerID serverID, SFLib::Message::SServerAcceptInfo& acceptInfo);
 
-    void sendLogicServerListToStub(CTcpStub* masterStub);
+    void sendLogicServerListToStub(CTcpStub* masterStub, GroupID groupID = 0);
     void sendExternalServerListToStub(CTcpStub* masterStub);
 
     void notifyAlreadyActiveStubsAll();

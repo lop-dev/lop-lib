@@ -20,6 +20,11 @@ public:
     CMasterStub(const BCLib::Network::CTcpConnectionSPtr& netConn);
     virtual ~CMasterStub();
 
+    virtual GroupID getGroupID()
+    {
+        return m_groupID;
+    }
+
 protected:
     /// @brief 未处理的消息放到 CNetMsgQueueBySFMsgLabel 队列中
     /// @return void
@@ -43,6 +48,9 @@ protected:
     virtual void _onXS2MSAckServerSave(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
 
 	virtual ServerID _getServerIDByType(EServerType serverType);
+
+private:
+    GroupID m_groupID;
 };
 }//Master
 }//SFLib

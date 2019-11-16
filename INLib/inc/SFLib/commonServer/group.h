@@ -19,12 +19,12 @@ namespace CommonServer
 class CGroup
 {
 public:
-    CGroup(GroupID groupID, BCLib::Network::CTcpStubSPtr netStubPtr);
+    CGroup(BCLib::Network::TcpStubID stubID, BCLib::Network::CTcpStubSPtr netStubPtr);
     virtual ~CGroup();
 
-    GroupID getGroupID()
+    BCLib::Network::TcpStubID getGroupID()
     {
-        return m_groupID;
+        return m_stubID;
     }
 
     bool sendMsg(PeerID peerID, const SFLib::Message::CNetMessage* msg);
@@ -34,7 +34,7 @@ public:
     bool sendMsg(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
 private:
-    GroupID m_groupID;
+    BCLib::Network::TcpStubID m_stubID;
     BCLib::Network::CTcpStubSPtr m_netStubPtr;
 };
 typedef BCLib::Utility::CPointer<CGroup> CGroupPtr;

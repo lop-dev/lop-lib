@@ -51,9 +51,14 @@ public:
     }
 
     //
+    void setGroupID(GroupID groupID)
+    {
+        m_groupID = groupID;
+    }
+
     virtual GroupID getGroupID()
     {
-        return INVALID_GROUP_ID;
+        return m_groupID;
     }
 
     virtual std::string getGroupName()
@@ -316,6 +321,7 @@ private:
     BCLib::Utility::CDateTime m_dtConfigFileLastWriteTime;
     volatile bool m_reloadflag;
 
+    GroupID m_groupID;
     ServerID m_serverID;
     std::string m_serverName;
 

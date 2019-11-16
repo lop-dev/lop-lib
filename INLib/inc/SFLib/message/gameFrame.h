@@ -169,7 +169,7 @@ public:
 
 struct SServerInfo
 {
-    BCLib::uint64 m_groupID;
+    GroupID m_groupID;
     ServerID m_serverID;
     ServerType m_serverType;
     BCLib::Network::ENetType m_acceptNetType;
@@ -181,7 +181,7 @@ struct SServerInfo
 
 	SServerInfo()
 	{
-        m_groupID = 0;
+        m_groupID = INVALID_GROUP_ID;
 		m_serverID = INVALID_SERVER_ID;
 		m_serverType = INVALID_SERVER_TYPE;
 		m_acceptNetType = BCLib::Network::ENetType::NETT_NULL;
@@ -225,6 +225,7 @@ public:
 
 struct SServerAcceptInfo
 {
+    GroupID m_groupID; // 只在逻辑服上起效
     ServerID m_serverID;
     BCLib::Network::ENetType m_acceptNetType;
 	char m_acceptIP[SFLIB_IP_TEXT_MAX + 1];
@@ -232,6 +233,7 @@ struct SServerAcceptInfo
 
 	SServerAcceptInfo()
 	{
+        m_groupID = INVALID_GROUP_ID;
 		m_serverID = INVALID_SERVER_ID;
 		m_acceptNetType = BCLib::Network::ENetType::NETT_NULL;
 		memset(m_acceptIP, 0, sizeof(m_acceptIP));

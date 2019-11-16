@@ -25,10 +25,10 @@ public:
     ~CGroupMgr();
 
     bool addGroup(CGroupPtr& group);
-    void delGroup(GroupID groupID);
+    void delGroup(BCLib::Network::TcpStubID groupID);
 
-    bool getGroup(GroupID groupID, CGroupPtr& group);
-    CGroupPtr getGroup(GroupID groupID);
+    bool getGroup(BCLib::Network::TcpStubID groupID, CGroupPtr& group);
+    CGroupPtr getGroup(BCLib::Network::TcpStubID groupID);
 
     void sendMsgToAll(PeerID peerID, const SFLib::Message::CNetMessage* msg);
     void sendMsgToAll(PeerID peerID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
@@ -42,7 +42,7 @@ private:
 protected:
 private:
     BCLib::Utility::CMutex m_mutex;
-    BCLib::Utility::CHashMap<SFLib::GroupID, CGroupPtr> m_groupHashMap;
+    BCLib::Utility::CHashMap<BCLib::Network::TcpStubID, CGroupPtr> m_groupHashMap;
 };
 }//CommonServer
 }//SFLib

@@ -107,12 +107,16 @@ public:
         return m_serverType;
     }
 
+    virtual BCLib::int32 send(const SFLib::Message::CNetMessage* msg);
+    virtual BCLib::int32 send(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+
     /// @brief 参数peerID主要是在消息发送失败的时候传给逻辑层使用
     /// @return 发送字节数或错误值
-    int send(PeerID peerID, const SFLib::Message::CNetMessage* msg);
+    virtual BCLib::int32 send(PeerID peerID, const SFLib::Message::CNetMessage* msg);
+
     /// @brief 参数peerID主要是在消息发送失败的时候传给逻辑层使用
     /// @return 发送字节数或错误值
-    int send(PeerID peerID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+    virtual BCLib::int32 send(PeerID peerID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
     std::string getDebugPrompt();
 

@@ -40,8 +40,8 @@ public:
 
     bool getServerInfo(ServerID serverID, SFLib::Message::SServerInfo& serverInfo);
 
-	//int getServerIDs(EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive = false);
-	//SFLib::ServerID randomServerID(ServerType serverType, bool bActive = false);
+    //int getServerIDs(EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive = false);
+    //SFLib::ServerID randomServerID(ServerType serverType, bool bActive = false);
 
     //
     int getLogicServerIDs(BCLib::uint64 groupID, EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive = false);
@@ -50,8 +50,8 @@ public:
     int getExternalServerIDs(EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive = false);
     SFLib::ServerID randomExternalServerID(ServerType serverType, bool bActive = false);
 
-    int getGatewayServerIDs(std::vector<ServerID>& vecServerID, bool bActive = false);
-    SFLib::ServerID randomGatewayServerID(bool bActive = false);
+    int getGatewayServerIDs(EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive = false);
+    SFLib::ServerID randomGatewayServerID(EServerType serverType, bool bActive = false);
 
 public:
 	bool connectExternalServer(SFLib::ServerID serverID);

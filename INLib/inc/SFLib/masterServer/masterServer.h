@@ -21,7 +21,7 @@ class CMasterServer : public SFLib::CommonServer::CCommonServer
 public:
     CMasterServer();
     virtual ~CMasterServer();
-    virtual GroupID getGroupID();
+
     virtual EServerType getServerType()
     {
         return ESERVER_MASTER;

@@ -21,6 +21,14 @@ public:
     CExternalStub(const BCLib::Network::CTcpConnectionSPtr& netConn);
     virtual ~CExternalStub();
 
+    /// @brief 参数peerID主要是在消息发送失败的时候传给逻辑层使用
+    /// @return 发送字节数或错误值
+    virtual BCLib::int32 send(PeerID peerID, const SFLib::Message::CNetMessage* msg);
+
+    /// @brief 参数peerID主要是在消息发送失败的时候传给逻辑层使用
+    /// @return 发送字节数或错误值
+    virtual BCLib::int32 send(PeerID peerID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+
 protected:
     /// @brief 未处理的消息放到 CNetMsgQueueByGroupKey 队列中
     /// @return void

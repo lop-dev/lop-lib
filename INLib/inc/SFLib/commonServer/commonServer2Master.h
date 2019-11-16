@@ -28,8 +28,6 @@ public:
         return (CCommonServer2Master *)CCommonServer::getCommonServer();
     }
 
-    virtual GroupID getGroupID();
-
     CMasterClientPtr getMasterClient()
     {
         return (CMasterClientPtr)m_masterClient;
@@ -74,8 +72,6 @@ public:
     {
         return (CCommonServer2Master *)CCommonServer::getCommonServer();
     }
-
-    virtual GroupID getGroupID();
 
     CMasterClientPtr getMasterClient()
     {

@@ -26,11 +26,11 @@ const ServerType INVALID_SERVER_TYPE = 0;
 typedef BCLib::uint16 ServerID;
 const ServerID INVALID_SERVER_ID = 0;
 
+typedef BCLib::uint64 GroupID;
+const GroupID INVALID_GROUP_ID = 0;
+
 typedef BCLib::uint64 PeerID;
 const PeerID INVALID_PEER_ID = 0;
-
-typedef ServerID GroupID;
-const GroupID INVALID_GROUP_ID = 0;
 
 typedef BCLib::uint64 EntityID;
 const EntityID INVALID_ENTITY_ID = 0;

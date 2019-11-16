@@ -33,7 +33,6 @@ public:
     CNetPeer(PeerID netPeerID);
     virtual ~CNetPeer();
 
-    GroupID getGroupID() const;
     PeerID getPeerID() const { return m_netPeerID; }
     EPeerState getState() { return m_peerState; }
 
