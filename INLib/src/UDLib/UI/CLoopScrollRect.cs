@@ -320,7 +320,7 @@ namespace UDLib.UI
         private RectTransform m_VerticalScrollbarRect;
 
         private DrivenRectTransformTracker m_Tracker;
-
+        private int m_FocusTo = -1;
         protected GameObject _rootCache;
         //==========LoopScrollRect==========
 
@@ -342,7 +342,9 @@ namespace UDLib.UI
                 //将基础预设移到外面避免被当成子物体使用引起问题  by xichuan
                 itemTemplate.transform.SetParent(content.parent, false);
                 itemTemplate.transform.SetAsLastSibling();
+               
             }
+            m_FocusTo = -1;
         }
 
         public void ClearCells()
@@ -353,7 +355,7 @@ namespace UDLib.UI
                 itemTypeEnd = 0;
                 totalCount = 0;
                 //objectsToFill = null;
-
+                m_FocusTo = -1;
                 if (content == null) return;
 
                 //for (int i = content.childCount - 1; i >= 0; i--)
@@ -486,6 +488,7 @@ namespace UDLib.UI
 
         // 定位到指定索引项
         public void FocusToIndex(int index) {
+             m_FocusTo = index;
             if (!gameObject.activeInHierarchy) return;
 
             if (m_Content.childCount < 1) { // 首次打开界面
@@ -508,6 +511,7 @@ namespace UDLib.UI
             StopMovement();
             StopAllCoroutines();
             StartCoroutine(FocusToIndexImplement(index));
+            m_FocusTo = -1;
         }
 
         IEnumerator FocusToIndexImplement(int index) {
@@ -599,7 +603,7 @@ namespace UDLib.UI
                 }
             }
         }
-        public void RefreshCount(int count = -1,bool toEnd = false)
+        public void RefreshCount(int count = -1,bool toEnd = false, bool conType = false)
         {
             int oldCount = totalCount;
             if (count != -1)
@@ -614,7 +618,22 @@ namespace UDLib.UI
             }
             else
             {
-                if(oldCount < totalCount)
+                if (conType)
+                {
+                    if (itemTypeEnd >= totalCount)
+                    {
+                        itemTypeStart = totalCount - 1 - (itemTypeEnd - itemTypeStart);
+                        if (itemTypeStart < 0) itemTypeStart = 0;
+                    }
+                    while (content.childCount > 0) //修改回收顺序，再次使用时视觉上不用重刷一遍
+                    {
+                        RecycleItem(content.GetChild(0));
+                    }
+                    FocusToIndex(itemTypeStart);
+                    return;
+                }
+
+                if (oldCount < totalCount)
                 {
                     StartCoroutine(FocusToIndexImplement(itemTypeStart));
                 }
@@ -687,6 +706,7 @@ namespace UDLib.UI
                         Transform trans = content.GetChild(i);
                         trans.name = Regex.Replace(trans.name, @"_(\d+)", "_" + itemTypeEnd);
                         RefreshItem(trans, itemTypeEnd);
+                      //  InstantiateNextItem(itemTypeStart)
                         itemTypeEnd++;
                     }
                     else
@@ -1010,6 +1030,8 @@ namespace UDLib.UI
                 m_VerticalScrollbar.onValueChanged.AddListener(SetVerticalNormalizedPosition);
 
             CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
+            if (m_FocusTo != -1) FocusToIndex(m_FocusTo);
+
         }
 
         protected override void OnDisable()
