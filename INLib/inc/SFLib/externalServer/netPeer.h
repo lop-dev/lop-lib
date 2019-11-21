@@ -29,6 +29,10 @@ public:
 	virtual bool serializeTo(BCLib::Utility::CStream& stream) const;
 	virtual bool serializeFrom(BCLib::Utility::CStream& stream);
 
+public:
+    virtual ServerID getServerID(EServerType serverType);
+    virtual EServerType getServerType(ServerID serverID);
+
 	/// @brief 发送消息到其他服务器
 	/// @return bool
 	/// @param serverType 服务器类型，只会发送给内部服务器

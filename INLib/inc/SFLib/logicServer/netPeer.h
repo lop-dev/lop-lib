@@ -40,6 +40,7 @@ public:
 
 public:
 	virtual ServerID getServerID(EServerType serverType);
+    virtual EServerType getServerType(ServerID serverID);
 
 	/// @brief 发送消息到其他服务器
 	/// @return bool

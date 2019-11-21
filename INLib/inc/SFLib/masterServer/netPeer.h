@@ -36,6 +36,7 @@ public:
 
 public:
 	virtual ServerID getServerID(EServerType serverType);
+    virtual EServerType getServerType(ServerID serverID);
 
 	virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
     virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);

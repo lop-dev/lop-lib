@@ -53,25 +53,6 @@ public:
     CNetMsgQueueByPeerID();
     virtual ~CNetMsgQueueByPeerID();
 };
-
-//////////////////////////////////////////////////////////////////////////
-
-struct SGroupKey
-{
-    BCLib::Network::TcpStubID m_stubID;
-    PeerID m_peerID;
-};
-
-typedef SFLib::CommonDefine::CNetMsgQueueCallback<SGroupKey> CNetMsgQueueByGroupKeyCallback;
-
-class CNetMsgQueueByGroupKey : public SFLib::CommonDefine::CNetMsgQueue<SGroupKey>
-{
-    BCLIB_SINGLETON_DECLARE(CNetMsgQueueByGroupKey);
-
-public:
-    CNetMsgQueueByGroupKey();
-    virtual ~CNetMsgQueueByGroupKey();
-};
 }//CommonServer
 }//SFLib
 

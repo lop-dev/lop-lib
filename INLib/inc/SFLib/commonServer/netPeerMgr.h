@@ -43,6 +43,8 @@ public:
     void clear();
     void traversal(CNetPeerMgrCallback& cb);
 
+    CNetPeerPtrVec getNetPeers(ServerID serverID);
+
 	bool getNetPeerByEntityID(EntityID entityID, CNetPeerPtr& netPeer);
 
 	BCLib::uint32 getNetPeerNum() { return m_netPeerHasnMap.size(); }
