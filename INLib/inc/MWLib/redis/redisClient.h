@@ -75,7 +75,8 @@ namespace MWLib
 			void setInfo(std::string& host, int port, std::string& passwd, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			bool init(EREDIS_ACCESS_RIGHT_TYPE type = E_REDIS_READ_AND_WRITE);
-
+			bool checkConnect(EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+			bool reconnect(EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 			bool connect(std::string host, int port, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 			bool connectWithTimeout(std::string host, int port, const struct timeval tv, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 

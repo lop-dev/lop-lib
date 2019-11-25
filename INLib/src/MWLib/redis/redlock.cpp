@@ -45,7 +45,7 @@
 
 #include <math.h>
 #include <MWLib/redis/redlock.h>
-
+#include <MWLib/redis/redisClient.h>
  /* Turn the plain C strings into Sds strings */
 static char **convertToSds(int count, char** args) {
     int j;
@@ -54,7 +54,10 @@ static char **convertToSds(int count, char** args) {
         sds[j] = sdsnew(args[j]);
     return sds;
 }
-
+namespace MWLib
+{
+	namespace Redis
+	{
 // ----------------
 // init redlock
 // ----------------
@@ -85,19 +88,23 @@ bool CRedLock::Initialize() {
     m_retryCount = m_defaultRetryCount;
     m_retryDelay = m_defaultRetryDelay;
     m_quoRum = 0;
-
+	m_pRedisClient = NULL;
     return true;
 }
 
 // ----------------
 // add redis server
 // ----------------
-bool CRedLock::AddServerContext(redisContext * c, BCLib::uint16 type) {
+bool CRedLock::AddServerContext(redisContext * c, BCLib::uint16 type, CRedisClient *pRedisClient) {
 
     if (c != NULL) {
 		m_redisServerMap[type] = c;
         //m_redisServer.push_back(c);
     }
+	if (pRedisClient != NULL)
+	{
+		m_pRedisClient = pRedisClient;
+	}
     m_quoRum = 1;
 	//m_quoRum = (int)m_redisServer.size() / 2 + 1;
     return true;
@@ -131,11 +138,11 @@ void CRedLock::SetRetry(const int count, const int delay) {
 // ----------------
 // lock the resource
 // ----------------
-bool CRedLock::Lock(const char *resource, const int ttl, CLock &lock, BCLib::uint16 type)
+int CRedLock::Lock(const char *resource, const int ttl, CLock &lock, BCLib::uint16 type)
 {
     sds val = GetUniqueLockId();
     if (!val) {
-        return false;
+        return -1;
     }
     lock.m_resource = sdsnew(resource);
     lock.m_val = val;
@@ -148,21 +155,33 @@ bool CRedLock::Lock(const char *resource, const int ttl, CLock &lock, BCLib::uin
 
         /*int slen = (int)m_redisServer.size();
         for (int i = 0; i < slen; i++) {
-            if (LockInstance(m_redisServer[i], resource, val, ttl)) {
+            if (LockInstance(m_redisServer[i], resource, val, ttl) == 0) {
                 n++;
             }
         }*/
 		std::unordered_map<BCLib::uint16, redisContext *>::iterator it = m_redisServerMap.find(type);
+		int ret = 0;
 		if (it != m_redisServerMap.end())
 		{
-			if (it->second != NULL && LockInstance(it->second, resource, val, ttl)) {
+			ret = LockInstance(it->second, resource, val, ttl);
+			if (it->second != NULL && ret == 0) {
 				n++;
 			}
 		}
-		if (n <= 0)
+		if (ret == -2)
 		{
 			printf("Lock error can not find redis context by type = %d !", type);
-			return false;
+			if (it->second)
+			{
+				this->delServerContext(it->second, type);
+				m_pRedisClient->disconnect((MWLib::Redis::EREDIS_CONTEXT_TYPE)type);
+			}		
+			return -2;
+		}
+		if (n <= 0)
+		{
+			printf("Lock error get lock faild, type = %d !", type);
+			return -1;
 		}
         //Add 2 milliseconds to the drift to account for Redis expires
         //precision, which is 1 millisecond, plus 1 millisecond min drift
@@ -175,7 +194,7 @@ bool CRedLock::Lock(const char *resource, const int ttl, CLock &lock, BCLib::uin
         //       validityTime, n, m_quoRum);
         if (n >= m_quoRum && validityTime > 0) {
             lock.m_validityTime = (int)validityTime;
-            return true;
+            return 0;
         }
         else {
             Unlock(lock, type);
@@ -185,14 +204,14 @@ bool CRedLock::Lock(const char *resource, const int ttl, CLock &lock, BCLib::uin
 
 #if defined(_LINUX)
         //usleep(delay * 1000);
-		usleep(100);
+		usleep(1000);
 #else
         //Sleep(delay);
 		Sleep(1);
 #endif
         retryCount--;
     } while (retryCount > 0);
-    return false;
+    return -1;
 }
 
 // ----------------
@@ -284,22 +303,32 @@ bool CRedLock::Unlock(const CLock &lock, BCLib::uint16 type)
 // ----------------
 // lock the resource milliseconds
 // ----------------
-bool CRedLock::LockInstance(redisContext *c, const char *resource, const char *val, const int ttl) 
+int CRedLock::LockInstance(redisContext *c, const char *resource, const char *val, const int ttl) 
 {
     redisReply *reply;
     reply = (redisReply *)redisCommand(c, "set %s %s px %d nx",
         resource, val, ttl);
     if (reply) {
-        // printf("Set return: %s [null == fail, OK == success]\n", reply->str);
+         printf("Set return: %s [null == fail, OK == success]\n", reply->str);
     }
+
+	if (reply == NULL)
+	{
+		return -2;
+	}
+
     if (reply && reply->str && strcmp(reply->str, "OK") == 0) {
         freeReplyObject(reply);
-        return true;
+        return 0;
     }
     if (reply) {
         freeReplyObject(reply);
     }
-    return false;
+	if (c)
+	{
+		c->obuf = sdsempty();
+	}
+    return -1;
 }
 
 // ----------------
@@ -397,3 +426,5 @@ sds CRedLock::GetUniqueLockId() {
     }
     return s;
 }
+	}//Redis
+}//MWLib

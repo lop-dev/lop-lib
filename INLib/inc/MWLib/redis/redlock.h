@@ -36,7 +36,11 @@
 #include <unordered_map>
 #include <hiredis.h>
 #include <sds.h>
-
+namespace MWLib
+{
+	namespace Redis
+	{
+class CRedisClient;
 class CLock
 {
 public:
@@ -65,15 +69,15 @@ public:
 
 public:
     bool                    Initialize();
-    bool                    AddServerContext(redisContext * c, BCLib::uint16 type);
+    bool                    AddServerContext(redisContext * c, BCLib::uint16 type, CRedisClient *pRedisClient);
     bool                    delServerContext(redisContext * c, BCLib::uint16 type);
     void                    SetRetry(const int count, const int delay);
-    bool                    Lock(const char *resource, const int ttl, CLock &lock, BCLib::uint16 type);
+    int                     Lock(const char *resource, const int ttl, CLock &lock, BCLib::uint16 type);
     bool                    ContinueLock(const char *resource, const int ttl, CLock &lock, BCLib::uint16 type);
     bool                    Unlock(const CLock &lock, BCLib::uint16 type);
 
 private:
-    bool                    LockInstance(redisContext *c, const char *resource, const char *val, const int ttl);
+    int                     LockInstance(redisContext *c, const char *resource, const char *val, const int ttl);
     bool                    ContinueLockInstance(redisContext *c, const char *resource, const char *val, const int ttl);
     void                    UnlockInstance(redisContext *c, const char *resource, const char *val);
     sds                     GetUniqueLockId();
@@ -94,5 +98,9 @@ private:
     //std::vector<redisContext *>  m_redisServer;          // redis master servers
     CLock   m_continueLock;         // ÐøËø
     sds                     m_continueLockScript;   // ÐøËø½Å±¾
+
+	CRedisClient *m_pRedisClient;
 };
+	}//Redis
+}//MWLib
 #endif // __MWLIB_REDIS_REDLOCK_H__

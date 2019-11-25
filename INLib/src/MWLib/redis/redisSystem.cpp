@@ -228,7 +228,7 @@ namespace MWLib
 			CRedisClient* pRedisClient = getRedisClient();
 			if (pRedisClient != NULL)
 			{
-				return pRedisClient->setUint64(key, type);
+				return pRedisClient->setUint64(key, value, type);
 			}
 			return false;
 		}
@@ -1586,12 +1586,12 @@ namespace MWLib
 			return 0;
 		}
 
-		CRedLock *CRedisSystem::getRedLock() 
+		CRedLock *CRedisSystem::getRedLock(EREDIS_CONTEXT_TYPE type )
 		{
 			CRedisClient* pRedisClient = getRedisClient();
 			if (pRedisClient != NULL)
 			{
-				return pRedisClient->getRedLock();
+				return pRedisClient->getRedLock(type);
 			}
 			return NULL;
 		}

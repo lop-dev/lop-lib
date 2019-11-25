@@ -10,6 +10,7 @@
 #include <BCLib/utility/convert.h>
 #include <BCLib/utility/logFile.h>
 #include <sstream>
+#include <codecvt>
 
 #define MWLIB_PROCESS_REPLY_ERROR    \
     if(m_redisReply == NULL)    \
@@ -55,6 +56,7 @@ namespace MWLib
 			, m_redisReply(NULL)
 			, m_pRedLock(NULL)
 			, m_eAccessRight(E_REDIS_READ_AND_WRITE)
+			, m_eOnOff(E_REDIS_TURN_ON)
 		{
 			m_pRedLock = new CRedLock();
 			m_redisContextMap.clear();
@@ -67,7 +69,7 @@ namespace MWLib
 
 		CRedisClient::~CRedisClient()
 		{
-			disconnect();
+			disconnectAll();
 			destoryTempList();
 			destoryTempMap();
 			destoryRedLock();
@@ -81,6 +83,10 @@ namespace MWLib
 				return false;
 			}
 			
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -106,7 +112,10 @@ namespace MWLib
 			{
 				return false;
 			}
-
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			//char writebuf[REDIS_READER_MAX_BUF] = { 0 };
 			std::string str;
 			pPtbuf->SerializeToString(&str);
@@ -120,7 +129,10 @@ namespace MWLib
 			{
 				return 0;
 			}
-
+			if (!checkConnect(type))
+			{
+				return 0;
+			}
 			//char readbuf[REDIS_READER_MAX_BUF] = { 0 };
 			//char *readbuf = new char[readBufSize];
 			//pPtbuf->SerializeToArray(readbuf, REDIS_READER_MAX_BUF);
@@ -218,7 +230,56 @@ namespace MWLib
 			BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis Clear");
 			return exec("FLUSHALL", type);
 		}
+		bool CRedisClient::checkConnect(EREDIS_CONTEXT_TYPE type)
+		{
+			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
+			if (it == m_redisContextMap.end())
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis checkConnect error m_redisContextMap has no this context!!! type = %d", type);
+				return false;
+			}
+			if (it->second.m_redisContext == NULL)
+			{
+				return reconnect(type);
+			}
+			return true;
+		}
+		bool CRedisClient::reconnect(EREDIS_CONTEXT_TYPE type)
+		{
+			struct timeval timeout = { 0, 200000 }; // 1.5 seconds
+			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
+			if (it == m_redisContextMap.end())
+			{
+				return false;
+			}
+			if (type == E_REDIS_SERVERTYPE_CACHE)
+			{
+				return false; //cache不发起重连
+			}
+			if (it->second.m_host == "")
+			{		
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis reconnect error m_redisContextMap.m_host = [空]!!! type = %d", type);
+				return false;
+			}
+			bool  connectflag = connectWithTimeout(it->second.m_host, it->second.m_port, timeout, (EREDIS_CONTEXT_TYPE)it->first);
+			if (!connectflag)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis reconnect error m_redisContextMap.m_host = [%s] port[%d]!!! type = %d", it->second.m_host.c_str(), it->second.m_port, type);
+				return false;
+			}
 
+			BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis Connect 连接 %s %d 成功", it->second.m_host.c_str(), it->second.m_port);
+
+			std::string auth_cmd = "AUTH " + it->second.m_passwd;
+			bool cmdflag = exec(auth_cmd.c_str(), (EREDIS_CONTEXT_TYPE)it->first);
+			if (!cmdflag)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis reconnect error AUTH m_redisContextMap.m_host = [%s] port[%d] passwd[%s] type = %d", it->second.m_host.c_str(), it->second.m_port, it->second.m_passwd.c_str(), type);
+				return false;
+			}
+			BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis 认证成功!!!");			
+			return true;
+		}
 		bool CRedisClient::connect(std::string host, int port, EREDIS_CONTEXT_TYPE type)
 		{
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
@@ -241,7 +302,7 @@ namespace MWLib
 			{
 				return true;
 			}
-			m_pRedLock->AddServerContext(m_redisContext, (BCLib::uint16)type );
+			m_pRedLock->AddServerContext(m_redisContext, (BCLib::uint16)type, this);
 			it->second.m_redisContext = m_redisContext;
 			m_redisContext = NULL;
 			return true;
@@ -263,7 +324,7 @@ namespace MWLib
 			{
 				return true;
 			}
-			m_pRedLock->AddServerContext(m_redisContext, (BCLib::uint16)type);
+			m_pRedLock->AddServerContext(m_redisContext, (BCLib::uint16)type, this);
 			it->second.m_redisContext = m_redisContext;
 			m_redisContext = NULL;
 			//setCommandTimeout(tv, type);
@@ -343,7 +404,7 @@ namespace MWLib
 			m_redisReply = (redisReply*)redisCommand(m_redisContext, "ping");
 			if (m_redisReply == NULL)
 			{
-				this->disconnect();
+				this->disconnect(type);
 				return false;
 			}
 
@@ -369,6 +430,11 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
+			
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -392,6 +458,10 @@ namespace MWLib
 			{
 				return "";
 			}
+			if (!checkConnect(type))
+			{
+				return "";
+			}
 			std::string retStr = "";
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -409,7 +479,7 @@ namespace MWLib
 			m_redisReply = (redisReply*)redisCommand(m_redisContext, "GET %s", key);
 			if (m_redisReply == NULL)
 			{
-				this->disconnect();
+				this->disconnect(type);
 				return retStr;
 			}
 
@@ -432,6 +502,10 @@ namespace MWLib
 				return false;
 			}
 			if (key == NULL || subkey == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -458,6 +532,10 @@ namespace MWLib
 			{
 				return "";
 			}
+			if (!checkConnect(type))
+			{
+				return "";
+			}
 			std::string retStr = "";
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -475,7 +553,7 @@ namespace MWLib
 			m_redisReply = (redisReply*)redisCommand(m_redisContext, "GET %s:[%llu]:%s", key, uniqueid, subkey);
 			if (m_redisReply == NULL || subkey == NULL)
 			{
-				this->disconnect();
+				this->disconnect(type);
 				return retStr;
 			}
 
@@ -492,6 +570,10 @@ namespace MWLib
 		bool CRedisClient::getString(const char *key, std::string &str, EREDIS_CONTEXT_TYPE type)
 		{
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -512,7 +594,7 @@ namespace MWLib
 			m_redisReply = (redisReply*)redisCommand(m_redisContext, "GET %s", key);
 			if (m_redisReply == NULL)
 			{
-				this->disconnect();
+				this->disconnect(type);
 				return false;
 			}
 
@@ -531,6 +613,10 @@ namespace MWLib
 			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "hsetString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+				return false;
+			}
+			if (key == NULL || subkey == NULL)
+			{
 				return false;
 			}
 			char strKey[1024] = { 0 };
@@ -553,6 +639,10 @@ namespace MWLib
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "hsetString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
 				return false;
 			}
+			if (key == NULL || subkey == NULL)
+			{
+				return false;
+			}
 			char strKey[1024] = { 0 };
 			snprintf(strKey, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
 			return setString(strKey, value, type);
@@ -565,6 +655,10 @@ namespace MWLib
 				return false;
 			}
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -591,6 +685,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			BCLib::uint64 retUint64 = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -609,7 +707,7 @@ namespace MWLib
 
 			if (m_redisReply == NULL)
 			{
-				this->disconnect();
+				this->disconnect(type);
 				return retUint64;
 			}
 
@@ -636,6 +734,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -659,6 +761,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			BCLib::uint64 retUint64 = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -677,7 +783,7 @@ namespace MWLib
 
 			if (m_redisReply == NULL)
 			{
-				this->disconnect();
+				this->disconnect(type);
 				return retUint64;
 			}
 
@@ -716,6 +822,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -749,6 +859,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			BCLib::uint32 retLen = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -777,7 +891,7 @@ namespace MWLib
 			}
 			if (m_redisReply == NULL)
 			{
-				this->disconnect();
+				this->disconnect(type);
 				return retLen;
 			}
 
@@ -825,6 +939,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -860,6 +978,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			BCLib::uint32 retLen = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -890,7 +1012,7 @@ namespace MWLib
 			}
 			if (m_redisReply == NULL)
 			{
-				this->disconnect();
+				this->disconnect(type);
 				return retLen;
 			}
 
@@ -923,6 +1045,10 @@ namespace MWLib
 				return false;
 			}
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -964,6 +1090,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -995,6 +1125,10 @@ namespace MWLib
 		bool CRedisClient::keys(const char *key, std::vector<std::string> &values, EREDIS_CONTEXT_TYPE type)
 		{
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -1036,6 +1170,14 @@ namespace MWLib
 		}
 		BCLib::uint64 CRedisClient::scan(const char *matchKey, std::vector<std::string> &values, BCLib::uint64 start, BCLib::uint64 count, EREDIS_CONTEXT_TYPE type)
 		{
+			if (matchKey == NULL)
+			{
+				return 0;
+			}
+			if (!checkConnect(type))
+			{
+				return 0;
+			}
 			BCLib::uint64 ret = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -1054,6 +1196,8 @@ namespace MWLib
 			{
 				match = "MATCH " + std::string(matchKey) + " ";
 			}
+			replace(match.begin(), match.end(), '%', '*');
+
 			std::string cmd = "SCAN " + BCLib::Utility::CConvert::toStringA(start) + " " + match + "COUNT " + BCLib::Utility::CConvert::toStringA(count);
 			m_redisReply = (redisReply*)redisCommand(m_redisContext, cmd.c_str());
 			if (m_redisReply == NULL)
@@ -1107,6 +1251,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -1152,6 +1300,10 @@ namespace MWLib
 				return false;
 			}
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -1205,6 +1357,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -1247,6 +1403,10 @@ namespace MWLib
 				return false;
 			}
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -1314,6 +1474,10 @@ namespace MWLib
 			{
 				return "";
 			}
+			if (!checkConnect(type))
+			{
+				return "";
+			}
 			std::string str = "";
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -1330,7 +1494,7 @@ namespace MWLib
 			m_redisReply = (redisReply*)redisCommand(m_redisContext, "HGET %s %s", key, field);
 			if (m_redisReply == NULL)
 			{
-				this->disconnect();
+				this->disconnect(type);
 				return str;
 			}
 			if (m_redisReply->type == REDIS_REPLY_STRING)
@@ -1345,6 +1509,10 @@ namespace MWLib
 		BCLib::uint32 CRedisClient::hgetBin(const char* key, const char* field, char* value, BCLib::uint32 len, EREDIS_CONTEXT_TYPE type)
 		{
 			if (key == NULL)
+			{
+				return 0;
+			}
+			if (!checkConnect(type))
 			{
 				return 0;
 			}
@@ -1364,7 +1532,7 @@ namespace MWLib
 			m_redisReply = (redisReply*)redisCommand(m_redisContext, "HGET %s %s", key, field);
 			if (m_redisReply == NULL)
 			{
-				this->disconnect();
+				this->disconnect(type);
 				return ret;
 			}
 			//std::string str = m_redisReply->str;
@@ -1415,6 +1583,10 @@ namespace MWLib
 			{
 				return;
 			}
+			if (!checkConnect(type))
+			{
+				return;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -1456,6 +1628,10 @@ namespace MWLib
 			{
 				return NULL;
 			}
+			if (!checkConnect(type))
+			{
+				return NULL;
+			}
 			destoryTempMap();
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -1472,7 +1648,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate hgetallBin error m_redisReply = null HGETALL %s ", key);
-				this->disconnect();
+				this->disconnect(type);
 				return NULL;
 			}
 			else
@@ -1534,6 +1710,10 @@ namespace MWLib
 			{
 				return;
 			}
+			if (!checkConnect(type))
+			{
+				return;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -1573,6 +1753,10 @@ namespace MWLib
 				return;
 			}
 			if (key == NULL)
+			{
+				return;
+			}
+			if (!checkConnect(type))
 			{
 				return;
 			}
@@ -1663,6 +1847,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -1708,6 +1896,10 @@ namespace MWLib
 			{
 				return 0;
 			}
+			if (!checkConnect(type))
+			{
+				return 0;
+			}
 			BCLib::uint64 ret = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -1726,6 +1918,8 @@ namespace MWLib
 			{
 				match = "MATCH " + std::string(matchKey) + " ";
 			}
+			replace(match.begin(), match.end(), '%', '*');
+
 			std::string cmd = "HSCAN " + std::string(key) + " " + BCLib::Utility::CConvert::toStringA(start) + " " + match + "COUNT " + BCLib::Utility::CConvert::toStringA(count);
 			m_redisReply = (redisReply*)redisCommand(m_redisContext, cmd.c_str());
 			if (m_redisReply == NULL)
@@ -1785,6 +1979,10 @@ namespace MWLib
 			{
 				return NULL;
 			}
+			if (!checkConnect(type))
+			{
+				return NULL;
+			}
 			destoryTempMap();
 			end = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
@@ -1804,6 +2002,8 @@ namespace MWLib
 			{
 				match = "MATCH " + std::string(matchKey) + " ";
 			}
+			replace(match.begin(), match.end(), '%', '*');
+
 			std::string cmd = "HSCAN " + std::string(key) + " " + BCLib::Utility::CConvert::toStringA(start) + " " + match + "COUNT " + BCLib::Utility::CConvert::toStringA(count);
 			m_redisReply = (redisReply*)redisCommand(m_redisContext, cmd.c_str());
 			if (m_redisReply == NULL)
@@ -1875,6 +2075,10 @@ namespace MWLib
 			{
 				return ret;
 			}
+			if (!checkConnect(type))
+			{
+				return ret;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -1890,7 +2094,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate hlen error m_redisReply = null HLEN %s ", key);
-				this->disconnect();
+				this->disconnect(type);
 				return ret;
 			}
 			else
@@ -1937,6 +2141,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -1971,6 +2179,10 @@ namespace MWLib
 				return false;
 			}
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -2029,6 +2241,10 @@ namespace MWLib
 			{
 				return "";
 			}
+			if (!checkConnect(type))
+			{
+				return "";
+			}
 			std::string value = "";
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -2047,7 +2263,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate lreadString error m_redisReply = null LRANGE %s 0 0", key);
-				this->disconnect();
+				this->disconnect(type);
 				return value;
 			}
 			else
@@ -2077,6 +2293,10 @@ namespace MWLib
 			{
 				return 0;
 			}
+			if (!checkConnect(type))
+			{
+				return 0;
+			}
 			BCLib::uint32 ret = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -2094,7 +2314,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate lreadBin error m_redisReply = null LRANGE %s 0 0", key);
-				this->disconnect();
+				this->disconnect(type);
 				return ret;
 			}
 			else
@@ -2157,6 +2377,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -2191,6 +2415,10 @@ namespace MWLib
 				return false;
 			}
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -2249,6 +2477,10 @@ namespace MWLib
 			{
 				return "";
 			}
+			if (!checkConnect(type))
+			{
+				return "";
+			}
 			std::string value = "";
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -2266,7 +2498,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate rreadString error m_redisReply = null LRANGE %s -1 -1", key);
-				this->disconnect();
+				this->disconnect(type);
 				return value;
 			}
 			else
@@ -2294,6 +2526,10 @@ namespace MWLib
 			{
 				return 0;
 			}
+			if (!checkConnect(type))
+			{
+				return 0;
+			}
 			BCLib::uint32 ret = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -2311,7 +2547,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate rreadBin error m_redisReply = null LRANGE %s -1 -1", key);
-				this->disconnect();
+				this->disconnect(type);
 				return ret;
 			}
 			else
@@ -2369,6 +2605,10 @@ namespace MWLib
 			{
 				return -1;
 			}
+			if (!checkConnect(type))
+			{
+				return -1;
+			}
 			BCLib::uint32 ret = -1;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -2386,7 +2626,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate llen error m_redisReply = null LLEN %s ", key);
-				this->disconnect();
+				this->disconnect(type);
 				return ret;
 			}
 			else
@@ -2432,6 +2672,10 @@ namespace MWLib
 			{
 				return "";
 			}
+			if (!checkConnect(type))
+			{
+				return "";
+			}
 			std::string value = "";
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -2449,7 +2693,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate lpopString error m_redisReply = null LPOP %s ", key);
-				this->disconnect();
+				this->disconnect(type);
 				return value;
 			}
 			else
@@ -2479,6 +2723,10 @@ namespace MWLib
 			{
 				return 0;
 			}
+			if (!checkConnect(type))
+			{
+				return 0;
+			}
 			BCLib::uint32 ret = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -2496,7 +2744,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate lpopBin error m_redisReply = null LPOP %s ", key);
-				this->disconnect();
+				this->disconnect(type);
 				return ret;
 			}
 			else
@@ -2558,6 +2806,10 @@ namespace MWLib
 			{
 				return "";
 			}
+			if (!checkConnect(type))
+			{
+				return "";
+			}
 			std::string value = "";
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -2575,7 +2827,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate rpopString error m_redisReply = null RPOP %s ", key);
-				this->disconnect();
+				this->disconnect(type);
 				return value;
 			}
 			else
@@ -2606,6 +2858,10 @@ namespace MWLib
 			{
 				return 0;
 			}
+			if (!checkConnect(type))
+			{
+				return 0;
+			}
 			BCLib::uint32 ret = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -2623,7 +2879,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate rpopBin error m_redisReply = null RPOP %s ", key);
-				this->disconnect();
+				this->disconnect(type);
 				return ret;
 			}
 			else
@@ -2681,6 +2937,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -2715,6 +2975,10 @@ namespace MWLib
 				return false;
 			}
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -2778,6 +3042,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -2824,6 +3092,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -2864,6 +3136,10 @@ namespace MWLib
 			{
 				return NULL;
 			}
+			if (!checkConnect(type))
+			{
+				return NULL;
+			}
 			destoryTempList();
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -2880,7 +3156,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate lgetAllElement error m_redisReply = null LRANGE %s 0 -1", key);
-				this->disconnect();
+				this->disconnect(type);
 				return NULL;
 			}
 			else
@@ -2942,6 +3218,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -2985,6 +3265,10 @@ namespace MWLib
 				return false;
 			}
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -3036,6 +3320,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -3074,6 +3362,10 @@ namespace MWLib
 				return false;
 			}
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -3137,6 +3429,10 @@ namespace MWLib
 			{
 				return 0;
 			}
+			if (!checkConnect(type))
+			{
+				return 0;
+			}
 			BCLib::uint32 ret = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -3154,7 +3450,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate sadd error m_redisReply = null  SCARD %s ", key);
-				this->disconnect();
+				this->disconnect(type);
 				return ret;
 			}
 			else
@@ -3194,6 +3490,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -3210,7 +3510,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate sismember error m_redisReply = null  SISMEMBER %s %s", key, member);
-				this->disconnect();
+				this->disconnect(type);
 				return false;
 			}
 			else
@@ -3251,6 +3551,10 @@ namespace MWLib
 		bool CRedisClient::sgetAllMembers(const char* key, std::set<std::string> &mySet, EREDIS_CONTEXT_TYPE type)
 		{
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -3308,6 +3612,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -3360,6 +3668,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			//SREM set_test abc hijk
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -3407,6 +3719,10 @@ namespace MWLib
 				return false;
 			}
 			if (disKey == NULL || srcKey == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -3466,6 +3782,10 @@ namespace MWLib
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "sinter exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -3510,6 +3830,10 @@ namespace MWLib
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "sinter exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -3551,6 +3875,10 @@ namespace MWLib
 			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "sinter exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+				return false;
+			}
+			if (!checkConnect(type))
+			{
 				return false;
 			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
@@ -3606,6 +3934,10 @@ namespace MWLib
 			{
 				return 0;
 			}
+			if (!checkConnect(type))
+			{
+				return 0;
+			}
 			BCLib::uint64 ret = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -3624,8 +3956,19 @@ namespace MWLib
 			{
 				match = "MATCH " + std::string(matchKey) + " ";
 			}
+			replace(match.begin(), match.end(), '%', '*');
+
 			std::string cmd = "SSCAN " + std::string(key) + " " + BCLib::Utility::CConvert::toStringA(start) + " " + match + "COUNT " + BCLib::Utility::CConvert::toStringA(count);
-			m_redisReply = (redisReply*)redisCommand(m_redisContext, cmd.c_str());
+			try
+			{
+				m_redisReply = (redisReply*)redisCommand(m_redisContext, cmd.c_str());
+			}
+			catch (...)
+			{
+				BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "Redis operate SSCAN error CException %s", cmd.c_str());
+				return ret;
+			}
+			
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate SSCAN error m_redisReply = null %s", cmd.c_str());
@@ -3686,6 +4029,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -3736,6 +4083,10 @@ namespace MWLib
 			{
 				return 0;
 			}
+			if (!checkConnect(type))
+			{
+				return 0;
+			}
 			BCLib::uint32 ret = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -3753,7 +4104,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate zcard error m_redisReply = null ZCARD %s ", key);
-				this->disconnect();
+				this->disconnect(type);
 				return ret;
 			}
 			else
@@ -3793,6 +4144,10 @@ namespace MWLib
 			{
 				return -1;
 			}
+			if (!checkConnect(type))
+			{
+				return -1;
+			}
 			BCLib::int32 ret = -1;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -3810,7 +4165,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate zrank error m_redisReply = null ZRANK %s %s", key, member);
-				this->disconnect();
+				this->disconnect(type);
 				return ret;
 
 			}
@@ -3851,6 +4206,10 @@ namespace MWLib
 			{
 				return -1;
 			}
+			if (!checkConnect(type))
+			{
+				return -1;
+			}
 			BCLib::int32 ret = -1;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -3868,7 +4227,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate zrevRank error m_redisReply = null ZREVRANK %s %s", key, member);
-				this->disconnect();
+				this->disconnect(type);
 				return ret;
 			}
 			else
@@ -3911,6 +4270,10 @@ namespace MWLib
 				return false;
 			}
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -3958,6 +4321,10 @@ namespace MWLib
 		bool CRedisClient::zrange(const char* key, std::vector<std::pair<std::string, double>> &members, BCLib::int32 startIndex, BCLib::int32 stopIndex, EREDIS_CONTEXT_TYPE type)
 		{
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -4019,6 +4386,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			// ZREVRANGE salary 0 - 1 WITHSCORES
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -4063,7 +4434,7 @@ namespace MWLib
 		}
 		bool CRedisClient::zrevRange(const char* key, BCLib::uint64 uniqueid, const char* subkey, std::vector<std::pair<std::string, double>> &members, const BCLib::int32 startIndex, const BCLib::int32 stopIndex, EREDIS_CONTEXT_TYPE type)
 		{
-			if (key == NULL)
+			if (key == NULL ||subkey == NULL)
 			{
 				return false;
 			}
@@ -4074,6 +4445,10 @@ namespace MWLib
 		double CRedisClient::zscore(const char* key, const char* member, EREDIS_CONTEXT_TYPE type)
 		{
 			if (key == NULL)
+			{
+				return 0;
+			}
+			if (!checkConnect(type))
 			{
 				return 0;
 			}
@@ -4094,7 +4469,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate zscore error m_redisReply = null ZSCORE %s %s", key, member);
-				this->disconnect();
+				this->disconnect(type);
 				return ret;
 			}
 			else
@@ -4133,6 +4508,10 @@ namespace MWLib
 				return false;
 			}
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -4185,6 +4564,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -4228,6 +4611,10 @@ namespace MWLib
 			{
 				return -1;
 			}
+			if (!checkConnect(type))
+			{
+				return -1;
+			}
 			BCLib::int32 ret = -1;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -4247,7 +4634,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate zcount error m_redisReply = null  ZCOUNT %s ", cmd.c_str());
-				this->disconnect();
+				this->disconnect(type);
 				return ret;
 			}
 			else
@@ -4284,6 +4671,10 @@ namespace MWLib
 		bool CRedisClient::zrangeByScore(const char* key, std::vector<std::pair<std::string, double>> &members, const char *minStr, const char *maxStr, EREDIS_CONTEXT_TYPE type)
 		{
 			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
 			{
 				return false;
 			}
@@ -4344,6 +4735,10 @@ namespace MWLib
 			{
 				return false;
 			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
 			{
@@ -4401,6 +4796,10 @@ namespace MWLib
 			{
 				return 0;
 			}
+			if (!checkConnect(type))
+			{
+				return 0;
+			}
 			BCLib::uint64 ret = 0;
 			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
 			if (it == m_redisContextMap.end())
@@ -4416,9 +4815,11 @@ namespace MWLib
 			}
 			std::string match = "";
 			if (matchKey != NULL)
-			{
+			{		
 				match = "MATCH " + std::string(matchKey) + " ";
 			}
+			replace(match.begin(), match.end(), '%', '*');
+			
 			std::string cmd = "ZSCAN " + std::string(key) + " " + BCLib::Utility::CConvert::toStringA(start) + " " + match + "COUNT " + BCLib::Utility::CConvert::toStringA(count);
 			m_redisReply = (redisReply*)redisCommand(m_redisContext, cmd.c_str());
 			if (m_redisReply == NULL)
@@ -4474,7 +4875,14 @@ namespace MWLib
 			snprintf(strKey, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
 			return zscan(strKey, matchKey, members, start, count, type);
 		}
-
+		CRedLock *CRedisClient::getRedLock(EREDIS_CONTEXT_TYPE type)
+		{
+			if (!checkConnect(type))
+			{
+				return NULL;
+			}
+			return m_pRedLock;
+		}
 		std::string CRedisClient::DoubleToString(const double value, BCLib::uint32 precisionAfterPoint/* = 6*/)
 		{
 			std::ostringstream out;

@@ -47,6 +47,11 @@ namespace MWLib
 			E_REDIS_READ_AND_WRITE = 0,
 			E_REDIS_READ_ONLY,
 		};
+		enum EREDIS_OFF_ON
+		{
+			E_REDIS_TURN_ON = 0,
+			E_REDIS_TURN_OFF,
+		};
 	} //Redis
 } //MWLib
 #endif //__MWLIB_REDIS_REDIS_BASE_DEF_H__

@@ -20,11 +20,11 @@
 using namespace std;
 
 #define MWLIB_REDIS_LOCK(key, uniqueid, subkey, type)    \
-    CRedLock* __pRedLock_ = MWLib::Redis::CRedisSystem::singleton().getRedLock();    \
-    CLock __my_lock_;    \
+    MWLib::Redis::CRedLock* __pRedLock_ = MWLib::Redis::CRedisSystem::singleton().getRedLock(type);    \
+    MWLib::Redis::CLock __my_lock_;    \
     if (__pRedLock_ != NULL)    \
     {    \
-		BCLib::int32 __try_count__ = 200;\
+		BCLib::int32 __try_count__ = 210;\
         while (__try_count__ > 0){    \
             char __key1__[1024] = { 0 };    \
             std::string __fild__ = BCLib::Utility::CConvert::toStringA(uniqueid);    \
@@ -33,21 +33,30 @@ using namespace std;
             char __key2__[512] = { 0 };    \
             snprintf(__key2__, 512, "%s:[%s]:", key, __fild__.c_str());    \
             snprintf(__key1__, 1024, "%s%s",__key2__, __subkey1__);    \
-            bool _lock_flag_ = __pRedLock_->Lock(__key1__, 200, __my_lock_,(BCLib::uint16)type);    \
-            if(_lock_flag_)    \
+            BCLib::int32 _lock_flag_ = __pRedLock_->Lock(__key1__, 200, __my_lock_,(BCLib::uint16)type);    \
+            if(_lock_flag_ == 0)    \
             {
 
 #define MWLIB_REDIS_UNLOCK(type)    \
                 __pRedLock_->Unlock(__my_lock_, (BCLib::uint16)type);    \
                 break;    \
             }    \
+			else if (_lock_flag_ == -2)\
+			{\
+				BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "MWLIB_REDIS_LOCK ERROR __pRedLock_ = NULL type = %d", type); \
+				break;\
+			}\
             else    \
             {    __try_count__--;\
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "MWLIB_REDIS_LOCK __key1__ = %s try count = %d type = %d", __key1__, __try_count__, type);\
-                BCLib::Utility::CThread::msleep(rand() % 3);    \
+                BCLib::Utility::CThread::msleep(1);    \
             }    \
         }\
-    }
+    }\
+	else\
+	{\
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "MWLIB_REDIS_LOCK ERROR __pRedLock_ = NULL type = %d", type); \
+	}
 
 #define MWLIB_REDIS_RETURN(type)    \
     if (__pRedLock_!=NULL)    \
