@@ -1266,7 +1266,7 @@ namespace MWLib
 			*/
 			BCLib::uint64 zscan(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *matchKey, std::vector<std::pair<std::string, double>> &members, BCLib::uint64 start = 0, BCLib::uint64 count = 50, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
-			CRedLock *getRedLock();
+			CRedLock *getRedLock(EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 		private:
 			BCLib::Utility::CMutex m_mutex;
 			std::unordered_map<std::thread::id, CRedisClient*> m_redisClientMap;//threadID, CRedisClient*

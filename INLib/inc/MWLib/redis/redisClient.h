@@ -1278,7 +1278,7 @@ namespace MWLib
 			*/
 			BCLib::uint64 zscan(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *matchKey, std::vector<std::pair<std::string, double>> &members, BCLib::uint64 start = 0, BCLib::uint64 count = 50, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
-			CRedLock *getRedLock() { return m_pRedLock; }
+			CRedLock *getRedLock(EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 		protected:
 			void destoryTempList()
@@ -1332,13 +1332,12 @@ namespace MWLib
 
 		private:
 			std::string DoubleToString(const double value, BCLib::uint32 precisionAfterPoint = 6);
-
 		private:
 			redisContext *m_redisContext;
 			redisReply *m_redisReply;
 			CRedLock  *m_pRedLock;
 			EREDIS_ACCESS_RIGHT_TYPE m_eAccessRight;
-
+			EREDIS_OFF_ON m_eOnOff;
 			std::unordered_map<BCLib::uint16, REDIS_NODE> m_redisContextMap;
 			std::list<std::pair<char *, BCLib::uint32>*> m_list;
 			std::map<std::string, std::pair<char *, BCLib::uint32>*> m_map;
