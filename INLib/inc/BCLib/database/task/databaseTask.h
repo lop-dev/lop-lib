@@ -111,6 +111,38 @@ protected:
 		return false;																								\
 	}
 
+#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_UseDB_For_StaticTask(pTask)											\
+	if (pTask == NULL)																								\
+	{																												\
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "pTask == NULL");												\
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_NOCONNECTION;													\
+		return false;																								\
+	}																												\
+	pConnection = pTask->GetConnection(mapConnections, strDBIndex, strDBName);										\
+	if (pConnection == NULL)																						\
+	{																												\
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "pConnection == NULL");											\
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_NOCONNECTION;													\
+		return false;																								\
+	}																												\
+																													\
+	if (!pConnection->isConnected())																				\
+	{																												\
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "!pConnection->isConnected()");									\
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_UNCONNECTED;													\
+		return false;																								\
+	}																												\
+																													\
+	sqlSentence.str("");																							\
+	sqlSentence << "USE " << strDBName.c_str();																		\
+	if (!pConnection->executeNonQuery(sqlSentence.str().c_str()))													\
+	{																												\
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "executeNonQuery : %s", pConnection->getErrorString().c_str());	\
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "sqlSentence : [%s:%s][%s]", strDBName.c_str(), strTBName.c_str(), sqlSentence.str().c_str());	\
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_EXECUTE_NONQUERY;												\
+		return false;																								\
+	}
+	
 #define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ExecuteNonQuery														\
 	if (!pConnection->executeNonQuery(sqlSentence.str().c_str()))													\
 	{																												\
@@ -140,7 +172,7 @@ protected:
 			BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "pDataReader->getRecordCount() < 1");						\
 			BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "sqlSentence : [%s:%s][%s]", strDBName.c_str(), strTBName.c_str(), sqlSentence.str().c_str());	\
 			m_errCode = BCLib::Database::EDB_TASK_ERROR_NO_RECORD;													\
-			BCLIB_SAFE_DELETE(pDataReader);																						\
+			BCLIB_SAFE_DELETE(pDataReader);																			\
 			return false;																							\
 		}																											\
 	}																												\
@@ -149,7 +181,7 @@ protected:
 		if (pDataReader->getRecordCount() != 0)																		\
 		{																											\
 			m_errCode = BCLib::Database::EDB_TASK_ERROR_DUPLICATED_RECORD;											\
-			BCLIB_SAFE_DELETE(pDataReader);																						\
+			BCLIB_SAFE_DELETE(pDataReader);																			\
 			return false;																							\
 		}																											\
 	}
@@ -160,7 +192,7 @@ protected:
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "!pDataReader->next()");											\
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "sqlSentence : [%s:%s][%s]", strDBName.c_str(), strTBName.c_str(), sqlSentence.str().c_str());	\
 		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_NEXT;														\
-		BCLIB_SAFE_DELETE(pDataReader);																							\
+		BCLIB_SAFE_DELETE(pDataReader);																				\
 		return false;																								\
 	}
 
@@ -171,7 +203,7 @@ protected:
 	{																		\
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
 		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);													\
+		BCLIB_SAFE_DELETE(pDataReader);										\
 		return false;														\
 	}																		\
 	_PTBUF_.set_##_NAME_((float)dValue);
@@ -181,7 +213,7 @@ protected:
 	{																		\
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
 		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);													\
+		BCLIB_SAFE_DELETE(pDataReader);										\
 		return false;														\
 	}																		\
 	_PTBUF_.set_##_NAME_(i32Value);
@@ -191,7 +223,7 @@ protected:
 	{																		\
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
 		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);													\
+		BCLIB_SAFE_DELETE(pDataReader);										\
 		return false;														\
 	}																		\
 	_PTBUF_.set_##_NAME_(i64Value);
@@ -201,7 +233,7 @@ protected:
 	{																		\
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
 		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);													\
+		BCLIB_SAFE_DELETE(pDataReader);										\
 		return false;														\
 	}																		\
 	_PTBUF_.set_##_NAME_(u32Value);
@@ -211,7 +243,7 @@ protected:
 	{																		\
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
 		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);													\
+		BCLIB_SAFE_DELETE(pDataReader);										\
 		return false;														\
 	}																		\
 	_PTBUF_.set_##_NAME_(u64Value);
@@ -221,7 +253,7 @@ protected:
 	{																		\
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
 		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);													\
+		BCLIB_SAFE_DELETE(pDataReader);										\
 		return false;														\
 	}																		\
 	_PTBUF_.set_##_NAME_(strValue);
@@ -231,7 +263,7 @@ protected:
 	{																		\
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
 		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);													\
+		BCLIB_SAFE_DELETE(pDataReader);										\
 		return false;														\
 	}																		\
 	_PTBUF_.ParsePartialFromString(BCLib::Security::CBase64::Decode(strValue));
@@ -242,7 +274,7 @@ protected:
 	{																		\
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
 		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);													\
+		BCLIB_SAFE_DELETE(pDataReader);										\
 		return false;														\
 	}																		\
 	_CONVERTFUNC_(_PTBUF_, strValue);

@@ -87,6 +87,8 @@ public:
     CLog();
     virtual ~CLog();
 
+	static const char* getLevelName(ELogLevel level);
+
     void setModuleLevel(uint16 module, ELogLevel level);
     void setModuleLevel(uint16 module, const char* level);
     ELogLevel getModuleLevel(uint16 module);

@@ -169,6 +169,9 @@ public:
 public:
 	virtual bool serialize(const void* pBuf) { return false; }
 	virtual bool deserialize(void* pBuf) { return false; }
+
+	virtual void setResult(BCLib::int16 echo) {}
+	virtual void setTracer(const std::string& strTracer) {}
 };
 
 // 预留给CNetMessage中serialize和deserialize对应的pBuf扩展用
