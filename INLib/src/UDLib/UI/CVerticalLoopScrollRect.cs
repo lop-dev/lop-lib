@@ -13,11 +13,12 @@ namespace UDLib.UI
             float size = contentSpacing;
             if (m_GridLayout != null)
             {
-                size += m_GridLayout.cellSize.y;
+                size += m_GridLayout.cellSize.y ;
             }
             else
             {
                 size += LayoutUtility.GetPreferredHeight(item);
+              //  Debug.Log("+++++++++++GetSize:" + LayoutUtility.GetPreferredHeight(item) +"name:"+ item.name);
             }
             return size;
         }

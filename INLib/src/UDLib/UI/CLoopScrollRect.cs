@@ -337,7 +337,6 @@ namespace UDLib.UI
                 tObjRoot.transform.SetParent(content.parent, false);
                 tObjRoot.SetActive(false);
                 _rootCache = tObjRoot;
-
                 itemTemplate.SetActive(false);
                 //将基础预设移到外面避免被当成子物体使用引起问题  by xichuan
                 itemTemplate.transform.SetParent(content.parent, false);
@@ -458,8 +457,11 @@ namespace UDLib.UI
                 return;
             }
             UpdateBounds();
+          
 
             RectTransform itemTempRectTransform = itemTemplate.gameObject.GetComponent<RectTransform>();
+            if (content.transform.childCount > 0)
+                itemTempRectTransform= content.transform.GetChild(0).GetComponent<RectTransform>();
             float height = Mathf.Max(GetSize(itemTempRectTransform), 0.001f);       //要作为分母，不能为0
 
             int maxCount = Mathf.CeilToInt(m_ContentBounds.size.y / height);
@@ -519,11 +521,14 @@ namespace UDLib.UI
             Vector2 tSizeView = m_ViewBounds.size, tSizeContent = m_ContentBounds.size;
             float tSub = m_Horizontal ? tSizeContent.x - tSizeView.x : tSizeContent.y - tSizeView.y;
             Vector2 tVec = m_Horizontal ? Vector2.right : Vector2.up, tPos = Vector2.zero;
-
+            RectTransform itemTempRectTransform = itemTemplate.gameObject.GetComponent<RectTransform>();
+            if (content.transform.childCount > 0)
+                itemTempRectTransform = content.transform.GetChild(0).GetComponent<RectTransform>();
             /// 刷新并停留在合适的位置
-            float tSizeItem = GetSize(m_GridLayout ? null : (itemTemplate.transform as RectTransform));
+            float tSizeItem = GetSize(m_GridLayout ? null : itemTempRectTransform);
             if ( Mathf.Approximately(tSizeItem ,0f))
                 tSizeItem = 1f;
+           
             int tCount = contentConstraintCount, tOffsetCount = -1;
             if (tCount == 0)
                 tCount = 1;
@@ -532,13 +537,18 @@ namespace UDLib.UI
             int tPageCountCur = Mathf.CeilToInt((itemTypeEnd - itemTypeStart) / (float)tCount);                      // 当前一页能显示的行（列）数
             int tIndexStop = tIndex <= (tMaxIndex - tPageCountCur) ? tIndex : tMaxIndex - tPageCountCur;             // 应该停留的行（列）数
             int tIndexEnd = -1;                                                                                      // 当前页显示的单元项个数(只用在上次不足一页的情况
-
+            if(tMaxIndex >1 && (tIndex + 1) >= tMaxIndex  )
+            {
+                tPos = tVec * tSub;
+              
+            }
+           // Debug.Log("-------------------------11111111111----- max index >>>" + tMaxIndex + "--- index>>>" + tIndex+ "tSizeItem:" + tSizeItem + "tSub:"+ tSub);
             // 一页显示的内容减少
             if (tMaxIndex < tPageCountCur) {
                 if (tPageCountCur > tPageCountPrefferd) {                       // 有冗余项
                     tOffsetCount = tPageCountCur - tMaxIndex;
 
-                    //Debug.Log("------------------------------ max index >>>" + tMaxIndex + "--- page max index>>>" + tPageCountCur);
+                  //  Debug.Log("------------------------------ max index >>>" + tMaxIndex + "--- page max index>>>" + tPageCountCur);
                     for (int i = 0; i < tOffsetCount; i++) DeleteItemAtStart();
                     yield return null;
                     //Canvas.ForceUpdateCanvases();
@@ -548,24 +558,24 @@ namespace UDLib.UI
                     tSub = m_Horizontal ? tSizeContent.x - tSizeView.x : tSizeContent.y - tSizeView.y;
                     tPageCountCur = tPageCountCur - tOffsetCount;
                     tIndexStop = tIndex <= (tMaxIndex - tPageCountCur) ? tIndex : tMaxIndex - tPageCountCur;
-                    //Debug.Log("-------------------------22222----- max index >>>" + tMaxIndex + "--- page max index>>>" + tPageCountCur);
+                   // Debug.Log("-------------------------22222----- max index >>>" + tMaxIndex + "--- page max index>>>" + tPageCountCur);
                 }
                 tIndexStop = Math.Max(tIndexStop, 0); // 修正数据，从索引0开始
             }
 
-            //Debug.Log("-------------------------------------------------------- size sub" + tSub);
+          //  Debug.Log("-------------------------------------------------------- size sub" + tSub);
             if (tSub <= 0.01) {                                                                 // 上次显示不足一页时，特殊处理
                 tIndexStop = tMaxIndex < tPageCountCur ? 0 : (tIndex <= (tMaxIndex - tPageCountCur) ? tIndex : tMaxIndex - tPageCountCur);
                 tIndexEnd = Math.Min(tPageCountPrefferd * tCount, totalCount - tIndexStop * tCount) + tIndexStop * tCount;
                 tPos = tIndex <= tIndexStop ? Vector2.zero : tVec * (tPageCountPrefferd * tSizeItem - (m_Horizontal ? tSizeView.x : tSizeView.y));
-                //Debug.Log("----------------------------------------------index start>>>" + tIndexStop + "---index end>>>" + tIndexEnd + "---pos>>>" + tPos);
+              //  Debug.Log("----------------------------------------------index start>>>" + tIndexStop + "---index end>>>" + tIndexEnd + "---pos>>>" + tPos);
             } else if (itemTypeEnd >= totalCount || tPageCountCur > tPageCountPrefferd + 1) { // 上次显示达到边界且有冗余项时，特殊处理
                 int tOverflow = Mathf.FloorToInt(tSub / tSizeItem);
                 tOffsetCount = tIndex - tIndexStop <= tOverflow ? tIndex - tIndexStop : -1;
                 tPos = tVec * (tOffsetCount >= 0 ? tOffsetCount * tSizeItem : tSub);
-                //Debug.Log("------------------------------------------------------------------------offset index>>>" + tOffsetCount + "---pos>>>" + tPos);
+               // Debug.Log("------------------------------------------------------------------------offset index>>>" + tOffsetCount + "---pos>>>" + tPos);
             }
-            //Debug.Log("------------------------------------- focus to index>>>" + index + "---start index>>>" + tIndexStop * tCount + "--- end index>>>" + itemTypeEnd + "---total count>>>" + totalCount + "--- page row>>>" + tPageCountCur);
+           // Debug.Log("------------------------------------- focus to index>>>" + index + "---start index>>>" + tIndexStop * tCount + "--- end index>>>" + itemTypeEnd + "---total count>>>" + totalCount + "--- page row>>>" + tPageCountCur);
 
             RefreshCells(tIndexStop * tCount, tIndexEnd);
             m_Content.anchoredPosition = tPos + (m_Horizontal ? Vector2.up : Vector2.right) * m_Content.anchoredPosition;

@@ -52,11 +52,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CCircleScroll.cs" />
+    <Compile Include="CCLoopMovedImage.cs" />
+    <Compile Include="CCUiScrollbar.cs" />
+    <Compile Include="CCUiScrollRect.cs" />
     <Compile Include="CFormationLoopScrollRect.cs" />
     <Compile Include="CHorizontalLoopScrollRect.cs" />
     <Compile Include="CLoopScrollRect.cs" />
+    <Compile Include="CLoopVerticalLayout.cs" />
+    <Compile Include="CLoopVerticalLayoutWraper.cs" />
+    <Compile Include="CLoopVerticalScrollZeroSizeBar.cs" />
+    <Compile Include="CPageScroll.cs" />
     <Compile Include="CPageVerticalLoopScrollRect.cs" />
+    <Compile Include="CParticleMask.cs" />
+    <Compile Include="CScrollRectCenter.cs" />
+    <Compile Include="CScrollRectCircle.cs" />
+    <Compile Include="CScrollRectCustom.cs" />
+    <Compile Include="CScrollRectFreedom.cs" />
+    <Compile Include="CTxtUnderlineImage.cs" />
+    <Compile Include="CUILookAtCamera.cs" />
+    <Compile Include="CVertialSpreadLayout.cs" />
     <Compile Include="CVerticalLoopScrollRect.cs" />
+    <Compile Include="CVerticalText.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
