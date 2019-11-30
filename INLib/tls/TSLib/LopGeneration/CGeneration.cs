@@ -137,6 +137,10 @@ namespace Proto2Code
             {
                 return _Gen4Msg();
             }
+            else if (m_strGenType == "Task")
+            {
+                return _Gen4Task();
+            }
             else if(m_strGenType == "LuaConfig")
             {
                 return _Gen4LuaConfig();
@@ -421,7 +425,7 @@ namespace Proto2Code
                 DirectoryInfo dataDirectoryInfo = new DirectoryInfo(m_strDataPath);
                 DirectoryInfo outputDirectoryInfo = new DirectoryInfo(m_strOutputPath);
 
-                TSLib.ProtoGeneration.CProtoFileGen.Generate(new string[] { dataDirectoryInfo.FullName, outputDirectoryInfo.FullName , m_strLanguage });
+                TSLib.ProtoGeneration.CGenerateMsg.Generate(new string[] { dataDirectoryInfo.FullName, outputDirectoryInfo.FullName , m_strLanguage });
 
                 System.Diagnostics.ProcessStartInfo Info = new System.Diagnostics.ProcessStartInfo();
                     
@@ -430,6 +434,34 @@ namespace Proto2Code
                 //Info.FileName = FileInfo.FullName;
                 //%src_proto_path% %gen_files_path% %create_files_type%
                 Info.Arguments = dataDirectoryInfo.FullName + "     "+ outputDirectoryInfo.FullName + "     " + m_strLanguage;
+                try
+                {
+                    //System.Diagnostics.Process.Start(Info);
+                }
+                catch (System.ComponentModel.Win32Exception e)
+                {
+                    Console.WriteLine("系统找不到指定的程序文件。\r{0}", e);
+                }
+            }
+            return 0;
+        }
+
+        private int _Gen4Task()
+        {
+            if ((m_strDataPath != "") && (m_strOutputPath != "") && (m_strLanguage != ""))
+            {
+                DirectoryInfo dataDirectoryInfo = new DirectoryInfo(m_strDataPath);
+                DirectoryInfo outputDirectoryInfo = new DirectoryInfo(m_strOutputPath);
+
+                TSLib.ProtoGeneration.CGenerateTask.Generate(new string[] { dataDirectoryInfo.FullName, outputDirectoryInfo.FullName, m_strLanguage });
+
+                System.Diagnostics.ProcessStartInfo Info = new System.Diagnostics.ProcessStartInfo();
+
+                //Info.WorkingDirectory = dataDirectoryInfo.FullName;
+
+                //Info.FileName = FileInfo.FullName;
+                //%src_proto_path% %gen_files_path% %create_files_type%
+                Info.Arguments = dataDirectoryInfo.FullName + "     " + outputDirectoryInfo.FullName + "     " + m_strLanguage;
                 try
                 {
                     //System.Diagnostics.Process.Start(Info);

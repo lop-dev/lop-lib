@@ -198,6 +198,11 @@ namespace Proto2Code
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
+            Console.WriteLine("********** 生成 Task 文件 **********");
+            argsStr = @"-GenType=Task -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Prototask\ -Language=cpp";
+            Console.WriteLine(argsStr);
+            Execute(argsStr.Split(' '));
+
             if (EXPORT_ALL)
             {
                 Console.WriteLine("********** 生成 LuaCfg 文件 **********");
