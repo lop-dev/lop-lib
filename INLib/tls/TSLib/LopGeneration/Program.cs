@@ -199,7 +199,7 @@ namespace Proto2Code
             Execute(argsStr.Split(' '));
 
             Console.WriteLine("********** 生成 Task 文件 **********");
-            argsStr = @"-GenType=Task -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Prototask\ -Language=cpp";
+            argsStr = @"-GenType=Task -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\5_Prototask\ -Language=cpp";
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 

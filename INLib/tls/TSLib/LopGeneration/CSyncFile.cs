@@ -137,6 +137,31 @@ namespace Proto2Code
                 }
             }
 
+            //拷贝到DTLib目录
+            string SERVER_DTLIB_PROFILEGEN_SRC = @".\TableOut\Temp\5_Prototask\C++\";
+            string SERVER_DTLIB_PROFILEGEN_DES_H = @".\TableOut\C++\DTLib\inc\DTLib\databaseTask\";
+            string SERVER_DTLIB_PROFILEGEN_DES_CPP = @".\TableOut\C++\DTLib\src\DTLib\databaseTask\";
+
+            fileterFiles.Clear();
+            if (fileterFiles.Count > 0)
+            {
+                CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_H, "*Task.h", true, fileterFiles);
+            }
+            else
+            {
+                CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_H, "*Task.h");
+            }
+
+            fileterFiles.Clear();
+            if (fileterFiles.Count > 0)
+            {
+                CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_CPP, "*Task.cc", true, fileterFiles);
+            }
+            else
+            {
+                CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_CPP, "*Task.cc");
+            }
+
             Console.WriteLine("拷贝文件之：Lua");
             string CLIENT_PB_LUA_SRC = @".\TableOut\Temp\2_Protobuf\Lua\";
             string CLIENT_PB_LUA_DES = @".\TableOut\Lua\Generate\Protobuf\";
