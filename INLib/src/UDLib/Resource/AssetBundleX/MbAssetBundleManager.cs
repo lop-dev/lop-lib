@@ -377,6 +377,74 @@ namespace UDLib.Resource
             return request;
         }
 
+        //处理依赖加载
+        private void LoadDependency(CLoadRequest request)
+        {
+            List<CLoadRequest> dependency_requests = null;
+            request.hash = this.MainMenifest.GetAssetBundleHash(request.packageName);
+            dependency_requests = GetManifestDependencyRequests(request);
+            request.depencencyRequests = dependency_requests;
+
+            if (dependency_requests != null)
+            {
+                for (int i = 0; i < dependency_requests.Count; i++)
+                {
+                    if (loadingRquestList.IndexOf(dependency_requests[i]) == -1)//依赖列表获取时，在加载中的被引用了，无需再次加载处理
+                        Load(dependency_requests[i]);
+                }
+            }
+        }
+
+        //检测相同的加载
+        private bool LoadSameRequest(CLoadRequest request)
+        {
+            CLoadRequest sameLoadingReuqest = null;
+            for (int i = 0; i < loadingRquestList.Count; i++)
+            {
+                //!loadingRquestList[i].isLoadingFromAssetBundle如果已经在读取资源了,回去处理sameRequest,这时候就不要合并过去了
+                //如果loadingRquestList[i]从缓存中就满足加载需求了，就不要合并
+                // load_num == 0的多级依赖也加入SameLoading判断
+                if (loadingRquestList[i].packageName == request.packageName)
+                {
+                    if (loadingRquestList[i].isLoadingFromAssetBundle == false && (loadingRquestList[i].loaded_num < loadingRquestList[i].load_num || loadingRquestList[i].load_num == 0))
+                    {
+                        sameLoadingReuqest = loadingRquestList[i];
+                        break;
+                    }
+                }
+            }
+
+            if (sameLoadingReuqest == null)
+            {
+                for (int i = 0; i < _waitList.Count; i++)
+                {
+                    if (_waitList[i].packageName == request.packageName)
+                    {
+                        sameLoadingReuqest = _waitList[i];
+                        break;
+                    }
+                }
+            }
+
+            if (sameLoadingReuqest != null)
+            {
+                if (request.master == null)//合并masterRequest,如果相同的request是被其他masterrequest依赖的，直接return
+                {
+                    if (sameLoadingReuqest.sameMasterRequest == null)
+                        sameLoadingReuqest.sameMasterRequest = new List<CLoadRequest>();
+
+                    sameLoadingReuqest.sameMasterRequest.Add(request);
+#if DEBUG
+                        CAssetBundleLog.Log("合并相同的master加载请求：" + request.packageName);
+#endif
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
         private void Load(CLoadRequest request)
         {
             if (IsDirectMode)
@@ -389,67 +457,13 @@ namespace UDLib.Resource
 #if DEBUG
                 CAssetBundleLog.Log(string.Format("请求加载：{0}", request.packageName));
 #endif
-                //处理依赖加载
-                List<CLoadRequest> dependency_requests = null;
-                request.hash = this.MainMenifest.GetAssetBundleHash(request.packageName);
-                dependency_requests = GetManifestDependencyRequests(request);
-                request.depencencyRequests = dependency_requests;
-
-                if (dependency_requests != null)
-                {
-                    for (int i = 0; i < dependency_requests.Count; i++)
-                    {
-                        if (loadingRquestList.IndexOf(dependency_requests[i]) == -1)//依赖列表获取时，在加载中的被引用了，无需再次加载处理
-                            Load(dependency_requests[i]);
-                    }
-                }
-                
-
+                //优先处理依赖加载
+                LoadDependency(request);
 
                 //检测相同的加载
-                CLoadRequest sameLoadingReuqest = null;
-                for (int i = 0; i < loadingRquestList.Count; i++)
-                {
-                    //!loadingRquestList[i].isLoadingFromAssetBundle如果已经在读取资源了,回去处理sameRequest,这时候就不要合并过去了
-                    //如果loadingRquestList[i]从缓存中就满足加载需求了，就不要合并
-                    // load_num == 0的多级依赖也加入SameLoading判断
-                    if (loadingRquestList[i].packageName == request.packageName)
-                    {
-                        if (loadingRquestList[i].isLoadingFromAssetBundle == false && (loadingRquestList[i].loaded_num < loadingRquestList[i].load_num || loadingRquestList[i].load_num == 0))
-                        {
-                            sameLoadingReuqest = loadingRquestList[i];
-                            break;
-                        }
-                    }
-                }
-
-                if (sameLoadingReuqest == null)
-                {
-                    for (int i = 0; i < _waitList.Count; i++)
-                    {
-                        if (_waitList[i].packageName == request.packageName)
-                        {
-                            sameLoadingReuqest = _waitList[i];
-                            break;
-                        }
-                    }
-                }
-
-                if (sameLoadingReuqest != null)
-                {
-                    if (request.master == null)//合并masterRequest,如果相同的request是被其他masterrequest依赖的，直接return
-                    {
-                        if (sameLoadingReuqest.sameMasterRequest == null)
-                            sameLoadingReuqest.sameMasterRequest = new List<CLoadRequest>();
-
-                        sameLoadingReuqest.sameMasterRequest.Add(request);
-#if DEBUG
-                        CAssetBundleLog.Log("合并相同的master加载请求：" + request.packageName);
-#endif
-                    }
-
+                bool isLoadingSame = LoadSameRequest(request);
+                if (isLoadingSame)
                     return;
-                }
 
                 if (loadingRquestList.IndexOf(request) == -1)
                 {
@@ -463,7 +477,6 @@ namespace UDLib.Resource
                     {
                         //  CAssetBundleLog.Log("~~~~加入等待列表：" + request.packageName);
                         _waitList.Add(request);
-                        //  _waitList.Sort((a, b) => (b.priority).CompareTo((a.priority)));//按优先级排序  [注：这里的排序可能导致被依赖的资源排到后面加载，这里先注释掉]
                     }
                 }
             }
@@ -487,6 +500,180 @@ namespace UDLib.Resource
                 }
                 else
                     break;
+            }
+        }
+
+        // Direct Mode 加载资源（Resource.load）
+        private void LoadResourceDirect(CLoadRequest request, string sub_path)
+        {
+            if (request.loaded_num < request.load_num)
+            {
+                for (int i = 0, n = request.load_num; i < n; ++i)
+                {
+                    if (request.load_objectsThisRequest[i] != null) continue;
+                    string res_name = sub_path + request.resourceNames[i];
+                    UnityEngine.Object uobj = LoadDirect(request.m_eResourceType, res_name);
+                    CAssetObject obj = CAssetObject.Get(request.m_eResourceType, res_name, uobj);
+                    request.load_objectsThisRequest[i] = obj;
+                    request.loaded_num++;
+                    //保存读出来的资源到缓存
+                    if (!loadedAssetObjectDic.ContainsKey(request.m_eResourceType))
+                    {
+                        loadedAssetObjectDic.Add(request.m_eResourceType, new Dictionary<string, CAssetObject>());
+                    }
+
+                    Dictionary<string, CAssetObject> loadedAssetCategoryDic = null;
+                    if (loadedAssetObjectDic.TryGetValue(request.m_eResourceType, out loadedAssetCategoryDic))
+                    {
+                        if (!loadedAssetCategoryDic.ContainsKey(res_name))
+                            loadedAssetCategoryDic.Add(res_name, request.load_objectsThisRequest[i]);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 尝试从缓存读取AB
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="asset_bundle"></param>
+        /// <returns></returns>
+        private AssetBundle TryLoadABFromCache(CLoadRequest request)
+        {
+            //获取assetBundle
+            AssetBundle asset_bundle = null ;
+            CAssetBundleObject assetBundleObject = null;
+            if (loadedAssetBundleDic.TryGetValue(request.packageName, out assetBundleObject))
+            {
+                // 只要使用，都加一次引用计数
+                if (request.master != null || request.isMaster)//由于依赖的重复性，引用会被增加多次，所以只有主动加载及其依赖的ab，才会addRef
+                    assetBundleObject.AddRef();
+                asset_bundle = assetBundleObject.assetBundle;
+#if DEBUG
+                        CAssetBundleLog.Log("从缓存获取ab:" + request.packageName);
+#endif
+            }
+            else if (systemAssetBundleObject.TryGetValue(request.packageName, out assetBundleObject))
+            {
+                if (request.master != null || request.isMaster)//由于依赖的重复性，引用会被增加多次，所以只有主动加载及其依赖的ab，才会addRef
+                    assetBundleObject.AddRef();
+                asset_bundle = assetBundleObject.assetBundle;
+#if DEBUG
+                        CAssetBundleLog.Log("从系统缓存获取ab:" + request.packageName);
+#endif
+            }
+            else
+            {
+                foreach (var key in CAssetBundleObject.unUsedAssetBundleObjects.Keys)
+                {
+                    if (key.name.Equals(request.packageName))
+                    {
+#if DEBUG
+                                CAssetBundleLog.Log("从unUsedList获取assetbundle:" + request.packageName);
+#endif
+                        assetBundleObject = key;
+                        CAssetBundleObject.unUsedAssetBundleObjects.Remove(key);
+                        loadedAssetBundleDic.Add(request.packageName, key);
+                        asset_bundle = key.assetBundle;
+                        key.Revive();
+                        if (request.master != null || request.isMaster)//由于依赖的重复性，引用会被增加多次，所以只有主动加载及其依赖的ab，才会addRef
+                            key.AddRef();
+                        break;
+                    }
+                }
+            }
+
+            return asset_bundle;
+        }
+
+        /// <summary>
+        ///  AB使用完做释放
+        /// </summary>
+        /// <param name="request"></param>
+        private void ReleaseABForRequest(CLoadRequest request)
+        {
+            // 资源读完了，放入延迟列表，准备释放assetbundle
+            // 非常驻AB 才释放
+            // releaseType是自动释放的才释放，UI管理的那块用手动释放
+            if (request.load_num != 0 && !IsPersistABInGame(request.packageName) && request.releaseType == CReleaseType.Normal)
+            {
+                if (IsPersistABInScene(request.packageName))
+                {
+                    loadedSceneAssetBundleDic.Add(request.packageName, loadedAssetBundleDic[request.packageName]);
+                }
+                else if (loadedAssetBundleDic.ContainsKey(request.packageName))
+                {
+                    loadedAssetBundleDic[request.packageName].Release();
+                }
+
+                if (request.depencencyRequests != null)
+                {
+                    for (int k = request.depencencyRequests.Count - 1; k >= 0; k--)
+                    {
+                        CAssetBundleObject depAbObj = null;
+                        var depReq = request.depencencyRequests[k];
+                        bool hasValue = loadedAssetBundleDic.TryGetValue(depReq.packageName, out depAbObj);
+                        if (hasValue)
+                        {
+                            if (IsPersistABInScene(request.packageName))
+                            {
+                                loadedSceneAssetBundleDic.Add(request.packageName, depAbObj);
+                            }
+                            else if (!IsPersistABInGame(depReq.packageName))
+                            {
+                                depAbObj.Release();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 加载资源结束，触发回调
+        /// </summary>
+        /// <param name="request"></param>
+        private void OnLoadABFinish(CLoadRequest request)
+        {
+            if (request.loaded_num == request.load_num)
+            {
+                if (IsScene(request.m_eResourceType))
+                {
+                    foreach (var action in request.onSceneLoadComplete)
+                        action();
+                }
+                else
+                {
+                    foreach (var action in request.onComplete)
+                        action(request.load_objectsThisRequest);
+                }
+
+                //处理sameMasterRequest
+                if (request.sameMasterRequest != null)
+                {
+                    for (int rindex = 0; rindex < request.sameMasterRequest.Count; rindex++)
+                    {
+                        CLoadRequest currentSame = request.sameMasterRequest[rindex];
+                        if (IsScene(request.m_eResourceType))
+                        {
+                            foreach (var action in currentSame.onSceneLoadComplete)
+                                action();
+                        }
+                        else
+                        {
+                            foreach (var action in currentSame.onComplete)
+                                action(currentSame.load_objectsThisRequest);
+                        }
+                    }
+                }
+
+                //  CAssetBundleLog.Log("!!!加载完成,name={0},loading Count = {1}", request.packageName, loadingRquestList.Count-1);
+                RemoveRequest(ref request);
+            }
+            else
+            {
+                OnRequestError(request);
+                CAssetBundleLog.LogError(string.Format("加载完成数量不匹配{0}/{1} - {2}", request.loaded_num, request.load_num, request.packageName));
             }
         }
 
@@ -533,103 +720,34 @@ namespace UDLib.Resource
 
             //从缓存中获取资源
             GetObjectFromCache(request, sub_path);
-
             //去即将销毁的列表里找找看
             GetObjectFromUnUsed(request, sub_path);
-
-            //CAssetBundleLog.Log("Stard Get AssetBundle:" + request.packageName);
-            // yield return null;
             request.Progress = 0.3f;
-
             AssetBundle asset_bundle = null;
+
             if (IsDirectMode)
             {
-                if (request.loaded_num < request.load_num)
-                {
-                    for (int i = 0, n = request.load_num; i < n; ++i)
-                    {
-                        if (request.load_objectsThisRequest[i] != null) continue;
-                        string res_name = sub_path + request.resourceNames[i];
-                        UnityEngine.Object uobj = LoadDirect(request.m_eResourceType, res_name);
-                        CAssetObject obj = CAssetObject.Get(request.m_eResourceType, res_name, uobj);
-                        request.load_objectsThisRequest[i] = obj;
-                        request.loaded_num++;
-                        //保存读出来的资源到缓存
-                        if (!loadedAssetObjectDic.ContainsKey(request.m_eResourceType))
-                        {
-                            loadedAssetObjectDic.Add(request.m_eResourceType, new Dictionary<string, CAssetObject>());
-                        }
-
-                        Dictionary<string, CAssetObject> loadedAssetCategoryDic = null;
-                        if (loadedAssetObjectDic.TryGetValue(request.m_eResourceType, out loadedAssetCategoryDic))
-                        {
-                            if (!loadedAssetCategoryDic.ContainsKey(res_name))
-                                loadedAssetCategoryDic.Add(res_name, request.load_objectsThisRequest[i]);
-                        }
-                    }
-                }
+                LoadResourceDirect(request, sub_path);          // Direct Mode 加载资源（Resource.load）
             }
             else
             {
-                //如果该request的assetbundle是被依赖的，则一定要加载
-                //如果当前request的obj还有没在缓存找到的
-                //如果其他request和此request加载地址一样，且需要加载的
+                //如果该request的assetbundle是被依赖的，则一定要加载 || 如果当前request的obj还有没在缓存找到的 || 如果其他request和此request加载地址一样，且需要加载的
                 if (request.load_num == 0 || request.loaded_num < request.load_num || !request.isSameRequestComplete())
                 {
-                    CAssetBundleObject assetBundleObject = null;
-                    //获取assetBundle
-                    if (loadedAssetBundleDic.TryGetValue(request.packageName, out assetBundleObject))
-                    {
-                        // 只要使用，都加一次引用计数
-                        if (request.master != null || request.isMaster)//由于依赖的重复性，引用会被增加多次，所以只有主动加载及其依赖的ab，才会addRef
-                            assetBundleObject.AddRef();
-                        asset_bundle = assetBundleObject.assetBundle;
-#if DEBUG
-                        CAssetBundleLog.Log("从缓存获取ab:" + request.packageName);
-#endif
-                    }
-                    else if (systemAssetBundleObject.TryGetValue(request.packageName, out assetBundleObject))
-                    {
-                        if (request.master != null || request.isMaster)//由于依赖的重复性，引用会被增加多次，所以只有主动加载及其依赖的ab，才会addRef
-                            assetBundleObject.AddRef();
-                        asset_bundle = assetBundleObject.assetBundle;
-#if DEBUG
-                        CAssetBundleLog.Log("从系统缓存获取ab:" + request.packageName);
-#endif
-                    }
-                    else
-                    {
-                        foreach (var key in CAssetBundleObject.unUsedAssetBundleObjects.Keys)
-                        {
-                            if (key.name.Equals(request.packageName))
-                            {
-#if DEBUG
-                                CAssetBundleLog.Log("从unUsedList获取assetbundle:" + request.packageName);
-#endif
-                                assetBundleObject = key;
-                                CAssetBundleObject.unUsedAssetBundleObjects.Remove(key);
-                                loadedAssetBundleDic.Add(request.packageName, key);
-                                asset_bundle = key.assetBundle;
-                                key.Revive();
-                                if (request.master != null || request.isMaster)//由于依赖的重复性，引用会被增加多次，所以只有主动加载及其依赖的ab，才会addRef
-                                    key.AddRef();
-                                break;
-                            }
-                        }
-                    }
-
-                    if (assetBundleObject == null)
+                    asset_bundle = TryLoadABFromCache(request);
+                    if (asset_bundle == null)
                     {
                         //从本地硬盘获取assetbundle
                         string pathPersist = GetPersistCachePath(request.packageName);
                         if (IsVersionCached(pathPersist))
                         {
-                            // 开始记录加载，硬盘读取
+
 #if DEBUG
+                            // 开始记录加载，硬盘读取
                             StartRecord(request);
                             CAssetBundleLog.Log("从本地硬盘P目录加载ab:" + pathPersist);
 #endif
-                            if(!request.isAsyncMode)
+                            if (!request.isAsyncMode)
                             {
                                 asset_bundle = AssetBundle.LoadFromFile(pathPersist);
                                 SaveToABCache(request.packageName, asset_bundle);
@@ -637,7 +755,6 @@ namespace UDLib.Resource
                             else
                             {
                                 AssetBundleCreateRequest req = null;
-                                //Application.backgroundLoadingPriority = ThreadPriority.BelowNormal;
                                 req = AssetBundle.LoadFromFileAsync(pathPersist);
                                 while (!req.isDone)
                                 {
@@ -649,54 +766,48 @@ namespace UDLib.Resource
                             }
 
                             if (asset_bundle == null)
-                            {
                                 File.Delete(pathPersist);
-                            }
                         }
+                    }
 
-                        // 如果没有从P目录加载，尝试底包加载
-                        if (asset_bundle == null)
+                    // 如果没有从P目录加载，尝试底包加载
+                    if (asset_bundle == null)
+                    {
+                        string pathPackage = GetPackageCachePath(request.packageName);
+                        if (MDownloadedAssetDic.ContainsKey(request.packageName))
                         {
-                            string pathPackage = GetPackageCachePath(request.packageName);
-                            if (MDownloadedAssetDic.ContainsKey(request.packageName))
-                            {
 #if DEBUG
                                 // 开始记录加载，硬盘读取
                                 StartRecord(request);
 #endif
-
-                                if(!request.isAsyncMode)
-                                {
-                                    asset_bundle = AssetBundle.LoadFromFile(pathPackage);
-                                    SaveToABCache(request.packageName, asset_bundle);
-                                }
-                                else
-                                {
-#if DEBUG
-                                    CAssetBundleLog.Log("P目录没有找到对应资源，从底包加载ab:" + pathPackage);
-#endif
-                                    AssetBundleCreateRequest req = null;
-                                    req = AssetBundle.LoadFromFileAsync(pathPackage);
-                                    while (!req.isDone)
-                                    {
-                                        //加载ab只算6成加载进度
-                                        request.Progress = 0.3f + req.progress * 0.6f;
-                                        yield return null;
-                                    }
-
-                                    asset_bundle = GetAssetBundleFromRequest(req, request);
-                                }
+                            if (!request.isAsyncMode)
+                            {
+                                asset_bundle = AssetBundle.LoadFromFile(pathPackage);
+                                SaveToABCache(request.packageName, asset_bundle);
                             }
                             else
                             {
-                                CAssetBundleLog.Log("P目录没有找到对应资源，底包也没有ab资源:" + pathPackage);
+#if DEBUG
+                                    CAssetBundleLog.Log("P目录没有找到对应资源，从底包加载ab:" + pathPackage);
+#endif
+                                AssetBundleCreateRequest req = null;
+                                req = AssetBundle.LoadFromFileAsync(pathPackage);
+                                while (!req.isDone)
+                                {
+                                    //加载ab只算6成加载进度
+                                    request.Progress = 0.3f + req.progress * 0.6f;
+                                    yield return null;
+                                }
+
+                                asset_bundle = GetAssetBundleFromRequest(req, request);
                             }
                         }
+                        else
+                        {
+                            CAssetBundleLog.Log("P目录没有找到对应资源，底包也没有ab资源:" + pathPackage);
+                        }
                     }
-                    else
-                    {
-                        request.Progress = 0.9f;//ab资源下载好了，90%
-                    }
+                    request.Progress = 0.9f;//ab资源下载好了，90%
 #if DEBUG
                     //从服务器下载asstBundle
                     if (asset_bundle == null)
@@ -717,7 +828,6 @@ namespace UDLib.Resource
                             }
 
                             CUpdateObject obj = mTotalAssetDic[request.packageName];
-                            //string url = RootPath + "version_" + obj.version + request.packageName + "?v=" + request.hash.ToString();
                             StringBuilder sbUrl = new StringBuilder(RootPath).Append("version_").Append(obj.version).Append("/").Append(request.packageName).Append("?v=").Append(request.hash.ToString());
 #if DEBUG
                             CAssetBundleLog.Log("从服务器下载资源：" + sbUrl);
@@ -735,8 +845,7 @@ namespace UDLib.Resource
                                 if (String.IsNullOrEmpty(www.error) && www.isDone)
                                 {
                                     CAssetBundleLog.Log(www.bytes.Length + "," + www.error + "," + www.isDone + "," + www.url);
-                                    //byte[] uncompressedBytes = GZipStream.UncompressBuffer(www.bytes);
-                                    asset_bundle = AssetBundle.LoadFromMemory(www.bytes/**uncompressedBytes*/);
+                                    asset_bundle = AssetBundle.LoadFromMemory(www.bytes);
 #if DEBUG
                                     CAssetBundleLog.Log("从服务器加载ab成功：" + sbUrl);
 #endif
@@ -747,7 +856,7 @@ namespace UDLib.Resource
                                     }
 
                                     //保存asset_bundle到硬盘
-                                    SaveAssetBundle(request.packageName, www.bytes/**uncompressedBytes*/);
+                                    SaveAssetBundle(request.packageName, www.bytes);
                                 }
                                 else
                                 {
@@ -780,13 +889,11 @@ namespace UDLib.Resource
 
                 //不管怎样，ab不会再处理了，强制90%进度
                 request.Progress = 0.9f;
-                //yield return null;
 
 #if DEBUG
                 // 记录加载结束
                 CheckLoadTime(request);
 #endif
-
                 //从asset_bundle获取资源
                 if (asset_bundle != null)
                 {
@@ -833,8 +940,6 @@ namespace UDLib.Resource
                         }
                     }
 
-                    // if (!loadedAssetBundleDic.ContainsKey(request.packageName) && !request.packageName.Contains("shader"))
-                    //     CAssetBundleLog.LogError("key is not exist! key=" + request.packageName);
                     if (!IsScene(request.m_eResourceType))
                     {
 #if DEBUG
@@ -843,9 +948,7 @@ namespace UDLib.Resource
                         request.LoadObjectFromAssetBundle(asset_bundle, sub_path);
 
                         while (request.isLoadingFromAssetBundle)
-                        {
                             yield return null;
-                        }
                     }
                     else
                     {
@@ -853,45 +956,10 @@ namespace UDLib.Resource
                     }
 
                     while (request.isLoadingFromAssetBundle)
-                    {
                         yield return null;
-                    }
 
-                    // 资源读完了，放入延迟列表，准备释放assetbundle
-                    // 非常驻AB 才释放
-                    // releaseType是自动释放的才释放，UI管理的那块用手动释放
-                    if (request.load_num != 0 && !IsPersistABInGame(request.packageName) && request.releaseType == CReleaseType.Normal)
-                    {
-                        if (IsPersistABInScene(request.packageName))
-                        {
-                            loadedSceneAssetBundleDic.Add(request.packageName, loadedAssetBundleDic[request.packageName]);
-                        }
-                        else if (loadedAssetBundleDic.ContainsKey(request.packageName))
-                        {
-                            loadedAssetBundleDic[request.packageName].Release();
-                        }
-
-                        if (request.depencencyRequests != null)
-                        {
-                            for (int k = request.depencencyRequests.Count - 1; k >= 0; k--)
-                            {
-                                CAssetBundleObject depAbObj = null;
-                                var depReq = request.depencencyRequests[k];
-                                bool hasValue = loadedAssetBundleDic.TryGetValue(depReq.packageName, out depAbObj);
-                                if (hasValue)
-                                {
-                                    if (IsPersistABInScene(request.packageName))
-                                    {
-                                        loadedSceneAssetBundleDic.Add(request.packageName, depAbObj);
-                                    }
-                                    else if (!IsPersistABInGame(depReq.packageName))
-                                    {
-                                        depAbObj.Release();
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    // AB使用完做释放
+                    ReleaseABForRequest(request);
                 }
             }
             //加载完成
@@ -900,48 +968,8 @@ namespace UDLib.Resource
             // 记录从AB实例化资源时间
             CheckInstanceTime(request);
 #endif
-
-            // yield return null;
-            if (request.loaded_num == request.load_num)
-            {
-                if (IsScene(request.m_eResourceType))
-                {
-                    foreach (var action in request.onSceneLoadComplete)
-                        action();
-                }
-                else
-                {
-                    foreach (var action in request.onComplete)
-                        action(request.load_objectsThisRequest);
-                }
-
-                //处理sameMasterRequest
-                if (request.sameMasterRequest != null)
-                {
-                    for (int rindex = 0; rindex < request.sameMasterRequest.Count; rindex++)
-                    {
-                        CLoadRequest currentSame = request.sameMasterRequest[rindex];
-                        if (IsScene(request.m_eResourceType))
-                        {
-                            foreach (var action in currentSame.onSceneLoadComplete)
-                                action();
-                        }
-                        else
-                        {
-                            foreach (var action in currentSame.onComplete)
-                                action(currentSame.load_objectsThisRequest);
-                        }
-                    }
-                }
-
-                //  CAssetBundleLog.Log("!!!加载完成,name={0},loading Count = {1}", request.packageName, loadingRquestList.Count-1);
-                RemoveRequest(ref request);
-            }
-            else
-            {
-                OnRequestError(request);
-                CAssetBundleLog.LogError(string.Format("加载完成数量不匹配{0}/{1} - {2}", request.loaded_num, request.load_num, request.packageName));
-            }
+            // 加载资源结束，触发回调
+            OnLoadABFinish(request);
         }
 
         private void OnRequestError(CLoadRequest request)
@@ -1534,7 +1562,7 @@ namespace UDLib.Resource
             return sub_path;
         }
 
-#region DEBUG 加载时间
+        #region DEBUG 加载时间
         public void StartRecordLoadTime()
         {
 #if DEBUG
@@ -1657,7 +1685,7 @@ namespace UDLib.Resource
             }
 #endif
         }
-#endregion
+        #endregion
 
         //--------------------------------------------------------------------------------
         //应用程序内容路径
