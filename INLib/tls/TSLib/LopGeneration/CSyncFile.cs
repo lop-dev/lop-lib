@@ -145,21 +145,21 @@ namespace Proto2Code
             fileterFiles.Clear();
             if (fileterFiles.Count > 0)
             {
-                CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_H, "*Task.h", true, fileterFiles);
+                CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_H, "*.h", true, fileterFiles);
             }
             else
             {
-                CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_H, "*Task.h");
+                CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_H, "*.h");
             }
 
             fileterFiles.Clear();
             if (fileterFiles.Count > 0)
             {
-                CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_CPP, "*Task.cc", true, fileterFiles);
+                CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_CPP, "*.cc", true, fileterFiles);
             }
             else
             {
-                CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_CPP, "*Task.cc");
+                CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_CPP, "*.cc");
             }
 
             Console.WriteLine("拷贝文件之：Lua");
