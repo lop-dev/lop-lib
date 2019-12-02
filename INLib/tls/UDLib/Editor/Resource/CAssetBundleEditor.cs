@@ -338,21 +338,22 @@ namespace UDLib.Editor
             return list;
         }
 
-        // 刷新AB包名
+        // 刷新所有AB包名
         //[MenuItem("AssetBundleX/1、自动设置资源ab名字")]
         public static void RefreshAllAssetBundleNames()
         {
-
-            DateTime startTime = System.DateTime.Now;
-            UDLib.Utility.CDebugOut.Log("开始 设置ab资源名字");
-
-            string title = "设置所有文件的AB名";
-
-            EditorUtility.DisplayProgressBar(title, "搜索文件及文件夹", 0.0f);
-
             string[] files = Directory.GetFiles("Assets", "*", SearchOption.AllDirectories);
             string[] dirs = Directory.GetDirectories("Assets", "*", SearchOption.AllDirectories);
+            RefreshAssetBundleNames(files, dirs);
+        }
 
+        // 刷新对应目录的Assetbundle名字
+        public static void RefreshAssetBundleNames(string[] files, string[] dirs)
+        {
+            string title = "设置所有文件的AB名";
+            EditorUtility.DisplayProgressBar(title, "搜索文件及文件夹", 0.0f);
+            UDLib.Utility.CDebugOut.Log("开始 设置ab资源名字");
+            DateTime startTime = System.DateTime.Now;
             float total = 1.0f / (float)(files.Length + dirs.Length);
             int p = 0;
 #if REFRENCE_MODE
@@ -395,6 +396,8 @@ namespace UDLib.Editor
             UDLib.Utility.CDebugOut.Log("结束 设置ab资源名字");
             UDLib.Utility.CDebugOut.Log("耗时：" + (endTime - startTime).TotalSeconds + "秒");
         }
+
+
 #if REFRENCE_MODE
          //设置引用模式下的ab名字
          private static void SetAssetBundleNamesReferenceMode(List<string> roots)
