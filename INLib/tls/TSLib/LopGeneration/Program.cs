@@ -260,6 +260,15 @@ namespace Proto2Code
             var proc5 = System.Diagnostics.Process.Start(ref5);
             proc5.WaitForExit();
 
+            string vsRefresh6 = dirRoot.FullName + "/TableOut/C++/DTLib/RefDTLibPrj.exe";
+            System.Diagnostics.ProcessStartInfo ref6 = new System.Diagnostics.ProcessStartInfo();
+            ref6.FileName = vsRefresh6;
+            ref6.UseShellExecute = false;
+            ref6.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/DTLib/";
+            var proc6 = System.Diagnostics.Process.Start(ref6);
+            proc6.WaitForExit();
+
             Console.WriteLine("按任意键继续...");
             Console.ReadKey();
             return 0;
