@@ -25,14 +25,15 @@
 #### UELib：基础UE4程序库，Unreal开发专用；
 
 ## 类库依赖
-#### LULib
 #### SCLib
+#### LULib
 #### CSLib -> UDLib
 #### BCLib -> CLLib
 #### BCLib -> GELib
 #### BCLib -> MWLib
 #### BCLib -> UELib
-#### BCLib -> SFLib -> PBLib -> PELib -> LTLib -> MSLib -> DTLib
+#### BCLib -> SFLib
+#### PBLib -> PELib -> LTLib -> MSLib -> DTLib
 
 ## 获取地址
 #### GIT ：https://github.com/lop-dev/lop-lib.git
