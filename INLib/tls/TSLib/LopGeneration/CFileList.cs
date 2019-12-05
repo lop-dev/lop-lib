@@ -273,10 +273,10 @@ namespace Proto2Code
                     string pybp = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Python/{0}_pb2.py", name);
 
                     //删除过滤文件里信息
-                    string pbLuaFilterLine = name + "System_pb.lua";
-                    string pbCsFilterLine = name + "System.pb.cs";
-                    string peLuaFilterLine = name + "System_pe.lua";
-                    string peCsFilterLine = name + "System_pb.pe.cs";
+                    string pbLuaFilterLine = name + "_pb.lua";
+                    string pbCsFilterLine = name + ".pb.cs";
+                    string peLuaFilterLine = name + "_pe.lua";
+                    string peCsFilterLine = name + ".pe.cs";
                     if (pbluaFileList.Remove(pbLuaFilterLine))
                     {
                         Console.WriteLine("filterFiles.pb.lua删除行：" + pbLuaFilterLine);
