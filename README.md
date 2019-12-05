@@ -11,6 +11,7 @@
 #### BCLib：基础 C++ 程序库，支持跨平台，多线程安全；
 #### CLLib：托管 C++ 程序库，主要用于工具开发；
 #### CSLib：基础 CSharp 程序库，基于 Mono 跨平台；
+#### DTLib：使用Lop工具导出的数据库任务代码，支持跨平台；
 #### GELib：自研图形引擎程序库，基于 DirectX 开发；
 #### LTLib：使用Lop工具导出的 luatinkere 代码库；
 #### LULib：基础 Lua 程序库，可以统一前后端逻辑开发；
@@ -22,6 +23,16 @@
 #### SFLib：服务器框架程序库，支持跨平台，多线程安全；
 #### UDLib：基础 Unity3D 程序库；
 #### UELib：基础 Unreal Engine 程序库；
+
+## 类库依赖
+#### LULib
+#### SCLib
+#### CSLib -> UDLib
+#### BCLib -> CLLib
+#### BCLib -> GELib
+#### BCLib -> MWLib
+#### BCLib -> UELib
+#### BCLib -> SFLib -> PBLib -> PELib -> LTLib -> MSLib -> DTLib
 
 ## 获取地址
 #### GIT ：https://github.com/lop-dev/lop-lib.git
