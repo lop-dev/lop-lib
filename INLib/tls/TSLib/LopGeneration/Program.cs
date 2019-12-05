@@ -203,6 +203,7 @@ namespace Proto2Code
             Console.WriteLine(argsStr);
             Execute(argsStr.Split(' '));
 
+            CFileList.Instance.ClearUnuseFile();
             if (EXPORT_ALL)
             {
                 Console.WriteLine("********** 生成 LuaCfg 文件 **********");
@@ -213,7 +214,6 @@ namespace Proto2Code
 
             //保存文件信息
             CFileList.Instance.SaveFileList();
-            CFileList.Instance.ClearUnuseFile();
 
             //拷贝到工程目录下
             CSyncFile.Instance.Copy2TableOut();

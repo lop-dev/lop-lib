@@ -121,6 +121,27 @@ namespace Proto2Code
 
         public void ClearUnuseFile()
         {
+
+            Console.WriteLine("刷新过滤文件");
+            string pbCsFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.pb.cs";
+            string pbLuaFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.pb.lua";
+            string peCsFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.pe.cs";
+            string peLuaFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.pe.lua";
+
+            List<string> pbCsFileList = new List<string>();
+            List<string> pbluaFileList = new List<string>();
+            List<string> peCsFileList = new List<string>();
+            List<string> peLuaFileList = new List<string>();
+
+            pbCsFileList.AddRange(File.ReadAllLines(pbCsFilter));
+            pbluaFileList.AddRange(File.ReadAllLines(pbLuaFilter));
+            peCsFileList.AddRange(File.ReadAllLines(peCsFilter));
+            peLuaFileList.AddRange(File.ReadAllLines(peLuaFilter));
+            File.Delete(pbCsFilter);
+            File.Delete(pbLuaFilter);
+            File.Delete(peCsFilter);
+            File.Delete(peLuaFilter);
+            #region
             foreach (var v in m_dicFileList)
             {
                 if (v.Value.type != EFileType.Deleted)
@@ -134,7 +155,6 @@ namespace Proto2Code
                     //删掉proto,pe,txt,dbg文件
                     Console.WriteLine("删除" + v.Key + "生成的残留文件");
                     string name = GetFileNameAndFirstCharToLower(v.Key);
-
                     string proto = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/{0}.proto", name);
                     string cspe = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C#/{0}.pe.cs", name);
                     string ccpeh = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.pe.h", name);
@@ -150,6 +170,29 @@ namespace Proto2Code
                     string ccpbcc = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.cc", name);
                     string luapb = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Lua/{0}_pb.lua", name);
                     string pybp = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Python/{0}_pb2.py", name);
+
+                    //删除过滤文件里信息
+                    string pbLuaFilterLine = name + "_pb.lua";
+                    string pbCsFilterLine = name + ".pb.cs";
+                    string peLuaFilterLine = name + "_pe.lua";
+                    string peCsFilterLine = name + ".pe.cs";
+                    
+                    if(pbluaFileList.Remove(pbLuaFilterLine))
+                    {
+                        Console.WriteLine("filterFiles.pb.lua删除行："+ pbLuaFilterLine);
+                    }
+                    if (pbCsFileList.Remove(pbCsFilterLine))
+                    {
+                        Console.WriteLine("filterFiles.pb.cs删除行："+ pbCsFilterLine);
+                    }
+                    if(peLuaFileList.Remove(peLuaFilterLine))
+                    {
+                        Console.WriteLine("filterFiles.pe.cs删除行："+ peLuaFilterLine);
+                    }
+                    if(peCsFileList.Remove(peCsFilterLine))
+                    {
+                        Console.WriteLine("filterFiles.pe.lua删除行：" + peCsFilterLine);
+                    }
 
                     if (File.Exists(proto))
                     {
@@ -191,6 +234,7 @@ namespace Proto2Code
                         Console.WriteLine("删除" + dbg);
                         File.Delete(dbg);
                     }
+
                     if (File.Exists(cspb))
                     {
                         Console.WriteLine("删除" + cspb);
@@ -222,12 +266,33 @@ namespace Proto2Code
                     //删掉proto,pe,txt,dbg文件
                     Console.WriteLine("删除" + v.Key + "生成的残留文件");
                     string name = GetFileNameAndFirstCharToLower(v.Key);
-
                     string cspb = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C#/{0}.pb.cs", name);
                     string ccpbh = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.h", name);
                     string ccpbcc = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.cc", name);
                     string luapb = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Lua/{0}_pb.lua", name);
                     string pybp = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Python/{0}_pb2.py", name);
+
+                    //删除过滤文件里信息
+                    string pbLuaFilterLine = name + "System_pb.lua";
+                    string pbCsFilterLine = name + "System.pb.cs";
+                    string peLuaFilterLine = name + "System_pe.lua";
+                    string peCsFilterLine = name + "System_pb.pe.cs";
+                    if (pbluaFileList.Remove(pbLuaFilterLine))
+                    {
+                        Console.WriteLine("filterFiles.pb.lua删除行：" + pbLuaFilterLine);
+                    }
+                    if (pbCsFileList.Remove(pbCsFilterLine))
+                    {
+                        Console.WriteLine("filterFiles.pb.cs删除行：" + pbCsFilterLine);
+                    }
+                    if (peLuaFileList.Remove(peLuaFilterLine))
+                    {
+                        Console.WriteLine("filterFiles.pe.cs删除行：" + peLuaFilterLine);
+                    }
+                    if (peCsFileList.Remove(peCsFilterLine))
+                    {
+                        Console.WriteLine("filterFiles.pe.lua删除行：" + peCsFilterLine);
+                    }
 
                     if (File.Exists(cspb))
                     {
@@ -256,6 +321,45 @@ namespace Proto2Code
                     }
                 }
             }
+            #endregion
+            
+            var utf8WithBom = new UTF8Encoding(true);
+
+            FileStream fileStream1 = new FileStream(pbCsFilter, FileMode.Create);
+            StreamWriter sw1 = new StreamWriter(fileStream1, utf8WithBom);
+            foreach(var line in pbCsFileList)
+            {
+                sw1.WriteLine(line);
+            }
+            sw1.Close();
+            fileStream1.Close();
+
+            FileStream fileStream2 = new FileStream(pbLuaFilter, FileMode.Create);
+            StreamWriter sw2 = new StreamWriter(fileStream2, utf8WithBom);
+            foreach (var line in pbluaFileList)
+            {
+                sw2.WriteLine(line);
+            }
+            sw2.Close();
+            fileStream2.Close();
+
+            FileStream fileStream3 = new FileStream(peCsFilter, FileMode.Create);
+            StreamWriter sw3 = new StreamWriter(fileStream3, utf8WithBom);
+            foreach (var line in peCsFileList)
+            {
+                sw3.WriteLine(line);
+            }
+            sw3.Close();
+            fileStream3.Close();
+
+            FileStream fileStream4 = new FileStream(peLuaFilter, FileMode.Create);
+            StreamWriter sw4 = new StreamWriter(fileStream4, utf8WithBom);
+            foreach (var line in peLuaFileList)
+            {
+                sw4.WriteLine(line);
+            }
+            sw4.Close();
+            fileStream4.Close();
         }
 
         /// <summary>
