@@ -161,6 +161,8 @@ namespace Proto2Code
                     string ccpecc = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.pe.cc", name);
                     string gope = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/GO/{0}.pe.go", name);
                     string luape = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/Lua/{0}_pe.go", name);
+                    string cclth = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.lt.h", name);
+                    string ccltcc = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.lt.cc", name);
 
                     string txt = m_strRootDirectory + string.Format("/TableOut/Temp/3_Protobin/{0}.txt", name);
                     string dbg = m_strRootDirectory + string.Format("/TableOut/Temp/3_Protobin/{0}.txt.dbg", name);
@@ -213,6 +215,16 @@ namespace Proto2Code
                     {
                         Console.WriteLine("删除" + ccpecc);
                         File.Delete(ccpecc);
+                    }
+                    if(File.Exists(ccltcc))
+                    {
+                        Console.WriteLine("删除" + ccltcc);
+                        File.Delete(ccltcc);
+                    }
+                    if(File.Exists(cclth))
+                    {
+                        Console.WriteLine("删除" + cclth);
+                        File.Delete(cclth);
                     }
                     if (File.Exists(gope))
                     {
@@ -271,6 +283,8 @@ namespace Proto2Code
                     string ccpbcc = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.cc", name);
                     string luapb = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Lua/{0}_pb.lua", name);
                     string pybp = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Python/{0}_pb2.py", name);
+                    string cclth = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.lt.h", name);
+                    string ccltcc = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.lt.cc", name);
 
                     //删除过滤文件里信息
                     string pbLuaFilterLine = name + "_pb.lua";
@@ -308,6 +322,16 @@ namespace Proto2Code
                     {
                         Console.WriteLine("删除" + ccpbcc);
                         File.Delete(ccpbcc);
+                    }
+                    if (File.Exists(ccltcc))
+                    {
+                        Console.WriteLine("删除" + ccltcc);
+                        File.Delete(ccltcc);
+                    }
+                    if (File.Exists(cclth))
+                    {
+                        Console.WriteLine("删除" + cclth);
+                        File.Delete(cclth);
                     }
                     if (File.Exists(luapb))
                     {
