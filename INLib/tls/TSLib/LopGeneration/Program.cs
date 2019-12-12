@@ -13,6 +13,8 @@ namespace Proto2Code
             DES, // 默认就导出数据的二进制
             PRO,
             CPP,
+            CSP,
+            LUA,
         }
         static public EExportType ExportType = EExportType.ALL;
 
@@ -39,7 +41,22 @@ namespace Proto2Code
                 else if (args[0] == "PRO")
                 {
                     ExportType = EExportType.PRO;
-                    CFileList.Instance.m_strFileList = dirRoot.FullName + @".\TableOut\Temp\FileList.pro";
+                    CFileList.Instance.m_strFileList = dirRoot.FullName + @".\FileList.pro";
+                }
+                else if (args[0] == "CPP")
+                {
+                    ExportType = EExportType.CPP;
+                    CFileList.Instance.m_strFileList = dirRoot.FullName + @".\FileList.cpp";
+                }
+                else if (args[0] == "CSP")
+                {
+                    ExportType = EExportType.CSP;
+                    CFileList.Instance.m_strFileList = dirRoot.FullName + @".\FileList.csp";
+                }
+                else if (args[0] == "LUA")
+                {
+                    ExportType = EExportType.LUA;
+                    CFileList.Instance.m_strFileList = dirRoot.FullName + @".\FileList.lua";
                 }
             }
 
@@ -69,7 +86,7 @@ namespace Proto2Code
             if (!desDir1.Exists) desDir1.Create();
 
             //
-            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO)
+            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP || ExportType == EExportType.CSP || ExportType == EExportType.LUA)
             {
                 Console.WriteLine("********** 拷贝 *.proto 文件 **********");
                 List<string> protoList = new List<string>(); // 所有的proto文件
@@ -128,9 +145,8 @@ namespace Proto2Code
             CFileList.Instance.ReadFileList();
 
             //
-            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO)
+            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP || ExportType == EExportType.CSP || ExportType == EExportType.LUA)
             {
-                Console.WriteLine("********** 生成 *.proto 和 *.pe 文件 **********");
                 string csPeDir = @".\TableOut\Temp\1_Protoext\C#";
                 string ccPeDir = @".\TableOut\Temp\1_Protoext\C++";
                 string goPeDir = @".\TableOut\Temp\1_Protoext\GO";
@@ -142,6 +158,7 @@ namespace Proto2Code
                 if (!Directory.Exists(luaPeDir)) Directory.CreateDirectory(luaPeDir);
 
                 Thread.Sleep(1000); // 不等待一下，有可能报 proto 文件锁住
+                Console.WriteLine("********** 生成 *.proto 和 *.pe 文件 **********");
 
                 argsStr = @"-GenType=Enum -DataFile=.\DesTable\DataTable\GlobalTable.xlsx -OutputFile=.\TableOut\Temp\1_Protoext\globalEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Description";
                 Console.WriteLine(argsStr);
@@ -180,35 +197,46 @@ namespace Proto2Code
                 Execute(argsStr.Split(' '));
             }
 
-            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO)
-            {
-                Environment.CurrentDirectory = desDir1.FullName;
-                CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
+            //
+            Environment.CurrentDirectory = desDir1.FullName;
+            CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
+            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP)
+            {
                 Console.WriteLine("********** 生成 C++ 的 *.pb 文件 **********");
                 argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=C++";
                 Console.WriteLine(argsStr);
                 Execute(argsStr.Split(' '));
+            }
 
+            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CSP)
+            {
                 Console.WriteLine("********** 生成 C# 的 *.pb 文件 **********");
                 argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=C#";
                 Console.WriteLine(argsStr);
                 Execute(argsStr.Split(' '), true);
+            }
 
+            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.LUA)
+            {
                 Console.WriteLine("********** 生成 Lua 的 *.pb 文件 **********");
                 argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=Lua";
                 Console.WriteLine(argsStr);
                 Execute(argsStr.Split(' '));
+            }
 
+            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO)
+            {
                 Console.WriteLine("********** 生成 Python 的 *.pb 文件 **********");
                 argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=Python";
                 Console.WriteLine(argsStr);
                 Execute(argsStr.Split(' '));
-
-                Environment.CurrentDirectory = dirRoot.FullName;
-                CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
             }
 
+            Environment.CurrentDirectory = dirRoot.FullName;
+            CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
+
+            //
             if (ExportType == EExportType.ALL || ExportType == EExportType.DES)
             {
                 Console.WriteLine("********** 生成 *.bin 文件 **********");
@@ -225,13 +253,24 @@ namespace Proto2Code
             }
 
             //
-            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO)
+            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP || ExportType == EExportType.CSP || ExportType == EExportType.LUA)
             {
                 Console.WriteLine("********** 生成 Msg 文件 **********");
-                argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_lua_cs";
+                argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_cs_lua";
                 Console.WriteLine(argsStr);
                 Execute(argsStr.Split(' '));
+            }
+            else if (ExportType == EExportType.CPP)
+            {
+                Console.WriteLine("********** 生成 Msg 文件 **********");
+                argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp";
+                Console.WriteLine(argsStr);
+                Execute(argsStr.Split(' '));
+            }
 
+            //
+            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP)
+            {
                 Console.WriteLine("********** 生成 Task 文件 **********");
                 argsStr = @"-GenType=Task -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\5_Prototask\ -Language=cpp";
                 Console.WriteLine(argsStr);
@@ -241,7 +280,7 @@ namespace Proto2Code
             //
             CFileList.Instance.ClearUnuseFile();
 
-            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO)
+            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.LUA)
             {
                 Console.WriteLine("********** 生成 LuaCfg 文件 **********");
                 argsStr = @"-GenType=LuaConfig -DataPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Lua\Generate\Parser\";
@@ -255,13 +294,16 @@ namespace Proto2Code
             //拷贝到工程目录下
             CSyncFile.Instance.Copy2TableOut();
 
-            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO)
+            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.LUA)
             {
                 //自动生成lua.pb和config文件的require()到configFiles文件
                 string path = ".\\TableOut\\Lua\\Generate\\";
                 TSLib.ProtoGeneration.CGenerateLuaConfigFiles luaConfig = new TSLib.ProtoGeneration.CGenerateLuaConfigFiles(path);
                 luaConfig.TransConfig();
+            }
 
+            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP)
+            {
                 Console.WriteLine("刷新VS工程文件");
                 string vsRefresh2 = dirRoot.FullName + "/TableOut/C++/LTLib/RefLTLibPrj.exe";
                 System.Diagnostics.ProcessStartInfo ref2 = new System.Diagnostics.ProcessStartInfo();

@@ -121,8 +121,6 @@ namespace Proto2Code
 
         public void ClearUnuseFile()
         {
-
-            Console.WriteLine("刷新过滤文件");
             string pbCsFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.pb.cs";
             string pbLuaFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.pb.lua";
             string peCsFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.pe.cs";
