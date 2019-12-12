@@ -18,18 +18,6 @@ namespace Proto2Code
 
         static int Main(string[] args)
         {
-            if(args.Length == 1)
-            {
-                if (args[0] == "DES")
-                {
-                    ExportType = EExportType.DES;
-                }
-                else if (args[0] == "PRO")
-                {
-                    ExportType = EExportType.PRO;
-                }
-            }
-
             // 设置默认的工作路径
             string strMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
             FileInfo fiMainModule = new FileInfo(strMainModule);
@@ -40,11 +28,23 @@ namespace Proto2Code
             CFileList.Instance.RootDirectory = Environment.CurrentDirectory;
             CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
-            CFileList.Instance.m_strFileList = dirRoot.FullName + @".\TableOut\Temp\FileList.txt";
+            //
+            if (args.Length == 1)
+            {
+                if (args[0] == "DES")
+                {
+                    ExportType = EExportType.DES;
+                    CFileList.Instance.m_strFileList = dirRoot.FullName + @".\TableOut\Temp\FileList.des";
+                }
+                else if (args[0] == "PRO")
+                {
+                    ExportType = EExportType.PRO;
+                    CFileList.Instance.m_strFileList = dirRoot.FullName + @".\TableOut\Temp\FileList.pro";
+                }
+            }
 
             //
-            //if (ExportType == EExportType.ALL || ExportType == EExportType.DES)
-            if (ExportType == EExportType.DES)
+            if (ExportType == EExportType.ALL || ExportType == EExportType.DES)
             {
                 Console.WriteLine("********** 检查数据表 **********");
                 string dataTableCheckExe = dirRoot.FullName + "/DesTable/DataTableCheck/DataTableCheck.exe";
@@ -65,21 +65,16 @@ namespace Proto2Code
             }
 
             //
-            DirectoryInfo exeDir1 = new DirectoryInfo(@".\TableGen\01_LopGeneration\");
-            DirectoryInfo srcDir1 = new DirectoryInfo(@".\TableGen\10_ProtobufDef\");
-            DirectoryInfo srcDir2 = new DirectoryInfo(@".\TableGen\11_ProtobufClt\");
             DirectoryInfo desDir1 = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
-
-            if (!desDir1.Exists)
-            {
-                desDir1.Create();
-            }
+            if (!desDir1.Exists) desDir1.Create();
 
             //
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO)
             {
                 Console.WriteLine("********** 拷贝 *.proto 文件 **********");
                 List<string> protoList = new List<string>(); // 所有的proto文件
+
+                DirectoryInfo srcDir1 = new DirectoryInfo(@".\TableGen\10_ProtobufDef\");
                 if (srcDir1.Exists)
                 {
                     Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir1.FullName, desDir1.FullName));
@@ -92,6 +87,7 @@ namespace Proto2Code
                     }
                 }
 
+                DirectoryInfo srcDir2 = new DirectoryInfo(@".\TableGen\11_ProtobufClt\");
                 if (srcDir2.Exists)
                 {
                     Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir2.FullName, desDir1.FullName));
@@ -129,11 +125,9 @@ namespace Proto2Code
             }
 
             // 
-            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO)
-            {
-                CFileList.Instance.ReadFileList();
-            }
+            CFileList.Instance.ReadFileList();
 
+            //
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO)
             {
                 Console.WriteLine("********** 生成 *.proto 和 *.pe 文件 **********");
@@ -188,22 +182,25 @@ namespace Proto2Code
 
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO)
             {
-                Console.WriteLine("********** 生成 *.pb 文件 **********");
                 Environment.CurrentDirectory = desDir1.FullName;
                 CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
+                Console.WriteLine("********** 生成 C++ 的 *.pb 文件 **********");
                 argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=C++";
                 Console.WriteLine(argsStr);
                 Execute(argsStr.Split(' '));
 
+                Console.WriteLine("********** 生成 C# 的 *.pb 文件 **********");
                 argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=C#";
                 Console.WriteLine(argsStr);
                 Execute(argsStr.Split(' '), true);
 
+                Console.WriteLine("********** 生成 Lua 的 *.pb 文件 **********");
                 argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=Lua";
                 Console.WriteLine(argsStr);
                 Execute(argsStr.Split(' '));
 
+                Console.WriteLine("********** 生成 Python 的 *.pb 文件 **********");
                 argsStr = @"-GenType=Pbsrc -ProtoPath=.\ -OutputPath=..\2_Protobuf\ -Language=Python";
                 Console.WriteLine(argsStr);
                 Execute(argsStr.Split(' '));
@@ -215,6 +212,7 @@ namespace Proto2Code
             if (ExportType == EExportType.ALL || ExportType == EExportType.DES)
             {
                 Console.WriteLine("********** 生成 *.bin 文件 **********");
+                DirectoryInfo exeDir1 = new DirectoryInfo(@".\TableGen\01_LopGeneration\");
                 Environment.CurrentDirectory = exeDir1.FullName; // 因为要找 cspProtobuf.dll 文件
                 CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
@@ -240,10 +238,8 @@ namespace Proto2Code
                 Execute(argsStr.Split(' '));
             }
 
-            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO)
-            {
-                CFileList.Instance.ClearUnuseFile();
-            }
+            //
+            CFileList.Instance.ClearUnuseFile();
 
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO)
             {
@@ -253,11 +249,8 @@ namespace Proto2Code
                 Execute(argsStr.Split(' '));
             }
 
-            //保存文件信息
-            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO)
-            {
-                CFileList.Instance.SaveFileList();
-            }
+            //
+            CFileList.Instance.SaveFileList();
 
             //拷贝到工程目录下
             CSyncFile.Instance.Copy2TableOut();

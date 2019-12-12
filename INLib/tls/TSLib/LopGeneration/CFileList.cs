@@ -468,7 +468,7 @@ namespace Proto2Code
             return temp.Substring(0,temp.IndexOf('.'));
         }
 
-        public string m_strFileList = @".\TableOut\Temp\FileList.txt";
+        public string m_strFileList = @".\TableOut\Temp\FileList.all";
         private Dictionary<string, CFileInfo> m_dicFileList = new Dictionary<string, CFileInfo>();
     }
 }
