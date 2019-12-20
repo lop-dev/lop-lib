@@ -282,7 +282,7 @@ namespace Proto2Code
 
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.LUA)
             {
-                Console.WriteLine("********** 生成 LuaCfg 文件 **********");
+                Console.WriteLine("********** 生成 LuaCfg(Parser) 文件 **********");
                 argsStr = @"-GenType=LuaConfig -DataPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Lua\Generate\Parser\";
                 Console.WriteLine(argsStr);
                 Execute(argsStr.Split(' '));
@@ -296,7 +296,7 @@ namespace Proto2Code
 
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.LUA)
             {
-                //自动生成lua.pb和config文件的require()到configFiles文件
+                Console.WriteLine("********** 生成 ConfigFiles.lua 文件 **********");
                 string path = ".\\TableOut\\Lua\\Generate\\";
                 TSLib.ProtoGeneration.CGenerateLuaConfigFiles luaConfig = new TSLib.ProtoGeneration.CGenerateLuaConfigFiles(path);
                 luaConfig.TransConfig();
@@ -304,46 +304,47 @@ namespace Proto2Code
 
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP)
             {
-                Console.WriteLine("刷新VS工程文件");
-                string vsRefresh2 = dirRoot.FullName + "/TableOut/C++/LTLib/RefLTLibPrj.exe";
-                System.Diagnostics.ProcessStartInfo ref2 = new System.Diagnostics.ProcessStartInfo();
-                ref2.FileName = vsRefresh2;
-                ref2.UseShellExecute = false;
-                ref2.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/LTLib/";
-                var proc2 = System.Diagnostics.Process.Start(ref2);
-                proc2.WaitForExit();
+                Console.WriteLine("********** 刷新VS工程文件 **********");
 
-                string vsRefresh3 = dirRoot.FullName + "/TableOut/C++/MSLib/RefMSLibPrj.exe";
-                System.Diagnostics.ProcessStartInfo ref3 = new System.Diagnostics.ProcessStartInfo();
-                ref3.FileName = vsRefresh3;
-                ref3.UseShellExecute = false;
-                ref3.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/MSLib/";
-                var proc3 = System.Diagnostics.Process.Start(ref3);
-                proc3.WaitForExit();
-
-                string vsRefresh4 = dirRoot.FullName + "/TableOut/C++/PBLib/RefPBLibPrj.exe";
+                string vsRefresh1 = dirRoot.FullName + "/TableOut/C++/PBLib/RefPBLibPrj.exe";
                 System.Diagnostics.ProcessStartInfo ref4 = new System.Diagnostics.ProcessStartInfo();
-                ref4.FileName = vsRefresh4;
+                ref4.FileName = vsRefresh1;
                 ref4.UseShellExecute = false;
                 ref4.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/PBLib/";
                 var proc4 = System.Diagnostics.Process.Start(ref4);
                 proc4.WaitForExit();
 
-                string vsRefresh5 = dirRoot.FullName + "/TableOut/C++/PELib/RefPELibPrj.exe";
+                string vsRefresh2 = dirRoot.FullName + "/TableOut/C++/PELib/RefPELibPrj.exe";
                 System.Diagnostics.ProcessStartInfo ref5 = new System.Diagnostics.ProcessStartInfo();
-                ref5.FileName = vsRefresh5;
+                ref5.FileName = vsRefresh2;
                 ref5.UseShellExecute = false;
                 ref5.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/PELib/";
                 var proc5 = System.Diagnostics.Process.Start(ref5);
                 proc5.WaitForExit();
 
-                string vsRefresh6 = dirRoot.FullName + "/TableOut/C++/DTLib/RefDTLibPrj.exe";
+                string vsRefresh3 = dirRoot.FullName + "/TableOut/C++/LTLib/RefLTLibPrj.exe";
+                System.Diagnostics.ProcessStartInfo ref2 = new System.Diagnostics.ProcessStartInfo();
+                ref2.FileName = vsRefresh3;
+                ref2.UseShellExecute = false;
+                ref2.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/LTLib/";
+                var proc2 = System.Diagnostics.Process.Start(ref2);
+                proc2.WaitForExit();
+
+                string vsRefresh4 = dirRoot.FullName + "/TableOut/C++/MSLib/RefMSLibPrj.exe";
+                System.Diagnostics.ProcessStartInfo ref3 = new System.Diagnostics.ProcessStartInfo();
+                ref3.FileName = vsRefresh4;
+                ref3.UseShellExecute = false;
+                ref3.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/MSLib/";
+                var proc3 = System.Diagnostics.Process.Start(ref3);
+                proc3.WaitForExit();
+
+                string vsRefresh5 = dirRoot.FullName + "/TableOut/C++/DTLib/RefDTLibPrj.exe";
                 System.Diagnostics.ProcessStartInfo ref6 = new System.Diagnostics.ProcessStartInfo();
-                ref6.FileName = vsRefresh6;
+                ref6.FileName = vsRefresh5;
                 ref6.UseShellExecute = false;
                 ref6.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/DTLib/";
