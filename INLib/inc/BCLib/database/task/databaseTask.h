@@ -12,6 +12,7 @@
 #include <BCLib/framework/serviceID.h>
 #include <BCLib/utility/string.h>
 #include <BCLib/utility/hashMap.h>
+#include <BCLib/utility/spointer.h>
 
 namespace BCLib
 {
@@ -144,6 +145,7 @@ protected:
 	}
 	
 #define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ExecuteNonQuery														\
+	BCLIB_LOG_DEBUG(BCLib::ELOGMODULE_DEFAULT, "sqlSentence : [%s:%s][%s]", strDBName.c_str(), strTBName.c_str(), sqlSentence.str().c_str());	\
 	if (!pConnection->executeNonQuery(sqlSentence.str().c_str()))													\
 	{																												\
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "executeNonQuery : %s", pConnection->getErrorString().c_str());	\
