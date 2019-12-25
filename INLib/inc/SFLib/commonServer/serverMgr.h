@@ -32,6 +32,8 @@ public:
 
     void setLogicServerList(const SFLib::Message::SMsgMS2XSNtfLogicServerList* msg, int msgSize);
     void setExternalServerList(const SFLib::Message::SMsgMS2XSNtfExternalServerList* msg, int msgSize);
+
+    std::vector<SFLib::Message::SServerInfo> getLogicServerList();
     std::vector<SFLib::Message::SServerInfo> getExternalServerList();
 
     void setNetSendByClient(ServerID serverID);
@@ -39,9 +41,6 @@ public:
     bool isSetNetSend(ServerID serverID);
 
     bool getServerInfo(ServerID serverID, SFLib::Message::SServerInfo& serverInfo);
-
-    //int getServerIDs(EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive = false);
-    //SFLib::ServerID randomServerID(ServerType serverType, bool bActive = false);
 
     //
     int getLogicServerIDs(BCLib::uint64 groupID, EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive = false);

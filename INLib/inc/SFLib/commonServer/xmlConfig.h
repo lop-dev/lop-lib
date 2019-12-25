@@ -45,6 +45,8 @@ struct SServerInfo
     void setServerInfo(SFLib::CommonServer::SServerInfo serverInfo);
     void getServerInfo(SFLib::CommonServer::SServerInfo& serverInfo);
 
+    void setServerInfoForReload(SFLib::CommonServer::SServerInfo serverInfo);
+
     GroupID m_groupID;
 	ServerID m_serverID;
 	EServerType m_serverType;
@@ -189,8 +191,8 @@ public:
     bool getLogicServerAcceptInfo(ServerID serverID, SFLib::Message::SServerAcceptInfo& acceptInfo);
 	bool getExternalServerAcceptInfo(ServerID serverID, SFLib::Message::SServerAcceptInfo& acceptInfo);
 
-    void sendLogicServerListToStub(CTcpStub* masterStub, GroupID groupID = 0);
-    void sendExternalServerListToStub(CTcpStub* masterStub);
+    void sendLogicServerListToStub(CTcpStub* tcpStub, GroupID groupID = 0);
+    void sendExternalServerListToStub(CTcpStub* tcpStub);
 
     void notifyAlreadyActiveStubsAll();
     void notifyAlreadyInitedStubsAll();
