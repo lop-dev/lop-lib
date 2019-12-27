@@ -9,7 +9,7 @@ namespace Proto2Code
     {
         Deleted,    //已被删除
         New,        //新文件或被修改过
-        UnModified,   //未被修改
+        UnModified, //未被修改
     }
 
     class CFileInfo
@@ -119,26 +119,39 @@ namespace Proto2Code
             writer.Close();
         }
 
+        /// <summary>
+        /// 清理无用文件
+        /// </summary>
         public void ClearUnuseFile()
         {
             string pbCsFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.pb.cs";
             string pbLuaFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.pb.lua";
             string peCsFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.pe.cs";
             string peLuaFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.pe.lua";
+            string ltHFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.lt.h";
+            string ltCcFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.lt.cc";
 
             List<string> pbCsFileList = new List<string>();
             List<string> pbluaFileList = new List<string>();
             List<string> peCsFileList = new List<string>();
             List<string> peLuaFileList = new List<string>();
+            List<string> ltHFileList = new List<string>();
+            List<string> ltCcFileList = new List<string>();
 
             pbCsFileList.AddRange(File.ReadAllLines(pbCsFilter));
             pbluaFileList.AddRange(File.ReadAllLines(pbLuaFilter));
             peCsFileList.AddRange(File.ReadAllLines(peCsFilter));
             peLuaFileList.AddRange(File.ReadAllLines(peLuaFilter));
+            ltHFileList.AddRange(File.ReadAllLines(ltHFilter));
+            ltCcFileList.AddRange(File.ReadAllLines(ltCcFilter));
+
             File.Delete(pbCsFilter);
             File.Delete(pbLuaFilter);
             File.Delete(peCsFilter);
             File.Delete(peLuaFilter);
+            File.Delete(ltHFilter);
+            File.Delete(ltCcFilter);
+
             #region
             foreach (var v in m_dicFileList)
             {
@@ -147,12 +160,28 @@ namespace Proto2Code
                     continue;
                 }
 
-                //残留的生成文件要删掉，先写死。
+                // 残留的生成文件要删掉，先写死。
                 if (v.Key.EndsWith(".xlsx"))
                 {
-                    //删掉proto,pe,txt,dbg文件
                     Console.WriteLine("删除" + v.Key + "生成的残留文件");
-                    string name = GetFileNameAndFirstCharToLower(v.Key);
+                    string name = _GetFileNameAndFirstCharToLower(v.Key);
+
+                    // 删除过滤文件里信息
+                    string pbLuaFilterLine = name + "_pb.lua";
+                    string pbCsFilterLine = name + ".pb.cs";
+                    string peLuaFilterLine = name + "_pe.lua";
+                    string peCsFilterLine = name + ".pe.cs";
+                    string ltHFilterLine = name + ".lt.h";
+                    string ltCcFilterLine = name + ".lt.cc";
+
+                    if (pbluaFileList.Remove(pbLuaFilterLine)) { Console.WriteLine("filterFiles.pb.lua删除行："+ pbLuaFilterLine); }
+                    if (pbCsFileList.Remove(pbCsFilterLine)) { Console.WriteLine("filterFiles.pb.cs删除行："+ pbCsFilterLine); }
+                    if (peLuaFileList.Remove(peLuaFilterLine)) { Console.WriteLine("filterFiles.pe.cs删除行："+ peLuaFilterLine); }
+                    if (peCsFileList.Remove(peCsFilterLine)) { Console.WriteLine("filterFiles.pe.lua删除行：" + peCsFilterLine); }
+                    if (peCsFileList.Remove(ltHFilterLine)) { Console.WriteLine("filterFiles.lt.h删除行：" + ltHFilterLine); }
+                    if (peCsFileList.Remove(ltCcFilterLine)) { Console.WriteLine("filterFiles.lt.cc删除行：" + ltCcFilterLine); }
+
+                    // 删除生成的PE文件
                     string proto = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/{0}.proto", name);
                     string cspe = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C#/{0}.pe.cs", name);
                     string ccpeh = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.pe.h", name);
@@ -162,120 +191,57 @@ namespace Proto2Code
                     string cclth = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.lt.h", name);
                     string ccltcc = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.lt.cc", name);
 
-                    string txt = m_strRootDirectory + string.Format("/TableOut/Temp/3_Protobin/{0}.txt", name);
-                    string dbg = m_strRootDirectory + string.Format("/TableOut/Temp/3_Protobin/{0}.txt.dbg", name);
+                    if (File.Exists(proto)) { Console.WriteLine("删除" + proto); File.Delete(proto); }
+                    if (File.Exists(cspe)) { Console.WriteLine("删除" + cspe); File.Delete(cspe); }
+                    if (File.Exists(ccpeh)) { Console.WriteLine("删除" + ccpeh); File.Delete(ccpeh); }
+                    if (File.Exists(ccpecc)) { Console.WriteLine("删除" + ccpecc); File.Delete(ccpecc); }
+                    if (File.Exists(ccltcc)) { Console.WriteLine("删除" + ccltcc); File.Delete(ccltcc); }
+                    if (File.Exists(cclth)) { Console.WriteLine("删除" + cclth); File.Delete(cclth); }
+                    if (File.Exists(gope)) { Console.WriteLine("删除" + gope); File.Delete(gope); }
+                    if (File.Exists(luape)) { Console.WriteLine("删除" + luape); File.Delete(luape); }
 
+                    // 删除生成的PB文件
                     string cspb = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C#/{0}.pb.cs", name);
                     string ccpbh = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.h", name);
                     string ccpbcc = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.cc", name);
                     string luapb = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Lua/{0}_pb.lua", name);
                     string pybp = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/Python/{0}_pb2.py", name);
 
-                    //删除过滤文件里信息
+                    if (File.Exists(cspb)) { Console.WriteLine("删除" + cspb); File.Delete(cspb); }
+                    if (File.Exists(ccpbh)) { Console.WriteLine("删除" + ccpbh); File.Delete(ccpbh); }
+                    if (File.Exists(ccpbcc)) { Console.WriteLine("删除" + ccpbcc); File.Delete(ccpbcc); }
+                    if (File.Exists(luapb)) { Console.WriteLine("删除" + luapb); File.Delete(luapb); }
+                    if (File.Exists(pybp)) { Console.WriteLine("删除" + pybp); File.Delete(pybp); }
+
+                    // 删除生成的二进制文件
+                    string txt = m_strRootDirectory + string.Format("/TableOut/Temp/3_Protobin/{0}.txt", name);
+                    string dbg = m_strRootDirectory + string.Format("/TableOut/Temp/3_Protobin/{0}.txt.dbg", name);
+
+                    if (File.Exists(txt)) { Console.WriteLine("删除" + txt); File.Delete(txt); }
+                    if (File.Exists(dbg)) { Console.WriteLine("删除" + dbg); File.Delete(dbg); }
+                }
+
+                if (v.Key.EndsWith(".proto"))
+                {
+                    Console.WriteLine("删除" + v.Key + "生成的残留文件");
+                    string name = _GetFileNameAndFirstCharToLower(v.Key);
+
+                    // 删除过滤文件里信息
                     string pbLuaFilterLine = name + "_pb.lua";
                     string pbCsFilterLine = name + ".pb.cs";
                     string peLuaFilterLine = name + "_pe.lua";
                     string peCsFilterLine = name + ".pe.cs";
-                    
-                    if(pbluaFileList.Remove(pbLuaFilterLine))
-                    {
-                        Console.WriteLine("filterFiles.pb.lua删除行："+ pbLuaFilterLine);
-                    }
-                    if (pbCsFileList.Remove(pbCsFilterLine))
-                    {
-                        Console.WriteLine("filterFiles.pb.cs删除行："+ pbCsFilterLine);
-                    }
-                    if(peLuaFileList.Remove(peLuaFilterLine))
-                    {
-                        Console.WriteLine("filterFiles.pe.cs删除行："+ peLuaFilterLine);
-                    }
-                    if(peCsFileList.Remove(peCsFilterLine))
-                    {
-                        Console.WriteLine("filterFiles.pe.lua删除行：" + peCsFilterLine);
-                    }
+                    string ltHFilterLine = name + ".lt.h";
+                    string ltCcFilterLine = name + ".lt.cc";
 
-                    if (File.Exists(proto))
-                    {
-                        Console.WriteLine("删除" + proto);
-                        File.Delete(proto);
-                    }
-                    if (File.Exists(cspe))
-                    {
-                        Console.WriteLine("删除" + cspe);
-                        File.Delete(cspe);
-                    }
-                    if (File.Exists(ccpeh))
-                    {
-                        Console.WriteLine("删除" + ccpeh);
-                        File.Delete(ccpeh);
-                    }
-                    if (File.Exists(ccpecc))
-                    {
-                        Console.WriteLine("删除" + ccpecc);
-                        File.Delete(ccpecc);
-                    }
-                    if(File.Exists(ccltcc))
-                    {
-                        Console.WriteLine("删除" + ccltcc);
-                        File.Delete(ccltcc);
-                    }
-                    if(File.Exists(cclth))
-                    {
-                        Console.WriteLine("删除" + cclth);
-                        File.Delete(cclth);
-                    }
-                    if (File.Exists(gope))
-                    {
-                        Console.WriteLine("删除" + gope);
-                        File.Delete(gope);
-                    }
-                    if (File.Exists(luape))
-                    {
-                        Console.WriteLine("删除" + luape);
-                        File.Delete(luape);
-                    }
-                    if (File.Exists(txt))
-                    {
-                        Console.WriteLine("删除" + txt);
-                        File.Delete(txt);
-                    }
-                    if (File.Exists(dbg))
-                    {
-                        Console.WriteLine("删除" + dbg);
-                        File.Delete(dbg);
-                    }
+                    if (pbluaFileList.Remove(pbLuaFilterLine)) { Console.WriteLine("filterFiles.pb.lua删除行：" + pbLuaFilterLine); }
+                    if (pbCsFileList.Remove(pbCsFilterLine)) { Console.WriteLine("filterFiles.pb.cs删除行：" + pbCsFilterLine); }
+                    if (peLuaFileList.Remove(peLuaFilterLine)) { Console.WriteLine("filterFiles.pe.cs删除行：" + peLuaFilterLine); }
+                    if (peCsFileList.Remove(peCsFilterLine)) { Console.WriteLine("filterFiles.pe.lua删除行：" + peCsFilterLine); }
+                    if (ltHFileList.Remove(ltHFilterLine)) { Console.WriteLine("filterFiles.pe.cs删除行：" + ltHFilterLine); }
+                    if (ltCcFileList.Remove(ltCcFilterLine)) { Console.WriteLine("filterFiles.pe.lua删除行：" + ltCcFilterLine); }
 
-                    if (File.Exists(cspb))
-                    {
-                        Console.WriteLine("删除" + cspb);
-                        File.Delete(cspb);
-                    }
-                    if (File.Exists(ccpbh))
-                    {
-                        Console.WriteLine("删除" + ccpbh);
-                        File.Delete(ccpbh);
-                    }
-                    if (File.Exists(ccpbcc))
-                    {
-                        Console.WriteLine("删除" + ccpbcc);
-                        File.Delete(ccpbcc);
-                    }
-                    if (File.Exists(luapb))
-                    {
-                        Console.WriteLine("删除" + luapb);
-                        File.Delete(luapb);
-                    }
-                    if (File.Exists(pybp))
-                    {
-                        Console.WriteLine("删除" + pybp);
-                        File.Delete(pybp);
-                    }
-                }
-                if (v.Key.EndsWith(".proto"))
-                {
-                    //删掉proto,pe,txt,dbg文件
-                    Console.WriteLine("删除" + v.Key + "生成的残留文件");
-                    string name = GetFileNameAndFirstCharToLower(v.Key);
+                    // 删除生成的PB文件
                     string cspb = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C#/{0}.pb.cs", name);
                     string ccpbh = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.h", name);
                     string ccpbcc = m_strRootDirectory + string.Format("/TableOut/Temp/2_Protobuf/C++/{0}.pb.cc", name);
@@ -284,104 +250,47 @@ namespace Proto2Code
                     string cclth = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.lt.h", name);
                     string ccltcc = m_strRootDirectory + string.Format("/TableOut/Temp/1_Protoext/C++/{0}.lt.cc", name);
 
-                    //删除过滤文件里信息
-                    string pbLuaFilterLine = name + "_pb.lua";
-                    string pbCsFilterLine = name + ".pb.cs";
-                    string peLuaFilterLine = name + "_pe.lua";
-                    string peCsFilterLine = name + ".pe.cs";
-                    if (pbluaFileList.Remove(pbLuaFilterLine))
-                    {
-                        Console.WriteLine("filterFiles.pb.lua删除行：" + pbLuaFilterLine);
-                    }
-                    if (pbCsFileList.Remove(pbCsFilterLine))
-                    {
-                        Console.WriteLine("filterFiles.pb.cs删除行：" + pbCsFilterLine);
-                    }
-                    if (peLuaFileList.Remove(peLuaFilterLine))
-                    {
-                        Console.WriteLine("filterFiles.pe.cs删除行：" + peLuaFilterLine);
-                    }
-                    if (peCsFileList.Remove(peCsFilterLine))
-                    {
-                        Console.WriteLine("filterFiles.pe.lua删除行：" + peCsFilterLine);
-                    }
-
-                    if (File.Exists(cspb))
-                    {
-                        Console.WriteLine("删除" + cspb);
-                        File.Delete(cspb);
-                    }
-                    if (File.Exists(ccpbh))
-                    {
-                        Console.WriteLine("删除" + ccpbh);
-                        File.Delete(ccpbh);
-                    }
-                    if (File.Exists(ccpbcc))
-                    {
-                        Console.WriteLine("删除" + ccpbcc);
-                        File.Delete(ccpbcc);
-                    }
-                    if (File.Exists(ccltcc))
-                    {
-                        Console.WriteLine("删除" + ccltcc);
-                        File.Delete(ccltcc);
-                    }
-                    if (File.Exists(cclth))
-                    {
-                        Console.WriteLine("删除" + cclth);
-                        File.Delete(cclth);
-                    }
-                    if (File.Exists(luapb))
-                    {
-                        Console.WriteLine("删除" + luapb);
-                        File.Delete(luapb);
-                    }
-                    if (File.Exists(pybp))
-                    {
-                        Console.WriteLine("删除" + pybp);
-                        File.Delete(pybp);
-                    }
+                    if (File.Exists(cspb)) { Console.WriteLine("删除" + cspb); File.Delete(cspb); }
+                    if (File.Exists(ccpbh)) { Console.WriteLine("删除" + ccpbh); File.Delete(ccpbh); }
+                    if (File.Exists(ccpbcc)) { Console.WriteLine("删除" + ccpbcc); File.Delete(ccpbcc); }
+                    if (File.Exists(ccltcc)) { Console.WriteLine("删除" + ccltcc); File.Delete(ccltcc); }
+                    if (File.Exists(cclth)) { Console.WriteLine("删除" + cclth); File.Delete(cclth); }
+                    if (File.Exists(luapb)) { Console.WriteLine("删除" + luapb); File.Delete(luapb); }
+                    if (File.Exists(pybp)) { Console.WriteLine("删除" + pybp); File.Delete(pybp); }
                 }
             }
             #endregion
-            
-            var utf8WithBom = new UTF8Encoding(true);
 
-            FileStream fileStream1 = new FileStream(pbCsFilter, FileMode.Create);
-            StreamWriter sw1 = new StreamWriter(fileStream1, utf8WithBom);
-            foreach(var line in pbCsFileList)
-            {
-                sw1.WriteLine(line);
-            }
-            sw1.Close();
-            fileStream1.Close();
+            _ClearUnuseFile4Writer(pbCsFilter, pbCsFileList);
+            _ClearUnuseFile4Writer(pbLuaFilter, pbluaFileList);
+            _ClearUnuseFile4Writer(peCsFilter, peCsFileList);
+            _ClearUnuseFile4Writer(peLuaFilter, peLuaFileList);
+            _ClearUnuseFile4Writer(ltHFilter, ltHFileList);
+            _ClearUnuseFile4Writer(ltCcFilter, ltCcFileList);
+        }
 
-            FileStream fileStream2 = new FileStream(pbLuaFilter, FileMode.Create);
-            StreamWriter sw2 = new StreamWriter(fileStream2, utf8WithBom);
-            foreach (var line in pbluaFileList)
-            {
-                sw2.WriteLine(line);
-            }
-            sw2.Close();
-            fileStream2.Close();
+        //根据文件的绝对路径获取首字母小写的文件名
+        private string _GetFileNameAndFirstCharToLower(string file)
+        {
+            if (string.IsNullOrEmpty(file))
+                return "";
+            string s = file.Replace('\\', '/');
+            string[] strArray = s.Split('/');
+            string temp = char.ToLower(strArray[strArray.Length - 1][0]) + strArray[strArray.Length - 1].Substring(1);
+            return temp.Substring(0, temp.IndexOf('.'));
+        }
 
-            FileStream fileStream3 = new FileStream(peCsFilter, FileMode.Create);
-            StreamWriter sw3 = new StreamWriter(fileStream3, utf8WithBom);
-            foreach (var line in peCsFileList)
+        private void _ClearUnuseFile4Writer(string strFilter, List<string> fileList)
+        {
+            UTF8Encoding utf8WithBom = new UTF8Encoding(true);
+            FileStream fileStream = new FileStream(strFilter, FileMode.Create);
+            StreamWriter streamWriter = new StreamWriter(fileStream, utf8WithBom);
+            foreach (var line in fileList)
             {
-                sw3.WriteLine(line);
+                streamWriter.WriteLine(line);
             }
-            sw3.Close();
-            fileStream3.Close();
-
-            FileStream fileStream4 = new FileStream(peLuaFilter, FileMode.Create);
-            StreamWriter sw4 = new StreamWriter(fileStream4, utf8WithBom);
-            foreach (var line in peLuaFileList)
-            {
-                sw4.WriteLine(line);
-            }
-            sw4.Close();
-            fileStream4.Close();
+            streamWriter.Close();
+            fileStream.Close();
         }
 
         /// <summary>
@@ -455,17 +364,7 @@ namespace Proto2Code
             return result + char.ToLower(strArray[strArray.Length-1][0]) + strArray[strArray.Length - 1].Substring(1);
         }
 
-        //根据文件的绝对路径获取首字母小写的文件名
-        public string GetFileNameAndFirstCharToLower(string file)
-        {
-            if (string.IsNullOrEmpty(file))
-                return "";
-            string s = file.Replace('\\', '/');
-            string[] strArray = s.Split('/');
-            string temp = char.ToLower(strArray[strArray.Length - 1][0]) + strArray[strArray.Length - 1].Substring(1);
-            return temp.Substring(0,temp.IndexOf('.'));
-        }
-
+        //
         public string m_strFileList = @".\TableOut\Temp\FileList.all";
         private Dictionary<string, CFileInfo> m_dicFileList = new Dictionary<string, CFileInfo>();
     }

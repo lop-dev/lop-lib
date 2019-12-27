@@ -53,8 +53,40 @@ namespace Proto2Code
                 string SERVER_LTLIB_PROTOEXT_SRC = @".\TableOut\Temp\1_Protoext\C++\";
                 string SERVER_LTLIB_PROTOEXT_DES_H = @".\TableOut\C++\LTLib\inc\LTLib\protoext\";
                 string SERVER_LTLIB_PROTOEXT_DES_CC = @".\TableOut\C++\LTLib\src\LTLib\protoext\";
-                CopyDirectory(SERVER_LTLIB_PROTOEXT_SRC, SERVER_LTLIB_PROTOEXT_DES_H, "*.lt.h");
-                CopyDirectory(SERVER_LTLIB_PROTOEXT_SRC, SERVER_LTLIB_PROTOEXT_DES_CC, "*.lt.cc");
+
+                fileterFiles.Clear();
+                _GetFileterFilesLTH(ref fileterFiles);
+                foreach (string file in Directory.GetFiles(SERVER_LTLIB_PROTOEXT_DES_H, "*.lt.h", SearchOption.TopDirectoryOnly))
+                {
+                    FileInfo info = new FileInfo(file);
+                    fileterFiles.Add(info.Name);
+                }
+
+                if (fileterFiles.Count > 0)
+                {
+                    CopyDirectory(SERVER_LTLIB_PROTOEXT_SRC, SERVER_LTLIB_PROTOEXT_DES_H, "*.lt.h", true, fileterFiles);
+                }
+                else
+                {
+                    CopyDirectory(SERVER_LTLIB_PROTOEXT_SRC, SERVER_LTLIB_PROTOEXT_DES_H, "*.lt.h");
+                }
+
+                fileterFiles.Clear();
+                _GetFileterFilesLTCc(ref fileterFiles);
+                foreach (string file in Directory.GetFiles(SERVER_LTLIB_PROTOEXT_DES_H, "*.lt.cc", SearchOption.TopDirectoryOnly))
+                {
+                    FileInfo info = new FileInfo(file);
+                    fileterFiles.Add(info.Name);
+                }
+
+                if (fileterFiles.Count > 0)
+                {
+                    CopyDirectory(SERVER_LTLIB_PROTOEXT_SRC, SERVER_LTLIB_PROTOEXT_DES_CC, "*.lt.cc", true, fileterFiles);
+                }
+                else
+                {
+                    CopyDirectory(SERVER_LTLIB_PROTOEXT_SRC, SERVER_LTLIB_PROTOEXT_DES_CC, "*.lt.cc");
+                }
 
                 // 拷贝到MSLib目录
                 string SERVER_MSLIB_PROFILEGEN_SRC = @".\TableOut\Temp\4_Protomsg\C++\";
@@ -380,6 +412,40 @@ namespace Proto2Code
             string strMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
             FileInfo fiMainModule = new FileInfo(strMainModule);
             string strFileName = fiMainModule.Directory.FullName + "\\fileterFiles.pe.lua";
+
+            FileStream fs = new FileStream(strFileName, FileMode.Open, FileAccess.Read);
+            StreamReader sr = new StreamReader(fs);
+
+            string strLine = sr.ReadLine();
+            while (strLine != null)
+            {
+                fileterFiles.Add(strLine);
+                strLine = sr.ReadLine();
+            }
+        }
+
+        void _GetFileterFilesLTH(ref List<string> fileterFiles)
+        {
+            string strMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+            FileInfo fiMainModule = new FileInfo(strMainModule);
+            string strFileName = fiMainModule.Directory.FullName + "\\fileterFiles.lt.h";
+
+            FileStream fs = new FileStream(strFileName, FileMode.Open, FileAccess.Read);
+            StreamReader sr = new StreamReader(fs);
+
+            string strLine = sr.ReadLine();
+            while (strLine != null)
+            {
+                fileterFiles.Add(strLine);
+                strLine = sr.ReadLine();
+            }
+        }
+
+        void _GetFileterFilesLTCc(ref List<string> fileterFiles)
+        {
+            string strMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+            FileInfo fiMainModule = new FileInfo(strMainModule);
+            string strFileName = fiMainModule.Directory.FullName + "\\fileterFiles.lt.cc";
 
             FileStream fs = new FileStream(strFileName, FileMode.Open, FileAccess.Read);
             StreamReader sr = new StreamReader(fs);
