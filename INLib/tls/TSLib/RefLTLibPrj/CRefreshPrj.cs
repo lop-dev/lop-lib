@@ -112,7 +112,14 @@ namespace RefLTLibPrj
                             int subIndex = file.LastIndexOf("\\inc\\");
                             string line = "    <ClInclude Include=\"..\\..\\.." + file.Substring(subIndex) + "\">";
                             sw.WriteLine(line);
-                            line = "      <Filter>inc\\protoext</Filter>";
+                            if (file.Contains("\\commonDefine\\"))
+                            {
+                                line = "      <Filter>inc\\commonDefine</Filter>";
+                            }
+                            else if (file.Contains("\\protoext\\"))
+                            {
+                                line = "      <Filter>inc\\protoext</Filter>";
+                            }
                             sw.WriteLine(line);
                             sw.WriteLine("    </ClInclude>");
                         }
