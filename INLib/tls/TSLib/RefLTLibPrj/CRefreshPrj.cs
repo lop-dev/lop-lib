@@ -9,7 +9,6 @@ namespace RefLTLibPrj
         static string currentDirectory = Directory.GetCurrentDirectory();
         static string incFilesRoot = currentDirectory + "/inc";
         static string srcFilesRoot = currentDirectory + "/src";
-        static string lidFilesRoot = currentDirectory + "/inc";
         
         static string vcxprojPath = currentDirectory + "/prj/LTLib/vs15/LTLib.vcxproj";
         static string vcxprojFilterPath = currentDirectory + "/prj/LTLib/vs15/LTLib.vcxproj.filters";
@@ -18,13 +17,12 @@ namespace RefLTLibPrj
         List<string> vcxprojFilterContent = new List<string>();
         List<string> incFiles = new List<string>();
         List<string> srcFiles = new List<string>();
-        List<string> lidFiles = new List<string>();
 
         public void Start()
         {
             incFiles.AddRange(Directory.GetFiles(incFilesRoot, "*.h", SearchOption.AllDirectories));
+            srcFiles.AddRange(Directory.GetFiles(srcFilesRoot, "*.cpp", SearchOption.AllDirectories));
             srcFiles.AddRange(Directory.GetFiles(srcFilesRoot, "*.cc", SearchOption.AllDirectories));
-            lidFiles.AddRange(Directory.GetFiles(lidFilesRoot, "*.lid", SearchOption.AllDirectories));
 
             ReadVcxproj();
             ReadVcxprojFilters();
@@ -36,7 +34,6 @@ namespace RefLTLibPrj
             vcxprojFilterContent.Clear();
             incFiles.Clear();
             srcFiles.Clear();
-            lidFiles.Clear();
         }
 
         public void RefreshVcxproj()
@@ -63,16 +60,6 @@ namespace RefLTLibPrj
                         }
                     }
                     else if (itemGroupIndex == 2)
-                    {
-                        foreach (var f in lidFiles)
-                        {
-                            string file = f.Replace('/', '\\');
-                            int subIndex = file.LastIndexOf("\\inc\\");
-                            string line = "    <None Include=\"..\\..\\.." + file.Substring(subIndex) + "\" />";
-                            sw.WriteLine(line);
-                        }
-                    }
-                    else if (itemGroupIndex == 3)
                     {
                         foreach (var f in srcFiles)
                         {
@@ -138,22 +125,16 @@ namespace RefLTLibPrj
                             int subIndex = file.LastIndexOf("\\src\\");
                             string line = "    <ClCompile Include=\"..\\..\\.." + file.Substring(subIndex) + "\">";
                             sw.WriteLine(line);
-                            line = "      <Filter>src\\protoext</Filter>";
+                            if (file.Contains("\\commonDefine\\"))
+                            {
+                                line = "      <Filter>src\\commonDefine</Filter>";
+                            }
+                            else if (file.Contains("\\protoext\\"))
+                            {
+                                line = "      <Filter>src\\protoext</Filter>";
+                            }
                             sw.WriteLine(line);
                             sw.WriteLine("    </ClCompile>");
-                        }
-                    }
-                    else if (itemGroupIndex == 3)
-                    {
-                        foreach (var f in lidFiles)
-                        {
-                            string file = f.Replace('/', '\\');
-                            int subIndex = file.Replace('/', '\\').LastIndexOf("\\inc\\");
-                            string line = "    <None Include=\"..\\..\\.." + file.Substring(subIndex) + "\">";
-                            sw.WriteLine(line);
-                            line = "      <Filter>inc\\protolid</Filter>";
-                            sw.WriteLine(line);
-                            sw.WriteLine("    </None>");
                         }
                     }
                     itemGroupIndex++;
