@@ -29,8 +29,9 @@ public:
     virtual ~CTcpClient();
 
 	virtual bool start();
-	virtual void terminate();
 	virtual void join();
+
+	virtual void terminate();
 	virtual bool isRunning();
 
     /// @brief 判断是否已有网络连接

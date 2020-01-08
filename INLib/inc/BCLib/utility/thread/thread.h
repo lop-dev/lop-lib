@@ -102,9 +102,9 @@ public:
     CThread();
     virtual ~CThread();
 
-    void start();
-    void join();
-    void cancel();
+	virtual bool start();
+	virtual void join();
+	virtual void cancel();
 
     EThreadState getState()
     {

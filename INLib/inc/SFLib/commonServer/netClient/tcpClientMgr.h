@@ -29,7 +29,7 @@ public:
     void delNetClient(ServerID serverID);
     CTcpClientPtr getNetClient(ServerID serverID);
 
-    void joinAll();
+    void clear();
 
 private:
     void _clear();
