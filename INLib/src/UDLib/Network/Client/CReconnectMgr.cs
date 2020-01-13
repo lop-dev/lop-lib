@@ -55,7 +55,10 @@ namespace UDLib.Network
             get { return m_timeOutRetryCount; }
         }
 
-
+        public void ResetLatestResIndex()
+        {
+            m_latestResIndex = 0;
+        }
 
         public void AddTimeoutCallBack(DTimeoutCallback callback)
         {
