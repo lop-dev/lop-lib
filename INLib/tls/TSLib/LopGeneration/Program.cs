@@ -91,6 +91,7 @@ namespace Proto2Code
                 Console.WriteLine("********** 拷贝 *.proto 文件 **********");
                 List<string> protoList = new List<string>(); // 所有的proto文件
 
+                //
                 DirectoryInfo srcDir1 = new DirectoryInfo(@".\TableGen\10_ProtobufDef\");
                 if (srcDir1.Exists)
                 {
@@ -117,6 +118,86 @@ namespace Proto2Code
                     }
                 }
 
+                //
+                DirectoryInfo srcDir3 = new DirectoryInfo(@".\TableGen\10_BasicsSystem\");
+                if (srcDir3.Exists)
+                {
+                    Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir3.FullName, desDir1.FullName));
+                    foreach (var fileInfo in srcDir3.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
+                    {
+                        string newfile = fileInfo.FullName.Replace('\\', '/');
+                        protoList.Add(fileInfo.Name.ToLower());
+                        newfile = newfile.Replace(srcDir3.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
+                        File.Copy(fileInfo.FullName, newfile, true);
+                    }
+
+                    DirectoryInfo srcDir3_1 = new DirectoryInfo(@".\TableGen\10_BasicsSystem\SpecialClient\");
+                    if (srcDir3_1.Exists)
+                    {
+                        Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir3_1.FullName, desDir1.FullName));
+                        foreach (var fileInfo in srcDir3_1.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
+                        {
+                            string newfile = fileInfo.FullName.Replace('\\', '/');
+                            protoList.Add(fileInfo.Name.ToLower());
+                            newfile = newfile.Replace(srcDir3_1.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
+                            File.Copy(fileInfo.FullName, newfile, true);
+                        }
+                    }
+
+                    DirectoryInfo srcDir3_2 = new DirectoryInfo(@".\TableGen\10_BasicsSystem\SpecialServer\");
+                    if (srcDir3_2.Exists)
+                    {
+                        Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir3_2.FullName, desDir1.FullName));
+                        foreach (var fileInfo in srcDir3_2.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
+                        {
+                            string newfile = fileInfo.FullName.Replace('\\', '/');
+                            protoList.Add(fileInfo.Name.ToLower());
+                            newfile = newfile.Replace(srcDir3_2.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
+                            File.Copy(fileInfo.FullName, newfile, true);
+                        }
+                    }
+                }
+
+                DirectoryInfo srcDir4 = new DirectoryInfo(@".\TableGen\11_ExtendSystem\");
+                if (srcDir4.Exists)
+                {
+                    Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir4.FullName, desDir1.FullName));
+                    foreach (var fileInfo in srcDir4.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
+                    {
+                        string newfile = fileInfo.FullName.Replace('\\', '/');
+                        protoList.Add(fileInfo.Name.ToLower());
+                        newfile = newfile.Replace(srcDir4.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
+                        File.Copy(fileInfo.FullName, newfile, true);
+                    }
+
+                    DirectoryInfo srcDir4_1 = new DirectoryInfo(@".\TableGen\11_ExtendSystem\SpecialClient\");
+                    if (srcDir4_1.Exists)
+                    {
+                        Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir4_1.FullName, desDir1.FullName));
+                        foreach (var fileInfo in srcDir4_1.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
+                        {
+                            string newfile = fileInfo.FullName.Replace('\\', '/');
+                            protoList.Add(fileInfo.Name.ToLower());
+                            newfile = newfile.Replace(srcDir4_1.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
+                            File.Copy(fileInfo.FullName, newfile, true);
+                        }
+                    }
+
+                    DirectoryInfo srcDir4_2 = new DirectoryInfo(@".\TableGen\11_ExtendSystem\SpecialServer\");
+                    if (srcDir4_2.Exists)
+                    {
+                        Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir4_2.FullName, desDir1.FullName));
+                        foreach (var fileInfo in srcDir4_2.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
+                        {
+                            string newfile = fileInfo.FullName.Replace('\\', '/');
+                            protoList.Add(fileInfo.Name.ToLower());
+                            newfile = newfile.Replace(srcDir4_2.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
+                            File.Copy(fileInfo.FullName, newfile, true);
+                        }
+                    }
+                }
+
+                //
                 DirectoryInfo desTableDir = new DirectoryInfo("./DesTable/DataTable");
                 DirectoryInfo proTableDir = new DirectoryInfo("./ProTable");
                 foreach (var fileInfo in desTableDir.GetFiles("*.xlsx", SearchOption.AllDirectories))
@@ -160,41 +241,83 @@ namespace Proto2Code
                 Thread.Sleep(1000); // 不等待一下，有可能报 proto 文件锁住
                 Console.WriteLine("********** 生成 *.proto 和 *.pe 文件 **********");
 
-                argsStr = @"-GenType=Enum -DataFile=.\DesTable\DataTable\GlobalTable.xlsx -OutputFile=.\TableOut\Temp\1_Protoext\globalEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Description";
-                Console.WriteLine(argsStr);
-                Execute(argsStr.Split(' '));
+                //
+                FileInfo tmpFileInfo = null;
 
-                argsStr = @"-GenType=Enum -DataFile=.\DesTable\DataTable\MailMsgTable.xlsx -OutputFile=.\TableOut\Temp\1_Protoext\mailIDEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Title";
-                Console.WriteLine(argsStr);
-                Execute(argsStr.Split(' '));
+                tmpFileInfo = new FileInfo(@".\DesTable\DataTable\GlobalTable.xlsx");
+                if (tmpFileInfo.Exists)
+                {
+                    argsStr = @"-GenType=Enum -DataFile=.\DesTable\DataTable\GlobalTable.xlsx -OutputFile=.\TableOut\Temp\1_Protoext\globalEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Description";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
 
-                argsStr = @"-GenType=Proto -DescPath=.\ProTable\AccountServer\ -OutputPath=.\TableOut\Temp\1_Protoext\";
-                Console.WriteLine(argsStr);
-                Execute(argsStr.Split(' '));
+                tmpFileInfo = new FileInfo(@".\DesTable\DataTable\MailMsgTable.xlsx");
+                if (tmpFileInfo.Exists)
+                {
+                    argsStr = @"-GenType=Enum -DataFile=.\DesTable\DataTable\MailMsgTable.xlsx -OutputFile=.\TableOut\Temp\1_Protoext\mailIDEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Title";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
 
-                argsStr = @"-GenType=Proto -DescPath=.\ProTable\GlobalServer\ -OutputPath=.\TableOut\Temp\1_Protoext\";
-                Console.WriteLine(argsStr);
-                Execute(argsStr.Split(' '));
+                //
+                DirectoryInfo tmpDirectoryInfo = null;
 
-                argsStr = @"-GenType=Proto -DescPath=.\ProTable\DatabaseServer\ -OutputPath=.\TableOut\Temp\1_Protoext\";
-                Console.WriteLine(argsStr);
-                Execute(argsStr.Split(' '));
+                tmpDirectoryInfo = new DirectoryInfo(@".\ProTable\AccountServer\");
+                if (tmpDirectoryInfo.Exists)
+                {
+                    argsStr = @"-GenType=Proto -DescPath=.\ProTable\AccountServer\ -OutputPath=.\TableOut\Temp\1_Protoext\";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
 
-                argsStr = @"-GenType=Proto -DescPath=.\ProTable\LogServer\ -OutputPath=.\TableOut\Temp\1_Protoext\";
-                Console.WriteLine(argsStr);
-                Execute(argsStr.Split(' '));
+                tmpDirectoryInfo = new DirectoryInfo(@".\ProTable\GlobalServer\");
+                if (tmpDirectoryInfo.Exists)
+                {
+                    argsStr = @"-GenType=Proto -DescPath=.\ProTable\GlobalServer\ -OutputPath=.\TableOut\Temp\1_Protoext\";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
 
-                argsStr = @"-GenType=Proto -DescPath=.\ProTable\LogicTable\ -OutputPath=.\TableOut\Temp\1_Protoext\";
-                Console.WriteLine(argsStr);
-                Execute(argsStr.Split(' '));
+                tmpDirectoryInfo = new DirectoryInfo(@".\ProTable\DatabaseServer\");
+                if (tmpDirectoryInfo.Exists)
+                {
+                    argsStr = @"-GenType=Proto -DescPath=.\ProTable\DatabaseServer\ -OutputPath=.\TableOut\Temp\1_Protoext\";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
 
-                argsStr = @"-GenType=Proto -DescPath=.\ProTable\BattleTable\ -OutputPath=.\TableOut\Temp\1_Protoext\";
-                Console.WriteLine(argsStr);
-                Execute(argsStr.Split(' '));
+                tmpDirectoryInfo = new DirectoryInfo(@".\ProTable\LogServer\");
+                if (tmpDirectoryInfo.Exists)
+                {
+                    argsStr = @"-GenType=Proto -DescPath=.\ProTable\LogServer\ -OutputPath=.\TableOut\Temp\1_Protoext\";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
 
-                argsStr = @"-GenType=Proto -DescPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Temp\1_Protoext\";
-                Console.WriteLine(argsStr);
-                Execute(argsStr.Split(' '));
+                tmpDirectoryInfo = new DirectoryInfo(@".\ProTable\LogicTable\");
+                if (tmpDirectoryInfo.Exists)
+                {
+                    argsStr = @"-GenType=Proto -DescPath=.\ProTable\LogicTable\ -OutputPath=.\TableOut\Temp\1_Protoext\";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
+
+                tmpDirectoryInfo = new DirectoryInfo(@".\ProTable\BattleTable\");
+                if (tmpDirectoryInfo.Exists)
+                {
+                    argsStr = @"-GenType=Proto -DescPath=.\ProTable\BattleTable\ -OutputPath=.\TableOut\Temp\1_Protoext\";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
+
+                tmpDirectoryInfo = new DirectoryInfo(@".\ProTable\DescTable\");
+                if (tmpDirectoryInfo.Exists)
+                {
+                    argsStr = @"-GenType=Proto -DescPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Temp\1_Protoext\";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
             }
 
             //
