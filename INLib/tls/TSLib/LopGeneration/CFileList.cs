@@ -291,6 +291,7 @@ namespace Proto2Code
             }
             streamWriter.Close();
             fileStream.Close();
+            fileStream.Dispose();
         }
 
         /// <summary>

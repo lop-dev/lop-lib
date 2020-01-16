@@ -381,6 +381,10 @@ namespace Proto2Code
                 fileterFiles.Add(strLine);
                 strLine = sr.ReadLine();
             }
+
+            sr.Close();
+            fs.Close();
+            fs.Dispose();
         }
 
         void _GetFileterFilesPEcs(ref List<string> fileterFiles)
@@ -398,6 +402,10 @@ namespace Proto2Code
                 fileterFiles.Add(strLine);
                 strLine = sr.ReadLine();
             }
+
+            sr.Close();
+            fs.Close();
+            fs.Dispose();
         }
 
         void _GetFileterFilesPBlua(ref List<string> fileterFiles)
@@ -415,6 +423,10 @@ namespace Proto2Code
                 fileterFiles.Add(strLine);
                 strLine = sr.ReadLine();
             }
+
+            sr.Close();
+            fs.Close();
+            fs.Dispose();
         }
 
         void _GetFileterFilesPElua(ref List<string> fileterFiles)
@@ -432,6 +444,10 @@ namespace Proto2Code
                 fileterFiles.Add(strLine);
                 strLine = sr.ReadLine();
             }
+
+            sr.Close();
+            fs.Close();
+            fs.Dispose();
         }
 
         void _GetFileterFilesLTH(ref List<string> fileterFiles)
@@ -449,6 +465,10 @@ namespace Proto2Code
                 fileterFiles.Add(strLine);
                 strLine = sr.ReadLine();
             }
+
+            sr.Close();
+            fs.Close();
+            fs.Dispose();
         }
 
         void _GetFileterFilesLTCc(ref List<string> fileterFiles)
@@ -466,6 +486,10 @@ namespace Proto2Code
                 fileterFiles.Add(strLine);
                 strLine = sr.ReadLine();
             }
+
+            sr.Close();
+            fs.Close();
+            fs.Dispose();
         }
     }
 }
