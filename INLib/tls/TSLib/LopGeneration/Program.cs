@@ -89,116 +89,37 @@ namespace Proto2Code
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP || ExportType == EExportType.CSP || ExportType == EExportType.LUA)
             {
                 Console.WriteLine("********** 拷贝 *.proto 文件 **********");
+                DirectoryInfo srcDir = null;
                 List<string> protoList = new List<string>(); // 所有的proto文件
 
                 //
-                DirectoryInfo srcDir1 = new DirectoryInfo(@".\TableGen\10_ProtobufDef\");
-                if (srcDir1.Exists)
-                {
-                    Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir1.FullName, desDir1.FullName));
-                    foreach (var fileInfo in srcDir1.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
-                    {
-                        string newfile = fileInfo.FullName.Replace('\\', '/');
-                        protoList.Add(fileInfo.Name.ToLower());
-                        newfile = newfile.Replace(srcDir1.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
-                        File.Copy(fileInfo.FullName, newfile, true);
-                    }
-                }
+                srcDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\");
+                _CopyProtoFile(srcDir, desDir1, ref protoList);
 
-                DirectoryInfo srcDir2 = new DirectoryInfo(@".\TableGen\11_ProtobufClt\");
-                if (srcDir2.Exists)
-                {
-                    Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir2.FullName, desDir1.FullName));
-                    foreach (var fileInfo in srcDir2.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
-                    {
-                        string newfile = fileInfo.FullName.Replace('\\', '/');
-                        protoList.Add(fileInfo.Name.ToLower());
-                        newfile = newfile.Replace(srcDir2.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
-                        File.Copy(fileInfo.FullName, newfile, true);
-                    }
-                }
+                srcDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\SpecialClient\");
+                _CopyProtoFile(srcDir, desDir1, ref protoList);
 
-                //
-                DirectoryInfo srcDir3 = new DirectoryInfo(@".\TableGen\10_BasicsSystem\");
-                if (srcDir3.Exists)
-                {
-                    Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir3.FullName, desDir1.FullName));
-                    foreach (var fileInfo in srcDir3.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
-                    {
-                        string newfile = fileInfo.FullName.Replace('\\', '/');
-                        protoList.Add(fileInfo.Name.ToLower());
-                        newfile = newfile.Replace(srcDir3.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
-                        File.Copy(fileInfo.FullName, newfile, true);
-                    }
+                srcDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\SpecialServer\");
+                _CopyProtoFile(srcDir, desDir1, ref protoList);
 
-                    DirectoryInfo srcDir3_1 = new DirectoryInfo(@".\TableGen\10_BasicsSystem\SpecialClient\");
-                    if (srcDir3_1.Exists)
-                    {
-                        Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir3_1.FullName, desDir1.FullName));
-                        foreach (var fileInfo in srcDir3_1.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
-                        {
-                            string newfile = fileInfo.FullName.Replace('\\', '/');
-                            protoList.Add(fileInfo.Name.ToLower());
-                            newfile = newfile.Replace(srcDir3_1.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
-                            File.Copy(fileInfo.FullName, newfile, true);
-                        }
-                    }
+                srcDir = new DirectoryInfo(@".\TableGen\11_ExtendSystem\");
+                _CopyProtoFile(srcDir, desDir1, ref protoList);
 
-                    DirectoryInfo srcDir3_2 = new DirectoryInfo(@".\TableGen\10_BasicsSystem\SpecialServer\");
-                    if (srcDir3_2.Exists)
-                    {
-                        Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir3_2.FullName, desDir1.FullName));
-                        foreach (var fileInfo in srcDir3_2.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
-                        {
-                            string newfile = fileInfo.FullName.Replace('\\', '/');
-                            protoList.Add(fileInfo.Name.ToLower());
-                            newfile = newfile.Replace(srcDir3_2.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
-                            File.Copy(fileInfo.FullName, newfile, true);
-                        }
-                    }
-                }
+                srcDir = new DirectoryInfo(@".\TableGen\11_ExtendSystem\SpecialClient\");
+                _CopyProtoFile(srcDir, desDir1, ref protoList);
 
-                DirectoryInfo srcDir4 = new DirectoryInfo(@".\TableGen\11_ExtendSystem\");
-                if (srcDir4.Exists)
-                {
-                    Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir4.FullName, desDir1.FullName));
-                    foreach (var fileInfo in srcDir4.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
-                    {
-                        string newfile = fileInfo.FullName.Replace('\\', '/');
-                        protoList.Add(fileInfo.Name.ToLower());
-                        newfile = newfile.Replace(srcDir4.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
-                        File.Copy(fileInfo.FullName, newfile, true);
-                    }
+                srcDir = new DirectoryInfo(@".\TableGen\11_ExtendSystem\SpecialServer\");
+                _CopyProtoFile(srcDir, desDir1, ref protoList);
 
-                    DirectoryInfo srcDir4_1 = new DirectoryInfo(@".\TableGen\11_ExtendSystem\SpecialClient\");
-                    if (srcDir4_1.Exists)
-                    {
-                        Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir4_1.FullName, desDir1.FullName));
-                        foreach (var fileInfo in srcDir4_1.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
-                        {
-                            string newfile = fileInfo.FullName.Replace('\\', '/');
-                            protoList.Add(fileInfo.Name.ToLower());
-                            newfile = newfile.Replace(srcDir4_1.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
-                            File.Copy(fileInfo.FullName, newfile, true);
-                        }
-                    }
+                // 兼容老版文件目录
+                srcDir = new DirectoryInfo(@".\TableGen\10_ProtobufDef\");
+                _CopyProtoFile(srcDir, desDir1, ref protoList);
 
-                    DirectoryInfo srcDir4_2 = new DirectoryInfo(@".\TableGen\11_ExtendSystem\SpecialServer\");
-                    if (srcDir4_2.Exists)
-                    {
-                        Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir4_2.FullName, desDir1.FullName));
-                        foreach (var fileInfo in srcDir4_2.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
-                        {
-                            string newfile = fileInfo.FullName.Replace('\\', '/');
-                            protoList.Add(fileInfo.Name.ToLower());
-                            newfile = newfile.Replace(srcDir4_2.FullName.Replace('\\', '/'), desDir1.FullName.Replace('\\', '/'));
-                            File.Copy(fileInfo.FullName, newfile, true);
-                        }
-                    }
-                }
+                srcDir = new DirectoryInfo(@".\TableGen\11_ProtobufClt\");
+                _CopyProtoFile(srcDir, desDir1, ref protoList);
 
                 //
-                DirectoryInfo desTableDir = new DirectoryInfo("./DesTable/DataTable");
+                DirectoryInfo desTableDir = new DirectoryInfo("./DesTable/DescTable");
                 DirectoryInfo proTableDir = new DirectoryInfo("./ProTable");
                 foreach (var fileInfo in desTableDir.GetFiles("*.xlsx", SearchOption.AllDirectories))
                 {
@@ -209,11 +130,23 @@ namespace Proto2Code
                     protoList.Add(fileInfo.Name.Replace("xlsx", "proto").ToLower());
                 }
 
-                protoList.Add("globalenum.proto");
-                protoList.Add("mailidenum.proto");
+                //
+                FileInfo tmpFileInfo = null;
+
+                tmpFileInfo = new FileInfo(@".\DesTable\DataTable\GlobalTable.xlsx");
+                if (tmpFileInfo.Exists)
+                {
+                    protoList.Add("globalenum.proto");
+                }
+
+                tmpFileInfo = new FileInfo(@".\DesTable\DataTable\MailMsgTable.xlsx");
+                if (tmpFileInfo.Exists)
+                {
+                    protoList.Add("mailidenum.proto");
+                }
 
                 // 清理 desDir1 中多余的 proto 文件
-                foreach (var fileInfo in desDir1.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
+                foreach (FileInfo fileInfo in desDir1.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
                 {
                     if (!protoList.Contains(fileInfo.Name.ToLower()))
                     {
@@ -478,6 +411,21 @@ namespace Proto2Code
             Console.WriteLine("按任意键继续...");
             Console.ReadKey();
             return 0;
+        }
+
+        private static void _CopyProtoFile(DirectoryInfo srcDir, DirectoryInfo desDir, ref List<string> protoList)
+        {
+            if (srcDir.Exists)
+            {
+                Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir.FullName, desDir.FullName));
+                foreach (var fileInfo in srcDir.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
+                {
+                    string newfile = fileInfo.FullName.Replace('\\', '/');
+                    protoList.Add(fileInfo.Name.ToLower());
+                    newfile = newfile.Replace(srcDir.FullName.Replace('\\', '/'), desDir.FullName.Replace('\\', '/'));
+                    File.Copy(fileInfo.FullName, newfile, true);
+                }
+            }
         }
 
         private static int Execute(string[] args, bool bSync = false)
