@@ -244,7 +244,7 @@ namespace Proto2Code
                     Execute(argsStr.Split(' '));
                 }
 
-                tmpDirectoryInfo = new DirectoryInfo(@".\ProTable\DescTable\");
+                tmpDirectoryInfo = new DirectoryInfo(@".\DesTable\DescTable\");
                 if (tmpDirectoryInfo.Exists)
                 {
                     argsStr = @"-GenType=Proto -DescPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Temp\1_Protoext\";
