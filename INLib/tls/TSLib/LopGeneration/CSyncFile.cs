@@ -188,8 +188,6 @@ namespace Proto2Code
                 Program.ExportType == Program.EExportType.PRO ||
                 Program.ExportType == Program.EExportType.CSP)
             {
-                DirectoryInfo tmpDirectoryInfo = null;
-
                 Console.WriteLine("拷贝文件之：C#");
                 List<string> fileterFiles = new List<string>();
 
