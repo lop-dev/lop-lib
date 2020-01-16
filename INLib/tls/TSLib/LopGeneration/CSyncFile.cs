@@ -28,6 +28,8 @@ namespace Proto2Code
                 Program.ExportType == Program.EExportType.PRO ||
                 Program.ExportType == Program.EExportType.CPP)
             {
+                DirectoryInfo tmpDirectoryInfo = null;
+
                 Console.WriteLine("拷贝文件之：C++");
                 List<string> fileterFiles = new List<string>();
 
@@ -93,83 +95,91 @@ namespace Proto2Code
                 string SERVER_MSLIB_PROFILEGEN_DES_H = @".\TableOut\C++\MSLib\inc\MSLib\message\";
                 string SERVER_MSLIB_PROFILEGEN_DES_CPP = @".\TableOut\C++\MSLib\src\MSLib\message\";
 
-                fileterFiles.Clear();
-                fileterFiles.Add("commandSystemMsg.h");
-                fileterFiles.Add("errorSystemMsg.h");
-                fileterFiles.Add("loginSystemMsg.h");
-                foreach (string file in Directory.GetFiles(SERVER_MSLIB_PROFILEGEN_SRC, "*Msg.h", SearchOption.TopDirectoryOnly))
+                tmpDirectoryInfo = new DirectoryInfo(SERVER_MSLIB_PROFILEGEN_SRC);
+                if (tmpDirectoryInfo.Exists)
                 {
-                    FileInfo info = new FileInfo(file);
-                    if (!info.Name.Contains("Table.pb.cs"))
+                    fileterFiles.Clear();
+                    fileterFiles.Add("commandSystemMsg.h");
+                    fileterFiles.Add("errorSystemMsg.h");
+                    fileterFiles.Add("loginSystemMsg.h");
+                    foreach (string file in Directory.GetFiles(SERVER_MSLIB_PROFILEGEN_SRC, "*Msg.h", SearchOption.TopDirectoryOnly))
                     {
-                        fileterFiles.Add(info.Name);
+                        FileInfo info = new FileInfo(file);
+                        if (!info.Name.Contains("Table.pb.cs"))
+                        {
+                            fileterFiles.Add(info.Name);
+                        }
                     }
-                }
 
-                if (fileterFiles.Count > 0)
-                {
-                    CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_H, "*Msg.h", true, fileterFiles);
-                }
-                else
-                {
-                    CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_H, "*Msg.h");
-                }
-
-                fileterFiles.Clear();
-                fileterFiles.Add("commandSystemMsg.cc");
-                fileterFiles.Add("errorSystemMsg.cc");
-                fileterFiles.Add("loginSystemMsg.cc");
-                foreach (string file in Directory.GetFiles(SERVER_MSLIB_PROFILEGEN_SRC, "*Msg.cc", SearchOption.TopDirectoryOnly))
-                {
-                    FileInfo info = new FileInfo(file);
-                    if (!info.Name.Contains("Table.pb.cs"))
+                    if (fileterFiles.Count > 0)
                     {
-                        fileterFiles.Add(info.Name);
+                        CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_H, "*Msg.h", true, fileterFiles);
                     }
-                }
+                    else
+                    {
+                        CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_H, "*Msg.h");
+                    }
 
-                if (fileterFiles.Count > 0)
-                {
-                    CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_CPP, "*Msg.cc", true, fileterFiles);
-                }
-                else
-                {
-                    CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_CPP, "*Msg.cc");
-                }
+                    fileterFiles.Clear();
+                    fileterFiles.Add("commandSystemMsg.cc");
+                    fileterFiles.Add("errorSystemMsg.cc");
+                    fileterFiles.Add("loginSystemMsg.cc");
+                    foreach (string file in Directory.GetFiles(SERVER_MSLIB_PROFILEGEN_SRC, "*Msg.cc", SearchOption.TopDirectoryOnly))
+                    {
+                        FileInfo info = new FileInfo(file);
+                        if (!info.Name.Contains("Table.pb.cs"))
+                        {
+                            fileterFiles.Add(info.Name);
+                        }
+                    }
 
-                //
-                string SERVER_MSLIB_MSGDEFINE_H = @".\TableOut\C++\MSLib\inc\MSLib\commonDefine\";
-                string SERVER_MSLIB_MSGDEFINE_CC = @".\TableOut\C++\MSLib\src\MSLib\commonDefine\";
-                CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_H, "msg2StrFunc.h", false);
-                CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_CC, "msg2StrFunc.cc", false);
-                CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_H, "err2StrFunc.h", false);
-                CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_CC, "err2StrFunc.cc", false);
-                CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_H, "sendMsgToDB.h", false);
-                CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_CC, "sendMsgToDB.cc", false);
+                    if (fileterFiles.Count > 0)
+                    {
+                        CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_CPP, "*Msg.cc", true, fileterFiles);
+                    }
+                    else
+                    {
+                        CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_PROFILEGEN_DES_CPP, "*Msg.cc");
+                    }
+
+                    //
+                    string SERVER_MSLIB_MSGDEFINE_H = @".\TableOut\C++\MSLib\inc\MSLib\commonDefine\";
+                    string SERVER_MSLIB_MSGDEFINE_CC = @".\TableOut\C++\MSLib\src\MSLib\commonDefine\";
+                    CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_H, "msg2StrFunc.h", false);
+                    CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_CC, "msg2StrFunc.cc", false);
+                    CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_H, "err2StrFunc.h", false);
+                    CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_CC, "err2StrFunc.cc", false);
+                    CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_H, "sendMsgToDB.h", false);
+                    CopyDirectory(SERVER_MSLIB_PROFILEGEN_SRC, SERVER_MSLIB_MSGDEFINE_CC, "sendMsgToDB.cc", false);
+                }
 
                 // 拷贝到DTLib目录
                 string SERVER_DTLIB_PROFILEGEN_SRC = @".\TableOut\Temp\5_Prototask\C++\";
                 string SERVER_DTLIB_PROFILEGEN_DES_H = @".\TableOut\C++\DTLib\inc\DTLib\databaseTask\";
                 string SERVER_DTLIB_PROFILEGEN_DES_CPP = @".\TableOut\C++\DTLib\src\DTLib\databaseTask\";
 
-                fileterFiles.Clear();
-                if (fileterFiles.Count > 0)
+                tmpDirectoryInfo = new DirectoryInfo(SERVER_DTLIB_PROFILEGEN_SRC);
+                if (tmpDirectoryInfo.Exists)
                 {
-                    CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_H, "*.h", true, fileterFiles);
-                }
-                else
-                {
-                    CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_H, "*.h");
-                }
+                    fileterFiles.Clear();
+                    if (fileterFiles.Count > 0)
+                    {
+                        CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_H, "*.h", true, fileterFiles);
+                    }
+                    else
+                    {
+                        CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_H, "*.h");
+                    }
 
-                fileterFiles.Clear();
-                if (fileterFiles.Count > 0)
-                {
-                    CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_CPP, "*.cc", true, fileterFiles);
-                }
-                else
-                {
-                    CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_CPP, "*.cc");
+                    fileterFiles.Clear();
+                    if (fileterFiles.Count > 0)
+                    {
+                        CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_CPP, "*.cc", true, fileterFiles);
+                    }
+                    else
+                    {
+                        CopyDirectory(SERVER_DTLIB_PROFILEGEN_SRC, SERVER_DTLIB_PROFILEGEN_DES_CPP, "*.cc");
+                    }
                 }
             }
 
@@ -178,6 +188,8 @@ namespace Proto2Code
                 Program.ExportType == Program.EExportType.PRO ||
                 Program.ExportType == Program.EExportType.CSP)
             {
+                DirectoryInfo tmpDirectoryInfo = null;
+
                 Console.WriteLine("拷贝文件之：C#");
                 List<string> fileterFiles = new List<string>();
 
