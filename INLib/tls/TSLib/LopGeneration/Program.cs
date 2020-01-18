@@ -171,7 +171,7 @@ namespace Proto2Code
                 if (!Directory.Exists(goPeDir)) Directory.CreateDirectory(goPeDir);
                 if (!Directory.Exists(luaPeDir)) Directory.CreateDirectory(luaPeDir);
 
-                Thread.Sleep(1000); // 不等待一下，有可能报 proto 文件锁住
+                //Thread.Sleep(1000); // 不等待一下，有可能报 proto 文件锁住
                 Console.WriteLine("********** 生成 *.proto 和 *.pe 文件 **********");
 
                 //
