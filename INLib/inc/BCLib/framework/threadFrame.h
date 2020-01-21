@@ -118,8 +118,9 @@ private:
     void _notifyServiceLeave(const CServiceID& leaveServiceID);
 
 private:
-    bool m_isTerminate;
-    bool m_isValid;
+	bool m_isValid;
+    bool m_doTerminate;
+	bool m_isTerminate;
     std::string m_name;
     uint32 m_msgBuffSize;
     SThreadInfo* m_threadInfo;

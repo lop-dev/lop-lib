@@ -191,7 +191,7 @@ public:
     bool getLogicServerAcceptInfo(ServerID serverID, SFLib::Message::SServerAcceptInfo& acceptInfo);
 	bool getExternalServerAcceptInfo(ServerID serverID, SFLib::Message::SServerAcceptInfo& acceptInfo);
 
-    void sendLogicServerListToStub(CTcpStub* tcpStub, GroupID groupID = 0);
+    void sendLogicServerListToStub(CTcpStub* tcpStub, GroupID groupID);
     void sendExternalServerListToStub(CTcpStub* tcpStub);
 
     void notifyAlreadyActiveStubsAll();
