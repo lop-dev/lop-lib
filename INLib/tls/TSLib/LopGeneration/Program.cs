@@ -120,11 +120,12 @@ namespace Proto2Code
 
                 //
                 DirectoryInfo desTableDir = new DirectoryInfo("./DesTable/DescTable");
-                DirectoryInfo proTableDir = new DirectoryInfo("./ProTable");
                 foreach (var fileInfo in desTableDir.GetFiles("*.xlsx", SearchOption.AllDirectories))
                 {
                     protoList.Add(fileInfo.Name.Replace("xlsx", "proto").ToLower());
                 }
+
+                DirectoryInfo proTableDir = new DirectoryInfo("./ProTable");
                 foreach (var fileInfo in proTableDir.GetFiles("*.xlsx", SearchOption.AllDirectories))
                 {
                     protoList.Add(fileInfo.Name.Replace("xlsx", "proto").ToLower());
@@ -312,25 +313,94 @@ namespace Proto2Code
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP || ExportType == EExportType.CSP || ExportType == EExportType.LUA)
             {
                 Console.WriteLine("********** 生成 Msg 文件 **********");
-                argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_cs_lua";
-                Console.WriteLine(argsStr);
-                Execute(argsStr.Split(' '));
+                DirectoryInfo tmpDir = null;
+
+                tmpDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\");
+                if(tmpDir.Exists)
+                {
+                    argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_BasicsSystem\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_cs_lua";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
+
+                tmpDir = new DirectoryInfo(@".\TableGen\11_ExtendSystem\");
+                if (tmpDir.Exists)
+                {
+                    argsStr = @"-GenType=Msg -DataPath=.\TableGen\11_ExtendSystem\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_cs_lua";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
+
+                // 兼容老版文件目录
+                tmpDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\");
+                if (tmpDir.Exists)
+                {
+                    argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_cs_lua";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
             }
             else if (ExportType == EExportType.CPP)
             {
                 Console.WriteLine("********** 生成 Msg 文件 **********");
-                argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp";
-                Console.WriteLine(argsStr);
-                Execute(argsStr.Split(' '));
+                DirectoryInfo tmpDir = null;
+
+                tmpDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\");
+                if (tmpDir.Exists)
+                {
+                    argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_BasicsSystem\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
+
+                tmpDir = new DirectoryInfo(@".\TableGen\11_ExtendSystem\");
+                if (tmpDir.Exists)
+                {
+                    argsStr = @"-GenType=Msg -DataPath=.\TableGen\11_ExtendSystem\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
+
+                // 兼容老版文件目录
+                tmpDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\");
+                if (tmpDir.Exists)
+                {
+                    argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
             }
 
             //
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP)
             {
                 Console.WriteLine("********** 生成 Task 文件 **********");
-                argsStr = @"-GenType=Task -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\5_Prototask\ -Language=cpp";
-                Console.WriteLine(argsStr);
-                Execute(argsStr.Split(' '));
+                DirectoryInfo tmpDir = null;
+
+                tmpDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\");
+                if (tmpDir.Exists)
+                {
+                    argsStr = @"-GenType=Task -DataPath=.\TableGen\10_BasicsSystem\ -OutputPath=.\TableOut\Temp\5_Prototask\ -Language=cpp";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
+
+                tmpDir = new DirectoryInfo(@".\TableGen\11_ExtendSystem\");
+                if (tmpDir.Exists)
+                {
+                    argsStr = @"-GenType=Task -DataPath=.\TableGen\11_ExtendSystem\ -OutputPath=.\TableOut\Temp\5_Prototask\ -Language=cpp";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
+
+                // 兼容老版文件目录
+                tmpDir = new DirectoryInfo(@".\TableGen\10_ProtobufDef\");
+                if (tmpDir.Exists)
+                {
+                    argsStr = @"-GenType=Task -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\5_Prototask\ -Language=cpp";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
             }
 
             //
@@ -362,50 +432,11 @@ namespace Proto2Code
             {
                 Console.WriteLine("********** 刷新VS工程文件 **********");
 
-                string vsRefresh1 = dirRoot.FullName + "/TableOut/C++/PBLib/RefPBLibPrj.exe";
-                System.Diagnostics.ProcessStartInfo ref4 = new System.Diagnostics.ProcessStartInfo();
-                ref4.FileName = vsRefresh1;
-                ref4.UseShellExecute = false;
-                ref4.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/PBLib/";
-                var proc4 = System.Diagnostics.Process.Start(ref4);
-                proc4.WaitForExit();
-
-                string vsRefresh2 = dirRoot.FullName + "/TableOut/C++/PELib/RefPELibPrj.exe";
-                System.Diagnostics.ProcessStartInfo ref5 = new System.Diagnostics.ProcessStartInfo();
-                ref5.FileName = vsRefresh2;
-                ref5.UseShellExecute = false;
-                ref5.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/PELib/";
-                var proc5 = System.Diagnostics.Process.Start(ref5);
-                proc5.WaitForExit();
-
-                string vsRefresh3 = dirRoot.FullName + "/TableOut/C++/LTLib/RefLTLibPrj.exe";
-                System.Diagnostics.ProcessStartInfo ref2 = new System.Diagnostics.ProcessStartInfo();
-                ref2.FileName = vsRefresh3;
-                ref2.UseShellExecute = false;
-                ref2.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/LTLib/";
-                var proc2 = System.Diagnostics.Process.Start(ref2);
-                proc2.WaitForExit();
-
-                string vsRefresh4 = dirRoot.FullName + "/TableOut/C++/MSLib/RefMSLibPrj.exe";
-                System.Diagnostics.ProcessStartInfo ref3 = new System.Diagnostics.ProcessStartInfo();
-                ref3.FileName = vsRefresh4;
-                ref3.UseShellExecute = false;
-                ref3.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/MSLib/";
-                var proc3 = System.Diagnostics.Process.Start(ref3);
-                proc3.WaitForExit();
-
-                string vsRefresh5 = dirRoot.FullName + "/TableOut/C++/DTLib/RefDTLibPrj.exe";
-                System.Diagnostics.ProcessStartInfo ref6 = new System.Diagnostics.ProcessStartInfo();
-                ref6.FileName = vsRefresh5;
-                ref6.UseShellExecute = false;
-                ref6.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                Environment.CurrentDirectory = dirRoot.FullName + "/TableOut/C++/DTLib/";
-                var proc6 = System.Diagnostics.Process.Start(ref6);
-                proc6.WaitForExit();
+                _RefreshVSProject(dirRoot.FullName + "/TableOut/C++/PBLib/RefPBLibPrj.exe");
+                _RefreshVSProject(dirRoot.FullName + "/TableOut/C++/PELib/RefPELibPrj.exe");
+                _RefreshVSProject(dirRoot.FullName + "/TableOut/C++/LTLib/RefLTLibPrj.exe");
+                _RefreshVSProject(dirRoot.FullName + "/TableOut/C++/MSLib/RefMSLibPrj.exe");
+                _RefreshVSProject(dirRoot.FullName + "/TableOut/C++/DTLib/RefDTLibPrj.exe");
             }
 
             Console.WriteLine("按任意键继续...");
@@ -426,6 +457,24 @@ namespace Proto2Code
                     File.Copy(fileInfo.FullName, newfile, true);
                 }
             }
+        }
+
+        private static void _RefreshVSProject(string exefile)
+        {
+            FileInfo tmpFileInfo = new FileInfo(exefile);
+            if (!tmpFileInfo.Exists)
+            {
+                return;
+            }
+
+            System.Diagnostics.ProcessStartInfo tmpProcessStartInfo = new System.Diagnostics.ProcessStartInfo();
+            tmpProcessStartInfo.FileName = exefile;
+            tmpProcessStartInfo.UseShellExecute = false;
+            tmpProcessStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            Environment.CurrentDirectory = tmpFileInfo.DirectoryName;
+
+            var tmpProcess = System.Diagnostics.Process.Start(tmpProcessStartInfo);
+            tmpProcess.WaitForExit();
         }
 
         private static int Execute(string[] args, bool bSync = false)

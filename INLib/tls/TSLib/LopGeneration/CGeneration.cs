@@ -215,7 +215,6 @@ namespace Proto2Code
                 TSLib.TableGeneration.CGenerateProHeaderFiles.Generate(m_strOutputPath + "/C++/", m_strOutputPath + "/C++/");
                 TSLib.TableGeneration.CGenerateDesHeaderFiles.Generate(m_strOutputPath + "/C++/", m_strOutputPath + "/C++/");
                 TSLib.TableGeneration.CGenerateLuaHeaderFiles.Generate(m_strOutputPath + "/C++/", m_strOutputPath + "/C++/");
-                //TSLib.TableGeneration.CGenerateLuaTinker.Generate(m_strOutputPath + "/C++/", m_strOutputPath + "/C++/");
             }
             else if ((m_strDescFile != "") && (m_strOutputFile != "") && (CFileList.Instance.IsNewFile(m_strDescFile) || !File.Exists(m_strOutputFile)))
             {
