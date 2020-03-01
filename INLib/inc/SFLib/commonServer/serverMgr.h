@@ -36,6 +36,9 @@ public:
     std::vector<SFLib::Message::SServerInfo> getLogicServerList();
     std::vector<SFLib::Message::SServerInfo> getExternalServerList();
 
+	std::vector<SFLib::Message::SServerInfo> getServerList();
+	std::vector<SFLib::Message::SServerInfo> getServerList(bool bConnected);
+
     void setNetSendByClient(ServerID serverID);
     void setNetSendByStub(ServerID serverID);
     bool isSetNetSend(ServerID serverID);
