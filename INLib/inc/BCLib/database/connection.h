@@ -8,11 +8,11 @@
 #ifndef __BCLIB_DATABASE_CONNECTION_H__
 #define __BCLIB_DATABASE_CONNECTION_H__
 
-#include <BCLib/database/dataReader.h>
-#include <BCLib/utility/pointer.h>
-#include <BCLib/database/dbParamDef.h>
 #include <BCLib/utility/pointer.h>
 #include <BCLib/utility/hashMap.h>
+#include <BCLib/database/dbInfo.h>
+#include <BCLib/database/dataReader.h>
+#include <BCLib/database/dbParamDef.h>
 #include <string>
 
 namespace BCLib
@@ -58,9 +58,14 @@ public:
     CConnection(DBCTYPE dbcType);
     virtual ~CConnection();
 
+	void setDBIndex(BCLib::uint32 dbIndex);
+	BCLib::uint32 getDBIndex();
+
+	void setDBInfo(CDBInfo& dbInfo) { m_dbInfo = dbInfo; }
+	CDBInfo getDBInfo() { return m_dbInfo; }
+
     bool connectDB(const char* pszDBServer, const char* pszDBInstance, const char* pszDBName, const char* pszUserName, const char* pszPassword);
     bool isConnected() const;
-    //bool reconnectDB();
 
     bool executeNonQuery(const char* pszCommand);
     CDataReader* executeReader(const char* pszCommand);
@@ -75,11 +80,8 @@ private:
     IConnection* m_pConnection;
     DBCTYPE m_eComType;
 
-    std::string m_strDBServer;
-    std::string m_strDBInstance;
-    std::string m_strDBName;
-    std::string m_strUserName;
-    std::string m_strPassword;
+	BCLib::uint32 m_dbIndex;
+	CDBInfo m_dbInfo;
 };
 typedef BCLib::Utility::CHashMap<std::string, CConnection *> CConnectionMap;
 

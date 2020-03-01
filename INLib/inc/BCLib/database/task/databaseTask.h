@@ -51,10 +51,8 @@ enum EDBTaskResult
 class BCLIB_DATABASE_API CDatabaseTask
 {
 public:
-    CDatabaseTask() : m_errCode(0)
-    {}
-    virtual ~CDatabaseTask()
-    {}
+	CDatabaseTask();
+	virtual ~CDatabaseTask();
 
 public:
     virtual bool excute(CConnectionMap &) = 0;
@@ -62,6 +60,29 @@ public:
 
     BCLib::int32 type() const { return m_taskType; }
     operator BCLib::int32 & () { return m_errCode; }
+
+public:
+	//virtual BCLib::uint32 hashDBIndex(BCLib::uint64 uHash);
+	//virtual BCLib::uint32 hashDBIndex(const std::string& strHashKey);
+	//virtual BCLib::uint32 hashDBIndex(BCLib::Utility::CStringA& strHashKey);
+
+	//virtual BCLib::uint32 hashTBIndex(BCLib::uint64 uHash);
+	//virtual BCLib::uint32 hashTBIndex(const std::string& strHashKey);
+	//virtual BCLib::uint32 hashTBIndex(BCLib::Utility::CStringA& strHashKey);
+
+	// strDBIndex 是从 001 开始的，适应非程序对配置文件的脑回路
+	// strTBIndex 是从 001 开始的，适应非程序对配置文件的脑回路
+	virtual bool hashIndex(BCLib::uint64 uHash, BCLib::Utility::CStringA& strDBIndex, BCLib::Utility::CStringA& strTBIndex);
+	virtual bool hashIndex(const std::string& strHashKey, BCLib::Utility::CStringA& strDBIndex, BCLib::Utility::CStringA& strTBIndex);
+	virtual bool hashIndex(BCLib::Utility::CStringA& strHashKey, BCLib::Utility::CStringA& strDBIndex, BCLib::Utility::CStringA& strTBIndex);
+
+	// dbIndex    是从 000 开始的，适应程序员对代码编写的脑回路
+	// strDBIndex 是从 001 开始的，适应非程序对配置文件的脑回路
+	virtual BCLib::Database::CConnection* getConnection(BCLib::Database::CConnectionMap & mapConnections, BCLib::uint32 dbIndex, std::string& strDBName);
+	virtual BCLib::Database::CConnection* getConnection(BCLib::Database::CConnectionMap & mapConnections, std::string strDBIndex, std::string& strDBName);
+
+	// strDBIndex 是从 001 开始的，适应非程序对配置文件的脑回路
+	std::string		getDBName(std::string strDBIndex); 
 
 protected:
     BCLib::int32    m_taskType;
@@ -87,7 +108,7 @@ protected:
 	BCLib::Utility::SPointerGuard<BCLib::Database::CDataReader> readerGuard(pDataReader);
 
 #define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_UseDB																\
-	pConnection = GetConnection(mapConnections, strDBIndex, strDBName);												\
+	pConnection = getConnection(mapConnections, strDBIndex, strDBName);												\
 	if (pConnection == NULL)																						\
 	{																												\
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "pConnection == NULL");											\
@@ -119,7 +140,7 @@ protected:
 		m_errCode = BCLib::Database::EDB_TASK_ERROR_NOCONNECTION;													\
 		return false;																								\
 	}																												\
-	pConnection = pTask->GetConnection(mapConnections, strDBIndex, strDBName);										\
+	pConnection = pTask->getConnection(mapConnections, strDBIndex, strDBName);										\
 	if (pConnection == NULL)																						\
 	{																												\
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "pConnection == NULL");											\

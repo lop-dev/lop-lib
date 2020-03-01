@@ -27,10 +27,15 @@ protected:
     virtual ~CDatabaseMgr();
 
 public:
-	bool			init(CDatabaseTaskMgr* pDatabaseTaskMgr, std::string strDbFile, BCLib::uint32 uGroupCount = 8);
+	bool			init(CDatabaseTaskMgr* pDatabaseTaskMgr, std::string strDbFile);
+
 	BCLib::uint32	getDBIndex(BCLib::uint64 uHash);
 	BCLib::uint32	getTBIndex(BCLib::uint64 uHash);
-	bool getInstancesDBName(std::vector<std::string>& vec_reply);
+
+	std::string		getDBName(BCLib::uint32 dbIndex);  // dbIndex    是从 000 开始的，适应程序员对代码编写的脑回路
+
+protected:
+	bool _getInstancesDBName(std::vector<std::string>& vec_reply);
 
 private:
 	bool									m_bInit;

@@ -123,6 +123,10 @@ public:
     static void globalError(uint16 module, const char* file, int line, const char* funcname, const char* format, ...);
     static void globalSystem(uint16 module, const char* file, int line, const char* funcname, const char* format, ...);
 
+public:
+	static void setDebugValue();
+	static bool getDebugValue();
+
 protected:
     virtual void _outLog(ELogLevel level, const char* file, int line, const char* format, va_list ap) = 0;
     virtual void _outLog(ELogLevel level, const char* file, int line, const char* funcname, const char* format, va_list ap) = 0;

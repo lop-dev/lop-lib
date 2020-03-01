@@ -26,6 +26,9 @@ public:
     bool addMsgExecPtr(uint16 type, uint16 id, CMsgExecPtr& msgExecPtr);
     void delMsgExecPtr(uint16 type, uint16 id);
 
+	static void setDebugValue();
+	static bool getDebugValue();
+
 protected:
     virtual bool _createMsgExecPtr(uint16 type, uint16 id, CMsgExecPtr& msgExecPtr) = 0;
     virtual bool _createMsgExecPtr(uint16 type, CMsgExecPtr& msgExecPtr) = 0;
