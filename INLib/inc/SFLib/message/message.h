@@ -172,6 +172,9 @@ public:
 
 	virtual void setResult(BCLib::int16 echo) {}
 	virtual void setTracer(const std::string& strTracer) {}
+
+	virtual void setPageSize(BCLib::uint16) {}
+	virtual void setPageIndex(BCLib::uint16) {}
 };
 
 // 预留给CNetMessage中serialize和deserialize对应的pBuf扩展用

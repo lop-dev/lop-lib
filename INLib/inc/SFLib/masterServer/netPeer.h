@@ -45,6 +45,9 @@ public:
 	virtual bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
 public:
+	virtual BCLib::uint32 getLogicServerNum();
+
+public:
 	ServerID getGatewayServerID() { return m_gatewayServerID; }
 	void setGatewayServerID(ServerID gatewayServerID) { m_gatewayServerID = gatewayServerID; }
 

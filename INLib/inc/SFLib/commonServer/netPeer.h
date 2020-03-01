@@ -60,6 +60,9 @@ public:
 	virtual bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
 	virtual bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
+public:
+	virtual BCLib::uint32 getLogicServerNum();
+
 protected:
     virtual void _setLogicServerInfo(EServerType serverType, ServerID serverID);
     virtual void _delLogicServerInfo(EServerType serverType, ServerID serverID);

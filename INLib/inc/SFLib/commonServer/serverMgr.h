@@ -41,6 +41,7 @@ public:
     bool isSetNetSend(ServerID serverID);
 
     bool getServerInfo(ServerID serverID, SFLib::Message::SServerInfo& serverInfo);
+	void dumpInfo();
 
     //
     int getLogicServerIDs(BCLib::uint64 groupID, EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive = false);
