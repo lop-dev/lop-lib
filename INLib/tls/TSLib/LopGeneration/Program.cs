@@ -313,29 +313,19 @@ namespace Proto2Code
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP || ExportType == EExportType.CSP || ExportType == EExportType.LUA)
             {
                 Console.WriteLine("********** 生成 Msg 文件 **********");
-                DirectoryInfo tmpDir = null;
 
-                tmpDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\");
-                if(tmpDir.Exists)
-                {
-                    argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_BasicsSystem\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_cs_lua";
-                    Console.WriteLine(argsStr);
-                    Execute(argsStr.Split(' '));
-                }
+                //DirectoryInfo tmpDir = new DirectoryInfo(@".\TableGen\10_ProtobufDef\");
+                //if (tmpDir.Exists)
+                //{
+                //    argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_cs_lua";
+                //    Console.WriteLine(argsStr);
+                //    Execute(argsStr.Split(' '));
+                //}
 
-                tmpDir = new DirectoryInfo(@".\TableGen\11_ExtendSystem\");
+                DirectoryInfo tmpDir = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
                 if (tmpDir.Exists)
                 {
-                    argsStr = @"-GenType=Msg -DataPath=.\TableGen\11_ExtendSystem\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_cs_lua";
-                    Console.WriteLine(argsStr);
-                    Execute(argsStr.Split(' '));
-                }
-
-                // 兼容老版文件目录
-                tmpDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\");
-                if (tmpDir.Exists)
-                {
-                    argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_cs_lua";
+                    argsStr = @"-GenType=Msg -DataPath=.\TableOut\Temp\1_Protoext\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_cs_lua";
                     Console.WriteLine(argsStr);
                     Execute(argsStr.Split(' '));
                 }
@@ -343,29 +333,19 @@ namespace Proto2Code
             else if (ExportType == EExportType.CPP)
             {
                 Console.WriteLine("********** 生成 Msg 文件 **********");
-                DirectoryInfo tmpDir = null;
 
-                tmpDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\");
+                //DirectoryInfo tmpDir = new DirectoryInfo(@".\TableGen\10_ProtobufDef\");
+                //if (tmpDir.Exists)
+                //{
+                //    argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp";
+                //    Console.WriteLine(argsStr);
+                //    Execute(argsStr.Split(' '));
+                //}
+
+                DirectoryInfo tmpDir = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
                 if (tmpDir.Exists)
                 {
-                    argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_BasicsSystem\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp";
-                    Console.WriteLine(argsStr);
-                    Execute(argsStr.Split(' '));
-                }
-
-                tmpDir = new DirectoryInfo(@".\TableGen\11_ExtendSystem\");
-                if (tmpDir.Exists)
-                {
-                    argsStr = @"-GenType=Msg -DataPath=.\TableGen\11_ExtendSystem\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp";
-                    Console.WriteLine(argsStr);
-                    Execute(argsStr.Split(' '));
-                }
-
-                // 兼容老版文件目录
-                tmpDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\");
-                if (tmpDir.Exists)
-                {
-                    argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp";
+                    argsStr = @"-GenType=Msg -DataPath=.\TableOut\Temp\1_Protoext\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp";
                     Console.WriteLine(argsStr);
                     Execute(argsStr.Split(' '));
                 }
@@ -375,29 +355,19 @@ namespace Proto2Code
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP)
             {
                 Console.WriteLine("********** 生成 Task 文件 **********");
-                DirectoryInfo tmpDir = null;
 
-                tmpDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\");
+                //DirectoryInfo tmpDir = new DirectoryInfo(@".\TableGen\10_ProtobufDef\");
+                //if (tmpDir.Exists)
+                //{
+                //    argsStr = @"-GenType=Task -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\5_Prototask\ -Language=cpp";
+                //    Console.WriteLine(argsStr);
+                //    Execute(argsStr.Split(' '));
+                //}
+
+                DirectoryInfo tmpDir = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
                 if (tmpDir.Exists)
                 {
-                    argsStr = @"-GenType=Task -DataPath=.\TableGen\10_BasicsSystem\ -OutputPath=.\TableOut\Temp\5_Prototask\ -Language=cpp";
-                    Console.WriteLine(argsStr);
-                    Execute(argsStr.Split(' '));
-                }
-
-                tmpDir = new DirectoryInfo(@".\TableGen\11_ExtendSystem\");
-                if (tmpDir.Exists)
-                {
-                    argsStr = @"-GenType=Task -DataPath=.\TableGen\11_ExtendSystem\ -OutputPath=.\TableOut\Temp\5_Prototask\ -Language=cpp";
-                    Console.WriteLine(argsStr);
-                    Execute(argsStr.Split(' '));
-                }
-
-                // 兼容老版文件目录
-                tmpDir = new DirectoryInfo(@".\TableGen\10_ProtobufDef\");
-                if (tmpDir.Exists)
-                {
-                    argsStr = @"-GenType=Task -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\5_Prototask\ -Language=cpp";
+                    argsStr = @"-GenType=Task -DataPath=.\TableOut\Temp\1_Protoext\ -OutputPath=.\TableOut\Temp\5_Prototask\ -Language=cpp";
                     Console.WriteLine(argsStr);
                     Execute(argsStr.Split(' '));
                 }
