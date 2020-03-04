@@ -137,13 +137,22 @@ namespace Proto2Code
                 tmpFileInfo = new FileInfo(@".\DesTable\DataTable\GlobalTable.xlsx");
                 if (tmpFileInfo.Exists)
                 {
-                    protoList.Add("globalenum.proto");
+                    string tmpName = "globalEnum.proto";
+                    protoList.Add(tmpName.ToLower());
                 }
 
                 tmpFileInfo = new FileInfo(@".\DesTable\DataTable\MailMsgTable.xlsx");
                 if (tmpFileInfo.Exists)
                 {
-                    protoList.Add("mailidenum.proto");
+                    string tmpName = "mailIDEnum.proto";
+                    protoList.Add(tmpName.ToLower());
+                }
+
+                tmpFileInfo = new FileInfo(@".\DesTable\DataTable\GuildParameterTable.xlsx");
+                if (tmpFileInfo.Exists)
+                {
+                    string tmpName = "guildParameterEnum.proto";
+                    protoList.Add(tmpName.ToLower());
                 }
 
                 // 清理 desDir1 中多余的 proto 文件
@@ -190,6 +199,14 @@ namespace Proto2Code
                 if (tmpFileInfo.Exists)
                 {
                     argsStr = @"-GenType=Enum -DataFile=.\DesTable\DataTable\MailMsgTable.xlsx -OutputFile=.\TableOut\Temp\1_Protoext\mailIDEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Title";
+                    Console.WriteLine(argsStr);
+                    Execute(argsStr.Split(' '));
+                }
+
+                tmpFileInfo = new FileInfo(@".\DesTable\DataTable\GuildParameterTable.xlsx");
+                if (tmpFileInfo.Exists)
+                {
+                    argsStr = @"-GenType=Enum -DataFile=.\DesTable\DataTable\GuildParameterTable.xlsx -OutputFile=.\TableOut\Temp\1_Protoext\guildParameterEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Description";
                     Console.WriteLine(argsStr);
                     Execute(argsStr.Split(' '));
                 }
