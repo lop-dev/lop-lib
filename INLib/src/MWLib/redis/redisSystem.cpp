@@ -184,6 +184,24 @@ namespace MWLib
 			}
 			return false;
 		}
+		bool CRedisSystem::setNxString(const char *key, const char *value, EREDIS_CONTEXT_TYPE type)
+		{
+			CRedisClient* pRedisClient = getRedisClient();
+			if (pRedisClient != NULL)
+			{
+				return pRedisClient->setNxString(key, value, type);
+			}
+			return false;
+		}
+		bool CRedisSystem::setNxString(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *value, EREDIS_CONTEXT_TYPE type)
+		{
+			CRedisClient* pRedisClient = getRedisClient();
+			if (pRedisClient != NULL)
+			{
+				return pRedisClient->setNxString(key, uniqueid, subkey, value, type);
+			}
+			return false;
+		}
 
 		bool CRedisSystem::setString(const char *key, const char *value, EREDIS_CONTEXT_TYPE type)
 		{
@@ -561,7 +579,24 @@ namespace MWLib
 			return;
 		}
 
-		
+		void CRedisSystem::hmget(const char *key, EREDIS_CONTEXT_TYPE type, const std::set<std::string> &field_set, std::map<std::string, std::string>& field_values)
+		{
+			CRedisClient* pRedisClient = getRedisClient();
+			if (pRedisClient != NULL)
+			{
+				pRedisClient->hmget(key, type, field_set, field_values);
+			}
+			return;
+		}
+		void CRedisSystem::hmget(const char *key, BCLib::uint64 uniqueid, const char *subkey, EREDIS_CONTEXT_TYPE type, const std::set<std::string> &field_set, std::map<std::string, std::string>& field_values)
+		{
+			CRedisClient* pRedisClient = getRedisClient();
+			if (pRedisClient != NULL)
+			{
+				pRedisClient->hmget(key, uniqueid, subkey, type, field_set, field_values);
+			}
+			return;
+		}
 		bool CRedisSystem::herase(const char *key, const char *field, EREDIS_CONTEXT_TYPE type)
 		{
 			CRedisClient* pRedisClient = getRedisClient();

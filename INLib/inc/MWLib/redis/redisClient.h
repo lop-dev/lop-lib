@@ -90,6 +90,9 @@ namespace MWLib
 			bool clear(EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			//String
+			bool setNxString(const char *key, const char *value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+			bool setNxString(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+
 			bool setString(const char *key, const char *value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 			bool setString(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
@@ -286,7 +289,7 @@ namespace MWLib
 			/**
 			* 功能:同时将多个field - value(域-值)对设置到哈希表key中
 			* @param key 键值即对应hash表名
-			* @param fields_value 多个field value(域 值)
+			* @param format 多个field value(域 值)
 			* e.g.: hmset key_hash name "李三" age 18 birthday "20010101"
 			*/
 			void hmset(const char *key, EREDIS_CONTEXT_TYPE type, std::string format, ...);
@@ -298,6 +301,15 @@ namespace MWLib
 			* e.g.: hmset key_hash name "李三" age 18 birthday "20010101"
 			*/
 			void hmset(const char *key, EREDIS_CONTEXT_TYPE type, std::string format, va_list ap);
+
+			/**
+			* 功能:同时读取多个field - value(域-值)对设置到哈希表key中
+			* @param key 键值即对应hash表名
+			* @param field_set 请求查询的field 集合
+			* @param fields_value 返回对应的field-value
+			* e.g.: hmget key_hash name age birthday
+			*/
+			void hmget(const char *key, EREDIS_CONTEXT_TYPE type, const std::set<std::string> &field_set, std::map<std::string, std::string>& field_values);
 
 			/**
 			* 功能:同时将多个field - value(域-值)对设置到哈希表key中
@@ -318,6 +330,17 @@ namespace MWLib
 			* e.g.: hmset key_hash name "李三" age 18 birthday "20010101"
 			*/
 			void hmset(const char* key, BCLib::uint64 uniqueid, const char* subkey, EREDIS_CONTEXT_TYPE type, std::string format, va_list ap);
+
+			/**
+			* 功能:同时读取多个field - value(域-值)对设置到哈希表key中
+			* @param key 键值即对应hash表名
+			* @param uniqueid 实体ID 没有实体ID的可以考虑统一使用1000000来代替
+			* @param subkey 二级表名
+			* @param field_set 请求查询的field 集合
+			* @param fields_value 返回对应的field-value
+			* e.g.: hmget key_hash name age birthday
+			*/
+			void hmget(const char *key, BCLib::uint64 uniqueid, const char* subkey, EREDIS_CONTEXT_TYPE type, const std::set<std::string> &field_set, std::map<std::string, std::string>& field_values);
 
 			//void hmsetBin(const char *key, const char * filed, const char * value, BCLib::uint32 len);
 			//void hmsetBin(const char*key, BCLib::uint64 uniqueid, const char*subkey, const char *filed, const char *value, BCLib::uint32 len);

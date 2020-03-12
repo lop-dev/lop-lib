@@ -418,7 +418,79 @@ namespace MWLib
 
 			return true;
 		}
+		bool CRedisClient::setNxString(const char *key, const char *value, EREDIS_CONTEXT_TYPE type )
+		{
+			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "setString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+				return false;
+			}
+			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
 
+			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
+			if (it == m_redisContextMap.end())
+			{
+				return false;
+			}
+			m_redisContext = it->second.m_redisContext;
+			m_redisReply = NULL;
+			if (m_redisContext == NULL)
+			{
+				return false;
+			}
+
+			m_redisReply = (redisReply*)redisCommand(m_redisContext, "SETNX %s %s", key, value);
+			if (m_redisReply == NULL)
+			{
+				this->disconnect(type);
+				return false;
+			}
+			if (m_redisReply->type == REDIS_REPLY_ERROR)
+			{    
+				freeReplyObject(m_redisReply);
+				m_redisReply = NULL;
+				return false;
+			} 
+			if (m_redisReply->type == REDIS_REPLY_INTEGER)
+			{
+				BCLib::uint32 ret = m_redisReply->integer;
+				if (ret == 1)
+				{
+					freeReplyObject(m_redisReply);
+					m_redisReply = NULL;
+					return true;
+				}
+				else
+				{
+					freeReplyObject(m_redisReply);
+					m_redisReply = NULL;
+					return false;
+				}
+			}
+			MWLIB_PROCESS_REPLY_ERROR
+		}
+		bool CRedisClient::setNxString(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *value, EREDIS_CONTEXT_TYPE type)
+		{
+			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "hsetString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+				return false;
+			}
+			if (key == NULL || subkey == NULL)
+			{
+				return false;
+			}
+			char strKey[1024] = { 0 };
+			snprintf(strKey, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
+			return setNxString(strKey, value, type);
+		}
 		bool CRedisClient::setString(const char* key, const char* value, EREDIS_CONTEXT_TYPE type)
 		{
 			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
@@ -1203,7 +1275,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate SCAN error m_redisReply = null %s", cmd.c_str());
-				this->disconnect();
+				//this->disconnect(type);
 				return ret;
 			}
 
@@ -1816,7 +1888,80 @@ namespace MWLib
 			va_end(ap);
 			return;
 		}
+		void CRedisClient::hmget(const char *key, EREDIS_CONTEXT_TYPE type, const std::set<std::string> &field_set, std::map<std::string, std::string>& field_values)
+		{
+			if (key == NULL)
+			{
+				return;
+			}
+			if (!checkConnect(type))
+			{
+				return;
+			}
+			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
+			if (it == m_redisContextMap.end())
+			{
+				return;
+			}
+			m_redisContext = it->second.m_redisContext;
+			m_redisReply = NULL;
+			if (m_redisContext == NULL)
+			{
+				return;
+			}
+			if (field_set.empty())
+			{
+				return;
+			}
+			std::string field = "";
+			for (auto it = field_set.begin(); it != field_set.end(); ++it)
+			{
+				if (field == "")
+				{
+					field = *it;
+				}
+				else
+				{
+					field = field + " " + *it;
+				}
+			}
+			std::string cmd = "HMGET " + std::string(key) + " " + field;
+			m_redisReply = (redisReply*)redisCommand(m_redisContext, cmd.c_str());
+			if (m_redisReply == NULL)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate error m_redisReply = null %s ", cmd.c_str());
+			}
+			else
+			{
+				if (m_redisReply->type == REDIS_REPLY_ERROR)
+				{
+					BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate error HMGET %s ", cmd.c_str());
+				}
+				auto iter = field_set.begin();
+				for ( unsigned int i = 0 ; i < m_redisReply->elements && iter != field_set.end(); i = i + 1, ++iter)
+				{
+					if (m_redisReply->element[i] && m_redisReply->element[i]->len > 0)
+					{
+						std::string &str = field_values[*iter];
+						str.append(m_redisReply->element[i]->str, m_redisReply->element[i]->len);
+					}
+				}
+			}
 
+			MWLIB_PROCESS_REPLY_RETURN
+			return;
+		}
+		void CRedisClient::hmget(const char *key, BCLib::uint64 uniqueid, const char* subkey, EREDIS_CONTEXT_TYPE type, const std::set<std::string> &field_set, std::map<std::string, std::string>& field_values)
+		{
+			if (key == NULL || subkey == NULL)
+			{
+				return;
+			}
+			char strKey[1024] = { 0 };
+			snprintf(strKey, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
+			hmget(strKey, type, field_set, field_values);
+			return;
+		}
 		//void CRedisClient::hmsetBin(const char* key, const char* filed, const char*  value, BCLib::uint32 len)
 		//{
 		//	m_redisReply = NULL;
@@ -1925,7 +2070,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate HSCAN error m_redisReply = null %s", cmd.c_str());
-				this->disconnect();
+				//this->disconnect(type);
 				return ret;
 			}
 
@@ -2009,7 +2154,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate HSCAN error m_redisReply = null %s", cmd.c_str());
-				this->disconnect();
+				//this->disconnect(type);
 				return NULL;
 			}
 
@@ -3972,7 +4117,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate SSCAN error m_redisReply = null %s", cmd.c_str());
-				this->disconnect();
+				//this->disconnect(type);
 				return ret;
 			}
 
@@ -4825,7 +4970,7 @@ namespace MWLib
 			if (m_redisReply == NULL)
 			{
 				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "Redis operate ZSCAN error m_redisReply = null %s", cmd.c_str());
-				this->disconnect();
+				//this->disconnect(type);
 				return ret;
 			}
 
