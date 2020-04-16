@@ -35,9 +35,13 @@ protected:
     virtual bool _transformMsg(PeerID peerID, SFLib::Message::SNetMessage* msg, BCLib::uint32 msgSize);
 
     virtual void _cbTerminate();
+
     virtual bool _createMsgExecPtr(BCLib::uint16 type, BCLib::uint16 id, BCLib::Framework::CMsgExecPtr& msgExecPtr);
+
     virtual void _onXX2XSNtfServerType(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
     virtual void _onXS2MSResAccept(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
+    virtual void _onMS2XSNtfServerBroken(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
+
     virtual void _onXS2MSNtfShakeHands(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
     virtual void _onXS2MSNtfServerInited(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
 

@@ -43,7 +43,7 @@ public:
 
 protected:
     virtual bool _enterPoll();
-    virtual void _leavePoll();
+    virtual bool _leavePoll();
 
     bool _connectToSrv();
 
@@ -53,6 +53,7 @@ private:
     std::string m_serverIP;
     BCLib::uint16 m_serverPort;
     bool m_bReconnect; // 当发起连接的时候，如果开始连接不上，会一直重连，直到连上为主
+	bool m_bLeavePoll; // 记录是否已经离开Poll
 };
 typedef BCLib::Utility::CSPointer<CCommonClient> CCommonClientPtr;
 }//CommonServer

@@ -36,6 +36,9 @@ public:
     PeerID getPeerID() const { return m_netPeerID; }
     EPeerState getState() { return m_peerState; }
 
+	void setGroupID(GroupID groupID) { m_groupID = groupID; }
+	GroupID getGroupID() const { return m_groupID; }
+
 	void setEntityID(EntityID entityID)	{ m_entityID = entityID; }
 	EntityID getEntityID() const { return m_entityID; }
 
@@ -72,9 +75,10 @@ protected:
 
 private:
     PeerID m_netPeerID;
-    EPeerState m_peerState;
+	GroupID m_groupID;
 	EntityID m_entityID;
 
+    EPeerState m_peerState;
 	BCLib::Utility::CDateTime m_dtOffline;
 
     friend class CExternalClient;

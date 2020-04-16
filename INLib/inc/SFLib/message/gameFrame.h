@@ -15,9 +15,6 @@
 namespace SFLib
 {
 
-#define SFLIB_ACCOUNT_SERVER_ID 8000
-#define SFLIB_NAME_SERVER_ID 8001
-
 enum EErrorType
 {
     EERROR_OK = 0,
@@ -42,10 +39,11 @@ enum EMsgIDGameFrame
     EMID_XX2XS_NTF_SERVER_TYPE,
     EMID_MS2XS_NTF_LOGIC_SERVER_LIST,
     EMID_MS2XS_NTF_EXTERNAL_SERVER_LIST,
-    EMID_MS2XS_NTF_VERIFY_SUCCESS,
     EMID_MS2XS_REQ_ACCEPT,
     EMID_XS2MS_RES_ACCEPT,
     EMID_MS2XS_NTF_SERVER_ACTIVE,
+    EMID_XS2MS_NTF_SERVER_BROKEN,
+
     EMID_XS2MS_NTF_SHAKE_HANDS,
     EMID_XS2MS_NTF_SERVER_INITED,
     EMID_MS2XS_NTF_SERVER_INITED,
@@ -67,9 +65,15 @@ enum EMsgIDGameFrame
     EMID_LC2LC_NTF_SERVER_TERMINATE,
 
     //////////////////////////////////////////////////////////////////////////
+    // 对服务器关键数据的监控
+    //////////////////////////////////////////////////////////////////////////
+    EMID_XS2MS_NTF_NETWORK_INFO,
+    EMID_XS2MS_NTF_DATABASE_INFO,
+
+    //////////////////////////////////////////////////////////////////////////
     // 之前只有 C++ 客户端会用到，目前统一提到逻辑层处理
     //////////////////////////////////////////////////////////////////////////
-    //EMID_GC2LG_REQ_RECONNECT,
+    //EMID_GC2XS_REQ_RECONNECT,
     //EMID_GC2GW_REQ_RECONNECT,
 
     //////////////////////////////////////////////////////////////////////////
@@ -80,7 +84,7 @@ enum EMsgIDGameFrame
     EMID_MS2XS_REQ_CREATE_PEERID,              /// MS请求各个服务器创建对应的Peer 
     EMID_XS2MS_RES_CREATE_PEERID,              /// 各服务器回复MS创建Peer的结果
     EMID_MS2XS_NTF_INIT_PEERID,                /// MS通知各个服务器初始化对应Peer，但不要求各服务器初始化后回复
-    EMID_XS2GC_NTF_SELF_PEER_ID,               /// 某逻辑器通知客户端（限C++版的客户端）
+    EMID_XS2GC_NTF_SELF_PEERID,                /// 某逻辑器通知客户端（限C++版的客户端）
 
     //////////////////////////////////////////////////////////////////////////
     // Peer进入逻辑服的流程消息（通过 Master 中转）
@@ -112,10 +116,16 @@ enum EMsgIDGameFrame
     EMID_XS2XS_REQ_ENTER_SERVER,               /// Peer请求进入某逻辑器
     EMID_XS2XS_RES_ENTER_SERVER,               /// 某逻辑服回复进入结果
     
-    EMID_XS2XS_SET_ENTER_SERVER,               /// 设置 Peer 与服务器之间的关联
+    EMID_XS2XS_SET_ENTER_SERVER,               /// 设置Peer与该服的关联
 
     EMID_XS2XS_REQ_LEAVE_SERVER,               /// Peer请求离开某逻辑器
     EMID_XS2XS_RES_LEAVE_SERVER,               /// 某逻辑器回复离开结果
+
+    //////////////////////////////////////////////////////////////////////////
+    // Peer 列表 进入/离开 逻辑服的流程消息（通过 直连 方式）
+    //////////////////////////////////////////////////////////////////////////
+    EMID_XS2XS_REQ_ENTER_OR_LEAVE_SERVER,      /// Peer列表请求进入某逻辑器
+    EMID_XS2XS_RES_ENTER_OR_LEAVE_SERVER,      /// 某逻辑服回复列表进入结果
 };
 
 namespace Message
@@ -197,7 +207,7 @@ SFLIB_MSGDEBUG(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_MS2XS_NTF_LOGIC_SERVER_LIST)
 struct SMsgMS2XSNtfLogicServerList : public SNetMessage
 {
 public:
-    BCLib::uint8 m_count;
+    BCLib::uint16 m_count;
     SServerInfo m_serverInfos[1];
     SMsgMS2XSNtfLogicServerList() : SNetMessage(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_MS2XS_NTF_LOGIC_SERVER_LIST)
     {
@@ -212,7 +222,7 @@ SFLIB_MSGDEBUG(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_MS2XS_NTF_EXTERNAL_SERVER_LI
 struct SMsgMS2XSNtfExternalServerList : public SNetMessage
 {
 public:
-    BCLib::uint8 m_count;
+    BCLib::uint16 m_count;
     SServerInfo m_serverInfos[1];
     SMsgMS2XSNtfExternalServerList() : SNetMessage(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_MS2XS_NTF_EXTERNAL_SERVER_LIST)
     {
@@ -239,18 +249,6 @@ struct SServerAcceptInfo
 		memset(m_acceptIP, 0, sizeof(m_acceptIP));
 		m_acceptPort = 0;
 	}
-};
-
-SFLIB_MSGDEBUG(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_MS2XS_NTF_VERIFY_SUCCESS);
-struct SMsgMS2XSNtfVerifySuccess : public SNetMessage
-{
-public:
-    SMsgMS2XSNtfVerifySuccess() : SNetMessage(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_MS2XS_NTF_VERIFY_SUCCESS)
-    {
-        m_nMasterTime = BCLib::Utility::CDateTime::now().getTime();
-    }
-
-    BCLib::int64 m_nMasterTime;
 };
 
 SFLIB_MSGDEBUG(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_MS2XS_REQ_ACCEPT);
@@ -289,6 +287,20 @@ public:
         m_serverType = (BCLib::uint8)ESERVER_UNKNOW;
         m_serverID = INVALID_SERVER_ID;
         m_needConnection = false;
+    }
+};
+
+SFLIB_MSGDEBUG(ESERVER_MASTER, EFUNC_GAMEFRAME, EMID_XS2MS_NTF_SERVER_BROKEN);
+struct SMsgXS2MSNtfServerBroken : public SNetMessage
+{
+public:
+    ServerType m_serverType;
+    ServerID m_serverID;
+
+    SMsgXS2MSNtfServerBroken() : SNetMessage(ESERVER_MASTER, EFUNC_GAMEFRAME, EMID_XS2MS_NTF_SERVER_BROKEN)
+    {
+        m_serverType = (BCLib::uint8)ESERVER_UNKNOW;
+        m_serverID = INVALID_SERVER_ID;
     }
 };
 
@@ -539,12 +551,34 @@ public:
     }
 };
 
+// 对网络信息的监控
+SFLIB_MSGDEBUG(ESERVER_MASTER, EFUNC_GAMEFRAME, EMID_XS2MS_NTF_NETWORK_INFO);
+struct SMsgXS2MSNtfNetworkInfo : public SNetMessage
+{
+public:
+    ServerID m_serverID;
+    BCLib::uint16 m_count0;  // 成功连接的验证数量
+    BCLib::uint16 m_count1;  // 成功连接的连接数量
+    BCLib::uint16 m_count2;  // 未能连接的连接数量
+    ServerID m_serverIDs[1];
+    SMsgXS2MSNtfNetworkInfo() : SNetMessage(ESERVER_MASTER, EFUNC_GAMEFRAME, EMID_XS2MS_NTF_NETWORK_INFO)
+    {
+        m_serverID = INVALID_SERVER_ID;
+        m_count0 = 0;
+        m_count1 = 0;
+        m_count2 = 0;
+    }
+
+    int getSize() { return sizeof(SMsgXS2MSNtfNetworkInfo) - sizeof(ServerID) + (m_count1 + m_count2) * sizeof(ServerID); }
+    int getSize(int count1, int count2) { return sizeof(SMsgXS2MSNtfNetworkInfo) - sizeof(ServerID) + (count1 + count2) * sizeof(ServerID); }
+};
+
 /// 之前只有 C++ 客户端会用到，目前统一提到逻辑层处理
-//SFLIB_MSGDEBUG(ESERVER_LOGIN, EFUNC_GAMEFRAME, EMID_GC2LG_REQ_RECONNECT);
-//struct SMsgGC2LGReqReconnect : public SNetMessage
+//SFLIB_MSGDEBUG(ESERVER_LOGIN, EFUNC_GAMEFRAME, EMID_GC2XS_REQ_RECONNECT);
+//struct SMsgGC2XSReqReconnect : public SNetMessage
 //{
 //public:
-//    SMsgGC2LGReqReconnect() : SNetMessage(ESERVER_LOGIN, EFUNC_GAMEFRAME, EMID_GC2LG_REQ_RECONNECT)
+//    SMsgGC2XSReqReconnect() : SNetMessage(ESERVER_LOGIN, EFUNC_GAMEFRAME, EMID_GC2XS_REQ_RECONNECT)
 //    {
 //        m_peerID = INVALID_PEER_ID;
 //        m_uRandKey = 0;

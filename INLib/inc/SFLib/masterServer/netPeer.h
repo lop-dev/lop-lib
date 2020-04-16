@@ -55,14 +55,14 @@ public:
 	void setGameClientStubID(BCLib::Network::TcpStubID gameClientStubID) { m_gameClientStubID = gameClientStubID; }
 
 	bool isInServer(ServerID serverID);
-    BCLib::uint8 getActiveServerID(std::vector<SFLib::ServerID>& serverList);
+    BCLib::uint16 getActiveServerID(std::vector<SFLib::ServerID>& serverList);
 
 private:
 	bool _sendMsgToGW(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
     void _setServerInfo(EServerType serverType, ServerID serverID);
     void _delServerInfo(EServerType serverType, ServerID serverID);
-    BCLib::uint8 _getServerInfo(SFLib::Message::SPeerServerInfo* serverList);
+    BCLib::uint16 _getServerInfo(SFLib::Message::SPeerServerInfo* serverList);
 
 private:
     ServerID m_gatewayServerID;

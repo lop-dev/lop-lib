@@ -24,43 +24,45 @@ class CTcpClient;
 class CNetClient
 {
 public:
-    CNetClient(bool bUseSelfMsgQueue = false);
+    CNetClient(ServerType serverType = SFLib::ESERVER_UNKNOW, bool bUseSelfMsgQueue = false);
     virtual ~CNetClient();
+
+    bool useSelfMsgQueue() { return m_bUseSelfMsgQueue; }
+    CNetMsgQueueByPeerID& getNetMsgQueue() { return m_netMsgQueue; }
 
     virtual std::string getGameVersion() = 0;
 
-    PeerID getPeerID()
-    {
-        return m_selfPeerID;
-    }
-    bool connectLG(const char* ip, BCLib::uint16 port);
+    bool connectXS(const char* ip, BCLib::uint16 port);
     bool connectGW(const char* ip, BCLib::uint16 port);
 
-    //void reconnectLG(BCLib::uint16 uCount = 3);
+    //void reconnectXS(BCLib::uint16 uCount = 3);
     //void reconnectGW(BCLib::uint16 uCount = 3);
 
-    bool isReconnectLG() { return m_bReconnectLG; }
+    bool isReconnectXS() { return m_bReconnectXS; }
     bool isReconnectGW() { return m_bReconnectGW; }
 
-    bool sendToLG(const SFLib::Message::CNetMessage* msg);
-    bool sendToLG(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+    bool sendToXS(const SFLib::Message::CNetMessage* msg);
+    bool sendToXS(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
     bool sendToGW(const SFLib::Message::CNetMessage* msg);
     bool sendToGW(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
-    void closeLG();
+    void closeXS();
     void closeGW();
 
-    void resetLG();
+    void resetXS();
     void resetGW();
 
     void final();
 
     //
-    bool isConnectionValidLG() const;
+    bool isConnectionValidXS() const;
     bool isConnectionValidGW() const;
 
     std::string getMAC() const;
+
+public:
+    PeerID getPeerID() { return m_selfPeerID; }
 
     void setUsrKey(BCLib::uint64 usrKey);
     BCLib::uint64 getUsrKey() const;
@@ -72,39 +74,38 @@ public:
     void setRTT(EServerType eServerType, bool bOpen);
     BCLib::uint32 getRTTInMS(EServerType eServerType) const;
 
-    bool useSelfMsgQueue() { return m_bUseSelfMsgQueue; }
-    CNetMsgQueueByPeerID& getNetMsgQueue() { return m_netMsgQueue; }
-
 protected:
     CClientMsgExecMgr* _getClientMsgExecMgr(){ return m_msgExecMgr; }
 
-    CTcpClient* _connectLG(const char* ip, BCLib::uint16 port);
+private:
+    CTcpClient* _connectXS(const char* ip, BCLib::uint16 port);
     CTcpClient* _connectGW(const char* ip, BCLib::uint16 port);
 
-    //BCLib::ResThread _reconnectLG(void* param);
+    //BCLib::ResThread _reconnectXS(void* param);
     //BCLib::ResThread _reconnectGW(void* param);
 
 private:
-    std::string m_strIPLG;
-    BCLib::uint16 m_uPortLG;
-    std::string m_strIPGW;
-    BCLib::uint16 m_uPortGW;
-
-    CTcpClient* m_tcpClient2LG;
-    CTcpClient* m_tcpClient2GW;
-
-    bool m_bReconnectLG;
-    bool m_bReconnectGW;
-
-    BCLib::Utility::CHndThread m_hndReconnectLG;
-    BCLib::Utility::CHndThread m_hndReconnectGW;
-
-    PeerID m_selfPeerID;
-    CClientMsgExecMgr* m_msgExecMgr;
-
+    ServerType m_serverType;
     bool m_bUseSelfMsgQueue;
     CNetMsgQueueByPeerID m_netMsgQueue;
 
+    std::string m_strIPXS;
+    BCLib::uint16 m_uPortXS;
+    std::string m_strIPGW;
+    BCLib::uint16 m_uPortGW;
+
+    CTcpClient* m_tcpClient2XS;
+    CTcpClient* m_tcpClient2GW;
+
+    bool m_bReconnectXS;
+    bool m_bReconnectGW;
+
+    BCLib::Utility::CHndThread m_hndReconnectXS;
+    BCLib::Utility::CHndThread m_hndReconnectGW;
+
+    CClientMsgExecMgr* m_msgExecMgr;
+
+    PeerID m_selfPeerID;
     BCLib::uint64 m_usrKey;
     BCLib::uint32 m_uRandKey;
 

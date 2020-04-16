@@ -22,10 +22,9 @@ public:
     CMasterServer();
     virtual ~CMasterServer();
 
-    virtual EServerType getServerType()
-    {
-        return ESERVER_MASTER;
-    }
+    virtual EServerType getServerType() { return ESERVER_MASTER; }
+
+    SFLib::Message::SMsgXS2MSNtfNetworkInfo* getNetworkInfo(ServerID serverID);
 
     void setRandKey(BCLib::uint32 val);
     BCLib::uint32 getRandKey();
@@ -45,12 +44,14 @@ protected:
     virtual void _onXS2MSAckLeavePeerID(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
     virtual void _onXS2MSResEnterServerCreatePeerID(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
     virtual void _onXS2MSResLeaveServerRemovePeerID(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
+    virtual void _onXS2MSNtfNetworkInfo(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
 
 private:
 	void _applyForPeerID(SFLib::Message::SMsgMS2XSResApplyForPeerID resApplyForPeerID);
 
 private:
-	BCLib::Utility::CHashMap<PeerID, SFLib::Message::SMsgMS2XSResApplyForPeerID> m_DelayApplyForPeerID;
+	BCLib::Utility::CHashMap<PeerID, SFLib::Message::SMsgMS2XSResApplyForPeerID> m_delayApplyForPeerIDMap;
+    BCLib::Utility::CHashMap<ServerID, SFLib::Message::SMsgXS2MSNtfNetworkInfo> m_ntfNetworkInfoMap;
 
     bool m_bRandKey1;
     BCLib::uint32 m_uRandKey1;

@@ -19,6 +19,10 @@ class CLogicClient : public CCommonClient
 public:
     CLogicClient();
     virtual ~CLogicClient();
+
+protected:
+    virtual bool _createMsgExecPtr(BCLib::uint16 type, BCLib::uint16 id, BCLib::Framework::CMsgExecPtr& msgExecPtr);
+    virtual void _onXX2XSNtfServerType(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
 };
 }//CommonServer
 }//SFLib

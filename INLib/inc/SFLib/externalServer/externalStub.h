@@ -10,6 +10,7 @@
 
 #include <SFLib/commonServer/tcpStub.h>
 #include <SFLib/commonServer/netClient/tcpClient.h>
+#include <SFLib/message/peerMsg.h>
 
 namespace SFLib
 {
@@ -40,11 +41,17 @@ protected:
 
     virtual void _cbTerminate();
     virtual bool _createMsgExecPtr(BCLib::uint16 type, BCLib::uint16 id, BCLib::Framework::CMsgExecPtr& msgExecPtr);
+
     virtual void _onXX2XSNtfServerType(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
+
 	virtual void _onXS2XSReqEnterServer(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
 	virtual void _onXS2XSReqLeaveServer(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
 
-protected:
+    virtual void _onXS2XSReqEnterOrLeaveServer(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
+
+private:
+    void _doReqEnterServer(SFLib::Message::SReqEnterOrLeaveServer& reqEnterOrLeaveServer, SFLib::Message::SResEnterOrLeaveServer& resEnterOrLeaveServer);
+    void _doReqLeaveServer(SFLib::Message::SReqEnterOrLeaveServer& reqEnterOrLeaveServer, SFLib::Message::SResEnterOrLeaveServer& resEnterOrLeaveServer);
 };
 typedef BCLib::Utility::CSPointer<CExternalStub> CExternalStubPtr;
 }//External

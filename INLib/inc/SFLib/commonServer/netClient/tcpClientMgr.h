@@ -29,13 +29,19 @@ public:
     void delNetClient(ServerID serverID);
     CTcpClientPtr getNetClient(ServerID serverID);
 
+    void checkBrokenServer();
+
     void clear();
 
 private:
     void _clear();
 
-    BCLib::Utility::CHashMap<BCLib::uint32, CTcpClientPtr> m_netClientHashMap;
-    BCLib::Utility::CMutex m_mutex;
+private:
+    BCLib::Utility::CHashMap<ServerID, CTcpClientPtr> m_netClientHashMap;
+    BCLib::Utility::CMutex m_mutexNetClientHashMap;
+
+    BCLib::Utility::CHashMap<ServerID, ServerType> m_mapAlreadyBrokenServer;
+    BCLib::Utility::CMutex m_mutexAlreadyBrokenServer;
 };
 }//CommonServer
 }//SFLib

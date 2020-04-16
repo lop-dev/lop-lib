@@ -52,7 +52,7 @@ public:
         return m_serverID;
     }
 
-    /// @brief 网络连接是否已经验证合法性，只有在收到 SMsgMS2XSNtfVerifySuccess 消息后，才会最终验证通过
+    /// @brief 网络连接是否已经验证合法性
     /// @return bool
     bool isVerified() const
     {
@@ -68,14 +68,15 @@ protected:
     }
 
     virtual bool _cbParseMsg(const void* msgBuff, BCLib::uint32 msgSize);
+    virtual void _cbTerminate(const BCLib::Network::CTcpConnectionSPtr& connPtr);
+
     virtual void _unhandledMsg(SSFMsgLabel& msgLabel, SFLib::Message::SNetMessage* msg, BCLib::uint32 msgSize);
     virtual bool _transformMsg(PeerID peerID, SFLib::Message::SNetMessage* msg, BCLib::uint32 msgSize);
 
     virtual bool _createMsgExecPtr(BCLib::uint16 type, BCLib::uint16 id, BCLib::Framework::CMsgExecPtr& msgExecPtr);
     virtual bool _createMsgExecPtr(BCLib::uint16 type, BCLib::Framework::CMsgExecPtr& msgExecPtr);
-    virtual void _onXX2XSNtfServerType(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
 
-private:
+protected:
     EServerType m_serverType;
     ServerID m_serverID;
     bool m_verified;

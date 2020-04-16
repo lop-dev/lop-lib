@@ -188,11 +188,13 @@ public:
     /// @brief Peer进入本地Server，保证其它服务器已经创建成功
     /// @return void
     /// @param peerID 进入的PeerID
+    /// @param nReason 进入的原因
     virtual void cbPeerEnter(CNetPeerPtr& netPeerPtr, EPeerEnterReason nReason);
 
     /// @brief Peer离开本地Server，保证其它服务器已经还存在Peer
     /// @return void
     /// @param peerID 离开的PeerID
+    /// @param nReason 离开的原因
     virtual void cbPeerLeave(CNetPeerPtr& netPeerPtr, EPeerLeaveReason nReason);
 
     /// @brief 删除Peer，不能保证其它服务器已经还存在Peer
@@ -214,11 +216,12 @@ public:
     /// @param result 是否成功
     virtual void cbPeerLeaveServer(PeerID peerID, ServerID serverID, bool result);
 
-    /// @brief 当其它Server申请CNetPeer::enterXXXServer或CNetPeer::leaveXXXServer操作，改变Peer的Server，本地Server触发该接口
+    /// @brief 当Server申请CNetPeer::enterXXXServer或CNetPeer::leaveXXXServer操作，改变Peer的Server，本地Server触发该接口
     /// @return void
     /// @param peerID 发生变化的Peer
-    /// @param serverID 新进入的Server
-    virtual void cbSetPeerServer(PeerID peerID, ServerID serverID);
+    /// @param serverType 新进入的服务器类型
+    /// @param serverID 新进入的服务器编号，该值如果是 INVALID_SERVER_ID，表示和服务器断开关联
+    virtual void cbSetPeerServer(PeerID peerID, EServerType serverType, ServerID serverID);
 
 #ifndef USE_PIPESERVER_TEST_LOGIC
 

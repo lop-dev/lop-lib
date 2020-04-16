@@ -24,13 +24,16 @@ public:
 
 protected:
     virtual bool _enterPoll();
-    virtual void _leavePoll();
+    virtual bool _leavePoll();
+
+    virtual void _cbTerminate(const BCLib::Network::CTcpConnectionSPtr& connPtr);
 
     virtual bool _createMsgExecPtr(BCLib::uint16 type, BCLib::uint16 id, BCLib::Framework::CMsgExecPtr& msgExecPtr);
-    virtual void _onMS2XSReqAccept(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
+
+    virtual void _onXX2XSNtfServerType(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
     virtual void _onMS2XSNtfLogicServerList(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
     virtual void _onMS2XSNtfExternalServerList(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
-    virtual void _onMS2XSNtfVerifySuccess(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
+    virtual void _onMS2XSReqAccept(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
     virtual void _onMS2XSNtfRemoveServer(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
     virtual void _onMS2XSReqServerSave(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);
 	virtual void _onMS2XSNtfServerClose(BCLib::Framework::SThdMsgLabel* msgLabel, BCLib::Framework::SMessage* msg);

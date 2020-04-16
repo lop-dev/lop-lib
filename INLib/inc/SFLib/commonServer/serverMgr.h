@@ -33,6 +33,8 @@ public:
     void setLogicServerList(const SFLib::Message::SMsgMS2XSNtfLogicServerList* msg, int msgSize);
     void setExternalServerList(const SFLib::Message::SMsgMS2XSNtfExternalServerList* msg, int msgSize);
 
+    bool getServerInfo(ServerID serverID, SFLib::Message::SServerInfo& serverInfo);
+
     std::vector<SFLib::Message::SServerInfo> getLogicServerList();
     std::vector<SFLib::Message::SServerInfo> getExternalServerList();
 
@@ -42,9 +44,10 @@ public:
     void setNetSendByClient(ServerID serverID);
     void setNetSendByStub(ServerID serverID);
     bool isSetNetSend(ServerID serverID);
+    bool isConnectionValid(ServerID serverID);
 
-    bool getServerInfo(ServerID serverID, SFLib::Message::SServerInfo& serverInfo);
 	void dumpInfo();
+    bool ntfNetworkInfo2MS(BCLib::uint16 uCount);
 
     //
     int getLogicServerIDs(BCLib::uint64 groupID, EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive = false);
@@ -67,6 +70,10 @@ public:
     virtual bool sendMsgToXSByID(ServerID serverID, const SFLib::Message::CNetMessage* msg);
     virtual bool sendMsgToXSByID(ServerID serverID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
+protected:
+    // 这个接口是给 CXmlConfig 专用的，也算是给 MasterServer 专用的
+    void _sendServerListToStubs();
+
 private:
     void _clear();
 
@@ -86,12 +93,15 @@ private:
         BCLib::Network::CTcpSendSPtr m_netSend;
 		bool m_bStub;
     };
+    bool _isConnected(SServerInfoExt* pServerInfoExt);
 
 private:
     BCLib::Utility::CHashMap<BCLib::uint32, SServerInfoExt*> m_serverListByID;
     std::vector<SServerInfoExt*> m_serverListByType[ESERVER_MAX - ESERVER_GAMECLIENT];
 	BCLib::Utility::CMutex  m_mutexServerListByID;
 	BCLib::Utility::CMutex  m_mutexServerListByType;
+
+    friend class CXmlConfig;
 };
 }//CommonServer
 }//SFLib

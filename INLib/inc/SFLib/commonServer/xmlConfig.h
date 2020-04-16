@@ -148,14 +148,16 @@ public:
     virtual ~CXmlConfig();
 
     void sendMsgToAllStub(const SFLib::Message::SNetMessage* msg, unsigned int msgSize);
-    void sendMsgToAllStubExceptID(const SFLib::Message::SNetMessage* msg, unsigned int msgSize, ServerID serverID);
-	void sendMsgToAllStubExceptType(const SFLib::Message::SNetMessage* msg, unsigned int msgSize, BCLib::int32 serverType);
-	void sendMsgToAllStubAssignType(const SFLib::Message::SNetMessage* msg, unsigned int msgSize, BCLib::int32 serverType);
-
+    void sendMsgToAllStubByGroupID(const SFLib::Message::SNetMessage* msg, unsigned int msgSize, GroupID groupID);
+    void sendMsgToAllStubByServerType(const SFLib::Message::SNetMessage* msg, unsigned int msgSize, BCLib::int32 serverType);
+    void sendMsgToAllStubExceptServerID(const SFLib::Message::SNetMessage* msg, unsigned int msgSize, ServerID serverID);
+	void sendMsgToAllStubExceptServerType(const SFLib::Message::SNetMessage* msg, unsigned int msgSize, BCLib::int32 serverType);
+	
 	void sendMsgToAllStub(const SFLib::Message::CNetMessage* msg);
-	void sendMsgToAllStubExceptID(const SFLib::Message::CNetMessage* msg, ServerID serverID);
-	void sendMsgToAllStubExceptType(const SFLib::Message::CNetMessage* msg, BCLib::int32 serverType);
-	void sendMsgToAllStubAssignType(const SFLib::Message::CNetMessage* msg, BCLib::int32 serverType);
+    void sendMsgToAllStubByGroupID(const SFLib::Message::CNetMessage* msg, GroupID groupID);
+    void sendMsgToAllStubByServerType(const SFLib::Message::CNetMessage* msg, BCLib::int32 serverType);
+	void sendMsgToAllStubExceptServerID(const SFLib::Message::CNetMessage* msg, ServerID serverID);
+	void sendMsgToAllStubExceptServerType(const SFLib::Message::CNetMessage* msg, BCLib::int32 serverType);
 
     void notifyCloseServer(GroupID groupID);
 
@@ -180,6 +182,9 @@ public:
     void setExternalServerActive(ServerID serverID, bool isActive);
     void setExternalServerInited(ServerID serverID, bool isInited);
 
+    bool isLogicServerNotifyActive(ServerID srcServerID, ServerID dstServerID);
+    bool isExternalServerNotifyActive(ServerID srcServerID, ServerID dstServerID);
+
     ServerID fetchLogicServerID(SFLib::EServerType serverType, BCLib::Network::ENetType netType, const char* peerIP);
     EServerType fetchLogicServerType(ServerID serverID, BCLib::Network::ENetType netType, const char* peerIP);
     SServerInfo* getLogicServerInfo(ServerID serverID);
@@ -191,16 +196,23 @@ public:
     bool getLogicServerAcceptInfo(ServerID serverID, SFLib::Message::SServerAcceptInfo& acceptInfo);
 	bool getExternalServerAcceptInfo(ServerID serverID, SFLib::Message::SServerAcceptInfo& acceptInfo);
 
+    void sendLogicServerListToStub(CTcpStubPtr tcpStubPtr, GroupID groupID);
     void sendLogicServerListToStub(CTcpStub* tcpStub, GroupID groupID);
+
+    void sendExternalServerListToStub(CTcpStubPtr tcpStubPtr);
     void sendExternalServerListToStub(CTcpStub* tcpStub);
 
-    void notifyAlreadyActiveStubsAll();
-    void notifyAlreadyInitedStubsAll();
+    void notifyAlreadyActiveServersForLogicStub(CTcpStub* tcpStub);
+    void notifyAlreadyActiveServersForExternalStub(CTcpStub* tcpStub);
+    void notifyAlreadyActiveServersForAllStubs();
+
+    void notifyAlreadyInitedServersForLogicStubs(CTcpStub* tcpStub);
+    void notifyAlreadyInitedServersForAllStubs();
 
     void setClearPeers(ServerID serverID, bool bClear);
     bool isAllServerClearPeers();
     void setServerSave(ServerID serverID, bool bSave);
-    bool isAllServerServerSave();
+    bool isAllServerServerSave(GroupID groupID = INVALID_GROUP_ID);
 
     int getLogicActiveServerListMap(SActiveServerListMap& serverMap);
 
@@ -231,7 +243,15 @@ private:
     bool _shouldConnectTo(EServerType startServer, EServerType endServer);
 
 private:
+    void _resetSMsgMS2XSNtfLogicServerList();
+    void _resetSMsgMS2XSNtfExternalServerList();
+
+    void _sendSMsgMS2XSNtfLogicServerList(CTcpStubPtr tcpStubPtr, GroupID groupID);
+    void _sendSMsgMS2XSNtfExternalServerList(CTcpStubPtr tcpStubPtr);
+
+private:
     std::string m_strFile;
+    std::string m_strFileMd5;
 
     std::map<std::string, EServerType> m_logicServerType;
     std::map<EServerType, SLogicServerConnectionItem> m_logicServerConnection;
@@ -241,6 +261,16 @@ private:
     std::map<std::string, EServerType> m_externalServerType;
     SExternalServerListItemVec m_externalServerList;
 	BCLib::Utility::CMutex m_mutexExternalServerList;
+
+    // 缓存一下消息，降低高并发时MS的CPU压力
+    typedef std::vector<SFLib::Message::SMsgMS2XSNtfLogicServerList> SMsgMS2XSNtfLogicServerListVec;
+    typedef std::map<GroupID, SMsgMS2XSNtfLogicServerListVec> SMsgMS2XSNtfLogicServerListMap;
+    SMsgMS2XSNtfLogicServerListMap m_mapSMsgMS2XSNtfLogicServerList;
+    BCLib::Utility::CMutex m_mutexSMsgMS2XSNtfLogicServerList;
+
+    typedef std::vector<SFLib::Message::SMsgMS2XSNtfExternalServerList> SMsgMS2XSNtfExternalServerListVec;
+    SMsgMS2XSNtfExternalServerListVec m_vecSMsgMS2XSNtfExternalServerList;
+    BCLib::Utility::CMutex m_mutexSMsgMS2XSNtfExternalServerList;
 };
 }//CommonServer
 }//SFLib

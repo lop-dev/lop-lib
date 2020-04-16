@@ -62,7 +62,7 @@ private:
 
     void _setServerInfo(EServerType serverType, ServerID serverID);
     void _delServerInfo(EServerType serverType, ServerID serverID);
-    BCLib::uint8 _getServerInfo(SFLib::Message::SPeerServerInfo* serverList);
+    BCLib::uint16 _getServerInfo(SFLib::Message::SPeerServerInfo* serverList);
 
 private:
     ServerID m_gatewayServerID;

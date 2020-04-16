@@ -110,13 +110,14 @@ struct SPeerServerInfo
     ServerType m_serverType;
     ServerID m_activeServerID;
 };
+typedef std::vector<SPeerServerInfo> SPeerServerInfoVec;
 
 SFLIB_MSGDEBUG(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_MS2XS_NTF_INIT_PEERID);
 struct SMsgMS2XSNtfInitPeerID : public SNetMessage
 {
 public:
     PeerID m_peerID;
-    BCLib::uint8 m_count;
+    BCLib::uint16 m_count;
     SPeerServerInfo m_peerServerInfo[1];
 
     SMsgMS2XSNtfInitPeerID() : SNetMessage(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_MS2XS_NTF_INIT_PEERID)
@@ -129,13 +130,13 @@ public:
     int getSize(int count) { return sizeof(SMsgMS2XSNtfInitPeerID) - sizeof(SPeerServerInfo) + count * sizeof(SPeerServerInfo); }
 };
 
-SFLIB_MSGDEBUG(ESERVER_GAMECLIENT, EFUNC_GAMEFRAME, EMID_XS2GC_NTF_SELF_PEER_ID);
+SFLIB_MSGDEBUG(ESERVER_GAMECLIENT, EFUNC_GAMEFRAME, EMID_XS2GC_NTF_SELF_PEERID);
 struct SMsgXS2GCNtfSelfPeerID : public SNetMessage
 {
 public:
     PeerID m_peerID;
 
-    SMsgXS2GCNtfSelfPeerID() : SNetMessage(ESERVER_GAMECLIENT, EFUNC_GAMEFRAME, EMID_XS2GC_NTF_SELF_PEER_ID)
+    SMsgXS2GCNtfSelfPeerID() : SNetMessage(ESERVER_GAMECLIENT, EFUNC_GAMEFRAME, EMID_XS2GC_NTF_SELF_PEERID)
     {
         m_peerID = 0;
     }
@@ -350,20 +351,22 @@ struct SMsgXS2XSReqEnterServer : public SNetMessage
 {
 public:
     PeerID m_peerID;
+	GroupID m_groupID;
 	EntityID m_entityID;
     ServerID m_serverID;
-    EPeerEnterReason m_nReason;
     ServerID m_gatewayServerID;
     BCLib::Network::TcpStubID m_gameClientStubID;
+	EPeerEnterReason m_nReason;
 
     SMsgXS2XSReqEnterServer() : SNetMessage(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_XS2XS_REQ_ENTER_SERVER)
     {
         m_peerID = INVALID_PEER_ID;
+		m_groupID = INVALID_GROUP_ID;
 		m_entityID = INVALID_ENTITY_ID;
         m_serverID = INVALID_SERVER_ID;
-        m_nReason = EPEERENTERREASON_UNKNOW;
         m_gatewayServerID = INVALID_SERVER_ID;
         m_gameClientStubID = BCLib::Network::INVALID_TCPSTUBID;
+		m_nReason = EPEERENTERREASON_UNKNOW;
     }
 };
 
@@ -390,7 +393,7 @@ struct SMsgXS2XSSetEnterServer : public SNetMessage
 {
 public:
     PeerID m_peerID;
-    BCLib::uint8 m_count;
+    BCLib::uint16 m_count;
     SPeerServerInfo m_serverInfo[1];
 
     SMsgXS2XSSetEnterServer() : SNetMessage(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_XS2XS_SET_ENTER_SERVER)
@@ -399,8 +402,8 @@ public:
         m_count = 0;
     }
 
-    int getSize() { return sizeof(SMsgMS2XSNtfInitPeerID) - sizeof(SPeerServerInfo) + m_count * sizeof(SPeerServerInfo); }
-    int getSize(int count) { return sizeof(SMsgMS2XSNtfInitPeerID) - sizeof(SPeerServerInfo) + count * sizeof(SPeerServerInfo); }
+    int getSize() { return sizeof(SMsgXS2XSSetEnterServer) - sizeof(SPeerServerInfo) + m_count * sizeof(SPeerServerInfo); }
+    int getSize(int count) { return sizeof(SMsgXS2XSSetEnterServer) - sizeof(SPeerServerInfo) + count * sizeof(SPeerServerInfo); }
 };
 
 SFLIB_MSGDEBUG(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_XS2XS_REQ_LEAVE_SERVER);
@@ -435,6 +438,85 @@ public:
         m_serverID = INVALID_SERVER_ID;
         m_serverType = (BCLib::uint8)ESERVER_UNKNOW;
     }
+};
+
+//////////////////////////////////////////////////////////////////////////
+// Peer 列表 进入/离开 逻辑服的流程消息（通过 直连 方式）
+//////////////////////////////////////////////////////////////////////////
+struct SReqEnterOrLeaveServer
+{
+    bool m_bEnter; // true 代表进入 false 代表离开
+    PeerID m_peerID;
+    GroupID m_groupID;
+    EntityID m_entityID;
+    ServerID m_serverID;
+    ServerID m_gatewayServerID;
+    BCLib::Network::TcpStubID m_gameClientStubID;
+    BCLib::uint32 m_nReason; // EPeerEnterReason 或者 EPeerLeaveReason
+
+    SReqEnterOrLeaveServer()
+    {
+        m_bEnter = true;
+        m_peerID = INVALID_PEER_ID;
+        m_groupID = INVALID_GROUP_ID;
+        m_entityID = INVALID_ENTITY_ID;
+        m_serverID = INVALID_SERVER_ID;
+        m_gatewayServerID = INVALID_SERVER_ID;
+        m_gameClientStubID = BCLib::Network::INVALID_TCPSTUBID;
+        m_nReason = 0;
+    }
+};
+typedef std::vector<SReqEnterOrLeaveServer> SReqEnterOrLeaveServerVec;
+
+SFLIB_MSGDEBUG(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_XS2XS_REQ_ENTER_OR_LEAVE_SERVER);
+struct SMsgXS2XSReqEnterOrLeaveServer : public SNetMessage
+{
+public:
+    BCLib::uint16 m_count;
+    SReqEnterOrLeaveServer m_reqEnterOrLeaveServer[1];
+
+    SMsgXS2XSReqEnterOrLeaveServer() : SNetMessage(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_XS2XS_REQ_ENTER_OR_LEAVE_SERVER)
+    {
+        m_count = 0;
+    }
+
+    int getSize() { return sizeof(SMsgXS2XSReqEnterOrLeaveServer) - sizeof(SReqEnterOrLeaveServer) + m_count * sizeof(SReqEnterOrLeaveServer); }
+    int getSize(int count) { return sizeof(SMsgXS2XSReqEnterOrLeaveServer) - sizeof(SReqEnterOrLeaveServer) + count * sizeof(SReqEnterOrLeaveServer); }
+};
+
+struct SResEnterOrLeaveServer
+{
+    bool m_bEnter; // true 代表进入 false 代表离开
+    EErrorType m_errorID;
+    PeerID m_peerID;
+    ServerID m_serverID;
+    ServerType m_serverType;
+
+    SResEnterOrLeaveServer()
+    {
+        m_bEnter = true;
+        m_errorID = EERROR_OK;
+        m_peerID = INVALID_PEER_ID;
+        m_serverID = INVALID_SERVER_ID;
+        m_serverType = (BCLib::uint8)ESERVER_UNKNOW;
+    }
+};
+typedef std::vector<SResEnterOrLeaveServer> SResEnterOrLeaveServerVec;
+
+SFLIB_MSGDEBUG(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_XS2XS_RES_ENTER_OR_LEAVE_SERVER);
+struct SMsgXS2XSResEnterOrLeaveServer : public SNetMessage
+{
+public:
+    BCLib::uint16 m_count;
+    SResEnterOrLeaveServer m_resEnterOrLeaveServer[1];
+
+    SMsgXS2XSResEnterOrLeaveServer() : SNetMessage(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_XS2XS_RES_ENTER_OR_LEAVE_SERVER)
+    {
+        m_count = 0;
+    }
+
+    int getSize() { return sizeof(SMsgXS2XSResEnterOrLeaveServer) - sizeof(SResEnterOrLeaveServer) + m_count * sizeof(SResEnterOrLeaveServer); }
+    int getSize(int count) { return sizeof(SMsgXS2XSResEnterOrLeaveServer) - sizeof(SResEnterOrLeaveServer) + count * sizeof(SResEnterOrLeaveServer); }
 };
 
 #ifdef WIN32

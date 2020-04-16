@@ -91,20 +91,26 @@ public:
     CTcpStub(const BCLib::Network::CTcpConnectionSPtr& netConn);
     virtual ~CTcpStub();
 
-    /// @brief 只在有真正玩家连接的服务器上才会生效(比如GW)
-    /// @return PeerID
-    virtual PeerID getPeerID() const
+    virtual GroupID getGroupID()
     {
-        return 0;
+        return SFLib::INVALID_GROUP_ID;
     }
 
     ServerID getServerID() const
     {
         return m_serverID;
     }
+
     EServerType getServerType() const
     {
         return m_serverType;
+    }
+
+    /// @brief 只在有真正玩家连接的服务器上才会生效(比如GW)
+    /// @return PeerID
+    virtual PeerID getPeerID() const
+    {
+        return 0;
     }
 
     virtual BCLib::int32 send(const SFLib::Message::CNetMessage* msg);
