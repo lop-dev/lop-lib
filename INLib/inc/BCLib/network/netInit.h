@@ -9,7 +9,7 @@
 #define __BCLIB_NETWORK_NETINIT_H__
 
 #include <BCLib/network/baseDef.h>
-
+#include <BCLib/utility/thread/mutex.h>
 
 namespace BCLib
 {
@@ -135,6 +135,13 @@ public:
         static BCLib::uint32 ms_epollWaitTimeout;           //! millisecond
     };
 
+public:
+    static void setBindError(bool bValue);
+    static bool getBindError();
+
+private:
+    static bool m_bBindError;
+    static BCLib::Utility::CMutex m_mutexBindError;
 };
 }//Network
 }//BCLib

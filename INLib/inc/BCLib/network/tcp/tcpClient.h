@@ -77,7 +77,8 @@ public:
 
 protected:
     virtual bool _enterPoll();
-    virtual void _leavePoll();
+    virtual bool _leavePoll();
+
     virtual bool _cbParseMsg(const void* msgBuff, BCLib::uint32 msgSize) = 0;
     virtual bool _cbSendMsg(const BCLib::Network::CTcpConnectionSPtr& connPtr);
     virtual void _cbTerminate(const BCLib::Network::CTcpConnectionSPtr& connPtr);

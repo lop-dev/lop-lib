@@ -27,7 +27,15 @@ protected:
     virtual ~CDatabaseMgr();
 
 public:
-	bool			init(CDatabaseTaskMgr* pDatabaseTaskMgr, std::string strDbFile);
+    /// @brief 初始化数据库
+    /// @return bool
+    /// @param pDatabaseTaskMgr
+    /// @param strDbFile
+    /// @param uGroupCount 如果 uGroupCount 传的是0，会尝试从数据库的配置文件中读取线程数
+	bool			init(CDatabaseTaskMgr* pDatabaseTaskMgr, std::string strDbFile, BCLib::uint32 uGroupCount = 0);
+
+	BCLib::uint32	getDBMaxNum() { return m_dbMaxNum; }
+	BCLib::uint32	getTBMaxNum() { return m_tbMaxNum; }
 
 	BCLib::uint32	getDBIndex(BCLib::uint64 uHash);
 	BCLib::uint32	getTBIndex(BCLib::uint64 uHash);

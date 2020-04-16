@@ -118,6 +118,7 @@
     protected:\
         CFunction() : m_fun(NULL) {}\
     public:\
+        virtual ~CFunction() {}\
         CFunction(FType fun) : m_fun(fun) {}\
         CFunction(CFunction& obj) : m_fun(obj.m_fun) {}\
         CFunction& operator =(CFunction& obj)\
@@ -160,6 +161,7 @@
         typedef R(C::*FType)(BCLIB_UTILITY_FUNCTION_TYPE_##N);\
     public:\
         CFunctionObject() : m_fun(NULL), m_obj(NULL) {}\
+        virtual ~CFunctionObject() {}\
         CFunctionObject(FType fun, C* obj) : m_fun(fun), m_obj(obj) {}\
         CFunctionObject(CFunctionObject& obj) : m_fun(obj.m_fun), m_obj(obj.m_obj) {}\
         CFunctionObject& operator =(CFunctionObject& obj)\

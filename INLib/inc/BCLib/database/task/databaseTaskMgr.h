@@ -31,7 +31,11 @@ public:
     CDatabaseTaskMgr();
     virtual ~CDatabaseTaskMgr();
 
-    bool            init(std::vector<BCLib::Database::CDBInfo*> & vecDBInfo, BCLib::uint32 uGroupCount = 8);
+    /// @brief 初始化数据库连接，函数中会控制线程数在 1 ~ 1024
+    /// @return bool
+    /// @param vecDBInfo
+    /// @param uGroupCount 实际上就是对应的线程数
+    bool            init(std::vector<BCLib::Database::CDBInfo*> & vecDBInfo, BCLib::uint32 uGroupCount);
     void            release();
 
     bool            addTask(BCLib::uint32 u32HashID, CDatabaseTask * pTask);
@@ -40,8 +44,8 @@ public:
     BCLib::int32    processTaskResults();
 
     BCLib::uint32   getGroupCount() {return m_vecGroup.size();}
+    BCLib::uint32	hash(BCLib::uint64 uKey) { return BCLib::uint32(uKey % m_vecGroup.size()); }
 
-    BCLib::uint32	hash(BCLib::uint32 u32Hash) { return u32Hash % m_vecGroup.size(); }
     KeyHashMap&     getKeyHmap() {return m_keyHashMap;}
 
 	BCLib::int32    getReqQueueSize();

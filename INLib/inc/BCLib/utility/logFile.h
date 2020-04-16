@@ -123,6 +123,15 @@ public:
     static void globalError(uint16 module, const char* file, int line, const char* funcname, const char* format, ...);
     static void globalSystem(uint16 module, const char* file, int line, const char* funcname, const char* format, ...);
 
+public: // 在实际开发的过程中，有需要对特定对象，进行详细的日志跟踪
+    static void setFilter(uint64 filter);
+    static void filterDebug(uint64 filter, uint16 module, const char* file, int line, const char* funcname, const char* format, ...);
+    static void filterTrace(uint64 filter, uint16 module, const char* file, int line, const char* funcname, const char* format, ...);
+    static void filterInfor(uint64 filter, uint16 module, const char* file, int line, const char* funcname, const char* format, ...);
+    static void filterWarning(uint64 filter, uint16 module, const char* file, int line, const char* funcname, const char* format, ...);
+    static void filterError(uint64 filter, uint16 module, const char* file, int line, const char* funcname, const char* format, ...);
+    static void filterSystem(uint64 filter, uint16 module, const char* file, int line, const char* funcname, const char* format, ...);
+
 public:
 	static void setDebugValue();
 	static bool getDebugValue();
@@ -184,13 +193,6 @@ private:
 
 #define BCLIB_LOG_STACK(module, format, ...)    BCLib::Utility::CLog::globalStack(module, __FILE__, 0, format, ## __VA_ARGS__);
 
-//#define BCLIB_LOG_DEBUG(module, format, ...)    BCLib::Utility::CLog::globalDebug(module, __FILE__, __LINE__, format, ## __VA_ARGS__);
-//#define BCLIB_LOG_TRACE(module, format, ...)    BCLib::Utility::CLog::globalTrace(module, __FILE__, __LINE__, format, ## __VA_ARGS__);
-//#define BCLIB_LOG_INFOR(module, format, ...)    BCLib::Utility::CLog::globalInfor(module, __FILE__, __LINE__, format, ## __VA_ARGS__);
-//#define BCLIB_LOG_WARNING(module, format, ...)  BCLib::Utility::CLog::globalWarning(module, __FILE__, __LINE__, format, ## __VA_ARGS__);
-//#define BCLIB_LOG_ERROR(module, format, ...)    BCLib::Utility::CLog::globalError(module, __FILE__, __LINE__, format, ## __VA_ARGS__);
-//#define BCLIB_LOG_SYSTEM(module, format, ...)   BCLib::Utility::CLog::globalSystem(module, __FILE__, __LINE__, format, ## __VA_ARGS__);
-
 #define BCLIB_LOG_DEBUG(module, format, ...)    BCLib::Utility::CLog::globalDebug(module, __FILE__, __LINE__, __FUNCTION__, format, ## __VA_ARGS__);
 #define BCLIB_LOG_TRACE(module, format, ...)    BCLib::Utility::CLog::globalTrace(module, __FILE__, __LINE__, __FUNCTION__, format, ## __VA_ARGS__);
 #define BCLIB_LOG_INFOR(module, format, ...)    BCLib::Utility::CLog::globalInfor(module, __FILE__, __LINE__, __FUNCTION__, format, ## __VA_ARGS__);
@@ -198,6 +200,13 @@ private:
 #define BCLIB_LOG_ERROR(module, format, ...)    BCLib::Utility::CLog::globalError(module, __FILE__, __LINE__, __FUNCTION__, format, ## __VA_ARGS__);
 #define BCLIB_LOG_SYSTEM(module, format, ...)   BCLib::Utility::CLog::globalSystem(module, __FILE__, __LINE__, __FUNCTION__, format, ## __VA_ARGS__);
 
+ // 在实际开发的过程中，有需要对特定对象，进行详细的日志跟踪
+#define BCLIB_FILTER_DEBUG(filter, module, format, ...)    BCLib::Utility::CLog::filterDebug(filter, module, __FILE__, __LINE__, __FUNCTION__, format, ## __VA_ARGS__);
+#define BCLIB_FILTER_TRACE(filter, module, format, ...)    BCLib::Utility::CLog::filterTrace(filter, module, __FILE__, __LINE__, __FUNCTION__, format, ## __VA_ARGS__);
+#define BCLIB_FILTER_INFOR(filter, module, format, ...)    BCLib::Utility::CLog::filterInfor(filter, module, __FILE__, __LINE__, __FUNCTION__, format, ## __VA_ARGS__);
+#define BCLIB_FILTER_WARNING(filter, module, format, ...)  BCLib::Utility::CLog::filterWarning(filter, module, __FILE__, __LINE__, __FUNCTION__, format, ## __VA_ARGS__);
+#define BCLIB_FILTER_ERROR(filter, module, format, ...)    BCLib::Utility::CLog::filterError(filter, module, __FILE__, __LINE__, __FUNCTION__, format, ## __VA_ARGS__);
+#define BCLIB_FILTER_SYSTEM(filter, module, format, ...)   BCLib::Utility::CLog::filterSystem(filter, module, __FILE__, __LINE__, __FUNCTION__, format, ## __VA_ARGS__);
 
 #define BCLIB_LOG_SET_MODULE_ON(module)\
     do {\

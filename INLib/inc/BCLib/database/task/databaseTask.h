@@ -81,7 +81,9 @@ public:
 	virtual BCLib::Database::CConnection* getConnection(BCLib::Database::CConnectionMap & mapConnections, BCLib::uint32 dbIndex, std::string& strDBName);
 	virtual BCLib::Database::CConnection* getConnection(BCLib::Database::CConnectionMap & mapConnections, std::string strDBIndex, std::string& strDBName);
 
+	// dbIndex    是从 000 开始的，适应程序员对代码编写的脑回路
 	// strDBIndex 是从 001 开始的，适应非程序对配置文件的脑回路
+	std::string		getDBName(BCLib::uint32 dbIndex);
 	std::string		getDBName(std::string strDBIndex); 
 
 protected:
@@ -106,6 +108,22 @@ protected:
 	BCLib::uint64					u64Value = 0;(void)u64Value;			\
 	std::string						strValue = "";(void)strValue;			\
 	BCLib::Utility::SPointerGuard<BCLib::Database::CDataReader> readerGuard(pDataReader);
+
+#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_GetConnection														\
+	pConnection = getConnection(mapConnections, strDBIndex, strDBName);												\
+	if (pConnection == NULL)																						\
+	{																												\
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "pConnection == NULL");											\
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_NOCONNECTION;													\
+		return false;																								\
+	}																												\
+																													\
+	if (!pConnection->isConnected())																				\
+	{																												\
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "!pConnection->isConnected()");									\
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_UNCONNECTED;													\
+		return false;																								\
+	}
 
 #define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_UseDB																\
 	pConnection = getConnection(mapConnections, strDBIndex, strDBName);												\
@@ -192,8 +210,8 @@ protected:
 	{																												\
 		if (pDataReader->getRecordCount() < 1)																		\
 		{																											\
-			BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "pDataReader->getRecordCount() < 1");						\
-			BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "sqlSentence : [%s:%s][%s]", strDBName.c_str(), strTBName.c_str(), sqlSentence.str().c_str());	\
+			BCLIB_LOG_WARNING(BCLib::ELOGMODULE_DEFAULT, "pDataReader->getRecordCount() < 1");						\
+			BCLIB_LOG_WARNING(BCLib::ELOGMODULE_DEFAULT, "sqlSentence : [%s:%s][%s]", strDBName.c_str(), strTBName.c_str(), sqlSentence.str().c_str());	\
 			m_errCode = BCLib::Database::EDB_TASK_ERROR_NO_RECORD;													\
 			BCLIB_SAFE_DELETE(pDataReader);																			\
 			return false;																							\
