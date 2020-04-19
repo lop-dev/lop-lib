@@ -39,6 +39,9 @@ public:
 	void setGroupID(GroupID groupID) { m_groupID = groupID; }
 	GroupID getGroupID() const { return m_groupID; }
 
+    void setOrgServerID(ServerID serverID) { m_orgServerID = serverID; }
+    ServerID getOrgServerID() const { return m_orgServerID; }
+
 	void setEntityID(EntityID entityID)	{ m_entityID = entityID; }
 	EntityID getEntityID() const { return m_entityID; }
 
@@ -76,6 +79,7 @@ protected:
 private:
     PeerID m_netPeerID;
 	GroupID m_groupID;
+    ServerID m_orgServerID;
 	EntityID m_entityID;
 
     EPeerState m_peerState;

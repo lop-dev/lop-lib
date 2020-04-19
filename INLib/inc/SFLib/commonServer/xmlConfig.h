@@ -166,13 +166,6 @@ public:
 
 // 以下函数开放出来主要是给 CMasterServer 和 CMasterStub 用的
 public:
-	/// @brief 模拟收到网络消息 SMsgMS2XSNtfLogicServerList 后，直接对 CServerMgr 进行设置
-	/// @return void
-	void setServerMgrLogicServerList();
-	/// @brief 模拟收到网络消息 SMsgMS2XSNtfExternalServerList 后，直接对 CServerMgr 进行设置
-	/// @return void
-	void setServerMgrExternalServerList();
-
     void setLogicServerFetched(ServerID serverID, bool isFetched);
     void setLogicServerActive(ServerID serverID, bool isActive);
 	void setLogicServerInited(ServerID serverID, bool isInited);
@@ -219,6 +212,11 @@ public:
     SExternalServerListItemVec& getExternalServerList();
 
 private:
+    /// @brief 模拟收到网络消息 SMsgMS2XSNtfLogicServerList 后，直接对 CServerMgr 进行设置
+    void _setServerMgrLogicServerList();
+    /// @brief 模拟收到网络消息 SMsgMS2XSNtfExternalServerList 后，直接对 CServerMgr 进行设置
+    void _setServerMgrExternalServerList();
+
 	bool _isNecessaryLogicServer(ServerID serverID);
 	bool _isNecessaryLogicServerActives();
 

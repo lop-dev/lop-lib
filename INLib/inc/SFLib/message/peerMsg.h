@@ -352,8 +352,8 @@ struct SMsgXS2XSReqEnterServer : public SNetMessage
 public:
     PeerID m_peerID;
 	GroupID m_groupID;
+    ServerID m_orgServerID;
 	EntityID m_entityID;
-    ServerID m_serverID;
     ServerID m_gatewayServerID;
     BCLib::Network::TcpStubID m_gameClientStubID;
 	EPeerEnterReason m_nReason;
@@ -362,8 +362,8 @@ public:
     {
         m_peerID = INVALID_PEER_ID;
 		m_groupID = INVALID_GROUP_ID;
+        m_orgServerID = INVALID_SERVER_ID;
 		m_entityID = INVALID_ENTITY_ID;
-        m_serverID = INVALID_SERVER_ID;
         m_gatewayServerID = INVALID_SERVER_ID;
         m_gameClientStubID = BCLib::Network::INVALID_TCPSTUBID;
 		m_nReason = EPEERENTERREASON_UNKNOW;
@@ -376,15 +376,15 @@ struct SMsgXS2XSResEnterServer : public SNetMessage
 public:
     EErrorType m_errorID;
     PeerID m_peerID;
-    ServerID m_serverID;
-    ServerType m_serverType;
+    ServerID m_dstServerID;
+    ServerType m_dstServerType;
 
     SMsgXS2XSResEnterServer() : SNetMessage(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_XS2XS_RES_ENTER_SERVER)
     {
         m_errorID = EERROR_OK;
         m_peerID = INVALID_PEER_ID;
-        m_serverID = INVALID_SERVER_ID;
-        m_serverType = (BCLib::uint8)ESERVER_UNKNOW;
+        m_dstServerID = INVALID_SERVER_ID;
+        m_dstServerType = (BCLib::uint8)ESERVER_UNKNOW;
     }
 };
 
@@ -411,13 +411,11 @@ struct SMsgXS2XSReqLeaveServer : public SNetMessage
 {
 public:
     PeerID m_peerID;
-    ServerID m_serverID;
     EPeerLeaveReason m_nReason;
 
     SMsgXS2XSReqLeaveServer() : SNetMessage(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_XS2XS_REQ_LEAVE_SERVER)
     {
         m_peerID = INVALID_PEER_ID;
-        m_serverID = INVALID_SERVER_ID;
         m_nReason = EPEERLEAVEREASON_UNKNOW;
     }
 };
@@ -428,15 +426,15 @@ struct SMsgXS2XSResLeaveServer : public SNetMessage
 public:
     EErrorType m_errorID;
     PeerID m_peerID;
-    ServerID m_serverID;
-    ServerType m_serverType;
+    ServerID m_dstServerID;
+    ServerType m_dstServerType;
 
     SMsgXS2XSResLeaveServer() : SNetMessage(ESERVER_ANYXS, EFUNC_GAMEFRAME, EMID_XS2XS_RES_LEAVE_SERVER)
     {
         m_errorID = EERROR_OK;
         m_peerID = INVALID_PEER_ID;
-        m_serverID = INVALID_SERVER_ID;
-        m_serverType = (BCLib::uint8)ESERVER_UNKNOW;
+        m_dstServerID = INVALID_SERVER_ID;
+        m_dstServerType = (BCLib::uint8)ESERVER_UNKNOW;
     }
 };
 
@@ -448,8 +446,8 @@ struct SReqEnterOrLeaveServer
     bool m_bEnter; // true 代表进入 false 代表离开
     PeerID m_peerID;
     GroupID m_groupID;
+    ServerID m_orgServerID;
     EntityID m_entityID;
-    ServerID m_serverID;
     ServerID m_gatewayServerID;
     BCLib::Network::TcpStubID m_gameClientStubID;
     BCLib::uint32 m_nReason; // EPeerEnterReason 或者 EPeerLeaveReason
@@ -459,8 +457,8 @@ struct SReqEnterOrLeaveServer
         m_bEnter = true;
         m_peerID = INVALID_PEER_ID;
         m_groupID = INVALID_GROUP_ID;
+        m_orgServerID = INVALID_SERVER_ID;
         m_entityID = INVALID_ENTITY_ID;
-        m_serverID = INVALID_SERVER_ID;
         m_gatewayServerID = INVALID_SERVER_ID;
         m_gameClientStubID = BCLib::Network::INVALID_TCPSTUBID;
         m_nReason = 0;
@@ -489,16 +487,16 @@ struct SResEnterOrLeaveServer
     bool m_bEnter; // true 代表进入 false 代表离开
     EErrorType m_errorID;
     PeerID m_peerID;
-    ServerID m_serverID;
-    ServerType m_serverType;
+    ServerID m_dstServerID;
+    ServerType m_dstServerType;
 
     SResEnterOrLeaveServer()
     {
         m_bEnter = true;
         m_errorID = EERROR_OK;
         m_peerID = INVALID_PEER_ID;
-        m_serverID = INVALID_SERVER_ID;
-        m_serverType = (BCLib::uint8)ESERVER_UNKNOW;
+        m_dstServerID = INVALID_SERVER_ID;
+        m_dstServerType = (BCLib::uint8)ESERVER_UNKNOW;
     }
 };
 typedef std::vector<SResEnterOrLeaveServer> SResEnterOrLeaveServerVec;
