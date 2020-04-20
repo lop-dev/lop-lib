@@ -96,10 +96,9 @@ private:
     bool _isConnected(SServerInfoExt* pServerInfoExt);
 
 private:
+    BCLib::Utility::CMutex m_mutexServerList;
     BCLib::Utility::CHashMap<BCLib::uint32, SServerInfoExt*> m_serverListByID;
     std::vector<SServerInfoExt*> m_serverListByType[ESERVER_MAX - ESERVER_GAMECLIENT];
-	BCLib::Utility::CMutex  m_mutexServerListByID;
-	BCLib::Utility::CMutex  m_mutexServerListByType;
 
     friend class CXmlConfig;
 };

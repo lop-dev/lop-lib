@@ -40,8 +40,9 @@ public:
 
     virtual ~CNetMsgQueue()
     {
-        m_queueChar->clear();
-		BCLIB_SAFE_DELETE(m_queueChar);
+        //此类的子类的都是作为单例使用，为防止死锁，注销掉下面两句，内存检测到此处可以忽略
+        //m_queueChar->clear();
+		//BCLIB_SAFE_DELETE(m_queueChar);
     }
 
     void push(const TYPE& tempData, const SFLib::Message::SNetMessage* netMessage, const BCLib::uint32 netMessageSize)
