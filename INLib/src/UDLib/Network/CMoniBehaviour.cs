@@ -94,7 +94,27 @@ namespace UDLib.Network
             if (msgLabel.ResIndex != 0)
             {
                 UDLib.Utility.CDebugOut.Log("收到系统消息，更新断线重连位置 : ResIndex = " + msgLabel.ResIndex);
-                CReconnectMgr.Instance.LatestResIndex = msgLabel.ResIndex;
+               // CReconnectMgr.Instance.LatestResIndex = msgLabel.ResIndex;
+                UInt16 min, max;
+                if (CReconnectMgr.Instance.LatestResIndex > msgLabel.ResIndex)
+                {
+                    min = msgLabel.ResIndex;
+                    max = CReconnectMgr.Instance.LatestResIndex;
+                }
+                else
+                {
+                    max = msgLabel.ResIndex;
+                    min = CReconnectMgr.Instance.LatestResIndex;
+
+                }
+                if ((min != 0 ) &&(max > min + 30000) )
+                {
+                    CReconnectMgr.Instance.LatestResIndex = min;
+                }
+                else
+                {
+                    CReconnectMgr.Instance.LatestResIndex = max;
+                }
             }
 
             return ret;
