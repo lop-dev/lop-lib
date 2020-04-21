@@ -11,6 +11,7 @@ namespace UDLib.Editor
 {
     public class CAssetBundleEditor
     {
+     
         private static UDLib.Utility.IResourceDefine _iResourceDefine;
         public static UDLib.Utility.IResourceDefine ResourceDefine
         {
@@ -177,7 +178,14 @@ namespace UDLib.Editor
                     sw.WriteLine("          new string[] // " + info.categoryName);
                     sw.WriteLine("          {");
                     foreach (string path in info.subPaths)
-                        sw.WriteLine("              \"" + path.Replace("\\", "/") + "\",");
+                    {
+                        if(!path.Contains(".svn"))
+                        {
+                            sw.WriteLine("              \"" + path.Replace("\\", "/") + "\",");
+                        }
+                       
+                    }
+                       
                     sw.WriteLine("          },");
                 }
                 sw.WriteLine("      };");
@@ -750,7 +758,7 @@ namespace UDLib.Editor
         /// </summary>
         private static void CopyVideoToDir(string src,string des)
         {
-            string videoRoot = Path.Combine(des, "video");
+            string videoRoot = Path.Combine(des, "videos");
             if (Directory.Exists(videoRoot))
             {
                 Directory.Delete(videoRoot,true);
@@ -918,7 +926,7 @@ namespace UDLib.Editor
         {
             StringBuilder sb = new StringBuilder();
             string videoRoot = string.Format("{0}/AssetBuild/{1}/AssetBundle/",rootPath,platform).Replace('\\','/');
-            string[] videoFiles = Directory.GetFiles(Path.Combine(videoRoot,"video"), "*.mp4", SearchOption.AllDirectories);
+            string[] videoFiles = Directory.GetFiles(Path.Combine(videoRoot,"videos"), "*.mp4", SearchOption.AllDirectories);
             foreach(var videoFile in videoFiles)
             {
                 string assetKey = videoFile.Replace('\\', '/').Replace(videoRoot, "");
@@ -966,9 +974,8 @@ namespace UDLib.Editor
 
             string[] files = Directory.GetFiles(Application.streamingAssetsPath + "/assets/", "*.dat*", SearchOption.AllDirectories);
             StreamWriter sw = new StreamWriter(Application.streamingAssetsPath + "/zip_ab_all_list.txt");
-
-            StreamWriter shaderAndFontSW = new StreamWriter(Application.streamingAssetsPath + "/shader_and_font.txt");
-
+            StringBuilder shaderSW = new StringBuilder();
+            
             bool isIncludeShader = false;
             bool isIncludeFont = false;
 
@@ -982,13 +989,13 @@ namespace UDLib.Editor
                 file = file.Substring(startIndex + "assets/".Length);
                 if (file.IndexOf("shader.dat") != -1)
                 {
-                    shaderAndFontSW.WriteLine(file);
+                    shaderSW.AppendLine(file);
                     isIncludeShader = true;
                 }
 
                 if (file.IndexOf("ui_font.dat") != -1)
                 {
-                    shaderAndFontSW.Write(file);
+                    shaderSW.Append(file);
                     isIncludeFont = true;
                 }
 
@@ -999,6 +1006,10 @@ namespace UDLib.Editor
             sw.Flush();
             sw.Close();
 
+
+            StreamWriter shaderAndFontSW = new StreamWriter(Application.streamingAssetsPath + "/shader_and_font.txt");
+
+            shaderAndFontSW.Write(shaderSW.ToString());
             shaderAndFontSW.Flush();
             shaderAndFontSW.Close();
 
