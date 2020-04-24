@@ -63,6 +63,8 @@ class BCLIB_UTILITY_API CSingletonMgr
 {
 public:
     static CSingletonMgr& singleton();
+    static bool isInDestroy() { return m_bInDestroy; }
+
     void lock();
     void unLock();
     typedef void(*DeleteFunc)(void*);
@@ -89,8 +91,14 @@ private:
     };
     typedef std::vector<item> DestroyFuncList;
     DestroyFuncList m_funcList;
-    bool m_bInDestroy;
+    static bool m_bInDestroy;
 };
+
+#define BCLIB_UTILITY_SINGLETON_CALL(Class, Func)       \
+    if (!BCLib::Utility::CSingletonMgr::isInDestroy())  \
+    {                                                   \
+        Class::singleton().Func;                        \
+    }
 
 void BCLIB_UTILITY_API abend4Singleton();
 }//Utility
