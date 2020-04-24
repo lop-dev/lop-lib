@@ -50,4 +50,4 @@
 
 ## 开发人员
 #### 以首字母为序：
-#### 190240784@qq.com、a1051574139@163.com、caokouyilang@gmail.com、fanghuaiyi@gmail.com、jeffqin007@163.com、jinhong_zheng@163.com、jumberstudio@gmail.com、lvgang1983@gmail.com、lvhong@gmail.com、maosher@gmail.com、wangjin_16@126.com、yz_person@163.com、zuowilliam2018@gmail.com
+#### 190240784@qq.com、a1051574139@163.com、fanghuaiyi@gmail.com、jeffqin007@163.com、jinhong_zheng@163.com、jumberstudio@gmail.com、lvgang1983@gmail.com、lvhong@gmail.com、maosher@gmail.com、wangjin_16@126.com、yz_person@163.com、zuowilliam2018@gmail.com
