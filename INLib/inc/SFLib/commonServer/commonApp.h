@@ -29,7 +29,7 @@ public:
     }
 
 public:
-    bool isRuning() { return m_isRunning; }
+    bool isRunning() { return m_isRunning; }
     void terminate() { m_isRunning = false; }
 
 protected:
