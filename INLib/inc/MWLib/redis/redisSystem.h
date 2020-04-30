@@ -119,6 +119,8 @@ namespace MWLib
 			//断开当前线程的所有链接
 			void  disconnectAll();
 
+			void distroy();
+
 			bool  exec(const char *cmd, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			bool setCommandTimeout(const struct timeval tv, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);

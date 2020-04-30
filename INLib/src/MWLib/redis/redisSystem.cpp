@@ -26,11 +26,7 @@ namespace MWLib
 		}
 		CRedisSystem:: ~CRedisSystem()
 		{
-			for (auto it = m_redisClientMap.begin(); it != m_redisClientMap.end(); ++it)
-			{
-				BCLIB_SAFE_DELETE(it->second);
-			}
-			m_redisClientMap.clear();
+			distroy();
 		}
 
 		bool CRedisSystem::init(EREDIS_ACCESS_RIGHT_TYPE type)
@@ -144,6 +140,15 @@ namespace MWLib
 			{
 				pRedisClient->disconnectAll();
 			}
+		}
+
+		void CRedisSystem::distroy()
+		{
+			for (auto it = m_redisClientMap.begin(); it != m_redisClientMap.end(); ++it)
+			{
+				BCLIB_SAFE_DELETE(it->second);
+			}
+			m_redisClientMap.clear();
 		}
 
 		bool  CRedisSystem::exec(const char *cmd, EREDIS_CONTEXT_TYPE type)
