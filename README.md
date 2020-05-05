@@ -44,10 +44,8 @@
 #### 能获取的源码已经上传，后续应该会逐步上传更多的源码，暂时未上传的的源码，尽量不要索取，谢谢配合。
 
 ## 联系方式
-#### 有相关问题或建议，请发邮件至下列邮箱：
+#### 有相关问题或修改建议，请发邮件至下列邮箱：
 #### 主邮箱：lop_dev@hotmail.com
-#### 技术群：621571458
 
-## 开发人员
-#### 以首字母为序：
-#### 190240784@qq.com、a1051574139@163.com、fanghuaiyi@gmail.com、jeffqin007@163.com、jinhong_zheng@163.com、jumberstudio@gmail.com、lvgang1983@gmail.com、lvhong@gmail.com、maosher@gmail.com、wangjin_16@126.com、yz_person@163.com、zuowilliam2018@gmail.com
+## 版本维护
+#### 如果有使用该框架的产品上线，可以告知我们一下，我们可以为每款上线产品做分支备份。
