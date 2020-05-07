@@ -38,16 +38,24 @@ public:
     }
 
     bool addNetPeer(CNetPeerPtr& netPeer);
-    void delNetPeer(PeerID peerID);
+    
     bool getNetPeer(PeerID peerID, CNetPeerPtr& netPeer);
-    void clear();
-    void traversal(CNetPeerMgrCallback& cb);
-
+    bool getNetPeerByEntityID(EntityID entityID, CNetPeerPtr& netPeer);
     CNetPeerPtrVec getNetPeers(ServerID serverID);
 
-	bool getNetPeerByEntityID(EntityID entityID, CNetPeerPtr& netPeer);
+    void delNetPeer(PeerID peerID);
 
-	BCLib::uint32 getNetPeerNum() { return m_netPeerHasnMap.size(); }
+    /// @brief 当一个服务器断线了，清理跟它关联的所有玩家，会触发本进程cbPeerLeave()和cbPeerRemove()
+    /// @return void
+    /// @param serverType 服务器类型
+    /// @param serverID   服务器编号
+    void clear(ServerType serverType, ServerID serverID);
+    /// @brief 清理所有玩家
+    /// @return void
+    void clear();
+
+    BCLib::uint32 getNetPeerNum() { return m_netPeerHasnMap.size(); }
+    void traversal(CNetPeerMgrCallback& cb);
 
     bool serializeTo(BCLib::Utility::CStream& stream) const;
     bool serializeFrom(BCLib::Utility::CStream& stream);

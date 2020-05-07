@@ -27,9 +27,9 @@ public:
     CNetPeerPtr getNetPeer(PeerID peerID);
 	CNetPeerPtr getNetPeerByEntityID(EntityID entityID);
 
-	/// @brief 当一个服务器断线了，清理跟它关联的所有玩家
+	/// @brief 当一个服务器断线了，清理跟它关联的所有玩家，会触发本进程cbPeerLeave()和cbPeerRemove()
 	/// @return void
-	/// @param serverType 服务器类型，只会发送给内部服务器
+	/// @param stubID 这边传入的是内部服务器StubID
 	void clear(BCLib::Network::TcpStubID stubID);
 
 protected:

@@ -28,7 +28,7 @@ public:
     CNetPeerPtr getNetPeer(PeerID peerID);
 	CNetPeerPtr getNetPeerByEntityID(EntityID entityID);
 
-    BCLib::Utility::CUniqueID32* getAllocPeerID()
+    BCLib::Utility::CUniqueID64* getAllocPeerID()
     {
         return &m_allocPeerID;
     }
@@ -43,7 +43,7 @@ public:
     void delAllNetPeer();
 
 private:
-    BCLib::Utility::CUniqueID32 m_allocPeerID;
+    BCLib::Utility::CUniqueID64 m_allocPeerID;
 };
 }//Master
 }//SFLib

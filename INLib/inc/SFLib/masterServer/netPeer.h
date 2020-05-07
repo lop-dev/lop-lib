@@ -51,7 +51,7 @@ public:
 	ServerID getGatewayServerID() { return m_gatewayServerID; }
 	void setGatewayServerID(ServerID gatewayServerID) { m_gatewayServerID = gatewayServerID; }
 
-	ServerID getGameClientStubID() { return m_gameClientStubID; }
+    BCLib::Network::TcpStubID getGameClientStubID() { return m_gameClientStubID; }
 	void setGameClientStubID(BCLib::Network::TcpStubID gameClientStubID) { m_gameClientStubID = gameClientStubID; }
 
 	bool isInServer(ServerID serverID);
