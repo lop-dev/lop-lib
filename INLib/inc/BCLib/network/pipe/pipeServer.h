@@ -47,7 +47,7 @@ protected:
 private:
     CPipeMgr* m_pipeMgr;
     CPipeStubMgr* m_pipeStubMgr;
-    BCLib::Utility::CUniqueID32 m_uniqueID;
+    BCLib::Utility::CUniqueID64 m_uniqueID;
 };
 }//Network
 }//BCLib

@@ -63,6 +63,14 @@ public:
             return resID;
         }
 
+        if (!m_canRecycle)
+        {
+            m_currID = m_startID;
+            resID = m_currID;
+            m_mutex.unlock();
+            return resID;
+        }
+
         if(!m_recycleIDList.empty())
         {
             typename std::set<TYPE>::iterator it = m_recycleIDList.begin();
@@ -78,6 +86,10 @@ public:
     void putID(TYPE id)
     {
         m_mutex.lock();
+        if (!m_canRecycle)
+        {
+            return;
+        }
         if(m_startID <= id && id < m_endID)
         {
             typename std::set<TYPE>::iterator it = m_recycleIDList.find(id);

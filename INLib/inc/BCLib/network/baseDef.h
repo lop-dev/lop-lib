@@ -64,16 +64,16 @@ typedef struct sockaddr SOCKADDR;
 
 const BCLib::uint16 INVALID_PORT = BCLib::uint16(-1);
 
-typedef BCLib::uint16 TcpConnectID;
+typedef BCLib::uint64 TcpConnectID;
 const TcpConnectID INVALID_TCPCONNECTID = 0;
 
-typedef BCLib::uint16 TcpStubID;
+typedef BCLib::uint64 TcpStubID;
 const TcpStubID INVALID_TCPSTUBID = INVALID_TCPCONNECTID;
 
-typedef BCLib::uint32 PipeID;
+typedef BCLib::uint64 PipeID;
 const PipeID INVALID_PIPEID = 0;
 
-typedef BCLib::uint32 PipeStubID;
+typedef BCLib::uint64 PipeStubID;
 const PipeStubID INVALID_PIPESTUBID = INVALID_PIPEID;
 
 const BCLib::uint32 MAX_SOCKEVENT = 16;

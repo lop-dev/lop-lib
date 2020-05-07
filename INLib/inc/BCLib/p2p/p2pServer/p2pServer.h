@@ -44,7 +44,7 @@ public:
     void setAcceptorLostPacketRate(float rate);
 
     bool sendMsgByPeerID(BCLib::P2p::PeerID peerID, const void* msg, BCLib::uint32 msgSize);
-    bool sendMsgByConnectID(BCLib::P2p::ConnectID connID, const void* msg, BCLib::uint32 msgSize);
+    bool sendMsgByConnectID(BCLib::P2p::UdpConnectID connID, const void* msg, BCLib::uint32 msgSize);
 
     void setSendDelay(BCLib::P2p::PeerID peerID, BCLib::uint32 delay, BCLib::uint32 delayDiff);
     void setLostPacketRate(BCLib::P2p::PeerID peerID, float rate);
@@ -59,34 +59,34 @@ public:
     float getSendRateInKBPerSec(BCLib::P2p::PeerID peerID) const;
     float getRecvRateInKBPerSec(BCLib::P2p::PeerID peerID) const;
 
-    bool setRegisterPeer(BCLib::P2p::ConnectID connID, BCLib::P2p::PeerID peerID);
+    bool setRegisterPeer(BCLib::P2p::UdpConnectID connID, BCLib::P2p::PeerID peerID);
     bool allowConnectPeer(BCLib::P2p::PeerID srcPeerID, BCLib::P2p::PeerID dstPeerID);
 
     bool closePeerID(BCLib::P2p::PeerID peerID);
 
 protected:
     virtual void _cbParseMsgByPeerID(BCLib::P2p::PeerID peerID, const void* msg, BCLib::uint32 msgSize) = 0;
-    virtual void _cbParseMsgByConnectID(BCLib::P2p::ConnectID connID, const void* msg, BCLib::uint32 msgSize) = 0;
+    virtual void _cbParseMsgByConnectID(BCLib::P2p::UdpConnectID connID, const void* msg, BCLib::uint32 msgSize) = 0;
     virtual void _cbRequestConnectPeer(BCLib::P2p::PeerID srcPeerID, BCLib::P2p::PeerID dstPeerID) = 0;
-    virtual void _cbConnectionTerminate(BCLib::P2p::ConnectID connID, BCLib::P2p::PeerID peerID) = 0;
+    virtual void _cbConnectionTerminate(BCLib::P2p::UdpConnectID connID, BCLib::P2p::PeerID peerID) = 0;
 
 protected:
-    BCLib::Utility::CUniqueID32& _getConnIDMaker();
+    BCLib::Utility::CUniqueID64& _getConnIDMaker();
     bool _isTransitMsgBySrv() const;
     CP2pConnectionSPtr _getConnByPeerID(PeerID peerID) const;
-    CP2pConnectionSPtr _getConnByConnID(ConnectID connID) const;
+    CP2pConnectionSPtr _getConnByConnID(UdpConnectID connID) const;
     CP2pConnectionSPtr _getConnByAddr(BCLib::uint64 addr) const;
     bool _addConnection(const CP2pConnectionSPtr& conn);
     void _delConnection(const CP2pConnectionSPtr& conn);
-    bool _bindPeerID(ConnectID connID, PeerID peerID);
+    bool _bindPeerID(UdpConnectID connID, PeerID peerID);
 
 private:
     typedef std::vector<CP2pServerThread*> SrvThdVec;
     typedef BCLib::Utility::CHashMap<PeerID, CP2pConnectionSPtr> ConnMapByPeerID;
-    typedef BCLib::Utility::CHashMap<ConnectID, CP2pConnectionSPtr> ConnMapByConnID;
+    typedef BCLib::Utility::CHashMap<UdpConnectID, CP2pConnectionSPtr> ConnMapByConnID;
     typedef BCLib::Utility::CHashMap<BCLib::uint64, CP2pConnectionSPtr> ConnMapByAddr;
 
-    BCLib::Utility::CUniqueID32 m_connIDMaker;
+    BCLib::Utility::CUniqueID64 m_connIDMaker;
     bool m_bTransitMsgBySrv;
     CEncrypt* m_encrypt;
     CCompress* m_compress;

@@ -52,8 +52,8 @@ typedef struct sockaddr SOCKADDR;
 
 const BCLib::uint16 INVALID_PORT = BCLib::uint16(-1);
 
-typedef BCLib::uint32 ConnectID;
-const ConnectID INVALID_CONNECTID = 0;
+typedef BCLib::uint64 UdpConnectID;
+const UdpConnectID INVALID_UDPCONNECTID = 0;
 
 typedef BCLib::uint64 PeerID;
 const PeerID INVALID_PEERID = 0;

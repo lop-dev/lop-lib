@@ -60,7 +60,7 @@ private:
     CTcpStubMgr* m_netStubMgr;
     CNetAcceptorMgr* m_netAcceptorMgr;
     CNetStubPoolBase* m_stubPool[1];
-    BCLib::Utility::CUniqueID16 m_uniqueID;
+    BCLib::Utility::CUniqueID64 m_uniqueID;
 };
 }//Network
 }//BCLib
