@@ -491,6 +491,71 @@ namespace MWLib
 			snprintf(strKey, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
 			return setNxString(strKey, value, type);
 		}
+
+		bool CRedisClient::setNxExString(const char *key, const char *value, BCLib::int64 ttl, EREDIS_CONTEXT_TYPE type)
+		{
+			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "setString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+				return false;
+			}
+			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
+
+			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
+			if (it == m_redisContextMap.end())
+			{
+				return false;
+			}
+			m_redisContext = it->second.m_redisContext;
+			m_redisReply = NULL;
+			if (m_redisContext == NULL)
+			{
+				return false;
+			}
+
+			m_redisReply = (redisReply*)redisCommand(m_redisContext, "SET %s %s EX %d NX", key, value, ttl);
+			if (m_redisReply == NULL)
+			{
+				this->disconnect(type);
+				return false;
+			}
+			if (m_redisReply->type == REDIS_REPLY_ERROR)
+			{
+				freeReplyObject(m_redisReply);
+				m_redisReply = NULL;
+				return false;
+			}
+			if (m_redisReply->type == REDIS_REPLY_NIL)
+			{
+				freeReplyObject(m_redisReply);
+				m_redisReply = NULL;
+				return false;
+			}
+			MWLIB_PROCESS_REPLY_ERROR
+		}
+		bool CRedisClient::setNxExString(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *value, BCLib::int64 ttl, EREDIS_CONTEXT_TYPE type)
+		{
+			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "hsetString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+				return false;
+			}
+			if (key == NULL || subkey == NULL)
+			{
+				return false;
+			}
+			char strKey[1024] = { 0 };
+			snprintf(strKey, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
+			return setNxExString(strKey, value, ttl, type);
+		}
+
 		bool CRedisClient::setString(const char* key, const char* value, EREDIS_CONTEXT_TYPE type)
 		{
 			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
@@ -1416,6 +1481,66 @@ namespace MWLib
 			snprintf(tmp, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
 			return persist(tmp, type);
 
+		}
+
+		bool CRedisClient::hexists(const char*key, const char*field, bool &ret, EREDIS_CONTEXT_TYPE type)
+		{
+			if (m_eAccessRight != E_REDIS_READ_AND_WRITE)
+			{
+				BCLIB_LOG_INFOR(BCLib::ELOGMODULE_DEFAULT, "hsetString exec 权限非法 m_eAccessRight= %d", m_eAccessRight);
+				return false;
+			}
+			if (key == NULL)
+			{
+				return false;
+			}
+			if (!checkConnect(type))
+			{
+				return false;
+			}
+			std::unordered_map<BCLib::uint16, REDIS_NODE>::iterator it = m_redisContextMap.find(type);
+			if (it == m_redisContextMap.end())
+			{
+				return false;
+			}
+			m_redisContext = it->second.m_redisContext;
+			m_redisReply = NULL;
+			if (m_redisContext == NULL)
+			{
+				return false;
+			}
+			m_redisReply = (redisReply*)redisCommand(m_redisContext, "HEXISTS %s %s ", key, field);
+
+			if (m_redisReply == NULL)
+			{
+				this->disconnect(type);
+				return false;
+			}
+			if (m_redisReply->type == REDIS_REPLY_INTEGER)
+			{
+				if (m_redisReply->integer == 1)
+				{
+					ret = true;
+				}
+				else
+				{
+					ret = false;
+				}
+			}
+			freeReplyObject(m_redisReply);
+			m_redisReply = NULL;
+			return true;
+		}
+
+		bool CRedisClient::hexists(const char*key, BCLib::uint64 uniqueid, const char*subkey, const char*field, bool &ret, EREDIS_CONTEXT_TYPE type)
+		{
+			if (key == NULL || subkey == NULL)
+			{
+				return false;
+			}
+			char tmp[1024] = { 0 };
+			snprintf(tmp, 1024, "%s:[%llu]:%s", key, uniqueid, subkey);
+			return hexists(tmp, field, ret, type);
 		}
 
 		bool CRedisClient::hsetString(const char* key, const char* field, const char* value, EREDIS_CONTEXT_TYPE type)

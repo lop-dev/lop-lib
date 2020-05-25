@@ -131,6 +131,9 @@ namespace MWLib
 			//String
 			bool setNxString(const char *key, const char *value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 			bool setNxString(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+			//String
+			bool setNxExString(const char *key, const char *value, BCLib::int64 ttl, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+			bool setNxExString(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *value, BCLib::int64 ttl, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			bool setString(const char *key, const char *value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 			bool setString(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *value, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
@@ -192,6 +195,26 @@ namespace MWLib
 			/*
 			*map 封装↓↓↓↓↓
 			*/
+
+			/**
+			* 功能:检测key中是否有, field字段
+			* @param key 键值即对应hash表名
+			* @param field 哈希表key中的域
+			* @param ret 是否存在
+			* @return 是否执行成功
+			*/
+			bool hexists(const char*key, const char*field, bool &ret, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
+
+			/**
+			* 功能:检测key中是否有, field字段
+			* @param key 键值即对应hash表名
+			* @param uniqueid 实体ID 没有实体ID的可以考虑统一使用1000000来代替
+			* @param subkey 二级表名
+			* @param field 哈希表key中的域 字符串类型
+			* @param ret 是否存在
+			* @return 是否执行成功
+			*/
+			bool hexists(const char*key, BCLib::uint64 uniqueid, const char*subkey, const char*field, bool &ret, EREDIS_CONTEXT_TYPE type = E_REDIS_SERVERTYPE_LOGIC);
 
 			/**
 			* 功能:将特定field - value(域-值)对设置到哈希表key中

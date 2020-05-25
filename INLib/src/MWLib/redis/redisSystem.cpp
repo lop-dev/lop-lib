@@ -207,7 +207,24 @@ namespace MWLib
 			}
 			return false;
 		}
-
+		bool CRedisSystem::setNxExString(const char *key, const char *value, BCLib::int64 ttl, EREDIS_CONTEXT_TYPE type)
+		{
+			CRedisClient* pRedisClient = getRedisClient();
+			if (pRedisClient != NULL)
+			{
+				return pRedisClient->setNxExString(key, value, ttl, type);
+			}
+			return false;
+		}
+		bool CRedisSystem::setNxExString(const char *key, BCLib::uint64 uniqueid, const char *subkey, const char *value, BCLib::int64 ttl, EREDIS_CONTEXT_TYPE type)
+		{
+			CRedisClient* pRedisClient = getRedisClient();
+			if (pRedisClient != NULL)
+			{
+				return pRedisClient->setNxExString(key, uniqueid, subkey, value, ttl, type);
+			}
+			return false;
+		}
 		bool CRedisSystem::setString(const char *key, const char *value, EREDIS_CONTEXT_TYPE type)
 		{
 			CRedisClient* pRedisClient = getRedisClient();
@@ -402,7 +419,26 @@ namespace MWLib
 			return 0;
 		}
 
+		bool CRedisSystem::hexists(const char*key, const char*field, bool &ret, EREDIS_CONTEXT_TYPE type)
+		{
+			CRedisClient* pRedisClient = getRedisClient();
+			if (pRedisClient != NULL)
+			{
+				return pRedisClient->hexists(key, field, ret, type);
+			}
+			return false;
+		}
 		
+		bool CRedisSystem::hexists(const char*key, BCLib::uint64 uniqueid, const char*subkey, const char*field, bool &ret, EREDIS_CONTEXT_TYPE type)
+		{
+			CRedisClient* pRedisClient = getRedisClient();
+			if (pRedisClient != NULL)
+			{
+				return pRedisClient->hexists(key, uniqueid, subkey, field, ret, type);
+			}
+			return false;
+		}
+
 		bool CRedisSystem::hsetString(const char*key, const char*field, const char*value, EREDIS_CONTEXT_TYPE type)
 		{
 			CRedisClient* pRedisClient = getRedisClient();
