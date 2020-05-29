@@ -54,7 +54,7 @@ public:
     /// @return void
     void clear();
 
-    BCLib::uint32 getNetPeerNum() { return m_netPeerHasnMap.size(); }
+    BCLib::uint32 getNetPeerNum() { return m_mapNetPeerByPeerID.size(); }
     void traversal(CNetPeerMgrCallback& cb);
 
     bool serializeTo(BCLib::Utility::CStream& stream) const;
@@ -68,7 +68,8 @@ private:
     static CNetPeerMgr* m_netPeerMgr;
 
 protected:
-    BCLib::Utility::CHashMap<PeerID, CNetPeerPtr> m_netPeerHasnMap;
+    BCLib::Utility::CHashMap<PeerID, CNetPeerPtr> m_mapNetPeerByPeerID;
+    BCLib::Utility::CHashMap<EntityID, CNetPeerPtr> m_mapNetPeerByEntityID;
     BCLib::Utility::CMutex m_mutex;
 };
 }//CommonServer

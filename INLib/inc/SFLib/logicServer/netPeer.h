@@ -124,6 +124,9 @@ private:
 	std::map<EServerType, ServerID> m_externalServerTypeMap;
 	BCLib::Utility::CMutex  m_mutexExternalServerTypeMap;
 
+    ServerType m_resLeaveServerType;
+    SFLib::Message::SMsgXS2XSResLeaveServer m_resLeaveServerMsg;
+
 	//
     friend class CMasterClient;
     friend class CLogicStub;

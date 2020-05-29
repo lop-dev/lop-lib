@@ -27,10 +27,6 @@ namespace CommonServer
 {
 
 #ifndef USE_PIPESERVER_TEST_LOGIC
-#else
-#endif
-
-#ifndef USE_PIPESERVER_TEST_LOGIC
 class CCommonServer : public BCLib::Framework::CMainThread, public BCLib::Network::CTcpServer
 #else
 class CCommonServer : public BCLib::Framework::CMainThread, public BCLib::Network::CPipeServer
@@ -150,8 +146,8 @@ public:
     bool sendMsgToLogicServer(PeerID peerID, ServerID serverID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
 protected:
-	virtual CCommonClientPtr _createLogicClient(SFLib::Message::SServerInfo& serverInfo);
-	virtual CCommonClientPtr _createExternalClient();
+	virtual CCommonClientPtr _cbNewLogicClient(SFLib::Message::SServerInfo& serverInfo);
+	virtual CCommonClientPtr _cbNewExternalClient();
 
 public:
     /// @brief 其他Server与本地Server成功建立连接

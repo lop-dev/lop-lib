@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////
 //  created:    2011/11/01
-//  filename:   MSLib/commonDefine/msgGate.h
+//  filename:   SFLib/commonDefine/msgGate.h
 //  author:     League of Perfect
 /// @brief
 ///

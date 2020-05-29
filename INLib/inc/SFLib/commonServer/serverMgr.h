@@ -22,6 +22,13 @@ namespace SFLib
 {
 namespace CommonServer
 {
+
+enum EServerState
+{
+    ESERVERSTATE_NORMAL,        // 正常状态
+    ESERVERSTATE_RESTART,       // 准备重启
+};
+
 class CServerMgr
 {
     BCLIB_SINGLETON_DECLARE(CServerMgr);
@@ -84,6 +91,7 @@ private:
         {
 			m_netSend = NULL;
 			m_bStub = false;
+            m_eServerState = ESERVERSTATE_NORMAL;
         }
 
         int send(const SFLib::Message::CNetMessage* msg);
@@ -92,6 +100,7 @@ private:
 		SFLib::CommonServer::SServerInfo m_serverInfo;
         BCLib::Network::CTcpSendSPtr m_netSend;
 		bool m_bStub;
+        EServerState m_eServerState;
     };
     bool _isConnected(SServerInfoExt* pServerInfoExt);
 
@@ -102,6 +111,7 @@ private:
 
     friend class CXmlConfig;
 };
+
 }//CommonServer
 }//SFLib
 
