@@ -35,11 +35,14 @@ namespace UDLib.UI{
         public float centerSpeed = 10f;        //居中速度
         public float offsetY = 50;
         public float offsetScale = 0.8f;
+        public Vector2 childPivot = new Vector2(0.5f, 0.5f);
+        public bool needMask = false;
 
         //注册该事件获取当拖动结束时位于中心位置的子物体
         public delegate void OnCenterHandler(GameObject centerChild);
         public event OnCenterHandler onCenter;
-        public Action onCenterOnece;
+        public Action<int> onCenterOnece;
+        public Action<int> dragEndCB;
 
         private float _targetPos;
         private bool _centering = false;
@@ -72,9 +75,12 @@ namespace UDLib.UI{
             {
                 return;//yield break;
             }
-            for(int i =0;i< _container.childCount;i++)
+            if (needMask)
             {
-                _chilrenMask.Add(_container.GetChild(i).Find("mask").GetComponent<Image>());
+                for (int i = 0; i < _container.childCount; i++)
+                {
+                    _chilrenMask.Add(_container.GetChild(i).Find("mask").GetComponent<Image>());
+                }
             }
             ResetPosition();
             ChangeChildPosScale(_container.localPosition.x);
@@ -108,7 +114,7 @@ namespace UDLib.UI{
                         }
                         if (onCenterOnece != null && Mathf.Abs(_container.localPosition.x - _targetPos) < 5)
                         {
-                            onCenterOnece();
+                            onCenterOnece(_centerIndex);
                             onCenterOnece = null;
                         }
                         break;
@@ -138,7 +144,7 @@ namespace UDLib.UI{
             {
                 RectTransform childRT = _container.GetChild(i).GetComponent<RectTransform>();
                 if (!childRT.gameObject.activeSelf) continue;
-                childRT.pivot = new Vector2(0.5f, 1);
+                childRT.pivot = childPivot;
                 float value = _container.GetChild(i).localScale.x * _childSizeDelta.x / 2;
                 value += GetChildPosByIndex(i, _childSizeDelta.x);
                 childRT.anchoredPosition = new Vector2(value, _isInited ? childRT.anchoredPosition.y :0 );
@@ -168,6 +174,8 @@ namespace UDLib.UI{
                 case AxisType.Horizontal:
                     ResetChildrenPos();//计算变化后子节点的坐标
                     _targetPos = FindClosestPos(_container.localPosition.x);//计算目标点
+                    if (dragEndCB != null)
+                        dragEndCB(_centerIndex);
                     break;
             }
             
