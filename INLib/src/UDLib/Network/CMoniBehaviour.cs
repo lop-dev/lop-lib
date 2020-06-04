@@ -208,7 +208,11 @@ namespace UDLib.Network
             // 这个Cache后检测，保证断网后仍然可以缓存消息，在网络恢复后不会丢失消息（剧情过程中断网如不缓存会丢失消息导致黑屏）
             if (!m_tcpClient.IsValid())
             {
-                //UDLib.Utility.CDebugOut.LogError("SendMessage : !m_tcpClient.IsValid()");
+                if (m_tcpClient.m_bIsReady)
+                {
+                    m_tcpClient.Close();
+                }
+                UDLib.Utility.CDebugOut.LogWarning("SendMessage : !m_tcpClient.IsValid()");
                 return false;
             }
 
@@ -245,6 +249,7 @@ namespace UDLib.Network
 
             if (!m_tcpClient.IsValid())
             {
+                UDLib.Utility.CDebugOut.LogWarning("SendMessage : !m_tcpClient.IsValid()");
                 return false;
             }
 
@@ -253,6 +258,7 @@ namespace UDLib.Network
             {
                 if (curTicks < m_tcpClient.DelayedMsg.GetObject(msgResponse.UniqueID))
                 {
+                    UDLib.Utility.CDebugOut.LogWarning("SendMessage :DelayedMsg:" + msgResponse.UniqueID);
                     return false;
                 }
                 else

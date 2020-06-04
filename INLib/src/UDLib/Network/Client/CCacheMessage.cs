@@ -101,6 +101,10 @@ namespace UDLib.Network
                 m_messagePool.Clear();
             }
         }
+        public int GetLenCacheMessage()
+        {
+            return msgDictCache.Count ;
+        }
 
         // Update 检测超时
         public void Update()
@@ -144,11 +148,24 @@ namespace UDLib.Network
 #endif
                     if (timePassed > CReconnectMgr.Instance.TimeOutDuration)
                     {
+                        if (!m_tcpClient.IsValid())
+                        {
+                           if ( m_tcpClient.m_bIsReady)
+                            {
+                              //  UDLib.Utility.CDebugOut.LogError("IsValid out CbTerminate: " + (m_tcpClient.CbTerminate != null).ToString());
+                                m_tcpClient.Close();
+                              //  m_tcpClient.CbTerminate();
+                            }
+
+                            UDLib.Utility.CDebugOut.LogWarning("SendMessage : !m_tcpClient.IsValid()");
+                            return;
+                        }
                         CSLib.Utility.CStream msgStream = new CSLib.Utility.CStream();
 
                         messageObject.sentCount++;
                         messageObject.timeStamp = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
                         messageObject.netMessage.Serialize(msgStream);
+                      
                         SendMessage(msgStream);
                         if (CReconnectMgr.Instance.timeoutCallBack != null)
                         {

@@ -233,6 +233,7 @@ namespace UDLib.Network
             {
                 if (curTicks < m_tcpClient.DelayedMsg.GetObject(msgResponse.UniqueID))
                 {
+                    UDLib.Utility.CDebugOut.LogWarning("SendMessage :DelayedMsg:"+ msgResponse.UniqueID);
                     return false;
                 }
                 else

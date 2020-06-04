@@ -1,12 +1,15 @@
 ﻿using System;
+using  System.Collections.Generic;
 
 namespace UDLib.Network
 {
     public class CTcpClient : CSLib.Framework.CTcpClient
     {
+        public bool m_bIsReady = true;
         public CTcpClient()
         {
             m_cacheMessage = new CCacheMessage(this);
+            m_bIsReady = true;
         }
 
         public CSLib.Utility.CDictionary<UInt32, Int64> DelayedMsg
@@ -64,6 +67,8 @@ namespace UDLib.Network
 
         public void Update()
         {
+            if (!m_bIsReady)
+                return;
             m_cacheMessage.Update();
         }
 
@@ -74,7 +79,15 @@ namespace UDLib.Network
 
         public void ClearCacheMessage()
         {
+         //   UDLib.Utility.CDebugOut.LogError("CTcpClient :ClearCacheMessage");
             m_cacheMessage.ClearCacheMessage();
+            List<UInt32> keys =new List<UInt32>(m_dicDelayedMsg.Objects.Keys);
+            foreach(var key in keys)
+            {
+                m_dicDelayedMsg.DelObject(key);
+            }
+            keys.Clear();
+
         }
 
         private CSLib.Utility.CDictionary<UInt32, Int64> m_dicDelayedMsg = new CSLib.Utility.CDictionary<UInt32, Int64>(); // 第二个参数转成毫秒
