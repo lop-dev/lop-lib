@@ -15,11 +15,13 @@ namespace UDLib.Network
             {
                 m_sEchoIDCounter = 1;
             }
+            CSLib.Framework.CMsgExecuteMgr.Instance.AddMsgExecute(m_uEchoID, m_msgExecute);
         }
 
         public CMonoBehaviour(UT_ECHOID uEchoID)
         {
             m_uEchoID = uEchoID;
+            CSLib.Framework.CMsgExecuteMgr.Instance.AddMsgExecute(m_uEchoID, m_msgExecute);
         }
 
         public CSLib.Utility.CStatisticsNum<string> SendStatisticsNum
@@ -45,7 +47,7 @@ namespace UDLib.Network
             }
 
             m_tcpClient = tcpClient;
-            m_tcpClient.RegisterEchoID(m_uEchoID);
+            m_tcpClient.RegisterOwnerID(m_uEchoID);
 
             return true;
         }
@@ -89,12 +91,41 @@ namespace UDLib.Network
         /// <returns></returns>
         virtual protected bool ExecuteMessage(CSLib.Framework.CMessageLabel msgLabel, Byte[] msgBuff, Int32 msgSize)
         {
-            bool ret = m_msgExecute.ExecuteMessage(msgLabel, msgBuff, msgSize);
+            bool ret = false;
+            if (m_tcpClient.UseEchoID)
+            {
+                ret = m_msgExecute.ExecuteMessage(msgLabel, msgBuff, msgSize);
+            }
+            else
+            {
+                ret = CSLib.Framework.CMsgExecuteMgr.Instance.ExecuteMessage(msgLabel, msgBuff, msgSize);
+            }
+
             // 处理完收到的消息，更新已收到的最大response消息号，用于作为断线重连的开始位置
             if (msgLabel.ResIndex != 0)
             {
                 UDLib.Utility.CDebugOut.Log("收到系统消息，更新断线重连位置 : ResIndex = " + msgLabel.ResIndex);
-                CReconnectMgr.Instance.LatestResIndex = msgLabel.ResIndex;
+                //CReconnectMgr.Instance.LatestResIndex = msgLabel.ResIndex;
+                UInt16 min, max;
+                if (CReconnectMgr.Instance.LatestResIndex > msgLabel.ResIndex)
+                {
+                    min = msgLabel.ResIndex;
+                    max = CReconnectMgr.Instance.LatestResIndex;
+                }
+                else
+                {
+                    max = msgLabel.ResIndex;
+                    min = CReconnectMgr.Instance.LatestResIndex;
+
+                }
+                if ((min != 0) && (max > min + 30000))
+                {
+                    CReconnectMgr.Instance.LatestResIndex = min;
+                }
+                else
+                {
+                    CReconnectMgr.Instance.LatestResIndex = max;
+                }
             }
 
             return ret;
@@ -277,22 +308,39 @@ namespace UDLib.Network
             CheckTimeout();
 
             //UnityEngine.Profiling.Profiler.BeginSample("CMoniBehaviour > ExecuteMessages");
-            CSLib.Framework.CMsgBuffInfoQueue msgBuffInfoQueue = m_tcpClient.GetMsgBuffInfoQueue(m_uEchoID);
-            while (msgBuffInfoQueue.Count > 0)
+            CSLib.Framework.CMsgBuffInfoQueue msgBuffInfoQueue = null;
+
+            if (m_tcpClient.UseEchoID)
             {
-                CSLib.Framework.CMessageLabel msgLabel = new CSLib.Framework.CMessageLabel();
-                CSLib.Framework.CMsgBuffInfo msgBuffInfo = msgBuffInfoQueue.Dequeue();
-                // 执行后 msgLabel.Id 才会被赋值
-                if (!ExecuteMessage(msgLabel, msgBuffInfo.MsgBuff, msgBuffInfo.MsgSize))
+                msgBuffInfoQueue = m_tcpClient.GetMsgBuffInfoQueue(m_uEchoID);
+            }
+            else
+            {
+                msgBuffInfoQueue = m_tcpClient.GetMsgBuffInfoQueue(0);
+            }
+
+            if (msgBuffInfoQueue != null)
+            {
+                while (msgBuffInfoQueue.Count > 0)
                 {
-                    UDLib.Utility.CDebugOut.LogError("ExecuteMessages : 消息执行错误");
-                }
+                    CSLib.Framework.CMessageLabel msgLabel = new CSLib.Framework.CMessageLabel();
+                    CSLib.Framework.CMsgBuffInfo msgBuffInfo = msgBuffInfoQueue.Dequeue();
+                    // 执行后 msgLabel.Id 才会被赋值
+                    if (!ExecuteMessage(msgLabel, msgBuffInfo.MsgBuff, msgBuffInfo.MsgSize))
+                    {
+                        UDLib.Utility.CDebugOut.LogError("ExecuteMessages : 消息执行错误");
+                    }
 #if DEBUG
                 CSLib.Framework.CNetMessage msgResult = (CSLib.Framework.CNetMessage)msgLabel.MsgObject;
                 byte tmpServer = CSLib.Utility.CBitHelper.GetHighUInt8(msgResult.MsgType);
                 byte tmpFunc = CSLib.Utility.CBitHelper.GetLowUInt8(msgResult.MsgType);
                 m_recvStatisticsNum.AddNum(tmpServer.ToString() + " -> " + tmpFunc.ToString());
 #endif
+                }
+            }
+            else
+            {
+                UDLib.Utility.CDebugOut.LogError("ExecuteMessages : msgBuffInfoQueue == null");
             }
             //UnityEngine.Profiling.Profiler.EndSample();
         }
