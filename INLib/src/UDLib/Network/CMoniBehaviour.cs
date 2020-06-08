@@ -15,13 +15,11 @@ namespace UDLib.Network
             {
                 m_sEchoIDCounter = 1;
             }
-            CSLib.Framework.CMsgExecuteMgr.Instance.AddMsgExecute(m_uEchoID, m_msgExecute);
         }
 
         public CMoniBehaviour(UT_ECHOID uEchoID)
         {
             m_uEchoID = uEchoID;
-            CSLib.Framework.CMsgExecuteMgr.Instance.AddMsgExecute(m_uEchoID, m_msgExecute);
         }
 
         public CSLib.Utility.CStatisticsNum<string> SendStatisticsNum
@@ -61,7 +59,7 @@ namespace UDLib.Network
         /// <returns></returns>
         public bool AddMsgExecFunc(UInt16 type, UInt16 id, CSLib.Framework.DMsgExecFunc msgExecObj)
         {
-            return m_msgExecute.AddMsgExecFunc(type, id, msgExecObj);
+            return CSLib.Framework.CMsgExecuteMgr.Instance.AddMsgExecFunc(m_uEchoID, type, id, msgExecObj);
         }
 
         /// <summary>
@@ -74,7 +72,7 @@ namespace UDLib.Network
         /// <returns></returns>
         public bool AddMsgExecFunc(byte server, byte func, UInt16 id, CSLib.Framework.DMsgExecFunc msgExecObj)
         {
-            return m_msgExecute.AddMsgExecFunc(server, func, id, msgExecObj);
+            return CSLib.Framework.CMsgExecuteMgr.Instance.AddMsgExecFunc(m_uEchoID, server, func, id, msgExecObj);
         }
 
         public bool AddIgnoreTrace(byte server, byte func, UInt16 id)
@@ -94,7 +92,7 @@ namespace UDLib.Network
             bool ret = false;
             if (m_tcpClient.UseEchoID)
             {
-                ret = m_msgExecute.ExecuteMessage(msgLabel, msgBuff, msgSize);
+                ret = CSLib.Framework.CMsgExecuteMgr.Instance.ExecuteMessage(msgLabel, msgBuff, msgSize, m_uEchoID);
             }
             else
             {
@@ -353,7 +351,6 @@ namespace UDLib.Network
         private UT_ECHOID m_uEchoID = 0; // 是客户端用来标识处理不同系统的消息
 
         private CTcpClient m_tcpClient = null;
-        private CSLib.Framework.CMsgExecute m_msgExecute = new CSLib.Framework.CMsgExecute();
 
         private CSLib.Utility.CStatisticsNum<string> m_sendStatisticsNum = new CSLib.Utility.CStatisticsNum<string>();
         private CSLib.Utility.CStatisticsNum<string> m_recvStatisticsNum = new CSLib.Utility.CStatisticsNum<string>();
