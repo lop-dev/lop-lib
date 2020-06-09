@@ -75,6 +75,11 @@ namespace UDLib.Network
             return CSLib.Framework.CMsgExecuteMgr.Instance.AddMsgExecFunc(m_uEchoID, server, func, id, msgExecObj);
         }
 
+        public void ClrMsgExecFunc()
+        {
+            CSLib.Framework.CMsgExecuteMgr.Instance.DelMsgExecute(m_uEchoID);
+        }
+
         public bool AddIgnoreTrace(byte server, byte func, UInt16 id)
         {
             return CSLib.Framework.CMsgFactory.Instance.AddIgnoreTrace(server, func, id);
@@ -98,7 +103,7 @@ namespace UDLib.Network
             {
                 ret = CSLib.Framework.CMsgExecuteMgr.Instance.ExecuteMessage(msgLabel, msgBuff, msgSize);
             }
-            
+
             // 处理完收到的消息，更新已收到的最大response消息号，用于作为断线重连的开始位置
             if (msgLabel.ResIndex != 0)
             {

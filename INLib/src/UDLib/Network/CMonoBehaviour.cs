@@ -75,6 +75,11 @@ namespace UDLib.Network
             return CSLib.Framework.CMsgExecuteMgr.Instance.AddMsgExecFunc(m_uEchoID, server, func, id, msgExecObj);
         }
 
+        public void ClrMsgExecFunc()
+        {
+            CSLib.Framework.CMsgExecuteMgr.Instance.DelMsgExecute(m_uEchoID);
+        }
+
         public bool AddIgnoreTrace(byte server, byte func, UInt16 id)
         {
             return CSLib.Framework.CMsgFactory.Instance.AddIgnoreTrace(server, func, id);
