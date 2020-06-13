@@ -57,13 +57,7 @@ namespace Proto2Code
                 string SERVER_LTLIB_PROTOEXT_DES_CC = @".\TableOut\C++\LTLib\src\LTLib\protoext\";
 
                 fileterFiles.Clear();
-                _GetFileterFilesLTH(ref fileterFiles);
-                foreach (string file in Directory.GetFiles(SERVER_LTLIB_PROTOEXT_DES_H, "*.lt.h", SearchOption.TopDirectoryOnly))
-                {
-                    FileInfo info = new FileInfo(file);
-                    fileterFiles.Add(info.Name);
-                }
-
+                _GetFileterFilesLTh(ref fileterFiles);
                 if (fileterFiles.Count > 0)
                 {
                     CopyDirectory(SERVER_LTLIB_PROTOEXT_SRC, SERVER_LTLIB_PROTOEXT_DES_H, "*.lt.h", true, fileterFiles);
@@ -74,13 +68,7 @@ namespace Proto2Code
                 }
 
                 fileterFiles.Clear();
-                _GetFileterFilesLTCc(ref fileterFiles);
-                foreach (string file in Directory.GetFiles(SERVER_LTLIB_PROTOEXT_DES_H, "*.lt.cc", SearchOption.TopDirectoryOnly))
-                {
-                    FileInfo info = new FileInfo(file);
-                    fileterFiles.Add(info.Name);
-                }
-
+                _GetFileterFilesLTcc(ref fileterFiles);
                 if (fileterFiles.Count > 0)
                 {
                     CopyDirectory(SERVER_LTLIB_PROTOEXT_SRC, SERVER_LTLIB_PROTOEXT_DES_CC, "*.lt.cc", true, fileterFiles);
@@ -456,7 +444,7 @@ namespace Proto2Code
             fs.Dispose();
         }
 
-        void _GetFileterFilesLTH(ref List<string> fileterFiles)
+        void _GetFileterFilesLTh(ref List<string> fileterFiles)
         {
             string strMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
             FileInfo fiMainModule = new FileInfo(strMainModule);
@@ -477,7 +465,7 @@ namespace Proto2Code
             fs.Dispose();
         }
 
-        void _GetFileterFilesLTCc(ref List<string> fileterFiles)
+        void _GetFileterFilesLTcc(ref List<string> fileterFiles)
         {
             string strMainModule = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
             FileInfo fiMainModule = new FileInfo(strMainModule);
