@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0E5488E6-F888-4606-B45C-8F1DDFF05A7B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UDLib.UI</RootNamespace>
+    <AssemblyName>u3dUI</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\lib\UDLib\win-x86-32\debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\lib\UDLib\win-x86-32\release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="cspUtility">
+      <HintPath>..\..\..\..\INLib\lib\CSLib\win-x86-32\release\cspUtility.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\EXLib\csharp\Unity\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\EXLib\csharp\Unity\UnityEngine.UI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CCircleScroll.cs" />
+    <Compile Include="CCLoopMovedImage.cs" />
+    <Compile Include="CCUiScrollbar.cs" />
+    <Compile Include="CCUiScrollRect.cs" />
+    <Compile Include="CFormationLoopScrollRect.cs" />
+    <Compile Include="CHorizontalLoopScrollRect.cs" />
+    <Compile Include="CLoopScrollRect.cs" />
+    <Compile Include="CLoopVerticalLayout.cs" />
+    <Compile Include="CLoopVerticalLayoutWraper.cs" />
+    <Compile Include="CLoopVerticalScrollZeroSizeBar.cs" />
+    <Compile Include="CPageScroll.cs" />
+    <Compile Include="CPageVerticalLoopScrollRect.cs" />
+    <Compile Include="CParticleMask.cs" />
+    <Compile Include="CScrollRectCenter.cs" />
+    <Compile Include="CScrollRectCircle.cs" />
+    <Compile Include="CScrollRectCustom.cs" />
+    <Compile Include="CScrollRectFreedom.cs" />
+    <Compile Include="CTxtUnderlineImage.cs" />
+    <Compile Include="CUILookAtCamera.cs" />
+    <Compile Include="CVertialSpreadLayout.cs" />
+    <Compile Include="CVerticalLoopScrollRect.cs" />
+    <Compile Include="CVerticalText.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{96898657-206a-4a0c-9e73-048de639bc94}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
