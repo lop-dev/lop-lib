@@ -56,8 +56,8 @@ static char **convertToSds(int count, char** args) {
 }
 namespace MWLib
 {
-	namespace Redis
-	{
+namespace Redis
+{
 // ----------------
 // init redlock
 // ----------------
@@ -426,5 +426,5 @@ sds CRedLock::GetUniqueLockId() {
     }
     return s;
 }
-	}//Redis
+}//Redis
 }//MWLib

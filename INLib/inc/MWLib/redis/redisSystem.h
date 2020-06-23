@@ -77,7 +77,7 @@ namespace MWLib
     namespace Redis
     {
 		
-		class CRedisSystem
+		class MWLIB_REDIS_API CRedisSystem
 		{
 			BCLIB_SINGLETON_DECLARE(CRedisSystem);
 		private:

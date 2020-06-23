@@ -1,15 +1,24 @@
 //////////////////////////////////////////////////////////////////////
 //  created:    2014/07/18
-//  filename:   MWLib/redis/redisBaseDef.h
+//  filename:   MWLib/redis/baseDef.h
 //  author:     League of Perfect
 /// @brief
 ///
 //////////////////////////////////////////////////////////////////////
-#ifndef __MWLIB_REDIS_REDIS_BASE_DEF_H__
-#define __MWLIB_REDIS_REDIS_BASE_DEF_H__
+#ifndef __MWLIB_REDIS_BASE_DEF_H__
+#define __MWLIB_REDIS_BASE_DEF_H__
 #include <string>
 
+#ifdef MWLIB_REDIS_EXPORTS
+#    define MWLIB_REDIS_API _declspec(dllexport)
+#elif defined(MWLIB_REDIS_IMPORTS)
+#    define MWLIB_REDIS_API _declspec(dllimport)
+#else
+#    define MWLIB_REDIS_API
+#endif
+
 #define MWLIB_REDIS_DEFAULT_UNIQUEID 1000000
+
 namespace MWLib
 {
 	namespace Redis
@@ -39,7 +48,6 @@ namespace MWLib
 			E_REDIS_SERVERTYPE_CACHE,
 			E_REDIS_SERVERTYPE_EXTERNAL,
 			E_REDIS_SERVERTYPE_END,
-
 		};
 
 		enum EREDIS_ACCESS_RIGHT_TYPE
@@ -54,4 +62,4 @@ namespace MWLib
 		};
 	} //Redis
 } //MWLib
-#endif //__MWLIB_REDIS_REDIS_BASE_DEF_H__
+#endif //__MWLIB_REDIS_BASE_DEF_H__

@@ -31,17 +31,19 @@
 #ifndef __MWLIB_REDIS_REDLOCK_H__
 #define __MWLIB_REDIS_REDLOCK_H__
 
+#include <MWLib/redis/baseDef.h>
 #include <iostream>
 #include <vector>
 #include <unordered_map>
 #include <hiredis.h>
 #include <sds.h>
+
 namespace MWLib
 {
-	namespace Redis
-	{
+namespace Redis
+{
 class CRedisClient;
-class CLock
+class MWLIB_REDIS_API CLock
 {
 public:
     CLock()
@@ -61,7 +63,7 @@ public:
     sds                     m_val;          // 锁住资源的进程随机名字
 };
 
-class CRedLock
+class MWLIB_REDIS_API CRedLock
 {
 public:
     CRedLock();
@@ -101,6 +103,6 @@ private:
 
 	CRedisClient *m_pRedisClient;
 };
-	}//Redis
+}//Redis
 }//MWLib
 #endif // __MWLIB_REDIS_REDLOCK_H__

@@ -5,7 +5,7 @@
 #include <SFLib/commonDefine/logFile.h>
 #include <BCLib/utility/singleton.h>
 #include <MWLib/redis/redlock.h>
-#include <MWLib/redis/redisBaseDef.h>
+#include <MWLib/redis/baseDef.h>
 #include <unordered_map>
 #include <hiredis.h>
 #include <BCLib/utility/thread/thread.h>
@@ -40,7 +40,8 @@ namespace MWLib
 				}
 			}
 		}REDIS_NODE;
-		class CRedisClient
+
+		class MWLIB_REDIS_API CRedisClient
 		{
 			//BCLIB_SINGLETON_DECLARE(CRedisSystem);
 

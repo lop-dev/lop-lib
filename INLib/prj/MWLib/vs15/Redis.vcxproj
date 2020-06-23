@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\inc\MWLib\redis\redisBaseDef.h" />
+    <ClInclude Include="..\..\..\inc\MWLib\redis\baseDef.h" />
     <ClInclude Include="..\..\..\inc\MWLib\redis\redisClient.h" />
     <ClInclude Include="..\..\..\inc\MWLib\redis\redisSystem.h" />
     <ClInclude Include="..\..\..\inc\MWLib\redis\redlock.h" />
@@ -160,7 +160,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\..\..\inc;..\..\..\..\EXLib\hiredis\win\deps\hiredis;..\..\..\..\EXLib\protobuf\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;MWLIB_KAFKA_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;MWLIB_REDIS_EXPORTS;BCLIB_UTILITY_IMPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -169,13 +169,17 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Dbghelp.lib;hiredis_d.lib;Win32_Interop_d.lib;libprotobuf_d.lib;dllUtility_9md_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)dll$(ProjectName)_9md_d.dll</OutputFile>
       <ModuleDefinitionFile />
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <GenerateMapFile>true</GenerateMapFile>
-      <MapFileName>$(OutDir)dll$(ProjectName)_9md_d.map</MapFileName>
-      <MapExports>true</MapExports>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>
+      </MapFileName>
+      <MapExports>false</MapExports>
+      <ProgramDatabaseFile>$(OutDir)dll$(ProjectName)_9md_d.pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(OutDir)dll$(ProjectName)_9md_d.lib</ImportLibrary>
+      <AdditionalLibraryDirectories>..\..\..\..\EXLib\hiredis\win\lib;..\..\..\..\EXLib\protobuf\lib\win-x86-32;..\..\..\lib\BCLib\win-x86-32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='dll_9md|Win32'">
@@ -183,7 +187,7 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>..\..\..\inc;..\..\..\..\EXLib\hiredis\win\deps\hiredis;..\..\..\..\EXLib\protobuf\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;MWLIB_KAFKA_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;MWLIB_REDIS_EXPORTS;BCLIB_UTILITY_IMPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <ProgramDataBaseFileName>$(OutDir)dll$(ProjectName)_9md.pdb</ProgramDataBaseFileName>
@@ -191,12 +195,16 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Dbghelp.lib;hiredis.lib;Win32_Interop.lib;libprotobuf.lib;dllUtility_9md.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)dll$(ProjectName)_9md.dll</OutputFile>
       <ModuleDefinitionFile />
-      <GenerateMapFile>true</GenerateMapFile>
-      <MapFileName>$(OutDir)dll$(ProjectName)_9md.map</MapFileName>
-      <MapExports>true</MapExports>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>
+      </MapFileName>
+      <MapExports>false</MapExports>
+      <ProgramDatabaseFile>$(OutDir)dll$(ProjectName)_9md.pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(OutDir)dll$(ProjectName)_9md.lib</ImportLibrary>
+      <AdditionalLibraryDirectories>..\..\..\..\EXLib\hiredis\win\lib;..\..\..\..\EXLib\protobuf\lib\win-x86-32;..\..\..\lib\BCLib\win-x86-32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='lib_9mt|Win32'">

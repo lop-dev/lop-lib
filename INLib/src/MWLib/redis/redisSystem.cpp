@@ -11,8 +11,8 @@
 #include <BCLib/utility/convert.h>
 #include <BCLib/utility/logFile.h>
 #include <BCLib/utility/baseDef.h>
-
 #include <sstream>
+
 namespace MWLib
 {
 	namespace Redis
