@@ -58,6 +58,7 @@ namespace UDLib.Resource
         private bool mIsRecordLoadingTime = false;
         private Dictionary<uint, CABLoadTime> mDebugLoadTimeList = new Dictionary<uint, CABLoadTime>();
 
+        private List<CLoadRequest> toCancelList;
         public bool isLoadingManifest
         {
             get;
@@ -637,37 +638,42 @@ namespace UDLib.Resource
         {
             if (request.loaded_num == request.load_num)
             {
-                if (IsScene(request.m_eResourceType))
+                if (toCancelList == null || !toCancelList.Contains(request))
                 {
-                    foreach (var action in request.onSceneLoadComplete)
-                        action();
-                }
-                else
-                {
-                    foreach (var action in request.onComplete)
-                        action(request.load_objectsThisRequest);
-                }
-
-                //处理sameMasterRequest
-                if (request.sameMasterRequest != null)
-                {
-                    for (int rindex = 0; rindex < request.sameMasterRequest.Count; rindex++)
+                    if (IsScene(request.m_eResourceType))
                     {
-                        CLoadRequest currentSame = request.sameMasterRequest[rindex];
-                        if (IsScene(request.m_eResourceType))
+                        foreach (var action in request.onSceneLoadComplete)
+                            action();
+                    }
+                    else
+                    {
+                        foreach (var action in request.onComplete)
+                            action(request.load_objectsThisRequest);
+                    }
+
+                    //处理sameMasterRequest
+                    if (request.sameMasterRequest != null)
+                    {
+                        for (int rindex = 0; rindex < request.sameMasterRequest.Count; rindex++)
                         {
-                            foreach (var action in currentSame.onSceneLoadComplete)
-                                action();
-                        }
-                        else
-                        {
-                            foreach (var action in currentSame.onComplete)
-                                action(currentSame.load_objectsThisRequest);
+                            CLoadRequest currentSame = request.sameMasterRequest[rindex];
+                            if (IsScene(request.m_eResourceType))
+                            {
+                                foreach (var action in currentSame.onSceneLoadComplete)
+                                    action();
+                            }
+                            else
+                            {
+                                foreach (var action in currentSame.onComplete)
+                                    action(currentSame.load_objectsThisRequest);
+                            }
                         }
                     }
                 }
 
                 //  CAssetBundleLog.Log("!!!加载完成,name={0},loading Count = {1}", request.packageName, loadingRquestList.Count-1);
+                if (null != toCancelList)
+                    toCancelList.Remove(request);
                 RemoveRequest(ref request);
             }
             else
@@ -1171,6 +1177,11 @@ namespace UDLib.Resource
                 _waitList[i].Cancel();
             }
             _waitList.Clear();
+
+            if (toCancelList == null)
+                toCancelList = new List<CLoadRequest>();
+
+            toCancelList.AddRange(loadingRquestList);
         }
 
         // 释放指定的Assetbundle
