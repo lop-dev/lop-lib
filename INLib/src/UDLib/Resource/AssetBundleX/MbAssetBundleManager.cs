@@ -1180,6 +1180,8 @@ namespace UDLib.Resource
 
             if (toCancelList == null)
                 toCancelList = new List<CLoadRequest>();
+            else
+                toCancelList.Clear();
 
             toCancelList.AddRange(loadingRquestList);
         }
