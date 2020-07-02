@@ -21,16 +21,16 @@
 
 namespace MWLib
 {
-	namespace Kafka
-	{
-		typedef BCLib::Utility::HXmlNode XmlNode;
-		typedef BCLib::Utility::CXmlFile XmlFile;
-		typedef std::map <std::string, std::string > MapNameValue;
+namespace Kafka
+{
+typedef BCLib::Utility::HXmlNode XmlNode;
+typedef BCLib::Utility::CXmlFile XmlFile;
+typedef std::map <std::string, std::string > MapNameValue;
 
-		//解析所有子结点
-		void getXmlChildNodeNameValue(const XmlNode &node, MapNameValue& map);
-		void kafkaLogger(int level, const char*msg);
-	}//Kafka
+//解析所有子结点
+extern MWLIB_KAFKA_API void getXmlChildNodeNameValue(const XmlNode &node, MapNameValue& map);
+extern MWLIB_KAFKA_API void kafkaLogger(int level, const char*msg);
+}//Kafka
 }//MWLib
 
 #endif//__MWLIB_KAFKA_KAFKA_H__

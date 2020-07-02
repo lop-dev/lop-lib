@@ -16,40 +16,41 @@ namespace qbus
 	class QbusConsumer;
 	struct QbusMsgContentInfo;
 }
+
 namespace MWLib
 {
-	namespace Kafka
-	{
-		typedef void(*RebalanceCallback)(void *arg);
+namespace Kafka
+{
+    typedef void(*RebalanceCallback)(void *arg);
 
-		class ConsumeMsg
-		{
-		public:
-			const char* m_buf;
-			int  m_len;
-			void* m_arg;
-		};
+    class ConsumeMsg
+    {
+    public:
+        const char* m_buf;
+        int  m_len;
+        void* m_arg;
+    };
 
-		class MWLIB_KAFKA_API CKafkaConsumer :public BCLib::Utility::CNoncopyable
-		{
-		public:
-			CKafkaConsumer();
-			virtual ~CKafkaConsumer();
+    class MWLIB_KAFKA_API CKafkaConsumer :public BCLib::Utility::CNoncopyable
+    {
+    public:
+        CKafkaConsumer();
+        virtual ~CKafkaConsumer();
 
-			bool init(const char* configXmlPath);
+        bool init(const char* configXmlPath);
 
-			bool start();
-			void stop();
-			bool consume(ConsumeMsg& msg);
-			bool commit(const ConsumeMsg& msg);
-			bool destroy(const ConsumeMsg& msg);
-			void setRebalanceCallback(RebalanceCallback cb, void *arg);
+        bool start();
+        void stop();
+        bool consume(ConsumeMsg& msg);
+        bool commit(const ConsumeMsg& msg);
+        bool destroy(const ConsumeMsg& msg);
+        void setRebalanceCallback(RebalanceCallback cb, void *arg);
 
-		private:
-			qbus::QbusConsumer* m_consumer;
-			qbus::QbusMsgContentInfo* m_msgContent;
-		};
-	}//Kafka
+    private:
+        qbus::QbusConsumer* m_consumer;
+        qbus::QbusMsgContentInfo* m_msgContent;
+    };
+}//Kafka
 }//MWLib
 
 #endif//__MWLIB_KAFKA_CONSUMER_H__
