@@ -32,9 +32,11 @@ enum EStubState
 class BCLIB_NETWORK_API CTcpStub : public CTcpSend
 {
     BCLIB_MEMPOLL_DEFINE();
+
     friend class CNetStubCallback;
     friend class CTcpServer;
     template<class> friend class CNetStubThread;
+
 public:
     CTcpStub(const CTcpConnectionSPtr& connPtr);
     virtual ~CTcpStub();

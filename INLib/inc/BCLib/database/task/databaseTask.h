@@ -299,6 +299,16 @@ protected:
 	}																		\
 	_PTBUF_.set_##_NAME_(strValue);
 
+#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadBase64(_PTBUF_, _NAME_)	\
+	if (!pDataReader->getString(#_NAME_, strValue))							\
+	{																		\
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
+		BCLIB_SAFE_DELETE(pDataReader);										\
+		return false;														\
+	}																		\
+	_PTBUF_.set_##_NAME_(BCLib::Security::CBase64::Decode(strValue));
+
 #define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadPTBuf(_PTBUF_, _NAME_)	\
 	if (!pDataReader->getString(#_NAME_, strValue))							\
 	{																		\

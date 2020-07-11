@@ -15,10 +15,10 @@ namespace BCLib
 {
 namespace Network
 {
-class CNetInit
+class BCLIB_NETWORK_API CNetInit
 {
 public:
-    class NetDelay
+    class BCLIB_NETWORK_API NetDelay
     {
     public:
         static bool setTimerDuration(BCLib::uint32 msTime);
@@ -31,10 +31,10 @@ public:
         static BCLib::uint32 ms_timerPrecision;             //! millisecond
     };
 
-    class Tcp
+    class BCLIB_NETWORK_API Tcp
     {
     public:
-        class Accept
+        class BCLIB_NETWORK_API Accept
         {
         public:
             static bool setSendWindowSize(BCLib::uint32 size);
@@ -50,7 +50,7 @@ public:
             static BCLib::uint32 ms_epollWaitTimeout;       //! millisecond
         };
 
-        class Connect
+        class BCLIB_NETWORK_API Connect
         {
         public:
             static bool setSendWindowSize(BCLib::uint32 size);
@@ -76,7 +76,7 @@ public:
         };
     };
 
-    class Stub
+    class BCLIB_NETWORK_API Stub
     {
     public:
         static bool setVerifyTimeout(BCLib::uint32 msTime);
@@ -86,7 +86,7 @@ public:
         static BCLib::uint32 ms_verifyTimeout;              //! millisecond
     };
 
-    class Udp
+    class BCLIB_NETWORK_API Udp
     {
     public:
         class Client
@@ -122,7 +122,7 @@ public:
         };
     };
 
-    class Pipe
+    class BCLIB_NETWORK_API Pipe
     {
     public:
         static bool setConnectTimeout(BCLib::uint32 msTime);

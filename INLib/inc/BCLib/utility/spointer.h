@@ -263,10 +263,18 @@ void CCPointer<OBJTYPE>::_clearObj(const OBJTYPE* pObj) const
 {
     if(pObj)
     {
-        if(static_cast<const CRefCnt*>(pObj)->_decRef() <= 0)
+        // 因为要编译DLL，这边无法通过，所以就简单处理了
+#if BCLIB_UTILITY_EXPORTS || BCLIB_UTILITY_IMPORTS
+        if (((CRefCnt*)pObj)->_decRef() <= 0)
         {
             destroyObj4SPointer(pObj);
         }
+#else
+        if (static_cast<const CRefCnt*>(pObj)->_decRef() <= 0)
+        {
+            destroyObj4SPointer(pObj);
+        }
+#endif
     }
 }
 
@@ -275,7 +283,12 @@ void CCPointer<OBJTYPE>::_setObj(const OBJTYPE* pObj)
 {
     if(pObj)
     {
+        // 因为要编译DLL，这边无法通过，所以就简单处理了
+#if BCLIB_UTILITY_EXPORTS || BCLIB_UTILITY_IMPORTS
+        ((CRefCnt*)pObj)->_incRef();
+#else
         static_cast<const CRefCnt*>(pObj)->_incRef();
+#endif
     }
     m_pObj = pObj;
 }

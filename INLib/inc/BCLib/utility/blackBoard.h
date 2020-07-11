@@ -14,7 +14,7 @@ namespace BCLib
 {
 namespace Utility
 {
-class CBlackBoard
+class BCLIB_UTILITY_API CBlackBoard
 {
 public:
     CBlackBoard();

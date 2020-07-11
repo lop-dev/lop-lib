@@ -37,7 +37,7 @@ protected:
 };
 
 template<class BaseStringType, class SpecialCharType>
-class CBasicString : public BaseStringType, public SpecialCharType
+class BCLIB_UTILITY_TMP CBasicString : public BaseStringType, public SpecialCharType
 {
 public:
     typedef typename BaseStringType::value_type ValueType;
@@ -232,114 +232,6 @@ public:
         return subStringList.size();
     }
 
-    /// @brief 从左边去掉连续的target
-    /// @return void
-    /// @param target 字符串数组
-	void trimLeft(ValueType target[])
-	{
-		typename BaseStringType::iterator it = BaseStringType::begin();
-		while (it != BaseStringType::end())
-		{
-#ifdef _UNICODE
-			if (wcsrchr(target, *it) != NULL)
-#else
-			if (strchr(target, *it) != NULL)
-#endif
-			{
-				++it;
-				continue;
-			}
-			break;
-		}
-		BaseStringType::erase(BaseStringType::begin(), it);
-	}
-
-    /// @brief 从右边去掉连续的target
-    /// @return void
-    /// @param target 字符串数组
-	void trimRight(ValueType target[])
-	{
-		typename BaseStringType::iterator it = BaseStringType::end();
-		if (BaseStringType::begin() == it)
-		{
-			return;
-		}
-		--it;
-
-		while (it != BaseStringType::begin())
-		{
-#ifdef _UNICODE
-			if (wcsrchr(target, *it) != NULL)
-#else
-			if (strchr(target, *it) != NULL)
-#endif
-			{
-				--it;
-				continue;
-			}
-			break;
-		}
-		if (it == BaseStringType::begin())
-		{
-#ifdef _UNICODE
-			if (wcsrchr(target, *it) != NULL)
-#else
-			if (strchr(target, *it) != NULL)
-#endif
-			//if (*it == target)
-			{
-				BaseStringType::erase(it, BaseStringType::end());
-				return;
-			}
-		}
-		++it;
-		if (it == BaseStringType::end())
-		{
-			return;
-		}
-		BaseStringType::erase(it, BaseStringType::end());
-	}
-
-    /// @brief 从左边去掉连续的target，直到第一个字符不为 target
-    ///        如原字符串aaabbaa,target为a,处理完就是bbaa
-    /// @return void
-    /// @param target 单个字符
-    void trimLeft(ValueType target = ' ')
-    {
-        ValueType targets[] = { target };
-        trimLeft(targets);
-    }
-
-    /// @brief 从右边去掉连续的target，直到第一个字符不为 target
-    ///        如原字符串aaabbaa,target为a,处理完就是aaabb
-    /// @return void
-    /// @param target 单个字符
-    void trimRight(ValueType target = ' ')
-    {
-        ValueType targets[] = { target };
-        trimRight(targets);
-    }
-
-    /// @brief 从左边和右边去掉连续的target，直到第一个字符不为 target
-    ///        如原字符串aaabbaa,target为a,处理完就是bb
-    /// @return void
-    /// @param target 单个字符
-    void trim(ValueType target = ' ')
-    {
-		ValueType targets[] = { target };
-        trimLeft(targets);
-        trimRight(targets);
-    }
-
-    /// @brief 加强版本，去掉空格、换行等一切不可见字符
-    /// @return void
-    void trimSpace()
-    {
-        ValueType target[] = " \n\r\t\f\v";
-        trimLeft(target);
-        trimRight(target);
-    }
-
 protected:
     bool _formatSafeCheck(uint32 uParamCnt, const ValueType* pszFormat)
     {
@@ -408,6 +300,38 @@ public:
     void format(uint32 uParamCnt, const ValueType* pszFormat, ...);
 
     void format(const ValueType* pszFormat, ...);
+
+    /// @brief 从左边去掉连续的target
+    /// @return void
+    /// @param target 字符串数组
+    void trimLeft(ValueType target[]);
+
+    /// @brief 从右边去掉连续的target
+    /// @return void
+    /// @param target 字符串数组
+    void trimRight(ValueType target[]);
+
+    /// @brief 从左边去掉连续的target，直到第一个字符不为 target
+    ///        如原字符串aaabbaa,target为a,处理完就是bbaa
+    /// @return void
+    /// @param target 单个字符
+    void trimLeft(ValueType target = ' ');
+
+    /// @brief 从右边去掉连续的target，直到第一个字符不为 target
+    ///        如原字符串aaabbaa,target为a,处理完就是aaabb
+    /// @return void
+    /// @param target 单个字符
+    void trimRight(ValueType target = ' ');
+
+    /// @brief 从左边和右边去掉连续的target，直到第一个字符不为 target
+    ///        如原字符串aaabbaa,target为a,处理完就是bb
+    /// @return void
+    /// @param target 单个字符
+    void trim(ValueType target = ' ');
+
+    /// @brief 加强版本，去掉空格、换行等一切不可见字符
+    /// @return void
+    void trimSpace();
 
 public:
     CStringA& operator =(const char data[]);
@@ -489,6 +413,38 @@ public:
     /// @param
     void format(uint32 uParamCnt, const ValueType* pszFormat, ...);
     void format(const ValueType* pszFormat, ...);
+
+    /// @brief 从左边去掉连续的target
+    /// @return void
+    /// @param target 字符串数组
+    void trimLeft(ValueType target[]);
+
+    /// @brief 从右边去掉连续的target
+    /// @return void
+    /// @param target 字符串数组
+    void trimRight(ValueType target[]);
+
+    /// @brief 从左边去掉连续的target，直到第一个字符不为 target
+    ///        如原字符串aaabbaa,target为a,处理完就是bbaa
+    /// @return void
+    /// @param target 单个字符
+    void trimLeft(ValueType target = ' ');
+
+    /// @brief 从右边去掉连续的target，直到第一个字符不为 target
+    ///        如原字符串aaabbaa,target为a,处理完就是aaabb
+    /// @return void
+    /// @param target 单个字符
+    void trimRight(ValueType target = ' ');
+
+    /// @brief 从左边和右边去掉连续的target，直到第一个字符不为 target
+    ///        如原字符串aaabbaa,target为a,处理完就是bb
+    /// @return void
+    /// @param target 单个字符
+    void trim(ValueType target = ' ');
+
+    /// @brief 加强版本，去掉空格、换行等一切不可见字符
+    /// @return void
+    void trimSpace();
 
 public:
     CStringW& operator =(const char data[]);

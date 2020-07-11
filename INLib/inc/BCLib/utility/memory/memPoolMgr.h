@@ -24,7 +24,7 @@ public:                                                                 \
     {                                                                   \
         BCLib::Utility::CMemPoolMgr::singleton().freeMem(p);            \
     }                                                                   \
-private:                                                                \
+protected:                                                              \
     static void* operator new [](size_t) throw() { return NULL; }       \
     static void operator delete [](void*) throw() {}                    \
     static void* operator new(size_t, void*) throw() { return NULL; }   \
@@ -42,7 +42,7 @@ public:                                                                 \
     {                                                                   \
         free(p);                                                        \
     }                                                                   \
-private:                                                                \
+protected:                                                              \
     static void* operator new [](size_t) throw() { return NULL; }       \
     static void operator delete [](void*) throw() {}                    \
     static void* operator new(size_t, void*) throw() { return NULL; }   \

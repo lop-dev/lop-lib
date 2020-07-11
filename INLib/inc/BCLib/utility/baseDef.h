@@ -137,10 +137,13 @@ const HndThdMsgQueue INVALID_HNDTHDMSGQUEUE = -1;
 
 #ifdef BCLIB_UTILITY_EXPORTS
 #define BCLIB_UTILITY_API _declspec(dllexport)
+#define BCLIB_UTILITY_TMP _declspec(dllexport)
 #elif defined(BCLIB_UTILITY_IMPORTS)
 #define BCLIB_UTILITY_API _declspec(dllimport)
+#define BCLIB_UTILITY_TMP
 #else
 #define BCLIB_UTILITY_API
+#define BCLIB_UTILITY_TMP
 #endif
 
 #if defined(_WIN32)

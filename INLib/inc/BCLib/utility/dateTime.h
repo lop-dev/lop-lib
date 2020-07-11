@@ -24,7 +24,7 @@ namespace BCLib
 namespace Utility
 {
 /// @brief 得到当前时间的毫秒值
-extern int64 getMilliseconds();
+extern BCLIB_UTILITY_API int64 getMilliseconds();
 
 //////////////////////////////////////////////////////////////////////////
 /// @brief 封装基本的时间类，精确到秒，最常用的时间类
