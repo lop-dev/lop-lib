@@ -17,7 +17,7 @@ namespace CommonServer
 {
 #ifndef USE_PIPESERVER_TEST_LOGIC
 
-class CCommonServer2Master : public CCommonServer
+class SFLIB_COMMON_API CCommonServer2Master : public CCommonServer
 {
 public:
     CCommonServer2Master(const std::string& name);

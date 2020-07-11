@@ -16,7 +16,7 @@ namespace SFLib
 {
 namespace External
 {
-class CNetPeerMgr : public SFLib::CommonServer::CNetPeerMgr
+class SFLIB_EXTERNAL_API CNetPeerMgr : public SFLib::CommonServer::CNetPeerMgr
 {
     BCLIB_SINGLETON_DECLARE(CNetPeerMgr);
 

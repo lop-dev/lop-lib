@@ -16,7 +16,7 @@ namespace SFLib
 {
 namespace Logic
 {
-class CNetPeerMgr : public SFLib::CommonServer::CNetPeerMgr
+class SFLIB_LOGIC_API CNetPeerMgr : public SFLib::CommonServer::CNetPeerMgr
 {
     BCLIB_SINGLETON_DECLARE(CNetPeerMgr);
 

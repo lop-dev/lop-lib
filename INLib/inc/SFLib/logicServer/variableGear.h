@@ -14,7 +14,7 @@ namespace SFLib
 {
 namespace Logic
 {
-class CVariableGear
+class SFLIB_LOGIC_API CVariableGear
 {
 public:
 	CVariableGear();

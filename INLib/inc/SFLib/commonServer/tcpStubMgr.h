@@ -16,7 +16,7 @@ namespace SFLib
 {
 namespace CommonServer
 {
-class CTcpStubMgr : public BCLib::Network::CTcpStubMgr
+class SFLIB_COMMON_API CTcpStubMgr : public BCLib::Network::CTcpStubMgr
 {
     BCLIB_SINGLETON_DECLARE(CTcpStubMgr);
 

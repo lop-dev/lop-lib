@@ -16,7 +16,7 @@ namespace SFLib
 {
 namespace CommonServer
 {
-class CNetPeerMgr
+class SFLIB_COMMON_API CNetPeerMgr
 {
 public:
     class CNetPeerMgrCallback

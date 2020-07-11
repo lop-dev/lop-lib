@@ -9,15 +9,16 @@
 #define __SFLIB_GAMECLIENT_NETMSGQUEUE_H__
 
 #include <BCLib/utility/singleton.h>
-#include <SFLib/commonDefine/netMsgQueue.hpp>
+#include <SFLib/message/netMsgQueue.hpp>
+#include <SFLib/gameClient/baseDef.h>
 
 namespace SFLib
 {
 namespace Client
 {
-typedef SFLib::CommonDefine::CNetMsgQueueCallback<PeerID> CNetMsgQueueByPeerIDCallback;
+typedef SFLib::Message::CNetMsgQueueCallback<PeerID> CNetMsgQueueByPeerIDCallback;
 
-class CNetMsgQueueByPeerID : public SFLib::CommonDefine::CNetMsgQueue<PeerID>
+class SFLIB_CLIENT_API CNetMsgQueueByPeerID : public SFLib::Message::CNetMsgQueue<PeerID>
 {
     BCLIB_SINGLETON_DECLARE(CNetMsgQueueByPeerID);
 

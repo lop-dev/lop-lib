@@ -10,6 +10,7 @@
 
 #include <SFLib/message/gameFrame.h>
 #include <BCLib/utility/thread/thread.h>
+#include <SFLib/gameClient/baseDef.h>
 #include <SFLib/gameClient/netMsgQueue.h>
 
 namespace SFLib
@@ -21,7 +22,7 @@ class CP2pClient;
 class CClientMsgExecMgr;
 class CTcpClient;
 
-class CNetClient
+class SFLIB_CLIENT_API CNetClient
 {
 public:
     CNetClient(ServerType serverType = SFLib::ESERVER_UNKNOW, bool bUseSelfMsgQueue = false);

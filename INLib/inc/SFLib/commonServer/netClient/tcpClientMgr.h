@@ -17,7 +17,7 @@ namespace SFLib
 {
 namespace CommonServer
 {
-class CNetClientMgr
+class SFLIB_COMMON_API CNetClientMgr
 {
     BCLIB_SINGLETON_DECLARE(CNetClientMgr);
 

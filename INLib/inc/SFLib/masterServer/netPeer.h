@@ -22,7 +22,7 @@ class CPeerCreate;
 class CMasterServer;
 class CMasterStub;
 
-class CNetPeer : public SFLib::CommonServer::CNetPeer
+class SFLIB_MASTER_API CNetPeer : public SFLib::CommonServer::CNetPeer
 {
 public:
     CNetPeer(PeerID peerID, ServerID gatewayServerID, BCLib::Network::TcpStubID gameClientStubID);
@@ -38,11 +38,11 @@ public:
 	virtual ServerID getServerID(EServerType serverType);
     virtual EServerType getServerType(ServerID serverID);
 
-	virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
     virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+    virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
 
-	virtual bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
 	virtual bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+    virtual bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
 
 public:
 	virtual BCLib::uint32 getLogicServerNum();

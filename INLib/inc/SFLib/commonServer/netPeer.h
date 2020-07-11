@@ -26,7 +26,7 @@ enum EPeerState
     PEER_LEAVE,
 };
 
-class CNetPeer : public BCLib::Utility::CRefCnt
+class SFLIB_COMMON_API CNetPeer : public BCLib::Utility::CRefCnt
 {
 public:
     CNetPeer();

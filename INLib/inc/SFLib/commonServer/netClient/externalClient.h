@@ -15,7 +15,7 @@ namespace SFLib
 {
 namespace CommonServer
 {
-class CExternalClient : public CCommonClient
+class SFLIB_COMMON_API CExternalClient : public CCommonClient
 {
 public:
     CExternalClient();

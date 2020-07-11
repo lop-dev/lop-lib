@@ -15,7 +15,7 @@ namespace SFLib
 {
 namespace Logic
 {
-class CLogicClient : public SFLib::CommonServer::CLogicClient
+class SFLIB_LOGIC_API CLogicClient : public SFLib::CommonServer::CLogicClient
 {
 public:
     CLogicClient();

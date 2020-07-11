@@ -1,23 +1,24 @@
 //////////////////////////////////////////////////////////////////////
 //  created:    2011/11/01
-//  filename:   SFLib/commonDefine/netMsgQueue.hpp
+//  filename:   SFLib/message/netMsgQueue.hpp
 //  author:     League of Perfect
 /// @brief
 ///
 //////////////////////////////////////////////////////////////////////
-#ifndef __SFLIB_COMMONDEFINE_NETMSGQUEUE_HPP__
-#define __SFLIB_COMMONDEFINE_NETMSGQUEUE_HPP__
+#ifndef __SFLIB_MESSAGE_NETMSGQUEUE_HPP__
+#define __SFLIB_MESSAGE_NETMSGQUEUE_HPP__
 
 #include <BCLib/utility/thread/mutex.h>
 #include <BCLib/utility/queue.h>
 #include <SFLib/message/gameFrame.h>
+#include <SFLib/message/message.h>
 
 namespace SFLib
 {
-namespace CommonDefine
+namespace Message
 {
 template<class TYPE>
-class CNetMsgQueueCallback
+class SFLIB_MESSAGE_TMP CNetMsgQueueCallback
 {
 public:
     virtual ~CNetMsgQueueCallback()
@@ -28,7 +29,7 @@ public:
 };
 
 template<class TYPE>
-class CNetMsgQueue
+class SFLIB_MESSAGE_TMP CNetMsgQueue
 {
 public:
 	typedef BCLib::Utility::CQueue<SFLib::Message::SNetMessage, TYPE> MsgQueue;
@@ -45,7 +46,7 @@ public:
 		//BCLIB_SAFE_DELETE(m_queueChar);
     }
 
-    void push(const TYPE& tempData, const SFLib::Message::SNetMessage* netMessage, const BCLib::uint32 netMessageSize)
+    virtual void push(const TYPE& tempData, const SFLib::Message::SNetMessage* netMessage, const BCLib::uint32 netMessageSize)
     {
         BCLib::Utility::CMutexFun fun(&m_mutex);
         m_queueChar->push(netMessage, netMessageSize, &tempData, sizeof(TYPE));
@@ -62,7 +63,6 @@ public:
         *netMessageSize = m_queueChar->get(netMessage, &tempDateID);
         *tempData = *tempDateID;
 
-		
         return true;
     }
 
@@ -89,7 +89,7 @@ public:
     //************************************
     void doParse(CNetMsgQueueCallback<TYPE>& cb)
     {
-		MsgQueue* popQueue = swapMsgQueue();
+		MsgQueue* popQueue = _swapMsgQueue();
 
 		SFLib::Message::SNetMessage* netMsg;
 		TYPE* tempData;
@@ -107,8 +107,9 @@ public:
 
 		BCLIB_SAFE_DELETE(popQueue);
     }
+
 private:
-	MsgQueue* swapMsgQueue()
+	MsgQueue* _swapMsgQueue()
 	{
 		MsgQueue* newQueue = new MsgQueue();
 		MsgQueue* tmp = NULL;
@@ -122,7 +123,7 @@ private:
     BCLib::Utility::CMutex m_mutex;
 	MsgQueue *m_queueChar;
 };
-}//CommonDefine
+}//Message
 }//SFLib
 
-#endif//__SFLIB_COMMONDEFINE_NETMSGQUEUE_HPP__
+#endif//__SFLIB_MESSAGE_NETMSGQUEUE_HPP__

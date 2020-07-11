@@ -10,13 +10,14 @@
 
 #include <BCLib/network/udp/udpClient.h>
 #include <BCLib/framework/msgExecMgr.h>
+#include <SFLib/gameClient/baseDef.h>
 
 namespace SFLib
 {
 namespace Client
 {
 
-class CUdpClient : public BCLib::Network::CUdpClient, public BCLib::Framework::CMsgExecMgr
+class SFLIB_CLIENT_API CUdpClient : public BCLib::Network::CUdpClient, public BCLib::Framework::CMsgExecMgr
 {
 public:
     CUdpClient();

@@ -14,7 +14,7 @@ namespace SFLib
 {
 namespace Logic
 {
-class CMasterClient : public SFLib::CommonServer::CMasterClient
+class SFLIB_LOGIC_API CMasterClient : public SFLib::CommonServer::CMasterClient
 {
 public:
     CMasterClient();

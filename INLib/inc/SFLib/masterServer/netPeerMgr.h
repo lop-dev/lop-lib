@@ -17,7 +17,7 @@ namespace SFLib
 {
 namespace Master
 {
-class CNetPeerMgr : public SFLib::CommonServer::CNetPeerMgr
+class SFLIB_MASTER_API CNetPeerMgr : public SFLib::CommonServer::CNetPeerMgr
 {
     BCLIB_SINGLETON_DECLARE(CNetPeerMgr);
 

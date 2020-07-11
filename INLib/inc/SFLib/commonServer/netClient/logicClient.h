@@ -14,7 +14,7 @@ namespace SFLib
 {
 namespace CommonServer
 {
-class CLogicClient : public CCommonClient
+class SFLIB_COMMON_API CLogicClient : public CCommonClient
 {
 public:
     CLogicClient();

@@ -14,7 +14,7 @@ namespace SFLib
 {
 namespace External
 {
-class CMasterClient : public SFLib::CommonServer::CMasterClient
+class SFLIB_EXTERNAL_API CMasterClient : public SFLib::CommonServer::CMasterClient
 {
 public:
     CMasterClient();

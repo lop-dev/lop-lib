@@ -14,7 +14,7 @@ namespace SFLib
 {
 namespace CommonServer
 {
-class CMasterClient : public CTcpClient
+class SFLIB_COMMON_API CMasterClient : public CTcpClient
 {
 public:
     CMasterClient();

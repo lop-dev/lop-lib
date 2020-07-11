@@ -17,7 +17,7 @@ namespace SFLib
 namespace CommonServer
 {
 
-class CCommonApp : public BCLib::Utility::CThread
+class SFLIB_COMMON_API CCommonApp : public BCLib::Utility::CThread
 {
 public:
     CCommonApp();

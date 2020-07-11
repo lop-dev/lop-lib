@@ -33,7 +33,11 @@ enum EErrorType
 
 enum EMsgIDGameFrame
 {
-    EMID_XX2XX_NTF_ERROR_TYPE = 1,
+    EMID_XX2XX_NTF_SUBPACKAGE_MSG = 1,
+    EMID_XX2XX_NTF_TRANSFORM_MSG,
+    EMID_XX2XX_NTF_SINGLETON_DBG,
+
+    EMID_XX2XX_NTF_ERROR_TYPE,
     EMID_LC2LC_NTF_ERROR_TYPE,
 
     EMID_XX2XS_NTF_SERVER_TYPE,
@@ -47,9 +51,6 @@ enum EMsgIDGameFrame
     EMID_XS2MS_NTF_SHAKE_HANDS,
     EMID_XS2MS_NTF_SERVER_INITED,
     EMID_MS2XS_NTF_SERVER_INITED,
-
-    EMID_XX2XX_NTF_TRANSFORM_MSG,
-    EMID_XX2XX_NTF_SINGLETON_DBG,
 
     EMID_XS2GC_NTF_RANDKEY,
     EMID_XS2MS_REQ_VALID_RANDKEY,
@@ -136,6 +137,161 @@ namespace Message
 #else
 #pragma pack (1)
 #endif
+
+//分包消息
+SFLIB_MSGDEBUG(ESERVER_ANYXX, EFUNC_GAMEFRAME, EMID_XX2XX_NTF_SUBPACKAGE_MSG);
+struct SMsgXX2XXNtfSubpackageMsg : public SNetMessage
+{
+public:
+    BCLib::uint16 m_subType;
+    BCLib::uint16 m_subID;
+    BCLib::uint16 m_pageCount;
+    BCLib::uint16 m_pageIndex;
+    bool m_transform; // 标志是否具有TransformMsg特性
+    PeerID m_peerID;
+    BCLib::uint32 m_totalSize;
+    BCLib::uint32 m_bufSize;
+    char m_buf[1];
+
+    SMsgXX2XXNtfSubpackageMsg() : SNetMessage(ESERVER_ANYXX, EFUNC_GAMEFRAME, EMID_XX2XX_NTF_SUBPACKAGE_MSG)
+    {
+        m_subType = 0;
+        m_subID = 0;
+        m_pageCount = 0;
+        m_pageIndex = 0;
+        m_transform = false;
+        m_peerID = INVALID_PEER_ID;
+        m_totalSize = 0;
+        m_bufSize = 0;
+    }
+
+    void setValue(SMsgXX2XXNtfSubpackageMsg* netMsg)
+    {
+        if (netMsg == NULL)
+        {
+            return;
+        }
+
+        m_subType = netMsg->m_subType;
+        m_subID = netMsg->m_subID;
+        m_pageCount = netMsg->m_pageCount;
+        m_pageIndex = netMsg->m_pageIndex;
+        m_transform = netMsg->m_transform;
+        m_peerID = netMsg->m_peerID;
+        m_totalSize = netMsg->m_totalSize;
+        m_bufSize = netMsg->m_bufSize;
+        memcpy(m_buf, netMsg->m_buf, netMsg->m_bufSize);
+    }
+
+    BCLib::uint32 getSize() { return sizeof(SMsgXX2XXNtfSubpackageMsg) - sizeof(char) + m_bufSize * sizeof(char); }
+
+    BCLib::uint16 getSubType() const { return m_subType; }
+    BCLib::uint16 getSubID() const { return m_subID; }
+    BCLib::uint32 getSubUniqueID() const { return  BCLIB_HI_SHIFT(m_subType, 16) + m_subID; }
+
+    BCLib::uint8 getSubServer() const { return (BCLib::uint8)BCLIB_LO_SHIFT((m_subType & 0xFF00), 8); }
+    BCLib::uint8 getSubFunc() const { return (BCLib::uint8)(m_subType & 0x00FF); }
+
+    std::string getSubDebugPrompt() const
+    {
+        BCLib::Utility::CStringA strPrompt = "";
+
+        strPrompt.format("Server[%s] Func[%d] ID[%d] Prompt[%s] PageCount[%d] PageIndex[%d]",
+            getServerTypeName((EServerType)getSubServer()).c_str(), getSubFunc(), getSubID(),
+            BCLib::Framework::CMsgDebug::singleton().getPrompt(getSubType(), getSubID()).c_str(),
+            m_pageCount, m_pageIndex);
+
+        return strPrompt;
+    }
+};
+
+//转发消息
+SFLIB_MSGDEBUG(ESERVER_ANYXX, EFUNC_GAMEFRAME, EMID_XX2XX_NTF_TRANSFORM_MSG);
+struct SMsgXX2XXNtfTransformMsg : public SNetMessage
+{
+public:
+    PeerID m_peerID;
+    BCLib::uint32 m_bufSize;
+    char m_buf[1];
+
+    SMsgXX2XXNtfTransformMsg() : SNetMessage(ESERVER_ANYXX, EFUNC_GAMEFRAME, EMID_XX2XX_NTF_TRANSFORM_MSG)
+    {
+        m_peerID = INVALID_PEER_ID;
+        m_bufSize = 0;
+    }
+
+    BCLib::uint32 getSize() { return sizeof(SMsgXX2XXNtfTransformMsg) - sizeof(char) + m_bufSize * sizeof(char); }
+
+    std::string getSubDebugPrompt() const
+    {
+        SFLib::Message::SNetMessage* subMsg = (SFLib::Message::SNetMessage*)m_buf;
+        if (subMsg == NULL) {
+            return "";
+        }
+
+        BCLib::Utility::CStringA strPrompt = "";
+
+        strPrompt.format("Server[%s] Func[%d] ID[%d] Prompt[%s]",
+            getServerTypeName((EServerType)subMsg->getServer()).c_str(), subMsg->getFunc(), subMsg->getID(),
+            BCLib::Framework::CMsgDebug::singleton().getPrompt(subMsg->getType(), subMsg->getID()).c_str());
+
+        return strPrompt;
+    }
+};
+
+SFLIB_MSGDEBUG(ESERVER_ANYXX, EFUNC_GAMEFRAME, EMID_XX2XX_NTF_SINGLETON_DBG);
+struct SMsgXX2XXNtfSingletonDbg : public SNetMessage
+{
+public:
+    struct SSFCallback
+    {
+        enum ESFCALLBACK {
+            ESFC_INVALID,
+            ESFC_SERVER_ENTER,
+            ESFC_SERVER_INIT,
+            ESFC_SERVER_LEAVE,
+            ESFC_PEER_CREATE,
+            ESFC_PEER_ENTER,
+            ESFC_PEER_REENTER,
+            ESFC_PEER_LEAVE,
+            ESFC_PEER_REMOVE,
+            ESFC_PEER_PEER_ENTER_SCENE_SERVER,
+            ESFC_PEER_PEER_LEAVE_SCENE_SERVER,
+            ESFC_PEER_SET_PEER_SCENE_SERVER,
+        };
+        ESFCALLBACK m_eCallback;
+        ServerID m_serverID;
+        PeerID m_peerID;
+        ServerType m_serverType;
+        ServerID m_sceneServerID;
+        bool m_result;
+
+        SSFCallback()
+        {
+            m_eCallback = ESFC_INVALID;
+            m_serverID = INVALID_SERVER_ID;
+            m_peerID = INVALID_PEER_ID;
+            m_serverType = (BCLib::uint8)ESERVER_UNKNOW;
+            m_sceneServerID = INVALID_SERVER_ID;
+            m_result = false;
+        }
+    };
+
+    bool m_bSFCallback;
+    PeerID m_peerID;
+    int m_bufSize;
+    char m_buf[1];
+
+    SMsgXX2XXNtfSingletonDbg() : SNetMessage(ESERVER_ANYXX, EFUNC_GAMEFRAME, EMID_XX2XX_NTF_SINGLETON_DBG)
+    {
+        m_bSFCallback = false;
+        m_peerID = INVALID_PEER_ID;
+        m_bufSize = 0;
+    }
+
+    BCLib::uint32 getSize() const { return sizeof(SMsgXX2XXNtfSingletonDbg) - sizeof(char) + m_bufSize * sizeof(char); }
+    SSFCallback* getSFCallback() const { return (SSFCallback*)m_buf; }
+};
 
 SFLIB_MSGDEBUG(ESERVER_ANYXX, EFUNC_GAMEFRAME, EMID_XX2XX_NTF_ERROR_TYPE);
 struct SMsgXX2XXNtfErrorType : public SNetMessage
@@ -353,77 +509,6 @@ public:
         m_serverType = (BCLib::uint8)ESERVER_UNKNOW;
         m_serverID = INVALID_SERVER_ID;
     }
-};
-
-//转发消息
-SFLIB_MSGDEBUG(ESERVER_ANYXX, EFUNC_GAMEFRAME, EMID_XX2XX_NTF_TRANSFORM_MSG);
-struct SMsgXX2XXNtfTransformMsg : public SNetMessage
-{
-public:
-    PeerID m_peerID;
-    int m_bufSize;
-    char m_buf[1];
-
-    SMsgXX2XXNtfTransformMsg() : SNetMessage(ESERVER_ANYXX, EFUNC_GAMEFRAME, EMID_XX2XX_NTF_TRANSFORM_MSG)
-    {
-        m_bufSize = 0;
-    }
-
-    BCLib::uint32 getSize() { return sizeof(SMsgXX2XXNtfTransformMsg) - sizeof(char) + m_bufSize * sizeof(char); }
-};
-
-SFLIB_MSGDEBUG(ESERVER_ANYXX, EFUNC_GAMEFRAME, EMID_XX2XX_NTF_SINGLETON_DBG);
-struct SMsgXX2XXNtfSingletonDbg : public SNetMessage
-{
-public:
-    struct SSFCallback
-    {
-        enum ESFCALLBACK {
-            ESFC_INVALID,
-            ESFC_SERVER_ENTER,
-            ESFC_SERVER_INIT,
-            ESFC_SERVER_LEAVE,
-            ESFC_PEER_CREATE,
-            ESFC_PEER_ENTER,
-            ESFC_PEER_REENTER,
-            ESFC_PEER_LEAVE,
-            ESFC_PEER_REMOVE,
-            ESFC_PEER_PEER_ENTER_SCENE_SERVER,
-            ESFC_PEER_PEER_LEAVE_SCENE_SERVER,
-            ESFC_PEER_SET_PEER_SCENE_SERVER,
-        };
-        ESFCALLBACK m_eCallback;
-        ServerID m_serverID;
-        PeerID m_peerID;
-        ServerType m_serverType;
-        ServerID m_sceneServerID;
-        bool m_result;
-
-        SSFCallback()
-        {
-            m_eCallback = ESFC_INVALID;
-            m_serverID = INVALID_SERVER_ID;
-            m_peerID = INVALID_PEER_ID;
-            m_serverType = (BCLib::uint8)ESERVER_UNKNOW;
-            m_sceneServerID = INVALID_SERVER_ID;
-            m_result = false;
-        }
-    };
-
-    bool m_bSFCallback;
-    PeerID m_peerID;
-    int m_bufSize;
-    char m_buf[1];
-
-    SMsgXX2XXNtfSingletonDbg() : SNetMessage(ESERVER_ANYXX, EFUNC_GAMEFRAME, EMID_XX2XX_NTF_SINGLETON_DBG)
-    {
-        m_bSFCallback = false;
-        m_peerID = INVALID_PEER_ID;
-        m_bufSize = 0;
-    }
-
-    BCLib::uint32 getSize() const { return sizeof(SMsgXX2XXNtfSingletonDbg) - sizeof(char) + m_bufSize * sizeof(char); }
-    SSFCallback* getSFCallback() const { return (SSFCallback*)m_buf; }
 };
 
 //

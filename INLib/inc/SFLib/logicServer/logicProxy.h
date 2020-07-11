@@ -15,7 +15,7 @@ namespace SFLib
 {
 namespace Logic
 {
-class CLogicProxy : public BCLib::Network::CUdpProxy, public BCLib::Framework::CMsgExecMgr
+class SFLIB_LOGIC_API CLogicProxy : public BCLib::Network::CUdpProxy, public BCLib::Framework::CMsgExecMgr
 {
 public:
     CLogicProxy();

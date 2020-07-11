@@ -12,6 +12,17 @@
 #include <BCLib/framework/msgType.h>
 #include <BCLib/framework/msgDebug.h>
 
+#if defined(SFLIB_MESSAGE_EXPORTS)
+#define SFLIB_MESSAGE_API _declspec(dllexport)
+#define SFLIB_MESSAGE_TMP _declspec(dllexport)
+#elif defined(SFLIB_MESSAGE_IMPORTS)
+#define SFLIB_MESSAGE_API _declspec(dllimport)
+#define SFLIB_MESSAGE_TMP
+#else
+#define SFLIB_MESSAGE_API
+#define SFLIB_MESSAGE_TMP
+#endif
+
 namespace SFLib
 {
 enum EServerType
@@ -44,8 +55,8 @@ enum EGCServerType
     EGCSERVER_MAX
 };
 
-extern std::string getServerTypeName(EServerType serverType);
-class CServerTypeNameHelper
+extern SFLIB_MESSAGE_API std::string getServerTypeName(EServerType serverType);
+class SFLIB_MESSAGE_API CServerTypeNameHelper
 {
 public:
 	CServerTypeNameHelper();
@@ -68,8 +79,8 @@ enum EFuncType
     EFUNC_EXTEND_UNHANDLE,  // 从这个变量开始的消息，一旦未找到处理函数，都被丢到 CNetMsgQueue 队列中
 };
 
-extern std::string getFuncMsgIDName(BCLib::uint16 funcID, BCLib::int32 msgID);
-class CFuncMsgIDNameHelper
+extern SFLIB_MESSAGE_API std::string getFuncMsgIDName(BCLib::uint16 funcID, BCLib::int32 msgID);
+class SFLIB_MESSAGE_API CFuncMsgIDNameHelper
 {
 public:
 	CFuncMsgIDNameHelper();
@@ -85,7 +96,6 @@ private:
 namespace Message
 {
 #define SFLIB_VERSION_TEXT_MAX  16
-//#define SFLIB_IP_TEXT_MAX       63
 #define SFLIB_RANDKEY_TEXT_MAX  32
 #define SFLIB_MSG_TYPE(server, func) ( BCLIB_HI_SHIFT(server, 8) | func)
 #define SFLIB_MSGDEBUG(server, fun, id) BCLIB_MSGDEBUG(SFLIB_MSG_TYPE(server, fun), id)
@@ -104,6 +114,7 @@ public:
     :BCLib::Framework::SMessage(SFLIB_MSG_TYPE(server, func), id)
     {
     }
+
     BCLib::uint8 getServer() const
     {
         BCLib::uint16 type = BCLib::Framework::SMessage::getType();
@@ -134,8 +145,7 @@ public:
 #pragma pack ()
 #endif
 
-
-class CNetMessage : public BCLib::Framework::CMessage
+class SFLIB_MESSAGE_API CNetMessage : public BCLib::Framework::CMessage
 {
 public:
     CNetMessage(BCLib::uint8 server, BCLib::uint8 func, BCLib::uint16 id)
@@ -178,7 +188,7 @@ public:
 };
 
 // 预留给CNetMessage中serialize和deserialize对应的pBuf扩展用
-class IPBuf
+class SFLIB_MESSAGE_API IPBuf
 {
 public:
 	IPBuf() {};
@@ -189,6 +199,10 @@ public:
 };
 
 }//Message
+
+extern SFLIB_MESSAGE_API bool isTransformMsg(const SFLib::Message::SNetMessage* msg);
+extern SFLIB_MESSAGE_API bool isSubpackageMsg(const SFLib::Message::SNetMessage* msg);
+extern SFLIB_MESSAGE_API std::string getSubDebugPrompt(const SFLib::Message::SNetMessage* msg);
 
 }//SFLib
 

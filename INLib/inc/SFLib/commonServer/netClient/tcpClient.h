@@ -17,7 +17,7 @@ namespace SFLib
 {
 namespace CommonServer
 {
-class CTcpClient : public BCLib::Framework::CMsgExecMgr, public BCLib::Network::CTcpClient
+class SFLIB_COMMON_API CTcpClient : public BCLib::Framework::CMsgExecMgr, public BCLib::Network::CTcpClient
 {
 public:
     CTcpClient();
@@ -68,6 +68,7 @@ protected:
     }
 
     virtual bool _cbParseMsg(const void* msgBuff, BCLib::uint32 msgSize);
+            bool _cbParseMsg(SSFMsgLabel& msgLabel, SFLib::Message::SNetMessage* msg, BCLib::uint32 msgSize);
     virtual void _cbTerminate(const BCLib::Network::CTcpConnectionSPtr& connPtr);
 
     virtual void _unhandledMsg(SSFMsgLabel& msgLabel, SFLib::Message::SNetMessage* msg, BCLib::uint32 msgSize);
@@ -80,6 +81,11 @@ protected:
     EServerType m_serverType;
     ServerID m_serverID;
     bool m_verified;
+
+private:
+    typedef std::vector<SFLib::Message::SMsgXX2XXNtfSubpackageMsg*> SubpackageMsgVec;
+    typedef BCLib::Utility::CHashMap<BCLib::uint32, SubpackageMsgVec> SubpackageMsgMap;
+    SubpackageMsgMap m_mapSubpackageMsg;
 };
 typedef BCLib::Utility::CSPointer<CTcpClient> CTcpClientPtr;
 }//CommonServer

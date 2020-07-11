@@ -29,7 +29,7 @@ enum EServerState
     ESERVERSTATE_RESTART,       // 准备重启
 };
 
-class CServerMgr
+class SFLIB_COMMON_API CServerMgr
 {
     BCLIB_SINGLETON_DECLARE(CServerMgr);
 
@@ -71,11 +71,17 @@ public:
 	bool connectExternalServers(SFLib::ServerType serverType = INVALID_SERVER_TYPE);
 
 public:
-    virtual bool bstMsgToXSByType(EServerType serverType, const SFLib::Message::CNetMessage* msg);
     virtual bool bstMsgToXSByType(EServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+    virtual bool bstMsgToXSByType(EServerType serverType, const SFLib::Message::CNetMessage* msg);
 
-    virtual bool sendMsgToXSByID(ServerID serverID, const SFLib::Message::CNetMessage* msg);
+    virtual bool bstMsgToXSByType(PeerID peerID, EServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+    virtual bool bstMsgToXSByType(PeerID peerID, EServerType serverType, const SFLib::Message::CNetMessage* msg);
+
     virtual bool sendMsgToXSByID(ServerID serverID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+    virtual bool sendMsgToXSByID(ServerID serverID, const SFLib::Message::CNetMessage* msg);
+
+    virtual bool sendMsgToXSByID(PeerID peerID, ServerID serverID, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+    virtual bool sendMsgToXSByID(PeerID peerID, ServerID serverID, const SFLib::Message::CNetMessage* msg);
 
 protected:
     // 这个接口是给 CXmlConfig 专用的，也算是给 MasterServer 专用的

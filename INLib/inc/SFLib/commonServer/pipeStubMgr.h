@@ -16,7 +16,7 @@ namespace SFLib
 {
 namespace CommonServer
 {
-class CPipeStubMgr : public BCLib::Network::CPipeStubMgr
+class SFLIB_COMMON_API CPipeStubMgr : public BCLib::Network::CPipeStubMgr
 {
     BCLIB_SINGLETON_DECLARE(CPipeStubMgr);
 

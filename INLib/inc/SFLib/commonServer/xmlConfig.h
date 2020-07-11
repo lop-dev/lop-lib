@@ -135,7 +135,7 @@ typedef std::map<EServerType, SActiveServerList> SActiveServerListMap;
 
 //////////////////////////////////////////////////////////////////////////
 
-class CXmlConfig
+class SFLIB_COMMON_API CXmlConfig
 {
     BCLIB_SINGLETON_DECLARE(CXmlConfig);
 

@@ -85,7 +85,7 @@ private:
 
 typedef CAvgStat<BCLib::int32> CAvgStat32;
 
-class CTcpStub : public BCLib::Framework::CMsgExecMgr, public BCLib::Network::CTcpStub
+class SFLIB_COMMON_API CTcpStub : public BCLib::Framework::CMsgExecMgr, public BCLib::Network::CTcpStub
 {
 public:
     CTcpStub(const BCLib::Network::CTcpConnectionSPtr& netConn);
@@ -128,6 +128,7 @@ public:
 
 protected:
     virtual bool _cbParseMsg(const void* msgBuff, BCLib::uint32 msgSize);
+            bool _cbParseMsg(SSFMsgLabel& msgLabel, SFLib::Message::SNetMessage* msg, BCLib::uint32 msgSize);
     virtual void _unhandledMsg(SSFMsgLabel& msgLabel, SFLib::Message::SNetMessage* msg, BCLib::uint32 msgSize);
     virtual bool _transformMsg(PeerID peerID, SFLib::Message::SNetMessage* msg, BCLib::uint32 msgSize);
 
@@ -150,6 +151,10 @@ private:
     EServerType m_serverType;
     ServerID m_serverID;
     BCLib::Utility::CSurveyTimer m_pingTime;
+
+    typedef std::vector<SFLib::Message::SMsgXX2XXNtfSubpackageMsg*> SubpackageMsgVec;
+    typedef BCLib::Utility::CHashMap<BCLib::uint32, SubpackageMsgVec> SubpackageMsgMap;
+    SubpackageMsgMap m_mapSubpackageMsg;
 };
 typedef BCLib::Utility::CSPointer<CTcpStub> CTcpStubPtr;
 }//CommonServer

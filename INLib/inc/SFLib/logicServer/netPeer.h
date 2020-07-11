@@ -17,7 +17,7 @@ namespace SFLib
 {
 namespace Logic
 {
-class CNetPeer : public SFLib::CommonServer::CNetPeer
+class SFLIB_LOGIC_API CNetPeer : public SFLib::CommonServer::CNetPeer
 {
 public:
     CNetPeer();
@@ -47,14 +47,14 @@ public:
 	/// @param serverType 服务器类型
 	///        如果使用 enterLogicServer(ServerID serverID) 函数进入的话，则直接发送消息到这个服务器
 	///        如果使用 enterLogicServer(EServerType serverType) 函数进入的话，则随机一个服务器进行发送
+    virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 	virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
-	virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
+    virtual bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 	virtual bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
-	virtual bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
 
-    bool sendMsgToMS(const SFLib::Message::CNetMessage* msg);
 	bool sendMsgToMS(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+    bool sendMsgToMS(const SFLib::Message::CNetMessage* msg);
 
 public:
 	virtual BCLib::uint32 getLogicServerNum();

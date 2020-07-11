@@ -16,7 +16,7 @@ namespace SFLib
 {
 namespace Logic
 {
-class CLogicServer : public SFLib::CommonServer::CCommonServer2Master
+class SFLIB_LOGIC_API CLogicServer : public SFLib::CommonServer::CCommonServer2Master
 {
 public:
     CLogicServer(const std::string& name);

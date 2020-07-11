@@ -9,7 +9,7 @@
 #define __SFLIB_COMMONSERVER_NETMSGQUEUE_H__
 
 #include <BCLib/utility/singleton.h>
-#include <SFLib/commonDefine/netMsgQueue.hpp>
+#include <SFLib/message/netMsgQueue.hpp>
 #include <SFLib/commonServer/msgLabel.h>
 
 namespace SFLib
@@ -17,9 +17,9 @@ namespace SFLib
 namespace CommonServer
 {
 
-typedef SFLib::CommonDefine::CNetMsgQueueCallback<SSFMsgLabel> CNetMsgQueueBySFMsgLabelCallback;
+typedef SFLib::Message::CNetMsgQueueCallback<SSFMsgLabel> CNetMsgQueueBySFMsgLabelCallback;
 
-class CNetMsgQueueBySFMsgLabel : public SFLib::CommonDefine::CNetMsgQueue<SSFMsgLabel>
+class SFLIB_COMMON_API CNetMsgQueueBySFMsgLabel : public SFLib::Message::CNetMsgQueue<SSFMsgLabel>
 {
     BCLIB_SINGLETON_DECLARE(CNetMsgQueueBySFMsgLabel);
 
@@ -30,9 +30,9 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
-typedef SFLib::CommonDefine::CNetMsgQueueCallback<SUdpMsgLabel> CNetMsgQueueByUdpMsgLabelCallback;
+typedef SFLib::Message::CNetMsgQueueCallback<SUdpMsgLabel> CNetMsgQueueByUdpMsgLabelCallback;
 
-class CNetMsgQueueByUdpMsgLabel : public SFLib::CommonDefine::CNetMsgQueue<SUdpMsgLabel>
+class SFLIB_COMMON_API CNetMsgQueueByUdpMsgLabel : public SFLib::Message::CNetMsgQueue<SUdpMsgLabel>
 {
     BCLIB_SINGLETON_DECLARE(CNetMsgQueueByUdpMsgLabel);
 
@@ -43,9 +43,9 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
-typedef SFLib::CommonDefine::CNetMsgQueueCallback<PeerID> CNetMsgQueueByPeerIDCallback;
+typedef SFLib::Message::CNetMsgQueueCallback<PeerID> CNetMsgQueueByPeerIDCallback;
 
-class CNetMsgQueueByPeerID : public SFLib::CommonDefine::CNetMsgQueue<PeerID>
+class SFLIB_COMMON_API CNetMsgQueueByPeerID : public SFLib::Message::CNetMsgQueue<PeerID>
 {
     BCLIB_SINGLETON_DECLARE(CNetMsgQueueByPeerID);
 

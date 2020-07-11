@@ -16,7 +16,7 @@ namespace SFLib
 {
 namespace Logic
 {
-class CLogicStub : public SFLib::CommonServer::CTcpStub
+class SFLIB_LOGIC_API CLogicStub : public SFLib::CommonServer::CTcpStub
 {
 public:
     CLogicStub(const BCLib::Network::CTcpConnectionSPtr& netConn);

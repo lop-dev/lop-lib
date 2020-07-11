@@ -16,7 +16,7 @@ namespace SFLib
 {
 namespace External
 {
-class CExternalServer : public SFLib::CommonServer::CCommonServer2Master
+class SFLIB_EXTERNAL_API CExternalServer : public SFLib::CommonServer::CCommonServer2Master
 {
 public:
     CExternalServer(const std::string& name);

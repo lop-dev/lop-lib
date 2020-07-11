@@ -10,12 +10,48 @@
 
 #include <BCLib/utility/baseDef.h>
 
-#ifdef SFLIB_EXPORTS
-#    define SFLIB_SF_API _declspec(dllexport)
-#elif defined(SFLIB_IMPORTS)
-#    define SFLIB_SF_API _declspec(dllimport)
+#if defined(SFLIB_COMMON_EXPORTS)
+#define SFLIB_COMMON_API _declspec(dllexport)
+#define SFLIB_COMMON_TMP _declspec(dllexport)
+#elif defined(SFLIB_COMMON_IMPORTS)
+#define SFLIB_COMMON_API _declspec(dllimport)
+#define SFLIB_COMMON_TMP
 #else
-#    define SFLIB_SF_API
+#define SFLIB_COMMON_API
+#define SFLIB_COMMON_TMP
+#endif
+
+#if defined(SFLIB_MASTER_EXPORTS)
+#define SFLIB_MASTER_API _declspec(dllexport)
+#define SFLIB_MASTER_TMP _declspec(dllexport)
+#elif defined(SFLIB_MASTER_IMPORTS)
+#define SFLIB_MASTER_API _declspec(dllimport)
+#define SFLIB_MASTER_TMP
+#else
+#define SFLIB_MASTER_API
+#define SFLIB_MASTER_TMP
+#endif
+
+#if defined(SFLIB_EXTERNAL_EXPORTS)
+#define SFLIB_EXTERNAL_API _declspec(dllexport)
+#define SFLIB_EXTERNAL_TMP _declspec(dllexport)
+#elif defined(SFLIB_EXTERNAL_IMPORTS)
+#define SFLIB_EXTERNAL_API _declspec(dllimport)
+#define SFLIB_EXTERNAL_TMP
+#else
+#define SFLIB_EXTERNAL_API
+#define SFLIB_EXTERNAL_TMP
+#endif
+
+#if defined(SFLIB_LOGIC_EXPORTS)
+#define SFLIB_LOGIC_API _declspec(dllexport)
+#define SFLIB_LOGIC_TMP _declspec(dllexport)
+#elif defined(SFLIB_LOGIC_IMPORTS)
+#define SFLIB_LOGIC_API _declspec(dllimport)
+#define SFLIB_LOGIC_TMP
+#else
+#define SFLIB_LOGIC_API
+#define SFLIB_LOGIC_TMP
 #endif
 
 namespace SFLib

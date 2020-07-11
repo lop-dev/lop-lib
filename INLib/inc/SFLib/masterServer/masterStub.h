@@ -14,7 +14,7 @@ namespace SFLib
 {
 namespace Master
 {
-class CMasterStub : public SFLib::CommonServer::CTcpStub
+class SFLIB_MASTER_API CMasterStub : public SFLib::CommonServer::CTcpStub
 {
 public:
     CMasterStub(const BCLib::Network::CTcpConnectionSPtr& netConn);

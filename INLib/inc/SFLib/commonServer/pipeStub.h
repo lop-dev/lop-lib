@@ -23,7 +23,7 @@ namespace SFLib
 {
 namespace CommonServer
 {
-class CPipeStub : public BCLib::Framework::CMsgExecMgr, public BCLib::Network::CPipeStub
+class SFLIB_COMMON_API CPipeStub : public BCLib::Framework::CMsgExecMgr, public BCLib::Network::CPipeStub
 {
 public:
     CPipeStub(const BCLib::Network::CPipeSPtr& pipePtr);

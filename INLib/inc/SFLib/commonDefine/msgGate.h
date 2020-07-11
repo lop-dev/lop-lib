@@ -14,7 +14,7 @@
 
 namespace SFLib
 {
-    class CMsgGate
+    class SFLIB_COMMON_API CMsgGate
     {
     public:
         static CMsgGate& getSingleton()

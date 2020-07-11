@@ -17,7 +17,7 @@ namespace SFLib
 {
 namespace CommonServer
 {
-class CServerInfoMgr
+class SFLIB_COMMON_API CServerInfoMgr
 {
 public:
     CServerInfoMgr();

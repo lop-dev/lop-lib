@@ -15,7 +15,7 @@ namespace SFLib
 namespace External
 {
 
-class CExternalApp : public SFLib::CommonServer::CCommonApp
+class SFLIB_EXTERNAL_API CExternalApp : public SFLib::CommonServer::CCommonApp
 {
 public:
     CExternalApp();

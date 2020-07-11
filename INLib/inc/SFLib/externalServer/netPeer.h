@@ -17,7 +17,7 @@ namespace SFLib
 {
 namespace External
 {
-class CNetPeer : public SFLib::CommonServer::CNetPeer
+class SFLIB_EXTERNAL_API CNetPeer : public SFLib::CommonServer::CNetPeer
 {
 public:
     CNetPeer();
@@ -36,14 +36,14 @@ public:
 	/// @brief 发送消息到其他服务器
 	/// @return bool
 	/// @param serverType 服务器类型，只会发送给内部服务器
-	virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
 	virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+    virtual bool sendMsgByType(ServerType serverType, const SFLib::Message::CNetMessage* msg);
 
-	virtual bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
 	virtual bool sendMsgToGC(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+    virtual bool sendMsgToGC(const SFLib::Message::CNetMessage* msg);
 
-	virtual bool sendMsgToGW(const SFLib::Message::CNetMessage* msg);
 	virtual bool sendMsgToGW(const SFLib::Message::SNetMessage* msg, const BCLib::uint32 msgSize);
+    virtual bool sendMsgToGW(const SFLib::Message::CNetMessage* msg);
 
 public:
 	virtual BCLib::uint32 getLogicServerNum();

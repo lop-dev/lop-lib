@@ -15,7 +15,7 @@ namespace SFLib
 namespace Master
 {
 
-class CMasterApp : public SFLib::CommonServer::CCommonApp
+class SFLIB_MASTER_API CMasterApp : public SFLib::CommonServer::CCommonApp
 {
 public:
     CMasterApp();
