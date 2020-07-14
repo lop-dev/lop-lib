@@ -3,33 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MpqFile", "MpqFile.vcxproj", "{739D6309-47E7-47BC-B63A-2784878F2D5A}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Update", "Update.vcxproj", "{DFD1FEE8-1BFF-430B-B53C-45AE73FA4277}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CrashDump", "CrashDump.vcxproj", "{1B27F014-2C87-4CB0-9864-4584098CEB6F}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PakFile", "PakFile.vcxproj", "{9574A614-2E86-4707-AFDF-6D4B445D38D7}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StateMachine", "StateMachine.vcxproj", "{17475EC3-784F-4F5A-B41B-925EB2420719}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Trigger", "Trigger.vcxproj", "{4E5AF388-3440-460C-8AFD-73797A5AF432}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Subversion", "Subversion.vcxproj", "{3043F0B1-5B20-427C-8EFB-F1750FE5158D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SharedMemory", "SharedMemory.vcxproj", "{DE66DB8A-FF81-4805-9F0A-39B6C7B9F281}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ActiveDirectory", "ActiveDirectory.vcxproj", "{E846F689-7505-420F-9C8A-5F4FB90D2E42}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GluiWrap", "GluiWrap.vcxproj", "{7DC286FD-191F-4802-BA3F-17FDACF99DA0}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BehaviorTree", "BehaviorTree.vcxproj", "{C64C8D54-78A3-4AE0-90D3-6AFB6C013F51}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Misc", "Misc.vcxproj", "{430D823F-E7E3-4D83-811F-0776C3721C8F}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CurlWrap", "CurlWrap.vcxproj", "{9B1B5AAE-A4E5-43A9-B960-70FB77C4A12E}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XmlRpc", "XmlRpc.vcxproj", "{9D27E28D-9115-4901-A42D-1F4232939221}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kafka", "Kafka.vcxproj", "{7DF29CF1-CA08-40D4-81EB-185F20F5BBD2}"
 EndProject
@@ -47,78 +23,6 @@ Global
 		lib_9mt|Win32 = lib_9mt|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{739D6309-47E7-47BC-B63A-2784878F2D5A}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
-		{739D6309-47E7-47BC-B63A-2784878F2D5A}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
-		{739D6309-47E7-47BC-B63A-2784878F2D5A}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
-		{739D6309-47E7-47BC-B63A-2784878F2D5A}.dll_9md|Win32.Build.0 = dll_9md|Win32
-		{739D6309-47E7-47BC-B63A-2784878F2D5A}.lib_9md_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{739D6309-47E7-47BC-B63A-2784878F2D5A}.lib_9md_d|Win32.Build.0 = lib_9md_d|Win32
-		{739D6309-47E7-47BC-B63A-2784878F2D5A}.lib_9md|Win32.ActiveCfg = lib_9md|Win32
-		{739D6309-47E7-47BC-B63A-2784878F2D5A}.lib_9md|Win32.Build.0 = lib_9md|Win32
-		{739D6309-47E7-47BC-B63A-2784878F2D5A}.lib_9mt_d|Win32.ActiveCfg = lib_9mt_d|Win32
-		{739D6309-47E7-47BC-B63A-2784878F2D5A}.lib_9mt_d|Win32.Build.0 = lib_9mt_d|Win32
-		{739D6309-47E7-47BC-B63A-2784878F2D5A}.lib_9mt|Win32.ActiveCfg = lib_9mt|Win32
-		{739D6309-47E7-47BC-B63A-2784878F2D5A}.lib_9mt|Win32.Build.0 = lib_9mt|Win32
-		{DFD1FEE8-1BFF-430B-B53C-45AE73FA4277}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
-		{DFD1FEE8-1BFF-430B-B53C-45AE73FA4277}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
-		{DFD1FEE8-1BFF-430B-B53C-45AE73FA4277}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
-		{DFD1FEE8-1BFF-430B-B53C-45AE73FA4277}.dll_9md|Win32.Build.0 = dll_9md|Win32
-		{DFD1FEE8-1BFF-430B-B53C-45AE73FA4277}.lib_9md_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{DFD1FEE8-1BFF-430B-B53C-45AE73FA4277}.lib_9md_d|Win32.Build.0 = lib_9md_d|Win32
-		{DFD1FEE8-1BFF-430B-B53C-45AE73FA4277}.lib_9md|Win32.ActiveCfg = lib_9md|Win32
-		{DFD1FEE8-1BFF-430B-B53C-45AE73FA4277}.lib_9md|Win32.Build.0 = lib_9md|Win32
-		{DFD1FEE8-1BFF-430B-B53C-45AE73FA4277}.lib_9mt_d|Win32.ActiveCfg = lib_9mt_d|Win32
-		{DFD1FEE8-1BFF-430B-B53C-45AE73FA4277}.lib_9mt_d|Win32.Build.0 = lib_9mt_d|Win32
-		{DFD1FEE8-1BFF-430B-B53C-45AE73FA4277}.lib_9mt|Win32.ActiveCfg = lib_9mt|Win32
-		{DFD1FEE8-1BFF-430B-B53C-45AE73FA4277}.lib_9mt|Win32.Build.0 = lib_9mt|Win32
-		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
-		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
-		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
-		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.dll_9md|Win32.Build.0 = dll_9md|Win32
-		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9md_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9md_d|Win32.Build.0 = lib_9md_d|Win32
-		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9md|Win32.ActiveCfg = lib_9md|Win32
-		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9md|Win32.Build.0 = lib_9md|Win32
-		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9mt_d|Win32.ActiveCfg = lib_9mt_d|Win32
-		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9mt_d|Win32.Build.0 = lib_9mt_d|Win32
-		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9mt|Win32.ActiveCfg = lib_9mt|Win32
-		{1B27F014-2C87-4CB0-9864-4584098CEB6F}.lib_9mt|Win32.Build.0 = lib_9mt|Win32
-		{9574A614-2E86-4707-AFDF-6D4B445D38D7}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
-		{9574A614-2E86-4707-AFDF-6D4B445D38D7}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
-		{9574A614-2E86-4707-AFDF-6D4B445D38D7}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
-		{9574A614-2E86-4707-AFDF-6D4B445D38D7}.dll_9md|Win32.Build.0 = dll_9md|Win32
-		{9574A614-2E86-4707-AFDF-6D4B445D38D7}.lib_9md_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{9574A614-2E86-4707-AFDF-6D4B445D38D7}.lib_9md_d|Win32.Build.0 = lib_9md_d|Win32
-		{9574A614-2E86-4707-AFDF-6D4B445D38D7}.lib_9md|Win32.ActiveCfg = lib_9md|Win32
-		{9574A614-2E86-4707-AFDF-6D4B445D38D7}.lib_9md|Win32.Build.0 = lib_9md|Win32
-		{9574A614-2E86-4707-AFDF-6D4B445D38D7}.lib_9mt_d|Win32.ActiveCfg = lib_9mt_d|Win32
-		{9574A614-2E86-4707-AFDF-6D4B445D38D7}.lib_9mt_d|Win32.Build.0 = lib_9mt_d|Win32
-		{9574A614-2E86-4707-AFDF-6D4B445D38D7}.lib_9mt|Win32.ActiveCfg = lib_9mt|Win32
-		{9574A614-2E86-4707-AFDF-6D4B445D38D7}.lib_9mt|Win32.Build.0 = lib_9mt|Win32
-		{17475EC3-784F-4F5A-B41B-925EB2420719}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
-		{17475EC3-784F-4F5A-B41B-925EB2420719}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
-		{17475EC3-784F-4F5A-B41B-925EB2420719}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
-		{17475EC3-784F-4F5A-B41B-925EB2420719}.dll_9md|Win32.Build.0 = dll_9md|Win32
-		{17475EC3-784F-4F5A-B41B-925EB2420719}.lib_9md_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{17475EC3-784F-4F5A-B41B-925EB2420719}.lib_9md_d|Win32.Build.0 = lib_9md_d|Win32
-		{17475EC3-784F-4F5A-B41B-925EB2420719}.lib_9md|Win32.ActiveCfg = lib_9md|Win32
-		{17475EC3-784F-4F5A-B41B-925EB2420719}.lib_9md|Win32.Build.0 = lib_9md|Win32
-		{17475EC3-784F-4F5A-B41B-925EB2420719}.lib_9mt_d|Win32.ActiveCfg = lib_9mt_d|Win32
-		{17475EC3-784F-4F5A-B41B-925EB2420719}.lib_9mt_d|Win32.Build.0 = lib_9mt_d|Win32
-		{17475EC3-784F-4F5A-B41B-925EB2420719}.lib_9mt|Win32.ActiveCfg = lib_9mt|Win32
-		{17475EC3-784F-4F5A-B41B-925EB2420719}.lib_9mt|Win32.Build.0 = lib_9mt|Win32
-		{4E5AF388-3440-460C-8AFD-73797A5AF432}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
-		{4E5AF388-3440-460C-8AFD-73797A5AF432}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
-		{4E5AF388-3440-460C-8AFD-73797A5AF432}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
-		{4E5AF388-3440-460C-8AFD-73797A5AF432}.dll_9md|Win32.Build.0 = dll_9md|Win32
-		{4E5AF388-3440-460C-8AFD-73797A5AF432}.lib_9md_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{4E5AF388-3440-460C-8AFD-73797A5AF432}.lib_9md_d|Win32.Build.0 = lib_9md_d|Win32
-		{4E5AF388-3440-460C-8AFD-73797A5AF432}.lib_9md|Win32.ActiveCfg = lib_9md|Win32
-		{4E5AF388-3440-460C-8AFD-73797A5AF432}.lib_9md|Win32.Build.0 = lib_9md|Win32
-		{4E5AF388-3440-460C-8AFD-73797A5AF432}.lib_9mt_d|Win32.ActiveCfg = lib_9mt_d|Win32
-		{4E5AF388-3440-460C-8AFD-73797A5AF432}.lib_9mt_d|Win32.Build.0 = lib_9mt_d|Win32
-		{4E5AF388-3440-460C-8AFD-73797A5AF432}.lib_9mt|Win32.ActiveCfg = lib_9mt|Win32
-		{4E5AF388-3440-460C-8AFD-73797A5AF432}.lib_9mt|Win32.Build.0 = lib_9mt|Win32
 		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
 		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
 		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
@@ -131,54 +35,6 @@ Global
 		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9mt_d|Win32.Build.0 = lib_9mt_d|Win32
 		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9mt|Win32.ActiveCfg = lib_9mt|Win32
 		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9mt|Win32.Build.0 = lib_9mt|Win32
-		{DE66DB8A-FF81-4805-9F0A-39B6C7B9F281}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
-		{DE66DB8A-FF81-4805-9F0A-39B6C7B9F281}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
-		{DE66DB8A-FF81-4805-9F0A-39B6C7B9F281}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
-		{DE66DB8A-FF81-4805-9F0A-39B6C7B9F281}.dll_9md|Win32.Build.0 = dll_9md|Win32
-		{DE66DB8A-FF81-4805-9F0A-39B6C7B9F281}.lib_9md_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{DE66DB8A-FF81-4805-9F0A-39B6C7B9F281}.lib_9md_d|Win32.Build.0 = lib_9md_d|Win32
-		{DE66DB8A-FF81-4805-9F0A-39B6C7B9F281}.lib_9md|Win32.ActiveCfg = lib_9md|Win32
-		{DE66DB8A-FF81-4805-9F0A-39B6C7B9F281}.lib_9md|Win32.Build.0 = lib_9md|Win32
-		{DE66DB8A-FF81-4805-9F0A-39B6C7B9F281}.lib_9mt_d|Win32.ActiveCfg = lib_9mt_d|Win32
-		{DE66DB8A-FF81-4805-9F0A-39B6C7B9F281}.lib_9mt_d|Win32.Build.0 = lib_9mt_d|Win32
-		{DE66DB8A-FF81-4805-9F0A-39B6C7B9F281}.lib_9mt|Win32.ActiveCfg = lib_9mt|Win32
-		{DE66DB8A-FF81-4805-9F0A-39B6C7B9F281}.lib_9mt|Win32.Build.0 = lib_9mt|Win32
-		{E846F689-7505-420F-9C8A-5F4FB90D2E42}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
-		{E846F689-7505-420F-9C8A-5F4FB90D2E42}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
-		{E846F689-7505-420F-9C8A-5F4FB90D2E42}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
-		{E846F689-7505-420F-9C8A-5F4FB90D2E42}.dll_9md|Win32.Build.0 = dll_9md|Win32
-		{E846F689-7505-420F-9C8A-5F4FB90D2E42}.lib_9md_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{E846F689-7505-420F-9C8A-5F4FB90D2E42}.lib_9md_d|Win32.Build.0 = lib_9md_d|Win32
-		{E846F689-7505-420F-9C8A-5F4FB90D2E42}.lib_9md|Win32.ActiveCfg = lib_9md|Win32
-		{E846F689-7505-420F-9C8A-5F4FB90D2E42}.lib_9md|Win32.Build.0 = lib_9md|Win32
-		{E846F689-7505-420F-9C8A-5F4FB90D2E42}.lib_9mt_d|Win32.ActiveCfg = lib_9mt_d|Win32
-		{E846F689-7505-420F-9C8A-5F4FB90D2E42}.lib_9mt_d|Win32.Build.0 = lib_9mt_d|Win32
-		{E846F689-7505-420F-9C8A-5F4FB90D2E42}.lib_9mt|Win32.ActiveCfg = lib_9mt|Win32
-		{E846F689-7505-420F-9C8A-5F4FB90D2E42}.lib_9mt|Win32.Build.0 = lib_9mt|Win32
-		{7DC286FD-191F-4802-BA3F-17FDACF99DA0}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
-		{7DC286FD-191F-4802-BA3F-17FDACF99DA0}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
-		{7DC286FD-191F-4802-BA3F-17FDACF99DA0}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
-		{7DC286FD-191F-4802-BA3F-17FDACF99DA0}.dll_9md|Win32.Build.0 = dll_9md|Win32
-		{7DC286FD-191F-4802-BA3F-17FDACF99DA0}.lib_9md_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{7DC286FD-191F-4802-BA3F-17FDACF99DA0}.lib_9md_d|Win32.Build.0 = lib_9md_d|Win32
-		{7DC286FD-191F-4802-BA3F-17FDACF99DA0}.lib_9md|Win32.ActiveCfg = lib_9md|Win32
-		{7DC286FD-191F-4802-BA3F-17FDACF99DA0}.lib_9md|Win32.Build.0 = lib_9md|Win32
-		{7DC286FD-191F-4802-BA3F-17FDACF99DA0}.lib_9mt_d|Win32.ActiveCfg = lib_9mt_d|Win32
-		{7DC286FD-191F-4802-BA3F-17FDACF99DA0}.lib_9mt_d|Win32.Build.0 = lib_9mt_d|Win32
-		{7DC286FD-191F-4802-BA3F-17FDACF99DA0}.lib_9mt|Win32.ActiveCfg = lib_9mt|Win32
-		{7DC286FD-191F-4802-BA3F-17FDACF99DA0}.lib_9mt|Win32.Build.0 = lib_9mt|Win32
-		{C64C8D54-78A3-4AE0-90D3-6AFB6C013F51}.dll_9md_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{C64C8D54-78A3-4AE0-90D3-6AFB6C013F51}.dll_9md_d|Win32.Build.0 = lib_9md_d|Win32
-		{C64C8D54-78A3-4AE0-90D3-6AFB6C013F51}.dll_9md|Win32.ActiveCfg = lib_9md|Win32
-		{C64C8D54-78A3-4AE0-90D3-6AFB6C013F51}.dll_9md|Win32.Build.0 = lib_9md|Win32
-		{C64C8D54-78A3-4AE0-90D3-6AFB6C013F51}.lib_9md_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{C64C8D54-78A3-4AE0-90D3-6AFB6C013F51}.lib_9md_d|Win32.Build.0 = lib_9md_d|Win32
-		{C64C8D54-78A3-4AE0-90D3-6AFB6C013F51}.lib_9md|Win32.ActiveCfg = lib_9md|Win32
-		{C64C8D54-78A3-4AE0-90D3-6AFB6C013F51}.lib_9md|Win32.Build.0 = lib_9md|Win32
-		{C64C8D54-78A3-4AE0-90D3-6AFB6C013F51}.lib_9mt_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{C64C8D54-78A3-4AE0-90D3-6AFB6C013F51}.lib_9mt_d|Win32.Build.0 = lib_9md_d|Win32
-		{C64C8D54-78A3-4AE0-90D3-6AFB6C013F51}.lib_9mt|Win32.ActiveCfg = lib_9md|Win32
-		{C64C8D54-78A3-4AE0-90D3-6AFB6C013F51}.lib_9mt|Win32.Build.0 = lib_9md|Win32
 		{430D823F-E7E3-4D83-811F-0776C3721C8F}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
 		{430D823F-E7E3-4D83-811F-0776C3721C8F}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
 		{430D823F-E7E3-4D83-811F-0776C3721C8F}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
@@ -191,30 +47,6 @@ Global
 		{430D823F-E7E3-4D83-811F-0776C3721C8F}.lib_9mt_d|Win32.Build.0 = lib_9md_d|Win32
 		{430D823F-E7E3-4D83-811F-0776C3721C8F}.lib_9mt|Win32.ActiveCfg = lib_9md|Win32
 		{430D823F-E7E3-4D83-811F-0776C3721C8F}.lib_9mt|Win32.Build.0 = lib_9md|Win32
-		{9B1B5AAE-A4E5-43A9-B960-70FB77C4A12E}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
-		{9B1B5AAE-A4E5-43A9-B960-70FB77C4A12E}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
-		{9B1B5AAE-A4E5-43A9-B960-70FB77C4A12E}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
-		{9B1B5AAE-A4E5-43A9-B960-70FB77C4A12E}.dll_9md|Win32.Build.0 = dll_9md|Win32
-		{9B1B5AAE-A4E5-43A9-B960-70FB77C4A12E}.lib_9md_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{9B1B5AAE-A4E5-43A9-B960-70FB77C4A12E}.lib_9md_d|Win32.Build.0 = lib_9md_d|Win32
-		{9B1B5AAE-A4E5-43A9-B960-70FB77C4A12E}.lib_9md|Win32.ActiveCfg = lib_9md|Win32
-		{9B1B5AAE-A4E5-43A9-B960-70FB77C4A12E}.lib_9md|Win32.Build.0 = lib_9md|Win32
-		{9B1B5AAE-A4E5-43A9-B960-70FB77C4A12E}.lib_9mt_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{9B1B5AAE-A4E5-43A9-B960-70FB77C4A12E}.lib_9mt_d|Win32.Build.0 = lib_9md_d|Win32
-		{9B1B5AAE-A4E5-43A9-B960-70FB77C4A12E}.lib_9mt|Win32.ActiveCfg = lib_9md|Win32
-		{9B1B5AAE-A4E5-43A9-B960-70FB77C4A12E}.lib_9mt|Win32.Build.0 = lib_9md|Win32
-		{9D27E28D-9115-4901-A42D-1F4232939221}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
-		{9D27E28D-9115-4901-A42D-1F4232939221}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
-		{9D27E28D-9115-4901-A42D-1F4232939221}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
-		{9D27E28D-9115-4901-A42D-1F4232939221}.dll_9md|Win32.Build.0 = dll_9md|Win32
-		{9D27E28D-9115-4901-A42D-1F4232939221}.lib_9md_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{9D27E28D-9115-4901-A42D-1F4232939221}.lib_9md_d|Win32.Build.0 = lib_9md_d|Win32
-		{9D27E28D-9115-4901-A42D-1F4232939221}.lib_9md|Win32.ActiveCfg = lib_9md|Win32
-		{9D27E28D-9115-4901-A42D-1F4232939221}.lib_9md|Win32.Build.0 = lib_9md|Win32
-		{9D27E28D-9115-4901-A42D-1F4232939221}.lib_9mt_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{9D27E28D-9115-4901-A42D-1F4232939221}.lib_9mt_d|Win32.Build.0 = lib_9md_d|Win32
-		{9D27E28D-9115-4901-A42D-1F4232939221}.lib_9mt|Win32.ActiveCfg = lib_9md|Win32
-		{9D27E28D-9115-4901-A42D-1F4232939221}.lib_9mt|Win32.Build.0 = lib_9md|Win32
 		{7DF29CF1-CA08-40D4-81EB-185F20F5BBD2}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
 		{7DF29CF1-CA08-40D4-81EB-185F20F5BBD2}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
 		{7DF29CF1-CA08-40D4-81EB-185F20F5BBD2}.dll_9md|Win32.ActiveCfg = dll_9md|Win32

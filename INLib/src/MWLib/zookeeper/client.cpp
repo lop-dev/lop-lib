@@ -5,6 +5,11 @@
 /// @brief
 ///
 //////////////////////////////////////////////////////////////////////
+#if defined(_WIN32)
+#pragma comment(lib, "ws2_32.lib")
+#elif defined(_LINUX)
+#endif
+
 /** use the lib zookeeper as static lib */
 #ifndef USE_STATIC_LIB
 #define USE_STATIC_LIB
