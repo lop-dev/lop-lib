@@ -10,6 +10,14 @@
 
 #include <BCLib/utility/noncopyable.h>
 
+#ifdef MWLIB_HTTPSERVER_EXPORTS
+#    define MWLIB_HTTPSERVER_API _declspec(dllexport)
+#elif defined(MWLIB_HTTPSERVER_IMPORTS)
+#    define MWLIB_HTTPSERVER_API _declspec(dllimport)
+#else
+#    define MWLIB_HTTPSERVER_API
+#endif
+
 namespace MWLib
 {
     namespace HttpServer
@@ -22,7 +30,7 @@ namespace MWLib
          **禁止用户另外保存 CHttpSession 指针， 链接断开后有可能会话会被底层释放
          **如果有需要， 请保存会话id 通过CHttpServer 查找会话
         */
-        class CHttpSession
+        class MWLIB_HTTPSERVER_API CHttpSession
         {
             friend class CHttpServer;
 
@@ -71,7 +79,7 @@ namespace MWLib
 
         typedef void(*HttpHandleFunc)(CHttpSession* session);
 
-        class CHttpServer : public BCLib::Utility::CNoncopyable
+        class MWLIB_HTTPSERVER_API CHttpServer : public BCLib::Utility::CNoncopyable
         {
         public:
             bool init(const std::string &address);
