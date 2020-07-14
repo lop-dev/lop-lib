@@ -132,9 +132,12 @@
       <OutputFile>$(OutDir)dll$(ProjectName)_9md_d.dll</OutputFile>
       <AdditionalLibraryDirectories>..\..\..\lib\BCLib\win-x86-32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <GenerateMapFile>true</GenerateMapFile>
-      <MapFileName>$(OutDir)dll$(ProjectName)_9md_d.map</MapFileName>
-      <MapExports>true</MapExports>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>
+      </MapFileName>
+      <MapExports>false</MapExports>
+      <ProgramDatabaseFile>$(OutDir)dll$(ProjectName)_9md_d.pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(OutDir)dll$(ProjectName)_9md_d.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='dll_9md|Win32'">
@@ -154,9 +157,12 @@
       <AdditionalDependencies>libUtility_9md.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)dll$(ProjectName)_9md.dll</OutputFile>
       <AdditionalLibraryDirectories>..\..\..\lib\BCLib\win-x86-32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateMapFile>true</GenerateMapFile>
-      <MapFileName>$(OutDir)dll$(ProjectName)_9md.map</MapFileName>
-      <MapExports>true</MapExports>
+      <GenerateMapFile>false</GenerateMapFile>
+      <MapFileName>
+      </MapFileName>
+      <MapExports>false</MapExports>
+      <ProgramDatabaseFile>$(OutDir)dll$(ProjectName)_9md.pdb</ProgramDatabaseFile>
+      <ImportLibrary>$(OutDir)dll$(ProjectName)_9md.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
