@@ -11,6 +11,14 @@
 #include <mutex>
 #include <BCLib/utility/noncopyable.h>
 
+#ifdef MWLIB_ZOOKEEPER_EXPORTS
+#    define MWLIB_ZOOKEEPER_API _declspec(dllexport)
+#elif defined(MWLIB_ZOOKEEPER_IMPORTS)
+#    define MWLIB_ZOOKEEPER_API _declspec(dllimport)
+#else
+#    define MWLIB_ZOOKEEPER_API
+#endif
+
 namespace MWLib
 {
     namespace Zookeeper
@@ -57,7 +65,7 @@ namespace MWLib
             std::string path;
         };
 
-        class CClient : public BCLib::Utility::CNoncopyable
+        class MWLIB_ZOOKEEPER_API CClient : public BCLib::Utility::CNoncopyable
         {
         public:
             CClient();
