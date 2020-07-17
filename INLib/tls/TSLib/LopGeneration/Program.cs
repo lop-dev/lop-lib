@@ -83,56 +83,53 @@ namespace Proto2Code
             //
             CConfigFile.Instance.LoadFile();
 
-            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP || ExportType == EExportType.CSP || ExportType == EExportType.LUA)
+            Console.WriteLine("********** 拷贝 *.xlsx 描述文件 **********");
+            DirectoryInfo desDir01 = new DirectoryInfo(@".\TableOut\Temp\0_Excelfile\DescTable\");
+            if (!desDir01.Exists) desDir01.Create();
+
+            foreach (FileInfo fileInfo in desDir01.GetFiles("*.xlsx", SearchOption.TopDirectoryOnly))
             {
-                Console.WriteLine("********** 拷贝 *.xlsx 描述文件 **********");
-                DirectoryInfo desDir01 = new DirectoryInfo(@".\TableOut\Temp\0_Excelfile\DescTable\");
-                if (!desDir01.Exists) desDir01.Create();
+                fileInfo.Delete();
+            }
 
-                foreach (FileInfo fileInfo in desDir01.GetFiles("*.xlsx", SearchOption.TopDirectoryOnly))
-                {
-                    fileInfo.Delete();
-                }
+            foreach (string strDir in CConfigFile.Instance.DescPath)
+            {
+                Console.WriteLine(strDir);
+                DirectoryInfo srcDir = new DirectoryInfo(strDir);
+                _CopyExcelFile(srcDir, desDir01);
+            }
 
-                foreach (string strDir in CConfigFile.Instance.DescPath)
-                {
-                    Console.WriteLine(strDir);
-                    DirectoryInfo srcDir = new DirectoryInfo(strDir);
-                    _CopyExcelFile(srcDir, desDir01);
-                }
+            //
+            Console.WriteLine("********** 拷贝 *.xlsx 数据文件 **********");
+            DirectoryInfo desDir02 = new DirectoryInfo(@".\TableOut\Temp\0_Excelfile\DataTable\");
+            if (!desDir02.Exists) desDir02.Create();
 
-                //
-                Console.WriteLine("********** 拷贝 *.xlsx 数据文件 **********");
-                DirectoryInfo desDir02 = new DirectoryInfo(@".\TableOut\Temp\0_Excelfile\DataTable\");
-                if (!desDir02.Exists) desDir02.Create();
+            foreach (FileInfo fileInfo in desDir02.GetFiles("*.xlsx", SearchOption.TopDirectoryOnly))
+            {
+                fileInfo.Delete();
+            }
 
-                foreach (FileInfo fileInfo in desDir02.GetFiles("*.xlsx", SearchOption.TopDirectoryOnly))
-                {
-                    fileInfo.Delete();
-                }
+            foreach (string strDir in CConfigFile.Instance.DataPath)
+            {
+                Console.WriteLine(strDir);
+                DirectoryInfo srcDir = new DirectoryInfo(strDir);
+                _CopyExcelFile(srcDir, desDir02);
+            }
 
-                foreach (string strDir in CConfigFile.Instance.DataPath)
-                {
-                    Console.WriteLine(strDir);
-                    DirectoryInfo srcDir = new DirectoryInfo(strDir);
-                    _CopyExcelFile(srcDir, desDir02);
-                }
+            //
+            Console.WriteLine("********** 拷贝 *.proto 文件 **********");
+            DirectoryInfo desDir1 = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
+            if (!desDir1.Exists) desDir1.Create();
 
-                //
-                Console.WriteLine("********** 拷贝 *.proto 文件 **********");
-                DirectoryInfo desDir1 = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
-                if (!desDir1.Exists) desDir1.Create();
+            foreach (FileInfo fileInfo in desDir1.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
+            {
+                fileInfo.Delete();
+            }
 
-                foreach (FileInfo fileInfo in desDir1.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
-                {
-                    fileInfo.Delete();
-                }
-
-                foreach (string strDir in CConfigFile.Instance.ProtoPath)
-                {
-                    DirectoryInfo srcDir = new DirectoryInfo(strDir);
-                    _CopyProtoFile(srcDir, desDir1);
-                }
+            foreach (string strDir in CConfigFile.Instance.ProtoPath)
+            {
+                DirectoryInfo srcDir = new DirectoryInfo(strDir);
+                _CopyProtoFile(srcDir, desDir1);
             }
 
             // 
@@ -186,10 +183,7 @@ namespace Proto2Code
             }
 
             //
-            DirectoryInfo dirProtoext = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
-            if (!dirProtoext.Exists) dirProtoext.Create();
-
-            Environment.CurrentDirectory = dirProtoext.FullName;
+            Environment.CurrentDirectory = desDir1.FullName;
             CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP)
