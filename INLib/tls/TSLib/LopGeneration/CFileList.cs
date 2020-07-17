@@ -61,6 +61,14 @@ namespace Proto2Code
                 return;
             }
 
+            if (IsNewFile(strExe) || IsNewFile(strDll1) || IsNewFile(strDll2))
+            {
+                IsNewFile(strExe); // 把工具文件信息放进去
+                IsNewFile(strDll1);
+                IsNewFile(strDll2);
+                return;
+            }
+
             //
             StreamReader reader = new StreamReader(m_strFileList, Encoding.UTF8);
             string line;
@@ -72,7 +80,13 @@ namespace Proto2Code
                 }
                     
                 string[] infos = line.Split('|');
+                if (infos.Length != 2)
+                {
+                    continue;
+                }
+
                 string fileFullPath = m_strRootDirectory + "/" + infos[0];
+
                 FileInfo fi = new FileInfo(fileFullPath);
                 if (!fi.Exists)
                 {
@@ -84,7 +98,7 @@ namespace Proto2Code
                 string newMd5 = CSLib.Security.CMd5.EncodeFile(fileFullPath);
                 if (newMd5 == infos[1])
                 {
-                    m_dicFileList.Add(infos[0], new CFileInfo(infos[0], infos[1], EFileType.UnModified));
+                    m_dicFileList.Add(infos[0], new CFileInfo(infos[0], newMd5, EFileType.UnModified));
                 }
                 else
                 {
@@ -92,15 +106,6 @@ namespace Proto2Code
                 }
             }
             reader.Close();
-
-            //
-            if (IsNewFile(strExe) || IsNewFile(strDll1) || IsNewFile(strDll2))
-            {
-                m_dicFileList.Clear();
-                IsNewFile(strExe); // 把工具文件信息放进去
-                IsNewFile(strDll1);
-                IsNewFile(strDll2);
-            }
         }
 
         /// <summary>
@@ -122,7 +127,7 @@ namespace Proto2Code
         /// <summary>
         /// 清理无用文件
         /// </summary>
-        public void ClearUnuseFile()
+        public void ClearUnuseFileFromFileterFiles()
         {
             string pbCsFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.pb.cs";
             string pbLuaFilter = m_strRootDirectory + "/TableGen/01_LopGeneration/fileterFiles.pb.lua";
@@ -160,13 +165,13 @@ namespace Proto2Code
                     continue;
                 }
 
-                // 残留的生成文件要删掉，先写死。
+                // 残留的生成文件要删掉
                 if (v.Key.EndsWith(".xlsx"))
                 {
                     Console.WriteLine("删除" + v.Key + "生成的残留文件");
                     string name = _GetFileNameAndFirstCharToLower(v.Key);
 
-                    // 删除过滤文件里信息
+                    // 删除过滤文件里的信息
                     string pbLuaFilterLine = name + "_pb.lua";
                     string pbCsFilterLine = name + ".pb.cs";
                     string peLuaFilterLine = name + "_pe.lua";
@@ -220,13 +225,12 @@ namespace Proto2Code
                     if (File.Exists(txt)) { Console.WriteLine("删除" + txt); File.Delete(txt); }
                     if (File.Exists(dbg)) { Console.WriteLine("删除" + dbg); File.Delete(dbg); }
                 }
-
-                if (v.Key.EndsWith(".proto"))
+                else if (v.Key.EndsWith(".proto"))
                 {
                     Console.WriteLine("删除" + v.Key + "生成的残留文件");
                     string name = _GetFileNameAndFirstCharToLower(v.Key);
 
-                    // 删除过滤文件里信息
+                    // 删除过滤文件里的信息
                     string pbLuaFilterLine = name + "_pb.lua";
                     string pbCsFilterLine = name + ".pb.cs";
                     string peLuaFilterLine = name + "_pe.lua";
@@ -261,12 +265,12 @@ namespace Proto2Code
             }
             #endregion
 
-            _ClearUnuseFile4Writer(pbCsFilter, pbCsFileList);
-            _ClearUnuseFile4Writer(pbLuaFilter, pbluaFileList);
-            _ClearUnuseFile4Writer(peCsFilter, peCsFileList);
-            _ClearUnuseFile4Writer(peLuaFilter, peLuaFileList);
-            _ClearUnuseFile4Writer(ltHFilter, ltHFileList);
-            _ClearUnuseFile4Writer(ltCcFilter, ltCcFileList);
+            _RewriteFileterFilesAfterClearUnuseFile(pbCsFilter, pbCsFileList);
+            _RewriteFileterFilesAfterClearUnuseFile(pbLuaFilter, pbluaFileList);
+            _RewriteFileterFilesAfterClearUnuseFile(peCsFilter, peCsFileList);
+            _RewriteFileterFilesAfterClearUnuseFile(peLuaFilter, peLuaFileList);
+            _RewriteFileterFilesAfterClearUnuseFile(ltHFilter, ltHFileList);
+            _RewriteFileterFilesAfterClearUnuseFile(ltCcFilter, ltCcFileList);
         }
 
         //根据文件的绝对路径获取首字母小写的文件名
@@ -280,7 +284,7 @@ namespace Proto2Code
             return temp.Substring(0, temp.IndexOf('.'));
         }
 
-        private void _ClearUnuseFile4Writer(string strFilter, List<string> fileList)
+        private void _RewriteFileterFilesAfterClearUnuseFile(string strFilter, List<string> fileList)
         {
             UTF8Encoding utf8WithBom = new UTF8Encoding(true);
             FileStream fileStream = new FileStream(strFilter, FileMode.Create);

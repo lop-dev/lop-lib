@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 
 namespace Proto2Code
 {
@@ -82,86 +81,57 @@ namespace Proto2Code
             }
 
             //
-            DirectoryInfo desDir1 = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
-            if (!desDir1.Exists) desDir1.Create();
+            CConfigFile.Instance.LoadFile();
 
-            //
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP || ExportType == EExportType.CSP || ExportType == EExportType.LUA)
             {
+                Console.WriteLine("********** 拷贝 *.xlsx 描述文件 **********");
+                DirectoryInfo desDir01 = new DirectoryInfo(@".\TableOut\Temp\0_Excelfile\DescTable\");
+                if (!desDir01.Exists) desDir01.Create();
+
+                foreach (FileInfo fileInfo in desDir01.GetFiles("*.xlsx", SearchOption.TopDirectoryOnly))
+                {
+                    fileInfo.Delete();
+                }
+
+                foreach (string strDir in CConfigFile.Instance.DescPath)
+                {
+                    Console.WriteLine(strDir);
+                    DirectoryInfo srcDir = new DirectoryInfo(strDir);
+                    _CopyExcelFile(srcDir, desDir01);
+                }
+
+                //
+                Console.WriteLine("********** 拷贝 *.xlsx 数据文件 **********");
+                DirectoryInfo desDir02 = new DirectoryInfo(@".\TableOut\Temp\0_Excelfile\DataTable\");
+                if (!desDir02.Exists) desDir02.Create();
+
+                foreach (FileInfo fileInfo in desDir02.GetFiles("*.xlsx", SearchOption.TopDirectoryOnly))
+                {
+                    fileInfo.Delete();
+                }
+
+                foreach (string strDir in CConfigFile.Instance.DataPath)
+                {
+                    Console.WriteLine(strDir);
+                    DirectoryInfo srcDir = new DirectoryInfo(strDir);
+                    _CopyExcelFile(srcDir, desDir02);
+                }
+
+                //
                 Console.WriteLine("********** 拷贝 *.proto 文件 **********");
-                DirectoryInfo srcDir = null;
-                List<string> protoList = new List<string>(); // 所有的proto文件
+                DirectoryInfo desDir1 = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
+                if (!desDir1.Exists) desDir1.Create();
 
-                //
-                srcDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\");
-                _CopyProtoFile(srcDir, desDir1, ref protoList);
-
-                srcDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\SpecialClient\");
-                _CopyProtoFile(srcDir, desDir1, ref protoList);
-
-                srcDir = new DirectoryInfo(@".\TableGen\10_BasicsSystem\SpecialServer\");
-                _CopyProtoFile(srcDir, desDir1, ref protoList);
-
-                srcDir = new DirectoryInfo(@".\TableGen\11_ExtendSystem\");
-                _CopyProtoFile(srcDir, desDir1, ref protoList);
-
-                srcDir = new DirectoryInfo(@".\TableGen\11_ExtendSystem\SpecialClient\");
-                _CopyProtoFile(srcDir, desDir1, ref protoList);
-
-                srcDir = new DirectoryInfo(@".\TableGen\11_ExtendSystem\SpecialServer\");
-                _CopyProtoFile(srcDir, desDir1, ref protoList);
-
-                // 兼容老版文件目录
-                srcDir = new DirectoryInfo(@".\TableGen\10_ProtobufDef\");
-                _CopyProtoFile(srcDir, desDir1, ref protoList);
-
-                srcDir = new DirectoryInfo(@".\TableGen\11_ProtobufClt\");
-                _CopyProtoFile(srcDir, desDir1, ref protoList);
-
-                //
-                DirectoryInfo desTableDir = new DirectoryInfo("./DesTable/DescTable");
-                foreach (var fileInfo in desTableDir.GetFiles("*.xlsx", SearchOption.AllDirectories))
-                {
-                    protoList.Add(fileInfo.Name.Replace("xlsx", "proto").ToLower());
-                }
-
-                DirectoryInfo proTableDir = new DirectoryInfo("./ProTable");
-                foreach (var fileInfo in proTableDir.GetFiles("*.xlsx", SearchOption.AllDirectories))
-                {
-                    protoList.Add(fileInfo.Name.Replace("xlsx", "proto").ToLower());
-                }
-
-                //
-                FileInfo tmpFileInfo = null;
-
-                tmpFileInfo = new FileInfo(@".\DesTable\DataTable\GlobalTable.xlsx");
-                if (tmpFileInfo.Exists)
-                {
-                    string tmpName = "globalEnum.proto";
-                    protoList.Add(tmpName.ToLower());
-                }
-
-                tmpFileInfo = new FileInfo(@".\DesTable\DataTable\MailMsgTable.xlsx");
-                if (tmpFileInfo.Exists)
-                {
-                    string tmpName = "mailIDEnum.proto";
-                    protoList.Add(tmpName.ToLower());
-                }
-
-                tmpFileInfo = new FileInfo(@".\DesTable\DataTable\GuildParameterTable.xlsx");
-                if (tmpFileInfo.Exists)
-                {
-                    string tmpName = "guildParameterEnum.proto";
-                    protoList.Add(tmpName.ToLower());
-                }
-
-                // 清理 desDir1 中多余的 proto 文件
                 foreach (FileInfo fileInfo in desDir1.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
                 {
-                    if (!protoList.Contains(fileInfo.Name.ToLower()))
-                    {
-                        fileInfo.Delete();
-                    }
+                    fileInfo.Delete();
+                }
+
+                foreach (string strDir in CConfigFile.Instance.ProtoPath)
+                {
+                    DirectoryInfo srcDir = new DirectoryInfo(strDir);
+                    _CopyProtoFile(srcDir, desDir1);
                 }
             }
 
@@ -181,98 +151,45 @@ namespace Proto2Code
                 if (!Directory.Exists(goPeDir)) Directory.CreateDirectory(goPeDir);
                 if (!Directory.Exists(luaPeDir)) Directory.CreateDirectory(luaPeDir);
 
-                //Thread.Sleep(1000); // 不等待一下，有可能报 proto 文件锁住
                 Console.WriteLine("********** 生成 *.proto 和 *.pe 文件 **********");
 
-                //
-                FileInfo tmpFileInfo = null;
-
-                tmpFileInfo = new FileInfo(@".\DesTable\DataTable\GlobalTable.xlsx");
-                if (tmpFileInfo.Exists)
+                DirectoryInfo tmpDirectoryInfo = new DirectoryInfo(@".\TableOut\Temp\0_Excelfile\DescTable\");
+                if (tmpDirectoryInfo.Exists)
                 {
-                    argsStr = @"-GenType=Enum -DataFile=.\DesTable\DataTable\GlobalTable.xlsx -OutputFile=.\TableOut\Temp\1_Protoext\globalEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Description";
-                    Console.WriteLine(argsStr);
-                    Execute(argsStr.Split(' '));
-                }
-
-                tmpFileInfo = new FileInfo(@".\DesTable\DataTable\MailMsgTable.xlsx");
-                if (tmpFileInfo.Exists)
-                {
-                    argsStr = @"-GenType=Enum -DataFile=.\DesTable\DataTable\MailMsgTable.xlsx -OutputFile=.\TableOut\Temp\1_Protoext\mailIDEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Title";
-                    Console.WriteLine(argsStr);
-                    Execute(argsStr.Split(' '));
-                }
-
-                tmpFileInfo = new FileInfo(@".\DesTable\DataTable\GuildParameterTable.xlsx");
-                if (tmpFileInfo.Exists)
-                {
-                    argsStr = @"-GenType=Enum -DataFile=.\DesTable\DataTable\GuildParameterTable.xlsx -OutputFile=.\TableOut\Temp\1_Protoext\guildParameterEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Description";
+                    argsStr = @"-GenType=Proto -DescPath=.\TableOut\Temp\0_Excelfile\DescTable\ -OutputPath=.\TableOut\Temp\1_Protoext\";
                     Console.WriteLine(argsStr);
                     Execute(argsStr.Split(' '));
                 }
 
                 //
-                DirectoryInfo tmpDirectoryInfo = null;
-
-                tmpDirectoryInfo = new DirectoryInfo(@".\ProTable\AccountServer\");
-                if (tmpDirectoryInfo.Exists)
+                foreach (string strFile in CConfigFile.Instance.ProtoXlsx)
                 {
-                    argsStr = @"-GenType=Proto -DescPath=.\ProTable\AccountServer\ -OutputPath=.\TableOut\Temp\1_Protoext\";
-                    Console.WriteLine(argsStr);
-                    Execute(argsStr.Split(' '));
-                }
+                    Console.WriteLine(strFile);
+                    string[] arrString = strFile.Split(',');
+                    if (arrString.Length != 4) continue;
 
-                tmpDirectoryInfo = new DirectoryInfo(@".\ProTable\GlobalServer\");
-                if (tmpDirectoryInfo.Exists)
-                {
-                    argsStr = @"-GenType=Proto -DescPath=.\ProTable\GlobalServer\ -OutputPath=.\TableOut\Temp\1_Protoext\";
-                    Console.WriteLine(argsStr);
-                    Execute(argsStr.Split(' '));
-                }
+                    arrString[0] = arrString[0].Trim();
+                    arrString[1] = arrString[1].Trim();
+                    arrString[2] = arrString[2].Trim();
+                    arrString[3] = arrString[3].Trim();
 
-                tmpDirectoryInfo = new DirectoryInfo(@".\ProTable\DatabaseServer\");
-                if (tmpDirectoryInfo.Exists)
-                {
-                    argsStr = @"-GenType=Proto -DescPath=.\ProTable\DatabaseServer\ -OutputPath=.\TableOut\Temp\1_Protoext\";
-                    Console.WriteLine(argsStr);
-                    Execute(argsStr.Split(' '));
-                }
+                    FileInfo tmpFileInfo = new FileInfo(arrString[0]);
+                    if (!tmpFileInfo.Exists) continue;
 
-                tmpDirectoryInfo = new DirectoryInfo(@".\ProTable\LogServer\");
-                if (tmpDirectoryInfo.Exists)
-                {
-                    argsStr = @"-GenType=Proto -DescPath=.\ProTable\LogServer\ -OutputPath=.\TableOut\Temp\1_Protoext\";
-                    Console.WriteLine(argsStr);
-                    Execute(argsStr.Split(' '));
-                }
+                    string strProto = tmpFileInfo.Name.Replace("Table.xlsx", "Enum.proto").Trim();
+                    strProto = strProto[0].ToString().ToLower() + strProto.Substring(1);
 
-                tmpDirectoryInfo = new DirectoryInfo(@".\ProTable\LogicTable\");
-                if (tmpDirectoryInfo.Exists)
-                {
-                    argsStr = @"-GenType=Proto -DescPath=.\ProTable\LogicTable\ -OutputPath=.\TableOut\Temp\1_Protoext\";
-                    Console.WriteLine(argsStr);
-                    Execute(argsStr.Split(' '));
-                }
-
-                tmpDirectoryInfo = new DirectoryInfo(@".\ProTable\BattleTable\");
-                if (tmpDirectoryInfo.Exists)
-                {
-                    argsStr = @"-GenType=Proto -DescPath=.\ProTable\BattleTable\ -OutputPath=.\TableOut\Temp\1_Protoext\";
-                    Console.WriteLine(argsStr);
-                    Execute(argsStr.Split(' '));
-                }
-
-                tmpDirectoryInfo = new DirectoryInfo(@".\DesTable\DescTable\");
-                if (tmpDirectoryInfo.Exists)
-                {
-                    argsStr = @"-GenType=Proto -DescPath=.\DesTable\DescTable\ -OutputPath=.\TableOut\Temp\1_Protoext\";
-                    Console.WriteLine(argsStr);
+                    // argsStr = @"-GenType=Enum -DataFile=.\DesTable\DataTable\GlobalTable.xlsx -OutputFile=.\TableOut\Temp\1_Protoext\globalEnum.proto -EnumName=EnumName -EnumValue=ID -EnumDesc=Description";
+                    argsStr = @"-GenType=Enum -DataFile=" + arrString[0] + " -OutputFile=.\\TableOut\\Temp\\1_Protoext\\" + strProto + " -EnumName=" + arrString[1] + " -EnumValue=" + arrString[2] + " -EnumDesc=" + arrString[3];
                     Execute(argsStr.Split(' '));
                 }
             }
 
             //
-            Environment.CurrentDirectory = desDir1.FullName;
+            DirectoryInfo dirProtoext = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
+            if (!dirProtoext.Exists) dirProtoext.Create();
+
+            Environment.CurrentDirectory = dirProtoext.FullName;
             CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP)
@@ -318,7 +235,7 @@ namespace Proto2Code
                 Environment.CurrentDirectory = exeDir1.FullName; // 因为要找 cspProtobuf.dll 文件
                 CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
-                argsStr = @"-GenType=Binary -DataPath=..\..\DesTable\DataTable\ -DescPath=..\..\DesTable\DescTable\ -PBSrcPath=..\..\TableOut\Temp\2_Protobuf\C#\ -OutputPath=..\..\TableOut\Temp\3_Protobin\";
+                argsStr = @"-GenType=Binary -DataPath=..\..\TableOut\Temp\0_Excelfile\DataTable\ -DescPath=..\..\TableOut\Temp\0_Excelfile\DescTable\ -PBSrcPath=..\..\TableOut\Temp\2_Protobuf\C#\ -OutputPath=..\..\TableOut\Temp\3_Protobin\";
                 Console.WriteLine(argsStr);
                 Execute(argsStr.Split(' '));
 
@@ -331,14 +248,6 @@ namespace Proto2Code
             {
                 Console.WriteLine("********** 生成 Msg 文件 **********");
 
-                //DirectoryInfo tmpDir = new DirectoryInfo(@".\TableGen\10_ProtobufDef\");
-                //if (tmpDir.Exists)
-                //{
-                //    argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_cs_lua";
-                //    Console.WriteLine(argsStr);
-                //    Execute(argsStr.Split(' '));
-                //}
-
                 DirectoryInfo tmpDir = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
                 if (tmpDir.Exists)
                 {
@@ -350,14 +259,6 @@ namespace Proto2Code
             else if (ExportType == EExportType.CPP)
             {
                 Console.WriteLine("********** 生成 Msg 文件 **********");
-
-                //DirectoryInfo tmpDir = new DirectoryInfo(@".\TableGen\10_ProtobufDef\");
-                //if (tmpDir.Exists)
-                //{
-                //    argsStr = @"-GenType=Msg -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp";
-                //    Console.WriteLine(argsStr);
-                //    Execute(argsStr.Split(' '));
-                //}
 
                 DirectoryInfo tmpDir = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
                 if (tmpDir.Exists)
@@ -373,14 +274,6 @@ namespace Proto2Code
             {
                 Console.WriteLine("********** 生成 Task 文件 **********");
 
-                //DirectoryInfo tmpDir = new DirectoryInfo(@".\TableGen\10_ProtobufDef\");
-                //if (tmpDir.Exists)
-                //{
-                //    argsStr = @"-GenType=Task -DataPath=.\TableGen\10_ProtobufDef\ -OutputPath=.\TableOut\Temp\5_Prototask\ -Language=cpp";
-                //    Console.WriteLine(argsStr);
-                //    Execute(argsStr.Split(' '));
-                //}
-
                 DirectoryInfo tmpDir = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
                 if (tmpDir.Exists)
                 {
@@ -391,7 +284,7 @@ namespace Proto2Code
             }
 
             //
-            CFileList.Instance.ClearUnuseFile();
+            CFileList.Instance.ClearUnuseFileFromFileterFiles();
 
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.LUA)
             {
@@ -431,16 +324,27 @@ namespace Proto2Code
             return 0;
         }
 
-        private static void _CopyProtoFile(DirectoryInfo srcDir, DirectoryInfo desDir, ref List<string> protoList)
+        private static void _CopyExcelFile(DirectoryInfo srcDir, DirectoryInfo desDir)
+        {
+            if (srcDir.Exists)
+            {
+                Console.WriteLine(string.Format("Copy {0}*.xlsx to {1}", srcDir.FullName, desDir.FullName));
+                foreach (var fileInfo in srcDir.GetFiles("*.xlsx", SearchOption.AllDirectories))
+                {
+                    string newfile = desDir.FullName.Replace('\\', '/') + fileInfo.Name;
+                    File.Copy(fileInfo.FullName, newfile, true);
+                }
+            }
+        }
+
+        private static void _CopyProtoFile(DirectoryInfo srcDir, DirectoryInfo desDir)
         {
             if (srcDir.Exists)
             {
                 Console.WriteLine(string.Format("Copy {0}*.proto to {1}", srcDir.FullName, desDir.FullName));
-                foreach (var fileInfo in srcDir.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
+                foreach (var fileInfo in srcDir.GetFiles("*.proto", SearchOption.AllDirectories))
                 {
-                    string newfile = fileInfo.FullName.Replace('\\', '/');
-                    protoList.Add(fileInfo.Name.ToLower());
-                    newfile = newfile.Replace(srcDir.FullName.Replace('\\', '/'), desDir.FullName.Replace('\\', '/'));
+                    string newfile = desDir.FullName.Replace('\\', '/') + fileInfo.Name;
                     File.Copy(fileInfo.FullName, newfile, true);
                 }
             }
