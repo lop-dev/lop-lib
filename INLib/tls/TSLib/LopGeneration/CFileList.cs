@@ -116,10 +116,9 @@ namespace Proto2Code
             StreamWriter writer = new StreamWriter(m_strFileList, false,Encoding.UTF8);
             foreach (var v in m_dicFileList)
             {
-                if(v.Value.type != EFileType.Deleted)
-                {
-                    writer.WriteLine(v.Key + "|" + v.Value.md5);
-                }
+                if (v.Value.type == EFileType.Deleted) continue;
+                if (v.Value.md5 == "") continue;
+                writer.WriteLine(v.Key + "|" + v.Value.md5);
             }
             writer.Close();
         }

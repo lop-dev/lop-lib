@@ -29,6 +29,9 @@ namespace Proto2Code
             CFileList.Instance.RootDirectory = Environment.CurrentDirectory;
             CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
+            DirectoryInfo dirTempProtoext = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
+            if (!dirTempProtoext.Exists) dirTempProtoext.Create();
+
             //
             if (args.Length == 1)
             {
@@ -117,27 +120,24 @@ namespace Proto2Code
             }
 
             //
-            Console.WriteLine("********** 拷贝 *.proto 文件 **********");
-            DirectoryInfo desDir1 = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
-            if (!desDir1.Exists) desDir1.Create();
-
-            foreach (FileInfo fileInfo in desDir1.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
-            {
-                fileInfo.Delete();
-            }
-
-            foreach (string strDir in CConfigFile.Instance.ProtoPath)
-            {
-                DirectoryInfo srcDir = new DirectoryInfo(strDir);
-                _CopyProtoFile(srcDir, desDir1);
-            }
-
-            // 
-            CFileList.Instance.ReadFileList();
-
-            //
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP || ExportType == EExportType.CSP || ExportType == EExportType.LUA)
             {
+                Console.WriteLine("********** 拷贝 *.proto 文件 **********");
+                DirectoryInfo desDir1 = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
+                if (!desDir1.Exists) desDir1.Create();
+
+                foreach (FileInfo fileInfo in desDir1.GetFiles("*.proto", SearchOption.TopDirectoryOnly))
+                {
+                    fileInfo.Delete();
+                }
+
+                foreach (string strDir in CConfigFile.Instance.ProtoPath)
+                {
+                    DirectoryInfo srcDir = new DirectoryInfo(strDir);
+                    _CopyProtoFile(srcDir, desDir1);
+                }
+
+                //
                 string csPeDir = @".\TableOut\Temp\1_Protoext\C#";
                 string ccPeDir = @".\TableOut\Temp\1_Protoext\C++";
                 string goPeDir = @".\TableOut\Temp\1_Protoext\GO";
@@ -182,8 +182,10 @@ namespace Proto2Code
                 }
             }
 
+            CFileList.Instance.ReadFileList();
+
             //
-            Environment.CurrentDirectory = desDir1.FullName;
+            Environment.CurrentDirectory = dirTempProtoext.FullName;
             CGeneration.Instance.RootDirectory = Environment.CurrentDirectory;
 
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP)
@@ -241,9 +243,7 @@ namespace Proto2Code
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP || ExportType == EExportType.CSP || ExportType == EExportType.LUA)
             {
                 Console.WriteLine("********** 生成 Msg 文件 **********");
-
-                DirectoryInfo tmpDir = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
-                if (tmpDir.Exists)
+                if (dirTempProtoext.Exists)
                 {
                     argsStr = @"-GenType=Msg -DataPath=.\TableOut\Temp\1_Protoext\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp_cs_lua";
                     Console.WriteLine(argsStr);
@@ -253,9 +253,7 @@ namespace Proto2Code
             else if (ExportType == EExportType.CPP)
             {
                 Console.WriteLine("********** 生成 Msg 文件 **********");
-
-                DirectoryInfo tmpDir = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
-                if (tmpDir.Exists)
+                if (dirTempProtoext.Exists)
                 {
                     argsStr = @"-GenType=Msg -DataPath=.\TableOut\Temp\1_Protoext\ -OutputPath=.\TableOut\Temp\4_Protomsg\ -Language=cpp";
                     Console.WriteLine(argsStr);
@@ -267,9 +265,7 @@ namespace Proto2Code
             if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP)
             {
                 Console.WriteLine("********** 生成 Task 文件 **********");
-
-                DirectoryInfo tmpDir = new DirectoryInfo(@".\TableOut\Temp\1_Protoext\");
-                if (tmpDir.Exists)
+                if (dirTempProtoext.Exists)
                 {
                     argsStr = @"-GenType=Task -DataPath=.\TableOut\Temp\1_Protoext\ -OutputPath=.\TableOut\Temp\5_Prototask\ -Language=cpp";
                     Console.WriteLine(argsStr);
