@@ -136,8 +136,14 @@ namespace Proto2Code
                     DirectoryInfo srcDir = new DirectoryInfo(strDir);
                     _CopyProtoFile(srcDir, desDir1);
                 }
+            }
 
-                //
+            CFileList.Instance.ReadFileList();
+
+            if (ExportType == EExportType.ALL || ExportType == EExportType.PRO || ExportType == EExportType.CPP || ExportType == EExportType.CSP || ExportType == EExportType.LUA)
+            {
+                Console.WriteLine("********** 生成 *.proto 和 *.pe 文件 **********");
+
                 string csPeDir = @".\TableOut\Temp\1_Protoext\C#";
                 string ccPeDir = @".\TableOut\Temp\1_Protoext\C++";
                 string goPeDir = @".\TableOut\Temp\1_Protoext\GO";
@@ -147,8 +153,6 @@ namespace Proto2Code
                 if (!Directory.Exists(ccPeDir)) Directory.CreateDirectory(ccPeDir);
                 if (!Directory.Exists(goPeDir)) Directory.CreateDirectory(goPeDir);
                 if (!Directory.Exists(luaPeDir)) Directory.CreateDirectory(luaPeDir);
-
-                Console.WriteLine("********** 生成 *.proto 和 *.pe 文件 **********");
 
                 DirectoryInfo tmpDirectoryInfo = new DirectoryInfo(@".\TableOut\Temp\0_Excelfile\DescTable\");
                 if (tmpDirectoryInfo.Exists)
@@ -181,8 +185,6 @@ namespace Proto2Code
                     Execute(argsStr.Split(' '));
                 }
             }
-
-            CFileList.Instance.ReadFileList();
 
             //
             Environment.CurrentDirectory = dirTempProtoext.FullName;
