@@ -57,17 +57,17 @@ public:
     bool ntfNetworkInfo2MS(BCLib::uint16 uCount);
 
     //
-    int getLogicServerIDs(BCLib::uint64 groupID, EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive = false);
-    SFLib::ServerID randomLogicServerID(BCLib::uint64 groupID, ServerType serverType, bool bActive = false);
+    int getLogicServerIDs(EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive, BCLib::uint64 groupID);
+    SFLib::ServerID randomLogicServerID(ServerType serverType, bool bActive, BCLib::uint64 groupID);
 
-    int getLogicServerIDs(EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive = false);
-    SFLib::ServerID randomLogicServerID(ServerType serverType, bool bActive = false);
+    int getLogicServerIDs(EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive);
+    SFLib::ServerID randomLogicServerID(ServerType serverType, bool bActive);
 
-    int getExternalServerIDs(EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive = false);
-    SFLib::ServerID randomExternalServerID(ServerType serverType, bool bActive = false);
+    int getExternalServerIDs(EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive);
+    SFLib::ServerID randomExternalServerID(ServerType serverType, bool bActive);
 
-    int getGatewayServerIDs(EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive = false);
-    SFLib::ServerID randomGatewayServerID(EServerType serverType, bool bActive = false);
+    int getGatewayServerIDs(EServerType serverType, std::vector<ServerID>& vecServerID, bool bActive);
+    SFLib::ServerID randomGatewayServerID(EServerType serverType, bool bActive);
 
 public:
 	bool connectExternalServer(SFLib::ServerID serverID);
