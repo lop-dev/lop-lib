@@ -57,7 +57,6 @@ OBJ_S=
 DEBUG_LIB_FLAGS=
 RELEASE_LIB_FLAGS=
 
-
 # 输出静态库
 DEBUG_LIB_FILE=$(OUT_TARGET_DIR)/libKafka_d.a
 RELEASE_LIB_FILE=$(OUT_TARGET_DIR)/libKafka.a
@@ -69,10 +68,9 @@ RELEASE_LIB_FILE=$(OUT_TARGET_DIR)/libKafka.a
 DEBUG_DLL_FLAGS=
 RELEASE_DLL_FLAGS=
 
-
 # 输出动态库
-DEBUG_DLL_FILE=
-RELEASE_DLL_FILE=
+DEBUG_DLL_FILE=$(OUT_TARGET_DIR)/libKafka_d.so
+RELEASE_DLL_FILE=$(OUT_TARGET_DIR)/libKafka.so
 
 ################################################################
 #可执行文件参数设置
