@@ -70,7 +70,6 @@
     <Compile Include="CScrollRectCustom.cs" />
     <Compile Include="CScrollRectFreedom.cs" />
     <Compile Include="CTxtUnderlineImage.cs" />
-    <Compile Include="CUGUIOptimized.cs" />
     <Compile Include="CUILookAtCamera.cs" />
     <Compile Include="CVertialSpreadLayout.cs" />
     <Compile Include="CVerticalLoopScrollRect.cs" />
