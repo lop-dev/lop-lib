@@ -1,12 +1,12 @@
 //////////////////////////////////////////////////////////////////////
 //  created:    2011/11/01
-//  filename:   MWLib/behaviorTree/blackboardManager.h
+//  filename:   MWLib/behaviorTree/blackboard/blackboardManager.h
 //  author:     League of Perfect
 /// @brief
 ///
 //////////////////////////////////////////////////////////////////////
-#ifndef __MWLIB_BEHAVIORTREE_BLACKBOARDMANAGER_H__
-#define __MWLIB_BEHAVIORTREE_BLACKBOARDMANAGER_H__
+#ifndef __MWLIB_BEHAVIORTREE_BLACKBOARD_BLACKBOARDMANAGER_H__
+#define __MWLIB_BEHAVIORTREE_BLACKBOARD_BLACKBOARDMANAGER_H__
 /** @file */
 
 #include <BCLib/utility/baseDef.h>
@@ -62,4 +62,4 @@ public:
 }//BehaviorTree
 }//MWLib
 
-#endif//__MWLIB_BEHAVIORTREE_BLACKBOARDMANAGER_H__
+#endif//__MWLIB_BEHAVIORTREE_BLACKBOARD_BLACKBOARDMANAGER_H__

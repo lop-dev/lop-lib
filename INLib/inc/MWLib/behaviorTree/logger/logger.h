@@ -1,12 +1,12 @@
 //////////////////////////////////////////////////////////////////////
 //  created:    2011/11/01
-//  filename:   MWLib/behaviorTree/btLogger.h
+//  filename:   MWLib/behaviorTree/logger/logger.h
 //  author:     League of Perfect
 /// @brief
 ///
 //////////////////////////////////////////////////////////////////////
-#ifndef __MWLIB_BEHAVIORTREE_BTLOGGER_H__
-#define __MWLIB_BEHAVIORTREE_BTLOGGER_H__
+#ifndef __MWLIB_BEHAVIORTREE_LOGGER_BTLOGGER_H__
+#define __MWLIB_BEHAVIORTREE_LOGGER_BTLOGGER_H__
 
 #include <MWLib/behaviorTree/btNode.h>
 #include <BCLib/utility/thread/mutex.h>
@@ -83,4 +83,4 @@ private:
 }//BehaviorTree
 }//MWLib
 
-#endif//__MWLIB_BEHAVIORTREE_BTLOGGER_H__
+#endif//__MWLIB_BEHAVIORTREE_LOGGER_BTLOGGER_H__
