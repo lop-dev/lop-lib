@@ -92,7 +92,7 @@ namespace UDLib.Network
         /// <param name="msgBuff"></param>
         /// <param name="msgSize"></param>
         /// <returns></returns>
-        virtual protected bool ExecuteMessage(CSLib.Framework.CMessageLabel msgLabel, Byte[] msgBuff, Int32 msgSize)
+        protected virtual bool _ExecuteMessage(CSLib.Framework.CMessageLabel msgLabel, Byte[] msgBuff, Int32 msgSize)
         {
             bool ret = false;
             if (m_tcpClient.UseEchoID)
@@ -329,7 +329,7 @@ namespace UDLib.Network
                     CSLib.Framework.CMessageLabel msgLabel = new CSLib.Framework.CMessageLabel();
                     CSLib.Framework.CMsgBuffInfo msgBuffInfo = msgBuffInfoQueue.Dequeue();
                     // 执行后 msgLabel.Id 才会被赋值
-                    if (!ExecuteMessage(msgLabel, msgBuffInfo.MsgBuff, msgBuffInfo.MsgSize))
+                    if (!_ExecuteMessage(msgLabel, msgBuffInfo.MsgBuff, msgBuffInfo.MsgSize))
                     {
                         UDLib.Utility.CDebugOut.LogError("ExecuteMessages : 消息执行错误");
                     }
