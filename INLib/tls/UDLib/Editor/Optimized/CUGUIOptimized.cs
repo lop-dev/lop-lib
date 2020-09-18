@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
-using UDLib.UI;
 
 namespace UDLib.Editor
 {
@@ -436,16 +435,16 @@ namespace UDLib.Editor
             if (isHorizontal)
             {
                 go.name = "_LshXxx";
-                go.AddComponent<CHorizontalLoopScrollRect>();
-                CHorizontalLoopScrollRect cHorizontalLoopScrollRect = go.GetComponent<CHorizontalLoopScrollRect>();
+                go.AddComponent<UDLib.UI.CHorizontalLoopScrollRect>();
+                UDLib.UI.CHorizontalLoopScrollRect cHorizontalLoopScrollRect = go.GetComponent<UDLib.UI.CHorizontalLoopScrollRect>();
                 cHorizontalLoopScrollRect.content = contentTransform;
                 cHorizontalLoopScrollRect.viewport = viewPortTransform;
             }
             else
             {
                 go.name = "_LsvXxx";
-                go.AddComponent<CVerticalLoopScrollRect>();
-                CVerticalLoopScrollRect cVerticalLoopScrollRect = go.GetComponent<CVerticalLoopScrollRect>();
+                go.AddComponent<UDLib.UI.CVerticalLoopScrollRect>();
+                UDLib.UI.CVerticalLoopScrollRect cVerticalLoopScrollRect = go.GetComponent<UDLib.UI.CVerticalLoopScrollRect>();
                 cVerticalLoopScrollRect.content = contentTransform;
                 cVerticalLoopScrollRect.viewport = viewPortTransform;
             }

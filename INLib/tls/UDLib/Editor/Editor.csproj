@@ -153,7 +153,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\UDLib\UI\UI.csproj">
+      <Project>{0e5488e6-f888-4606-b45c-8f1ddff05a7b}</Project>
+      <Name>UI</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -163,19 +168,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>echo "dll代码混淆并拷贝到游戏目录开始"
-set dotPath="C:\Program Files (x86)\PreEmptive Solutions\Dotfuscator Professional Edition 4.9\dotfuscator.exe"
-set dotConfigPath="D:\Project\lop-lib\trunk\INLib\lib\UDLib\win-x86-32\release\UDLib.xml"
-set dllSrcPath="D:\Project\lop-lib\trunk\INLib\lib\UDLib\win-x86-32\release\\Dotfuscated"
-set dllDstPath="D:\Project\SHJH_TrunchNew\Client\Dev\Assets\Plugins\Shared\Lop\lib\UDLib\win-x86-32\release\"
-
-if $(ConfigurationName)==Release %25dotPath%25 /q %25dotConfigPath%25
-
-copy %25dllSrcPath%25\u3dNetwork.dll %25dllDstPath%25
-copy %25dllSrcPath%25\u3dResource.dll %25dllDstPath%25
-copy %25dllSrcPath%25\u3dUtility.dll %25dllDstPath%25
-copy %25dllSrcPath%25\u3dEditor.dll %25dllDstPath%25\Editor
-echo "dll代码混淆并拷贝到游戏目录结束"
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
