@@ -144,7 +144,6 @@
     <Compile Include="GUIWrap\CGUIEditorTools.cs" />
     <Compile Include="Optimized\CUGUIOptimized.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utility\ToolUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
