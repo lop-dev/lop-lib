@@ -92,7 +92,7 @@ namespace UDLib.Editor
         public static void CreateResourcePath()
         {
             // 输出路径
-            const string OUT_PATH = "Assets/App/Pro/Scripts/Lop/Resources/CResourcePath.cs";
+            const string OUT_PATH = "Assets/App/Pro/Scripts/INLib/ext/UDLib/Resource/CResourcePath.cs";
             // 取得信息
             List<AssetBundleInfo> list = GetAssetBundleInfoList();
             if (list == null)
@@ -569,7 +569,7 @@ namespace UDLib.Editor
                                         ab_name = ab_name.Replace(" ", "");
 
                                         // set file attribute
-                                        ToolUtils.RemoveMetaReadOnly(path + ".meta");
+                                        CSLib.Utility.CFileInfo.RemoveFileReadOnly(path + ".meta");
                                         if (importer.assetBundleName != ab_name || importer.assetBundleVariant.Length > 0)
                                         {
                                             importer.assetBundleName = ab_name;
@@ -590,7 +590,7 @@ namespace UDLib.Editor
                 if (importer.assetBundleName.Length > 0)
                 {
                     // 该资源无需ab名字了
-                    ToolUtils.RemoveMetaReadOnly(path + ".meta");
+                    CSLib.Utility.CFileInfo.RemoveFileReadOnly(path + ".meta");
                     importer.assetBundleName = string.Empty;
                 }
             }
