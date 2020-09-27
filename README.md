@@ -3,33 +3,44 @@
 #### 开发这套底层和框架的目标：减少重复劳动、高效稳定、快速启动新的项目、将已有项目中不稳定部分替换掉；
 #### 高效稳定的底层和框架，会大大节约开发成本、缩短开发周期、提升开发效率、增强成员信心、提高成功概率。
 
-## 程序简介
+## 基础类库
 #### BCLib：基础C++程序库，多线程安全，支持跨平台；
 #### CLLib：托管C++程序库，用于工具开发，仅Windows平台；
 #### CSLib：基础CSharp程序库，基于 Mono 跨平台；
-#### DTLib：使用Lop工具导出的数据库任务及任务处理代码，支持跨平台；
 #### GELib：自研图形引擎程序库，基于DirectX开发，仅Windows平台；
-#### LTLib：使用Lop工具导出的luatinkere代码，支持跨平台；
 #### LULib：基础Lua程序库，可以统一前后端逻辑开发；
 #### MWLib：常用中间件程序库，多线程安全，支持跨平台；
-#### MSLib：使用Lop工具导出的消息及消息处理代码，支持前后端消息，支持跨平台；
-#### PBLib：使用Ext工具导出的Protobuf代码，支持众多语言，支持跨平台；
-#### PELib：使用Lop工具导出的Protoext代码，支持C++,C#,Lua,GO等语言，支持跨平台；
 #### SCLib：脚本与命令程序库，一些常用文档的脚本文件；
 #### SFLib：服务器框架程序库，多线程安全，支持跨平台；
 #### UDLib：基础Unity3D程序库，Unity开发专用；
 #### UELib：基础UE4程序库，Unreal开发专用；
+#### 依赖关系：
+####   SCLib
+####   LULib
+####   CSLib -> UDLib
+####   BCLib -> CLLib
+####   BCLib -> GELib
+####   BCLib -> MWLib
+####   BCLib -> UELib
+####   BCLib -> SFLib
 
-## 依赖关系
-#### SCLib
-#### LULib
-#### CSLib -> UDLib
-#### BCLib -> CLLib
-#### BCLib -> GELib
-#### BCLib -> MWLib
-#### BCLib -> UELib
-#### BCLib -> SFLib
-#### PBLib -> PELib -> LTLib -> MSLib -> DTLib
+## 导出类库
+#### PBLib：使用Ext工具导出的Protobuf代码，支持众多语言，支持跨平台；
+#### PELib：使用Lop工具导出的Protoext代码，支持C++,C#,Lua,GO等语言，支持跨平台；
+#### LTLib：使用Lop工具导出的luatinkere代码，支持跨平台；
+#### MSLib：使用Lop工具导出的消息及消息处理代码，支持前后端消息，支持跨平台；
+#### DTLib：使用Lop工具导出的数据库任务及任务处理代码，支持跨平台；
+#### 依赖关系：
+####   PBLib -> PELib -> LTLib -> MSLib -> DTLib
+
+## 扩展类库
+#### SHLib
+#### LSLib
+#### BSLib
+#### ESLib
+#### 依赖关系：
+####   SHLib -> LSLib
+####   SHLib -> ESLib -> BSLib
 
 ## 支援方式
 #### 有任何使用问题、BUG反馈、修改建议，请发邮件至：
