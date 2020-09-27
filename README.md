@@ -34,10 +34,10 @@
 ###### PBLib -> PELib -> LTLib -> MSLib -> DTLib
 
 ## 扩展类库
-#### SHLib
-#### LSLib
-#### BSLib
-#### ESLib
+#### SHLib：组内组外服务器抽象库
+#### LSLib：组外服务器逻辑开发库
+#### BSLib：组内服务器逻辑开发库
+#### ESLib：战斗服务器逻辑与表现
 #### 依赖关系：
 ###### SHLib -> LSLib
 ###### SHLib -> ESLib -> BSLib
