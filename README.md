@@ -55,4 +55,4 @@
 ## 获取地址
 #### GIT ：https://github.com/lop-dev/lop-lib.git
 #### SVN ：https://github.com/lop-dev/lop-lib/trunk
-#### 注：因Github网站原因，下载速度较慢，一旦确立合作，我们将提专用的、快速的下载地址。
+#### 注：因Github网站原因，下载速度较慢，一旦确立合作，我们将提供专用的、快速的下载地址。
