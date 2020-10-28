@@ -41,13 +41,13 @@ function profiler:stopProfiler()
     end)
 
 -- 格式化报告输出
-    local time = tostring(os.date("%m_%d_%H:%M",  dateTime ))
-    local creatTime = tostring(os.date("%Y%m%d"),dateTime)
-    local filename = "D:/LuaCPU"..creatTime..".csv"
+    --local time      = tostring(os.date("%m_%d_%H:%M",  dateTime ))
+    local creatTime = tostring(os.date("%Y%m%d"))
+    local filename  = "D:/LuaCPU"..creatTime..".csv"
     log(filename, "[profiler]>> ", "FF9200")
     local file = io.open(filename, "w")
     if (not file) then
-        logw.error("can't open file:", filename)
+        error("can't open file:", filename)
         return
     end
     file:write("title, count, totaltime, percent\n")
@@ -135,7 +135,7 @@ function profiler:_func_title(funcinfo)
     assert(funcinfo)
 
     local line = string.format("%d", funcinfo.linedefined or 0)
-    local s = string.format("%s__%d", funcinfo.source, line)
+    local s    = string.format("%s__%d", funcinfo.source, line)
     return s
 end
 

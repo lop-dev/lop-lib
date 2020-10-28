@@ -6,7 +6,7 @@
 LuaBit = {}
 
 function LuaBit.__andBit(left,right)
-    return (left == 1 and right == 1) and 1 or 0    
+    return (left == 1 and right == 1) and 1 or 0
 end
 
 function LuaBit.__orBit(left, right)
@@ -57,5 +57,3 @@ end
 function LuaBit.rShiftOp(left,num)
     return math.floor(left / (2 ^ num))
 end
-
-return LuaBit

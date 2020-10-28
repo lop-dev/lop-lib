@@ -11,9 +11,7 @@ local BaseService = class("BaseService")
 BaseService._enableMockData = false
 BaseService._model           = nil
 
--- @params isAddModel 是否注册XxxModel.lua类。默认true
-function BaseService:ctor(isAddModel)
-    -- isAddModel = isAddModel ~= false and true or false
+function BaseService:ctor()
     self:onRegister()
 end
 

@@ -55,7 +55,7 @@ function SC_MemLeakDetector.SC_StopRecordAllocAndDumpStat(filename)
     if (not memStat) then return end
 
     local sorted = { }
-    for k, v in pairs(memStat) do
+    for _, v in pairs(memStat) do
         table.insert(sorted, v)
     end
 
@@ -65,11 +65,11 @@ function SC_MemLeakDetector.SC_StopRecordAllocAndDumpStat(filename)
     filename = filename or "D:/memAlloc"..createTime..".csv"
     local file = io.open(filename, "w")
     if (not file) then
-        logw.error("can't open file:", filename)
+        error("can't open file:", filename)
         return
     end
     file:write("fileLine, count, mem K, avg K\n")
-    for k, v in ipairs(sorted) do
+    for _, v in ipairs(sorted) do
         file:write(string.format("%s, %d, %f, %f\n", v[1], v[2], v[3], v[3] / v[2]))
     end
     file:close()

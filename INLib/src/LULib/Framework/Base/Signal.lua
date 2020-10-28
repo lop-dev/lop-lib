@@ -24,7 +24,7 @@ function Signal:addToTable(theTable, func, scope)
 end
 
 function Signal:add(func, scope)
-    self:addToTable(self.listeners, func, scope)   
+    self:addToTable(self.listeners, func, scope)
 end
 
 function Signal:dispatch(...)

@@ -4,19 +4,31 @@
 ---------------------------------------------------------------------------------
 
 local BaseSection = class("BaseSection", import(".BaseView"))
+BaseSection._baseViewType = 1
 
 function BaseSection:ctor(offsetX, offsetY, duration)
     self._owner             = nil                        -- 依赖的lua类
     self._objRoot           = nil                        -- 根节点
     self._childIndex        = nil                        -- 组件排序顺序索引
-    self._destroyed          = false                     -- 标志界面是否已销毁
     self._destroyWidgetList = {}                         -- 用来存储手动释放的组件（用于tolua销毁
 
-    self.mOpenAnimation = ViewManager.VIEW_ANIM_NONE
+    self._offsetX           = offsetX
+    self._offsetY           = offsetY
+    self._duration          = duration
 
-    self._offsetX  = offsetX
-    self._offsetY  = offsetY
-    self._duration = duration
+    --输出类log信息
+    getmetatable(self).__tostring = function()
+        local tb = {}
+        table.insert(tb, "Name: " .. self.type)
+        local txt = self._owner and (type(self._owner) == "table" and self._owner.type or self._owner.name) or "nil"
+        table.insert(tb, "owner: " .. txt)
+        table.insert(tb, "objRoot: " .. (self._objRoot and self._objRoot.name or "nil"))
+        table.insert(tb, "destroyed: " .. tostring(self:getDestroyed()))
+        table.insert(tb, "isLoading: " .. tostring(self:getIsLoading()))
+        table.insert(tb, "hideFlag: " .. tostring(self:getHideFlag()))
+
+        return table.concat(tb, "; ")
+    end
 end
 
 -----------------------------------------------------------------------------------------------------------------
@@ -24,39 +36,27 @@ end
 -- public function
 --
 -----------------------------------------------------------------------------------------------------------------
-
 --- 代理某部分Gameobject。适用于不需要加载prefab的界面
 -- @params owner 可以为指定GameObject对象或其他BasePanel实例
 function BaseSection:wrapObject(obj, ...)
-    if not obj then 
-        return 
+    if not obj then
+        if IsLogDebug then
+            error("obj is nil")
+        end
+        return
     end
+    self:setDestroyed(false)
+    self:setHideFlag(false)
+
     self._viewParams = {...}
     CUtilObj2Lua.SetActive(obj, true)
     self.gameObject = obj
     self:onInitialize()
-    self:onEnabled(true, ...)
-    self:onShow(...)
-
     self:addListeners()
-    self._destroyed = false
-    self._hideFlag = false        -- 重置
+    self:onEnabled(true)
+    self:onShow(...)
 end
-function BaseSection:ApplicationRecover(lostTime)
-    if isNil(self.gameObject) then
-        self:loadPrefab( unpack(self._viewParams, 1, table.maxn(self._viewParams)))
-    else
-        CUtilObj2Lua.SetActive( self.gameObject, true)
-        self:onInitialize()
-        self:onEnabled(true,  unpack(self._viewParams, 1, table.maxn(self._viewParams)))
-        self:onShow(unpack(self._viewParams, 1, table.maxn(self._viewParams)))
-        self:addListeners()
 
-    end
-
-    self._destroyed = false
-    self._hideFlag = false        -- 重置
-end
 --- 设置父节点。适用于需要加载prefab的界面
 -- @params owner 可以为指定GameObject对象或其他BasePanel实例
 -- @params childIndex 为正数时含义类似Transform中的childIndex。值为0时最底层；亦可以为负数，值为-1时最上层。（默认0
@@ -64,21 +64,25 @@ function BaseSection:setRoot(owner, childIndex, ...)
     self._childIndex = childIndex or 0
 
     self._owner = owner
-    self._objRoot = isKindOf(self._owner, "BasePanel") and self._owner.gameObject or owner
-
-    if isNil(self.gameObject) then
-        self:loadPrefab(...)
+    if type(owner) == "table" and (ViewManager:isContainer(owner) or ViewManager:isPanel(owner)) then
+        self._objRoot = self._owner.gameObject
     else
+        self._objRoot = owner
+    end
+
+    self:setDestroyed(false)
+    self:setHideFlag(false)
+
+    if self:isGameObjectValid() then
         self._viewParams = {...}
         self:addListeners()
         self:setVisible(true)
         self:_SetParent()
-        self:onEnabled(true, ...)
+        self:onEnabled(true)
         self:onShow(...)
+    else
+        self:loadPrefab(...)
     end
-
-    self._destroyed = false
-    self._hideFlag = false        -- 重置
 end
 
 
@@ -86,19 +90,32 @@ end
 -- @parms isRemoveListener 是否移除事件。默认false
 function BaseSection:hideSection(isRemoveListener)
     isRemoveListener = isRemoveListener == true
-
-    if self._destroyed or not BaseSection.super.setVisible(self, false) then 
-        return false 
-    end
-    self:onEnabled(false)
-
-    if isRemoveListener then 
+    if isRemoveListener then
         self:delListeners()
     end
-
-    return true
+    
+    local bret = self:setVisible(false)
+    return bret
 end
 
+function BaseSection:setVisible(isVisible)
+    if self:getDestroyed() then
+        return false
+    end
+    if self:isValid() and self:isGameObjectValid() then
+        if self:isActive() ~= isVisible then
+            self:onEnabled(isVisible)
+        end
+        CUtilObj2Lua.SetActive(self.gameObject, isVisible)
+        return true
+    end
+    
+    if not isVisible then
+        self:setHideFlag(true)
+    end
+
+    return false
+end
 -----------------------------------------------------------------------------------------------------------------
 --
 -- override protocal function
@@ -108,10 +125,6 @@ end
 -- first show or update here
 function BaseSection:onShow(...)
     BaseSection.super.onShow(self, ...)
-
-    if self.mOpenAnimation == ViewManager.VIEW_ANIM_MOVE then
-        
-    end
 end
 
 -- exit here
@@ -120,6 +133,10 @@ function BaseSection:onExit(isDestroy)
 
     self:delListeners()
     self._owner = nil
+    if isDestroy and self:isGameObjectValid() then
+        self:destroyGameObject()
+        self._objRoot = nil
+    end
 end
 
 -- onEnabled
@@ -144,15 +161,15 @@ function BaseSection:onLoadCompleteHandler(...)
     self:onInitialize()
     self:addListeners()
     -- 加载中但被标记为不显示的界面
-    if self._hideFlag == true then
+    if self:getHideFlag() then
+        self:setHideFlag(false)
         CUtilObj2Lua.SetActive(self.gameObject, false)
         self:delListeners()
-        self._hideFlag = false
         return
     end
 
     --- 打开界面逻辑
-    self:onEnabled(true, ...)
+    self:onEnabled(true)
     self:onShow(...)
 end
 
@@ -165,7 +182,7 @@ end
 function BaseSection:_SetParent()
     local tParent = self._objRoot
 
-    if isNil(self.gameObject) then
+    if not self:isGameObjectValid() then
         error("_SetParent error: self.gameObject is nil")
         return false
     end
@@ -179,6 +196,18 @@ function BaseSection:_SetParent()
 
     CUtilObj2Lua.SetParent(self.gameObject, tParent, true)
     return true
+end
+
+function BaseSection:doShow()
+    if IsLogDebug then
+        error("BaseSection no doShow function! refer to right usage")
+    end
+end
+
+function BaseSection:exit()
+    if IsLogDebug then
+        error("BaseSection no doShow function! refer to right usage")
+    end
 end
 
 return BaseSection

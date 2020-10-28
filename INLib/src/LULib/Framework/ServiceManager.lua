@@ -6,11 +6,11 @@
 local ServiceManager = {}
 
 ServiceManager._cachedService = {}
-ServiceManager._cachedModel = {}
+ServiceManager._cachedModel   = {}
 
 function ServiceManager:registerService(sService)
-    if not sService or not sService.type then 
-        error("function 'ServiceManager.registerService' error!") 
+    if not sService or not sService.type then
+        error("function 'ServiceManager.registerService' error!")
     end
 
     self._cachedService[sService.type] = sService
@@ -35,9 +35,9 @@ end
 --- 获取数据模块
 function ServiceManager:getService(sName)
     local result = self._cachedService[sName]
-    if not result then 
+    if not result then
         if IsLogDebug then
-            error("[ServiceManager]>> getService error! name: " .. tostring(sName)) 
+            error("[ServiceManager]>> getService error! name: " .. tostring(sName))
         end
     end
 
@@ -48,7 +48,7 @@ end
 -- @params sName
 function ServiceManager:getModel(sName)
     local result = self._cachedModel[sName]
-    if not result then 
+    if not result then
         if IsLogDebug then
             error("[ServiceManager]>> getModel error! name: " .. tostring(sName))
         end

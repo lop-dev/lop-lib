@@ -5,18 +5,18 @@
 
 function clone(object)
     local lookup_table = {}
-    local function _copy(object)
-        if type(object) ~= "table" then
-            return object
-        elseif lookup_table[object] then
-            return lookup_table[object]
+    local function _copy(obj)
+        if type(obj) ~= "table" then
+            return obj
+        elseif lookup_table[obj] then
+            return lookup_table[obj]
         end
         local new_table = {}
-        lookup_table[object] = new_table
-        for key, value in pairs(object) do
+        lookup_table[obj] = new_table
+        for key, value in pairs(obj) do
             new_table[_copy(key)] = _copy(value)
         end
-        return setmetatable(new_table, getmetatable(object))
+        return setmetatable(new_table, getmetatable(obj))
     end
     return _copy(object)
 end
@@ -79,28 +79,28 @@ local isKindOf_
 isKindOf_ = function(cls, name)
     local __index = rawget(cls, "__index")
     if type(__index) == "table" and rawget(__index, "type") == name then 
-        return true 
+        return true
     end
 
     --    if rawget(cls, "type") == name then return true end
-    if cls.type == name then 
-        return true 
+    if cls.type == name then
+        return true
     end
 
     local super = rawget(cls.__index, "super")
-    if not super then 
-        return false 
+    if not super then
+        return false
     end
-    if isKindOf_(super, name) then 
-        return true 
+    if isKindOf_(super, name) then
+        return true
     end
     return false
 end
 --判断类型
 function isKindOf(obj, classname)
     local t = type(obj)
-    if t ~= "table" and t ~= "userdata" then 
-        return false 
+    if t ~= "table" and t ~= "userdata" then
+        return false
     end
 
     local mt

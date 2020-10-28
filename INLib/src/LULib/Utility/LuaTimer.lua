@@ -4,20 +4,20 @@
 ---------------------------------------------------------------------------------
 
 LuaTimer = {}
-local _totalTime = 0
-local _updateSet = table.createWeakTable("k")
-local _multiUpdateSet = table.createWeakTable("k")
-local _fixedUpdateSet = table.createWeakTable("k")
-local _fixedUpdateTickSet = table.createWeakTable("k")
-local _lateUpdateSet = table.createWeakTable("k")
+local _totalTime           = 0
+local _updateSet           = table.createWeakTable("k")
+local _multiUpdateSet      = table.createWeakTable("k")
+local _fixedUpdateSet      = table.createWeakTable("k")
+local _fixedUpdateTickSet  = table.createWeakTable("k")
+local _lateUpdateSet       = table.createWeakTable("k")
 local _updateLogicFrameSet = {}
-local _triggerSet = {}
-local _index = 1
-local _triggerToRemove = {}
-local _lastTime = 0
+local _triggerSet          = {}
+local _index               = 1
+local _triggerToRemove     = {}
+--local _lastTime            = 0
 
-local beginSample = UnityEngine.Profiling.Profiler.BeginSample
-local endSample = UnityEngine.Profiling.Profiler.EndSample
+--local beginSample = UnityEngine.Profiling.Profiler.BeginSample
+--local endSample = UnityEngine.Profiling.Profiler.EndSample
 function LuaTimer.Update(delta, unscaleDelta)
 	_totalTime = _totalTime + delta
 
@@ -46,12 +46,12 @@ function LuaTimer.Update(delta, unscaleDelta)
 	end
 
 	if _triggerToRemove and #_triggerToRemove > 0 then
-		for i, v in ipairs(_triggerToRemove) do
+		for _, v in ipairs(_triggerToRemove) do
 			_triggerSet[v] = nil
 		end
 		_triggerToRemove = {}
 	end
-	_lastTime = Time.time
+	--_lastTime = Time.time
 end
 --{func ,delay ,count ,0 ,0}
 function LuaTimer.FixedUpdate( delta )
@@ -124,7 +124,7 @@ function LuaTimer.RegisterMultiUpdate(func, context)
 	if _multiUpdateSet[context] == nil then
 		_multiUpdateSet[context] = {}
 	end
-	for i, v in pairs(_multiUpdateSet[context]) do
+	for _, v in pairs(_multiUpdateSet[context]) do
 		if v == func then
 			return
 		end
@@ -208,5 +208,3 @@ function LuaTimer.UnregisterTrigger(index)
 		_triggerSet[index] = nil
 	end
 end
-
-return LuaTimer

@@ -3,6 +3,23 @@
 --      You can get the latest version from : github.com/lop-dev/lop-lib
 ---------------------------------------------------------------------------------
 
+--判断平台
+local isAndroid = nil
+function isAndroidPlatform()
+    if isAndroid == nil then
+        isAndroid = (Application.platform == RuntimePlatform.Android)
+    end
+    return isAndroid
+end
+
+local isIphone = nil
+function isIPhonePlatform()
+    if isIphone == nil then
+        isIphone = (Application.platform == RuntimePlatform.IPhonePlayer)
+    end
+    return isIphone
+end
+
 function LuaGC()
     local c = collectgarbage("count")
     --warning(string.format("Begin gc count = {%d} kb", c))
@@ -78,13 +95,13 @@ function dump(value, description, nesting)
                 result[#result +1 ] = string.format("%s%s = {", indent, dump_value_(description))
                 local indent2 = indent.."    "
                 local keys = {}
-                local keylen = 0
+                local keylength = 0
                 local values = {}
                 for k, v in pairs(value) do
                     keys[#keys + 1] = k
                     local vk = dump_value_(k)
                     local vkl = string.len(vk)
-                    if vkl > keylen then keylen = vkl end
+                    if vkl > keylength then keylength = vkl end
                     values[k] = v
                 end
                 table.sort(keys, function(a, b)
@@ -94,8 +111,8 @@ function dump(value, description, nesting)
                         return tostring(a) < tostring(b)
                     end
                 end)
-                for i, k in ipairs(keys) do
-                    dump_(values[k], k, indent2, nest + 1, keylen)
+                for _, k in ipairs(keys) do
+                    dump_(values[k], k, indent2, nest + 1, keylength)
                 end
                 result[#result +1] = string.format("%s}", indent)
             end
@@ -105,3 +122,5 @@ function dump(value, description, nesting)
     dump_(value, description, "- ", 1)
     print(table.concat(result, "\n"))
 end
+
+

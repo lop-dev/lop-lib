@@ -17,14 +17,14 @@ function string.substitute(msg , ...)
 
     if type(tArgs[1]) == "table" then tArgs = tArgs[1] end
 
-    for i , item in ipairs(tArgs) do
+    for i, item in ipairs(tArgs) do
         msg = string.gsub(msg , "{".. (i-1) .."}" , item)
     end
 
     return msg
 end
 
-function string.trim(input)
+function string.trimEx(input)
     input = string.gsub(input, "^[ \t\n\r]+", "")
     return string.gsub(input, "[ \t\n\r]+$", "")
 end
@@ -110,9 +110,14 @@ function string.isValid(str)
         return false
     end
 
-    if string:trim(str) == "" then
+    if string.trim(str) == "" then
         return false
     end
 
     return true
+end
+
+--首字母大写转换
+function string.convertFirstCharToUpper(str)
+    return str:gsub("^%l", string.upper)
 end

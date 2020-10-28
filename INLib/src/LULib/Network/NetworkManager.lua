@@ -116,7 +116,7 @@ function NetworkManager:update()
         return
     end
 
-    for key, networkSystem in pairs(self._networkSystemList) do
+    for _, networkSystem in pairs(self._networkSystemList) do
         if networkSystem ~= nil then
             networkSystem:ExecuteMessages()
         end
@@ -126,18 +126,19 @@ function NetworkManager:ReCheckUpdate()
 
     local index = 0
     if self._networkSystemList ~= nil then
-        for key, networkSystem in pairs(self._networkSystemList) do
+        for _, networkSystem in pairs(self._networkSystemList) do
             if networkSystem ~= nil then
                 networkSystem:ExecuteMessages()
                 index = math.max(index , CReconnectMgr.Instance.LatestResIndex)
             end
         end
     end
-    CBattleSystem.Instance:Update()
+    --注释掉目前没有的system代码
+    --CBattleSystem.Instance:Update()
     index = math.max(index , CReconnectMgr.Instance.LatestResIndex)
-    CCommandSys.Instance:Update()
+    --CCommandSys.Instance:Update()
     index = math.max(index , CReconnectMgr.Instance.LatestResIndex)
-    CMiscSystem.Instance:Update()
+    --CMiscSystem.Instance:Update()
     CReconnectMgr.Instance.LatestResIndex = index
 
 end
@@ -163,12 +164,12 @@ function NetworkManager:sendMessage(systemName, netMsg)
     if networkSystem ~= nil then
         print("[NetworkManager]>> systemName : " .. systemName)
         if (CNetwork.Instance.IsReady == false) and   (systemName ~=  ServiceManager:getService("LoginSystem")._systemName) then
-            self:InsertToCache(networkSystem ,1 ,netMsg:getBufMsg())  --fix reconnet
+            self:InsertToCache(networkSystem ,1 ,netMsg:getMsgObject())  --fix reconnet
         else
             if IsLogDebug then
                 print("[NetworkManager]>> sendMessage : " .. netMsg.type)
             end
-            ret =  networkSystem:SendMessage(netMsg:getBufMsg())
+            ret =  networkSystem:SendMessage(netMsg:getMsgObject())
 
         end
 
@@ -188,12 +189,12 @@ function NetworkManager:sendMessageSafely(systemName, reqMsg, resMsg, timeout)
     if networkSystem ~= nil then
 
         if (CNetwork.Instance.IsReady == false) and   (systemName ~=  ServiceManager:getService("LoginSystem")._systemName) then
-            self:InsertToCache(networkSystem ,2 ,{reqMsg:getBufMsg(), resMsg:getBufMsg(), timeout})  --fix reconnet
+            self:InsertToCache(networkSystem ,2 ,{reqMsg:getMsgObject(), resMsg:getMsgObject(), timeout})  --fix reconnet
         else
             if IsLogDebug then
                 print("[NetworkManager]>> sendMessageSafely : " .. reqMsg.type)
             end
-            ret =  networkSystem:SendMessage(reqMsg:getBufMsg(), resMsg:getBufMsg(), timeout)
+            ret =  networkSystem:SendMessage(reqMsg:getMsgObject(), resMsg:getMsgObject(), timeout)
 
         end
 

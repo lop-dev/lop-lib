@@ -2,6 +2,7 @@
 --      This code was created by League of Perfect (lop_dev@hotmail.com)
 --      You can get the latest version from : github.com/lop-dev/lop-lib
 ---------------------------------------------------------------------------------
+local table = table
 
 function table.isEmpty(tab)
     return _G.next(tab) == nil
@@ -26,7 +27,7 @@ end
 
 function table.keys(hashtable)
     local keys = {}
-    for k, v in pairs(hashtable) do
+    for k, _ in pairs(hashtable) do
         keys[#keys + 1] = k
     end
     return keys
@@ -34,7 +35,7 @@ end
 
 function table.values(hashtable)
     local values = {}
-    for k, v in pairs(hashtable) do
+    for _, v in pairs(hashtable) do
         values[#values + 1] = v
     end
     return values
@@ -50,7 +51,7 @@ end
 
 --- 适用于字典（亦可用于数组，但不推荐适用。此时可用indexof
 function table.hasValue(table, value)
-    for key, item in pairs(table) do
+    for _, item in pairs(table) do
         if item == value then
             return true
         end
@@ -92,7 +93,7 @@ function table.removeByKey(tab, key, removeAll)
         return
     end
 
-    for k,v in pairs(tab) do
+    for k, _ in pairs(tab) do
         if k == key then
             tab[k] = nil
             c = c + 1
@@ -122,7 +123,7 @@ end
 
 function table.nums(t)
     local count = 0
-    for k, v in pairs(t) do
+    for _, _ in pairs(t) do
         count = count + 1
     end
     return count
@@ -159,18 +160,18 @@ end
 
 function table.deepCopy(object)
     local lookup_table = {}
-    local function _copy(object)
-        if type(object) ~= "table" then
-            return object
-        elseif lookup_table[object] then
-            return lookup_table[object]
+    local function _copy(obj)
+        if type(obj) ~= "table" then
+            return obj
+        elseif lookup_table[obj] then
+            return lookup_table[obj]
         end
         local new_table = {}
-        lookup_table[object] = new_table
-        for index, value in pairs(object) do
+        lookup_table[obj] = new_table
+        for index, value in pairs(obj) do
             new_table[_copy(index)] = _copy(value)
         end
-        return setmetatable(new_table, getmetatable(object))
+        return setmetatable(new_table, getmetatable(obj))
     end
     return _copy(object)
 end

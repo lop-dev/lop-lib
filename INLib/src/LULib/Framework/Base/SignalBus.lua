@@ -6,6 +6,8 @@
 local CURRENT_MODULE_NAME = ...
 local SignalBus = class("SignalBus")
 
+SignalBus.APP_RECOVER = "SignalBus.APP_RECOVER"
+
 function SignalBus:ctor()
 	self.signalMap = {}
     self._objEvents = {}
@@ -60,7 +62,7 @@ function SignalBus:delContextListener(type, listener, listenerContext)
 end
 
 -- 使用该接口是 addContextListener 务必传入 listenerContext
-function SignalBus:delContextListeners(listenerContext)    
+function SignalBus:delContextListeners(listenerContext)
     local key = nil
     if listenerContext.type ~= nil then
         key = listenerContext.type

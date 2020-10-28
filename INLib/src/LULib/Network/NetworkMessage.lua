@@ -15,7 +15,7 @@ function NetworkMessage:setMsgString(msgString)
     end
 end
 
-function NetworkMessage:getBufMsg()
+function NetworkMessage:getMsgObject()
     return self._msgObject
 end
 

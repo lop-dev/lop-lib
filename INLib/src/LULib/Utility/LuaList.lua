@@ -6,8 +6,8 @@
 local LuaList_Node = {}
 
 LuaList_Node.value = nil
-LuaList_Node.next = nil
-LuaList_Node.prev = nil
+LuaList_Node.next  = nil
+LuaList_Node.prev  = nil
 
 function LuaList_Node:New(object)
     object = object or {}
@@ -16,8 +16,8 @@ function LuaList_Node:New(object)
     return object
 end
 
-LuaList_Iterator = {}
-LuaList_Iterator.node = nil
+local LuaList_Iterator       = {}
+LuaList_Iterator.node  = nil
 LuaList_Iterator.owner = nil
 
 function LuaList_Iterator:New(_owner)
@@ -30,7 +30,7 @@ end
 
 function LuaList_Iterator:Next(count)
     count = count or 1
-    for i = 1, count do
+    for _ = 1, count do
         if self.node ~= nil then
             self.node = self.node.next
         else
@@ -42,7 +42,7 @@ end
 
 function LuaList_Iterator:Prev(count)
     count = count or 1
-    for i = 1, count do
+    for _ = 1, count do
         if self.node ~= nil then
             self.node = self.node.prev
         else
@@ -322,7 +322,7 @@ end
 
 function LuaList:Size()
     local count = 0
-    for v in ilist(self) do
+    for _ in ilist(self) do
         count = count + 1
     end
     return count

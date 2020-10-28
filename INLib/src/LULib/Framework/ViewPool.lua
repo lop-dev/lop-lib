@@ -6,11 +6,11 @@
 
 local ViewPool = {}
 
-ViewPool._viewGOPool = {} -- 界面prefab对象缓存池，用于预加载
+ViewPool._cacheObjPool = {} -- 界面prefab对象缓存池，用于预加载
 
 -- 预加载界面
 function ViewPool:preLoadView(fullClassName)
-    if  self._viewGOPool[fullClassName] ~= nil then
+    if  self._cacheObjPool[fullClassName] ~= nil then
         return
     end
     if IsLogDebug then
@@ -20,37 +20,37 @@ function ViewPool:preLoadView(fullClassName)
     if tClass then
         CommonUtil:getResourcePrefabClone(ERESOURCE_TYPE.UI_PREFABS, tClass.PREFAB_PATH, true,
         function(obj)
-            self._viewGOPool[tClass.type] = obj
+            self._cacheObjPool[tClass.type] = obj
             obj:SetActive(false)
-            CUtilObj2Lua.SetParent(obj, UICache, true)
+            CUtilObj2Lua.SetParent(obj, UGUI.UICache, true)
         end)
     end
 end
 
 -- 清除所有缓存
 function ViewPool:clearPool()
-    if self._viewGOPool == nil then
+    if self._cacheObjPool == nil then
         return
     end
 
-    for i, v in pairs(self._viewGOPool) do
+    for _, v in pairs(self._cacheObjPool) do
         if v ~= nil then
             GameObject.Destroy(v)
         end
     end
 
-    self._viewGOPool = {}
+    self._cacheObjPool = {}
 end
 
 -- 判断界面是否预加载
 function ViewPool:isViewPreload(shortClassName)
-    return self._viewGOPool[shortClassName] ~= nil
+    return self._cacheObjPool[shortClassName] ~= nil
 end
 
 -- 弹出预加载界面
-function ViewPool:spawnView(shortClassName)
-    local view = self._viewGOPool[shortClassName]
-    self._viewGOPool[shortClassName] = nil
+function ViewPool:popView(shortClassName)
+    local view = self._cacheObjPool[shortClassName]
+    self._cacheObjPool[shortClassName] = nil
     return view
 end
 
