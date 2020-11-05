@@ -11,8 +11,8 @@
 #### 如需查看更详细的技术文档或购买LopKit套件，请点击 [合作共赢](http://106.14.76.70/lop-lib/index.html)
 
 ## 联系方式
-#### 微 信 号：lop_dev
-#### 电子邮箱：lop_dev@hotmail.com
+#### 微信：lop_dev
+#### 邮箱：lop_dev@hotmail.com
 
 ## 获取地址
 #### GIT ：https://github.com/lop-dev/lop-lib.git
