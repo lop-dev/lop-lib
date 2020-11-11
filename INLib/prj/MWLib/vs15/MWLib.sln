@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Subversion", "Subversion.vcxproj", "{3043F0B1-5B20-427C-8EFB-F1750FE5158D}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Misc", "Misc.vcxproj", "{430D823F-E7E3-4D83-811F-0776C3721C8F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kafka", "Kafka.vcxproj", "{7DF29CF1-CA08-40D4-81EB-185F20F5BBD2}"
@@ -23,18 +21,6 @@ Global
 		lib_9mt|Win32 = lib_9mt|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
-		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
-		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
-		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.dll_9md|Win32.Build.0 = dll_9md|Win32
-		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9md_d|Win32.ActiveCfg = lib_9md_d|Win32
-		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9md_d|Win32.Build.0 = lib_9md_d|Win32
-		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9md|Win32.ActiveCfg = lib_9md|Win32
-		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9md|Win32.Build.0 = lib_9md|Win32
-		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9mt_d|Win32.ActiveCfg = lib_9mt_d|Win32
-		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9mt_d|Win32.Build.0 = lib_9mt_d|Win32
-		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9mt|Win32.ActiveCfg = lib_9mt|Win32
-		{3043F0B1-5B20-427C-8EFB-F1750FE5158D}.lib_9mt|Win32.Build.0 = lib_9mt|Win32
 		{430D823F-E7E3-4D83-811F-0776C3721C8F}.dll_9md_d|Win32.ActiveCfg = dll_9md_d|Win32
 		{430D823F-E7E3-4D83-811F-0776C3721C8F}.dll_9md_d|Win32.Build.0 = dll_9md_d|Win32
 		{430D823F-E7E3-4D83-811F-0776C3721C8F}.dll_9md|Win32.ActiveCfg = dll_9md|Win32
