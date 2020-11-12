@@ -18,4 +18,6 @@
 ## 获取地址
 #### GIT ：https://github.com/lop-dev/lop-lib.git
 #### SVN ：https://github.com/lop-dev/lop-lib/trunk
-#### 注：原OKBase获取地址，因为官方网站登录异常，不再维护；因Github网站原因，下载速度较慢，一旦确立合作，我们将提供专用的快速下载地址。
+#### 注：
+#### 原OKBase获取地址，因为官方网站登录异常，不再维护；
+#### 因Github网站原因，下载速度较慢，一旦确立合作，我们将提供专用的快速下载地址。
