@@ -24,6 +24,7 @@ namespace RefreshPTPrj
         {
             incFiles.AddRange(Directory.GetFiles(incFilesRoot, "*.h", SearchOption.AllDirectories));
             srcFiles.AddRange(Directory.GetFiles(srcFilesRoot, "*.cc", SearchOption.AllDirectories));
+            srcFiles.AddRange(Directory.GetFiles(srcFilesRoot, "*.cpp", SearchOption.AllDirectories));
 
             ReadVcxproj();
             ReadVcxprojFilters();
