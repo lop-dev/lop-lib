@@ -46,6 +46,9 @@ enum EDBTaskResult
 	EDB_TASK_ERROR_SELECT_RECORD,
 	EDB_TASK_ERROR_UPDATE_RECORD,
 	EDB_TASK_ERROR_DELETE_RECORD,
+
+    EDB_TASK_ERROR_EXTEND,   // 留给上层扩展使用
+    EDB_TASK_ERROR_MAX = 50, // 上层扩展最好不要超过这个值，因为LOP配套工具链产生的错误值，从这个值开始
 };
 
 class BCLIB_DATABASE_API CDatabaseTask
@@ -93,7 +96,7 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_Variable						\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_Variable					\
 	std::ostringstream              sqlSentence;(void)sqlSentence;			\
 	BCLib::Utility::CStringA		strDBIndex = "";(void)strDBIndex;		\
 	BCLib::Utility::CStringA		strTBIndex = "";(void)strTBIndex;		\
@@ -109,7 +112,7 @@ protected:
 	std::string						strValue = "";(void)strValue;			\
 	BCLib::Utility::SPointerGuard<BCLib::Database::CDataReader> readerGuard(pDataReader);
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_GetConnection														\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_GetConnection													\
 	pConnection = getConnection(mapConnections, strDBIndex, strDBName);												\
 	if (pConnection == NULL)																						\
 	{																												\
@@ -125,7 +128,7 @@ protected:
 		return false;																								\
 	}
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_UseDB																\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_UseDB															\
 	pConnection = getConnection(mapConnections, strDBIndex, strDBName);												\
 	if (pConnection == NULL)																						\
 	{																												\
@@ -151,7 +154,7 @@ protected:
 		return false;																								\
 	}
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_UseDB_For_StaticTask(pTask)											\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_UseDB_For_StaticTask(pTask)									\
 	if (pTask == NULL)																								\
 	{																												\
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "pTask == NULL");												\
@@ -183,7 +186,7 @@ protected:
 		return false;																								\
 	}
 	
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ExecuteNonQuery														\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ExecuteNonQuery												\
 	BCLIB_LOG_DEBUG(BCLib::ELOGMODULE_DEFAULT, "sqlSentence : [%s:%s][%s]", strDBName.c_str(), strTBName.c_str(), sqlSentence.str().c_str());	\
 	if (!pConnection->executeNonQuery(sqlSentence.str().c_str()))													\
 	{																												\
@@ -193,7 +196,7 @@ protected:
 		return false;																								\
 	}
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ExecuteReader														\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ExecuteReader													\
     BCLIB_SAFE_DELETE(pDataReader);																					\
     pDataReader = pConnection->executeReader(sqlSentence.str().c_str());											\
     if (!pDataReader)																								\
@@ -204,7 +207,7 @@ protected:
         return false;																								\
     }
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ExecuteReader_Check(_NEED_HAVE_)									\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ExecuteReader_Check(_NEED_HAVE_)								\
 																													\
 	if (_NEED_HAVE_)																								\
 	{																												\
@@ -227,7 +230,7 @@ protected:
 		}																											\
 	}
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ExecuteReader_Next													\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ExecuteReader_Next											\
 	if (!pDataReader->next())																						\
 	{																												\
 		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, "!pDataReader->next()");											\
@@ -239,95 +242,95 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadFloat(_PTBUF_, _NAME_)	\
-	if (!pDataReader->getDouble(#_NAME_, dValue))							\
-	{																		\
-		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
-		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);										\
-		return false;														\
-	}																		\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadFloat(_PTBUF_, _NAME_)	\
+	if (!pDataReader->getDouble(#_NAME_, dValue))							        \
+	{																		        \
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				        \
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				        \
+		BCLIB_SAFE_DELETE(pDataReader);										        \
+		return false;														        \
+	}																		        \
 	_PTBUF_.set_##_NAME_((float)dValue);
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadInt32(_PTBUF_, _NAME_)	\
-	if (!pDataReader->getInt32(#_NAME_, i32Value))							\
-	{																		\
-		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
-		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);										\
-		return false;														\
-	}																		\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadInt32(_PTBUF_, _NAME_)	\
+	if (!pDataReader->getInt32(#_NAME_, i32Value))							        \
+	{																		        \
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				        \
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				        \
+		BCLIB_SAFE_DELETE(pDataReader);										        \
+		return false;														        \
+	}																		        \
 	_PTBUF_.set_##_NAME_(i32Value);
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadInt64(_PTBUF_, _NAME_)	\
-	if (!pDataReader->getInt64(#_NAME_, i64Value))							\
-	{																		\
-		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
-		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);										\
-		return false;														\
-	}																		\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadInt64(_PTBUF_, _NAME_)	\
+	if (!pDataReader->getInt64(#_NAME_, i64Value))							        \
+	{																		        \
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				        \
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				        \
+		BCLIB_SAFE_DELETE(pDataReader);										        \
+		return false;														        \
+	}																		        \
 	_PTBUF_.set_##_NAME_(i64Value);
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadUint32(_PTBUF_, _NAME_)	\
-	if (!pDataReader->getUint32(#_NAME_, u32Value))							\
-	{																		\
-		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
-		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);										\
-		return false;														\
-	}																		\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadUint32(_PTBUF_, _NAME_)	\
+	if (!pDataReader->getUint32(#_NAME_, u32Value))							        \
+	{																		        \
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				        \
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				        \
+		BCLIB_SAFE_DELETE(pDataReader);										        \
+		return false;														        \
+	}																		        \
 	_PTBUF_.set_##_NAME_(u32Value);
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadUint64(_PTBUF_, _NAME_)	\
-	if (!pDataReader->getUint64(#_NAME_, u64Value))							\
-	{																		\
-		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
-		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);										\
-		return false;														\
-	}																		\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadUint64(_PTBUF_, _NAME_)	\
+	if (!pDataReader->getUint64(#_NAME_, u64Value))							        \
+	{																		        \
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				        \
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				        \
+		BCLIB_SAFE_DELETE(pDataReader);										        \
+		return false;														        \
+	}																		        \
 	_PTBUF_.set_##_NAME_(u64Value);
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadString(_PTBUF_, _NAME_)	\
-	if (!pDataReader->getString(#_NAME_, strValue))							\
-	{																		\
-		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
-		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);										\
-		return false;														\
-	}																		\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadString(_PTBUF_, _NAME_)	\
+	if (!pDataReader->getString(#_NAME_, strValue))							        \
+	{																		        \
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				        \
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				        \
+		BCLIB_SAFE_DELETE(pDataReader);										        \
+		return false;														        \
+	}																		        \
 	_PTBUF_.set_##_NAME_(strValue);
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadBase64(_PTBUF_, _NAME_)	\
-	if (!pDataReader->getString(#_NAME_, strValue))							\
-	{																		\
-		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
-		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);										\
-		return false;														\
-	}																		\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadBase64(_PTBUF_, _NAME_)	\
+	if (!pDataReader->getString(#_NAME_, strValue))							        \
+	{																		        \
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				        \
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				        \
+		BCLIB_SAFE_DELETE(pDataReader);										        \
+		return false;														        \
+	}																		        \
 	_PTBUF_.set_##_NAME_(BCLib::Security::CBase64::Decode(strValue));
 
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadPTBuf(_PTBUF_, _NAME_)	\
-	if (!pDataReader->getString(#_NAME_, strValue))							\
-	{																		\
-		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
-		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);										\
-		return false;														\
-	}																		\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadPTBuf(_PTBUF_, _NAME_)	\
+	if (!pDataReader->getString(#_NAME_, strValue))							        \
+	{																		        \
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				        \
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				        \
+		BCLIB_SAFE_DELETE(pDataReader);										        \
+		return false;														        \
+	}																		        \
 	_PTBUF_.ParsePartialFromString(BCLib::Security::CBase64::Decode(strValue));
 
 // 里面调用了一个生成的函数
-#define CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadRepeated(_PTBUF_, _NAME_, _CONVERTFUNC_)	\
-	if (!pDataReader->getString(#_NAME_, strValue))							\
-	{																		\
-		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				\
-		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				\
-		BCLIB_SAFE_DELETE(pDataReader);										\
-		return false;														\
-	}																		\
+#define BCLIB_CDATABASETASK_SUBCLASS_DEFINE_REPLY_SQL_ReadRepeated(_PTBUF_, _NAME_, _CONVERTFUNC_)	\
+	if (!pDataReader->getString(#_NAME_, strValue))							                        \
+	{																		                        \
+		BCLIB_LOG_ERROR(BCLib::ELOGMODULE_DEFAULT, #_NAME_);				                        \
+		m_errCode = BCLib::Database::EDB_TASK_ERROR_READ_DATA;				                        \
+		BCLIB_SAFE_DELETE(pDataReader);										                        \
+		return false;														                        \
+	}																		                        \
 	_CONVERTFUNC_(_PTBUF_, strValue);
 
 //////////////////////////////////////////////////////////////////////////
