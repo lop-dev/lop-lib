@@ -110,10 +110,6 @@ private:
     typedef StrBlackBoardValueMap::iterator StrBlackBoardValueMapIt;
 
     IntBlackBoardValueMap m_intBlackBoardValueMap;
-
-    //
-    //typedef std::set<SBlackBoardValue*> BlackBoardValueSet;
-    //BlackBoardValueSet m_blackBoardValueSet;
 };
 }//Utility
 }//BCLib
